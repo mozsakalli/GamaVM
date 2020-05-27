@@ -1,0 +1,368 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		450176A4246819E600589EDC /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = 450176A3246819E600589EDC /* miniz.c */; };
+		451DDF63244D5CBB0064EE50 /* digiplay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 451DDF62244D5CBB0064EE50 /* digiplay.cpp */; };
+		451DDF66244D5E2A0064EE50 /* geom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 451DDF65244D5E2A0064EE50 /* geom.cpp */; };
+		452A59302468F6BA00ACF01E /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 452A592F2468F6BA00ACF01E /* assets */; };
+		453391BC247A439B00564DB1 /* gc.c in Sources */ = {isa = PBXBuildFile; fileRef = 453391BB247A439B00564DB1 /* gc.c */; };
+		45ACD593247462D6008DD07B /* compiler.c in Sources */ = {isa = PBXBuildFile; fileRef = 45ACD592247462D6008DD07B /* compiler.c */; };
+		45CF602B24792E68000FDA18 /* natives.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CF602A24792E68000FDA18 /* natives.m */; };
+		45D416C62445E159006F4EF6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45D416C52445E159006F4EF6 /* Assets.xcassets */; };
+		45D416CC2445E159006F4EF6 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 45D416CB2445E159006F4EF6 /* main.mm */; };
+		45FDAC5324673F2A00611F96 /* jvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 45FDAC5224673F2A00611F96 /* jvm.c */; };
+		45FE8CCC246B3EDF00ED04C2 /* interpreter.c in Sources */ = {isa = PBXBuildFile; fileRef = 45FE8CCB246B3EDF00ED04C2 /* interpreter.c */; };
+		45FE8CCF246D3CC600ED04C2 /* aot.c in Sources */ = {isa = PBXBuildFile; fileRef = 45FE8CCE246D3CC600ED04C2 /* aot.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		450176A2246819E500589EDC /* miniz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
+		450176A3246819E600589EDC /* miniz.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
+		451DDF61244D5CBB0064EE50 /* digiplay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = digiplay.h; sourceTree = "<group>"; };
+		451DDF62244D5CBB0064EE50 /* digiplay.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = digiplay.cpp; sourceTree = "<group>"; };
+		451DDF64244D5E2A0064EE50 /* geom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = geom.h; sourceTree = "<group>"; };
+		451DDF65244D5E2A0064EE50 /* geom.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = geom.cpp; sourceTree = "<group>"; };
+		452A592F2468F6BA00ACF01E /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = Digiplay/assets; sourceTree = "<group>"; };
+		453391BB247A439B00564DB1 /* gc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gc.c; sourceTree = "<group>"; };
+		45ACD592247462D6008DD07B /* compiler.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = compiler.c; sourceTree = "<group>"; };
+		45CF602924792E68000FDA18 /* natives.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = natives.h; sourceTree = "<group>"; };
+		45CF602A24792E68000FDA18 /* natives.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = natives.m; sourceTree = "<group>"; };
+		45D416B62445E157006F4EF6 /* Digiplay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Digiplay.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		45D416C52445E159006F4EF6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		45D416CA2445E159006F4EF6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		45D416CB2445E159006F4EF6 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		45FDAC5124673F2A00611F96 /* jvm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jvm.h; sourceTree = "<group>"; };
+		45FDAC5224673F2A00611F96 /* jvm.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = jvm.c; sourceTree = "<group>"; };
+		45FE8CCB246B3EDF00ED04C2 /* interpreter.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = interpreter.c; sourceTree = "<group>"; };
+		45FE8CCD246B3FF500ED04C2 /* opcodes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opcodes.h; sourceTree = "<group>"; };
+		45FE8CCE246D3CC600ED04C2 /* aot.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = aot.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		45D416B32445E157006F4EF6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		45D416AD2445E157006F4EF6 = {
+			isa = PBXGroup;
+			children = (
+				452A592F2468F6BA00ACF01E /* assets */,
+				45D416B82445E157006F4EF6 /* Digiplay */,
+				45D416B72445E157006F4EF6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		45D416B72445E157006F4EF6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				45D416B62445E157006F4EF6 /* Digiplay.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		45D416B82445E157006F4EF6 /* Digiplay */ = {
+			isa = PBXGroup;
+			children = (
+				45D416C52445E159006F4EF6 /* Assets.xcassets */,
+				45D416CA2445E159006F4EF6 /* Info.plist */,
+				45D416CB2445E159006F4EF6 /* main.mm */,
+				451DDF61244D5CBB0064EE50 /* digiplay.h */,
+				451DDF62244D5CBB0064EE50 /* digiplay.cpp */,
+				451DDF64244D5E2A0064EE50 /* geom.h */,
+				451DDF65244D5E2A0064EE50 /* geom.cpp */,
+				45FDAC5124673F2A00611F96 /* jvm.h */,
+				45FDAC5224673F2A00611F96 /* jvm.c */,
+				450176A2246819E500589EDC /* miniz.h */,
+				450176A3246819E600589EDC /* miniz.c */,
+				45FE8CCB246B3EDF00ED04C2 /* interpreter.c */,
+				45FE8CCD246B3FF500ED04C2 /* opcodes.h */,
+				45FE8CCE246D3CC600ED04C2 /* aot.c */,
+				45ACD592247462D6008DD07B /* compiler.c */,
+				45CF602924792E68000FDA18 /* natives.h */,
+				45CF602A24792E68000FDA18 /* natives.m */,
+				453391BB247A439B00564DB1 /* gc.c */,
+			);
+			path = Digiplay;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		45D416B52445E157006F4EF6 /* Digiplay */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 45D416CF2445E159006F4EF6 /* Build configuration list for PBXNativeTarget "Digiplay" */;
+			buildPhases = (
+				45D416B22445E157006F4EF6 /* Sources */,
+				45D416B32445E157006F4EF6 /* Frameworks */,
+				45D416B42445E157006F4EF6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Digiplay;
+			productName = Digiplay;
+			productReference = 45D416B62445E157006F4EF6 /* Digiplay.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		45D416AE2445E157006F4EF6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = mustafa;
+				TargetAttributes = {
+					45D416B52445E157006F4EF6 = {
+						CreatedOnToolsVersion = 11.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 45D416B12445E157006F4EF6 /* Build configuration list for PBXProject "Digiplay" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 45D416AD2445E157006F4EF6;
+			productRefGroup = 45D416B72445E157006F4EF6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				45D416B52445E157006F4EF6 /* Digiplay */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		45D416B42445E157006F4EF6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45D416C62445E159006F4EF6 /* Assets.xcassets in Resources */,
+				452A59302468F6BA00ACF01E /* assets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		45D416B22445E157006F4EF6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45CF602B24792E68000FDA18 /* natives.m in Sources */,
+				451DDF66244D5E2A0064EE50 /* geom.cpp in Sources */,
+				45FDAC5324673F2A00611F96 /* jvm.c in Sources */,
+				453391BC247A439B00564DB1 /* gc.c in Sources */,
+				45FE8CCF246D3CC600ED04C2 /* aot.c in Sources */,
+				45FE8CCC246B3EDF00ED04C2 /* interpreter.c in Sources */,
+				45D416CC2445E159006F4EF6 /* main.mm in Sources */,
+				450176A4246819E600589EDC /* miniz.c in Sources */,
+				45ACD593247462D6008DD07B /* compiler.c in Sources */,
+				451DDF63244D5CBB0064EE50 /* digiplay.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		45D416CD2445E159006F4EF6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		45D416CE2445E159006F4EF6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		45D416D02445E159006F4EF6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7TN55SRW8B;
+				INFOPLIST_FILE = Digiplay/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = Digiplay/lib/iOS/arm64;
+				"LIBRARY_SEARCH_PATHS[arch=armv7]" = Digiplay/lib/iOS/arm;
+				"LIBRARY_SEARCH_PATHS[arch=i386]" = Digiplay/lib/iOS/x86;
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = Digiplay/lib/iOS/x86_64;
+				OTHER_CFLAGS = "-fshort-wchar";
+				OTHER_LDFLAGS = "-lgc";
+				PRODUCT_BUNDLE_IDENTIFIER = com.digitoygames.digiplay;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		45D416D12445E159006F4EF6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7TN55SRW8B;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				INFOPLIST_FILE = Digiplay/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = Digiplay/lib/iOS/arm64;
+				"LIBRARY_SEARCH_PATHS[arch=armv7]" = Digiplay/lib/iOS/arm;
+				"LIBRARY_SEARCH_PATHS[arch=i386]" = Digiplay/lib/iOS/x86;
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = Digiplay/lib/iOS/x86_64;
+				OTHER_CFLAGS = "-fshort-wchar";
+				OTHER_LDFLAGS = "-lgc";
+				PRODUCT_BUNDLE_IDENTIFIER = com.digitoygames.digiplay;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		45D416B12445E157006F4EF6 /* Build configuration list for PBXProject "Digiplay" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				45D416CD2445E159006F4EF6 /* Debug */,
+				45D416CE2445E159006F4EF6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		45D416CF2445E159006F4EF6 /* Build configuration list for PBXNativeTarget "Digiplay" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				45D416D02445E159006F4EF6 /* Debug */,
+				45D416D12445E159006F4EF6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 45D416AE2445E157006F4EF6 /* Project object */;
+}
