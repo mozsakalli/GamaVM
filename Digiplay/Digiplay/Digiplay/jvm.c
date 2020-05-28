@@ -993,6 +993,9 @@ Object *resolve_field(VM *vm, void *clsName, void *name, int isString) {
         if(f) return f;
         cls = CLS_FIELD(cls,superClass);
     }
+    
+    throw_nullpointerexception(vm);
+    
     return NULL;
 }
 Object *resolve_field_by_index(VM *vm,Object *cls, int index) {

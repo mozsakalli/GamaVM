@@ -1,1 +1,5 @@
+gamavm/apple/ObjC.class
 Main.class
+gamavm/apple/Selector.class
+gamavm/apple/NSObject.class
+gamavm/apple/ObjCClass.class

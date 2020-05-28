@@ -13,7 +13,7 @@
 #ifdef __APPLE__
 #include <mach/mach_time.h>
 #endif
-
+#import <objc/runtime.h>
 
 void java_lang_Object_clone(VM *vm, Object *method, VAR *args) {
     void *result = NULL;
@@ -246,6 +246,108 @@ void java_lang_Float_toStringImpl(VM *vm, Object *method, VAR *args) {
     }
     
     vm->frames[vm->FP].retVal.O = (Object*)alloc_string(vm, s);
+}
+
+jlong get_nsobject_handle(VM *vm, Object *o) {
+    static int handle_field_offset = -1;
+    if(handle_field_offset == -1) {
+        Object *field = resolve_field(vm, "gamavm/apple/NSObject", "handle", 0);
+        if(vm->exception || !field) return 0;
+        handle_field_offset = ((FieldFields*)field->instance)->offset;
+    }
+    
+    return *FIELD_PTR_J(o, handle_field_offset);
+}
+
+void gamavm_apple_ObjC_sel_registerName(VM *vm, Object *method, VAR *args) {
+    jlong ret = 0;
+    if(args[0].O) {
+        SEL sel = sel_registerName((const char*)string2c(args[0].O));
+        ret = (jlong)(__bridge void *)(sel);
+    }
+    vm->frames[vm->FP].retVal.J = ret;
+}
+
+void gamavm_apple_ObjC_objc_getClass(VM *vm, Object *method, VAR *args) {
+    jlong ret = 0;
+    if(args[0].O) {
+        id cls = objc_getClass((const char*)string2c(args[0].O));
+        ret = (jlong)(__bridge void *)(cls);
+    }
+    vm->frames[vm->FP].retVal.J = ret;
+}
+
+#define HANDLENUMBERTYPES(F, index)            \
+F('c', char, numberWithChar, charValue, index); \
+F('i', int, numberWithInt, intValue, index); \
+F('s', short, numberWithShort, shortValue, index); \
+F('l', long, numberWithLong, longValue, index); \
+F('q', long long, numberWithLongLong, longLongValue, index); \
+F('C', unsigned char, numberWithUnsignedChar, unsignedCharValue, index); \
+F('I', unsigned int, numberWithUnsignedInt, unsignedIntValue, index); \
+F('S', unsigned short, numberWithUnsignedShort, unsignedShortValue, index); \
+F('L', unsigned long, numberWithUnsignedLong, unsignedLongValue, index); \
+F('Q', unsigned long long, numberWithUnsignedLongLong, unsignedLongLongValue, index); \
+F('f', float, numberWithFloat, floatValue, index); \
+F('d', double, numberWithDouble, doubleValue, index); \
+F('B', _Bool, numberWithBool, boolValue, index)
+
+void objc_to_java(VM *vm, const char *type, void *buffer, VAR *result) {
+    switch(type[0]) {
+        default:
+            printf("!!!!!!!! Unknown OBJC Type: %c !!!!!!!!!\n", type[0]);
+            break;
+    }
+#define CNVBUF(type) type x = *(type*)buffer
+#define PUSHNUMBERTYPE(ch, type, nummethod, valmethod, index) \
+case ch: \
+    { \
+        CNVBUF(type); \
+        [stack addObject:[NSNumber nummethod:x]]; \
+    } \
+    break
+}
+
+//https://github.com/torus/Lua-Objective-C-Bridge/blob/master/LuaBridge.m
+void gamavm_apple_ObjC_call(VM *vm, Object *method, VAR *args) {
+    if(!args[0].O || !args[1].O) {
+        throw_nullpointerexception(vm);
+        return;
+    }
+    id target = (id)get_nsobject_handle(vm,args[0].O);
+    if(vm->exception) return;
+
+    SEL sel = (SEL)get_nsobject_handle(vm,args[1].O);
+    if(vm->exception) return;
+    
+    NSMethodSignature *sig = [target methodSignatureForSelector:sel];
+    NSInvocation *inv = [NSInvocation invocationWithMethodSignature:sig];
+    [inv retainArguments];
+    NSUInteger numarg = [sig numberOfArguments] - 2;
+    
+    Object *params = args[1].O;
+    if(!params || params->length != numarg) {
+        throw_nullpointerexception(vm);
+        return;
+    }
+    
+    for (int i = 0; i < numarg; i++) {
+        const char *t = [sig getArgumentTypeAtIndex:i+2];
+    }
+    
+    [inv setTarget:target];
+    [inv setSelector:sel];
+    [inv invoke];
+    
+    const char *rettype = [sig methodReturnType];
+    void *buffer = NULL;
+    if (rettype[0] != 'v') { // don't get return value from void function
+        NSUInteger len = [[inv methodSignature] methodReturnLength];
+        buffer = malloc(len);
+        [inv getReturnValue:buffer];
+        objc_to_java(vm, rettype, buffer, &vm->frames[vm->FP].retVal);
+        free(buffer);
+    }
 }
 
 NativeMethodInfo NATIVES[] = {

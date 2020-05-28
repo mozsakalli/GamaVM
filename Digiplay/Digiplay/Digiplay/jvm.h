@@ -334,6 +334,7 @@ extern Object *resolve_class(VM *vm, void *name, int isString);
 extern Object *resolve_class_by_index(VM *vm, Object *cls, int index);
 extern Object *resolve_array_class_by_index(VM *vm, Object *cls, int index);
 extern Object *resolve_method_by_index(VM *vm, Object *cls, int index);
+extern Object *resolve_field(VM *vm, void *clsName, void *name, int isString);
 extern Object *resolve_field_by_index(VM *vm,Object *cls, int index);
 
 extern void alloc_init(VM *vm);
