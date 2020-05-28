@@ -21,5 +21,5 @@ package java.lang;
  * @author mustafa
  */
 public class NoSuchMethodError extends Error {
-
+    
 }

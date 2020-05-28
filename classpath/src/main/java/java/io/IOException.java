@@ -1,24 +1,17 @@
 /*
- * Copyright (c) 2012, Codename One and/or its affiliates. All rights reserved.
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * This code is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Codename One designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the LICENSE file that accompanied this code.
- *  
- * This code is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * version 2 for more details (a copy is included in the LICENSE file that
- * accompanied this code).
- * 
- * You should have received a copy of the GNU General Public License version
- * 2 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- * 
- * Please contact Codename One through http://www.codenameone.com/ if you 
- * need additional information or have any questions.
+ * Copyright (C) 2019 Digitoy Games.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package java.io;
@@ -26,29 +19,49 @@ package java.io;
  * Signals that an I/O exception of some sort has occurred. This class is the general class of exceptions produced by failed or interrupted I/O operations.
  * Since: JDK1.0, CLDC 1.0 See Also:InputStream, OutputStream
  */
-public class IOException extends java.lang.Exception{
+public class IOException extends Exception {
+
+    private static final long serialVersionUID = 7818375828146090155L;
+
     /**
-     * Constructs an IOException with null as its error detail message.
+     * Constructs a new {@code IOException} with its stack trace filled in.
      */
-    public IOException(){
-         //TODO codavaj!!
+    public IOException() {
     }
 
     /**
-     * Constructs an IOException with the specified detail message. The error message string s can later be retrieved by the
-     * method of class java.lang.Throwable.
-     * s - the detail message.
+     * Constructs a new {@code IOException} with its stack trace and detail
+     * message filled in.
+     *
+     * @param detailMessage
+     *            the detail message for this exception.
      */
-    public IOException(java.lang.String s){
-         super(s);
+    public IOException(String detailMessage) {
+        super(detailMessage);
     }
-    
+
+    /**
+     * Constructs a new instance of this class with detail message and cause
+     * filled in.
+     *
+     * @param message
+     *            The detail message for the exception.
+     * @param cause
+     *            The detail cause for the exception.
+     * @since 1.6
+     */
+    public IOException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    /**
+     * Constructs a new instance of this class with its detail cause filled in.
+     *
+     * @param cause
+     *            The detail cause for the exception.
+     * @since 1.6
+     */
     public IOException(Throwable cause) {
-        super(cause);
+        super(cause == null ? null : cause.toString(), cause);
     }
-    
-    public IOException(java.lang.String s, Throwable cause) {
-        super(s, cause);
-    }
-
 }

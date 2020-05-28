@@ -1,143 +1,119 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/* Copyright (c) 2008-2015, Avian Contributors
+
+   Permission to use, copy, modify, and/or distribute this software
+   for any purpose with or without fee is hereby granted, provided
+   that the above copyright notice and this permission notice appear
+   in all copies.
+
+   There is NO WARRANTY for this software.  See license.txt for
+   details. */
+
 package java.util.regex;
 
 /**
- *
- * @author shannah
+ * This is a work in progress.
+ * 
+ * @author zsombor and others
  */
-public class Matcher implements MatchResult {
-    Matcher() {
-        
+public abstract class Matcher {
+  protected CharSequence input;
+  protected int start;
+  protected int end;
+
+  public Matcher(CharSequence input) {
+    reset(input);
+  }
+
+  public abstract boolean matches();
+
+  public boolean find() {
+    return find(end);
+  }
+
+  public abstract boolean find(int start);
+
+  public Matcher reset() {
+    return reset(input);
+  }
+
+  public Matcher reset(CharSequence input) {
+    this.input = input;
+    start = 0;
+    end = 0;
+    return this;
+  }
+
+  public String replaceAll(String replacement) {
+    return replace(replacement, Integer.MAX_VALUE);
+  }
+
+  public String replaceFirst(String replacement) {
+    return replace(replacement, 1);
+  }
+
+  protected String replace(String replacement, int limit) {
+    reset();
+
+    StringBuilder sb = null;
+    int index = 0;
+    int count = 0;
+    while (count < limit && index < input.length()) {
+      if (find(index)) {
+        if (sb == null) {
+          sb = new StringBuilder();
+        }
+        if (start > index) {
+          sb.append(input.subSequence(index, start));
+        }
+        sb.append(replacement);
+        index = end;
+        ++ count;
+      } else if (index == 0) {
+        return input.toString();
+      } else {
+        break;
+      }
     }
-    public Matcher appendReplacement(StringBuffer sb, String replacement) {
-        return null;
+    if (index < input.length()) {
+      sb.append(input.subSequence(index, input.length()));
     }
-    
-    public StringBuffer appendTail(StringBuffer sb) {
-        return null;
+    return sb.toString();
+  }
+
+  public int start() {
+    return start;
+  }
+
+  public int end() {
+    return end;
+  }
+
+  public String group() {
+    return input.subSequence(start, end).toString();
+  }
+
+  public int start(int group) {
+    if (group == 0) {
+      return start();
     }
-    
-    public int end() {
-        return 0;
+    throw new UnsupportedOperationException();
+  }
+
+  public int end(int group) {
+    if (group == 0) {
+      return end();
     }
-    
-    public int end(int group) {
-        return 0;
+    throw new UnsupportedOperationException();
+  }
+
+  public String group(int group) {
+    if (group == 0) {
+      return group();
     }
-    
-    public boolean find() {
-        return false;
-    }
-    
-    public boolean find(int start) {
-        return false;
-    }
-    
-    public String group() {
-        return null;
-    }
-    
-    public String group(int group) {
-        return null;
-    }
-    
-    public String group(String name) {
-        return null;
-    }
-    
-    public int groupCount() {
-        return 0;
-    }
-    
-    public boolean hasAnchoringBounds() {
-        return false;
-    }
-    
-    public boolean hasTransparentBounds() {
-        return false;
-    }
-    
-    public boolean hitEnd() {
-        return false;
-    }
-    
-    public boolean lookingAt() {
-        return false;
-    }
-    public boolean matches() {
-        return false;
-    }
-    
-    public Pattern pattern() {
-        return null;
-    }
-    
-    public String quoteReplacement(String s) {
-        return null;
-    }
-    
-    public Matcher region(int start, int end) {
-        return null;
-    }
-    public int regionEnd() {
-        return 0;
-    }
-    
-    public int regionStart() {
-        return 0;
-    }
-    
-    public String replaceAll(String replacement) {
-        return null;
-    }
-    
-    public String replaceFirst(String replacement) {
-        return null;
-    }
-    
-    public boolean requireEnd() {
-        return false;
-    }
-    
-    public Matcher reset() {
-        return null;
-    }
-    
-    public Matcher reset(CharSequence input) {
-        return null;
-    }
-    
-    public int start() {
-        return 0;
-    }
-    
-    public int start(int group) {
-        return 0;
-    }
-    
-    public MatchResult toMatchResult() {
-        return null;
-    }
-    
-    public String toString() {
-        return null;
-    }
-    
-    public Matcher useAnchoringBounds(boolean b) {
-        return null;
-    }
-    
-    public Matcher usePattern(Pattern newPattern) {
-        return null;
-    }
-    
-    public Matcher useTransparentBounds(boolean b) {
-        return null;
-    }
-    
-    
+    throw new UnsupportedOperationException();
+  }
+
+  public int groupCount() {
+    return 0;
+  }
 }

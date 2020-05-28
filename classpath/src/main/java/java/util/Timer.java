@@ -19,15 +19,6 @@ package java.util;
 
 public class Timer {
     boolean canceled;
-    private String name;
-    
-    public Timer(boolean isDaemon) {
-        
-    }
-    
-    public Timer(String name) {
-        this.name = name;
-    }
     
     public Timer() {}
     

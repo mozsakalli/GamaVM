@@ -21,7 +21,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 
 public class Throwable implements Serializable {
-    private int FP;
+    int FP;
     private StackTraceElement[] stackTrace;
     private final String detailMessage;
     private Throwable cause = this;
@@ -66,7 +66,6 @@ public class Throwable implements Serializable {
         return this;
     }
 
-    @Override
     public String toString() {
         String msg = getLocalizedMessage();
         return getClass().getName() + (msg == null ? "" : ": " + msg);
@@ -154,8 +153,7 @@ public class Throwable implements Serializable {
     }
 
     public StackTraceElement[] getStackTrace() {
-        //System.out.println("!!!!!!!!!!!!!!!!!!!! "+stackTrace);
-        return stackTrace;// != null ? stackTrace.clone() : new StackTraceElement[0];
+        return stackTrace != null ? stackTrace.clone() : new StackTraceElement[0];
     }
 
     public void setStackTrace(StackTraceElement[] stackTrace) {

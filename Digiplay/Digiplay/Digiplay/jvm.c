@@ -91,12 +91,26 @@ void jstr_println(Object *str) {
 }
 
 void print_stack_trace(VM *vm) {
-    for(int i=vm->exceptionFP; i>=0; i--) {
-        Frame *f = &vm->frames[i];
-        if(f->method) {
-            printf("at %s:", string2c(CLS_FIELD(MTH_FIELD(f->method,declaringClass),name)));
-            printf(":%s", string2c(MTH_FIELD(f->method,name)));
-            printf(":%s line=%d\n", string2c(MTH_FIELD(f->method,signature)), f->line);
+    if(vm->exception) {
+        //Object *throwable = resolve_class(vm, "java/lang/Throwable", 0);
+        Object *tmp = vm->exception;
+        vm->exception = NULL;
+        Object *trace_method = resolve_method(vm, "java/lang/Throwable", "printStackTrace", "()V", 0);
+        if(trace_method) {
+            VAR args[1] = { {.O = tmp} };
+            ((JVM_CALL)(MTH_FIELD(trace_method, entry)))(vm,trace_method, &args[0]);
+            return;
+        }
+        vm->exception = tmp;
+        ClassFields *cls = vm->exception->cls->instance;
+        printf("Unhandled exception: %s\n", string2c(cls->name));
+        for(int i=vm->exceptionFP; i>=0; i--) {
+            Frame *f = &vm->frames[i];
+            if(f->method) {
+                printf("at %s:", string2c(CLS_FIELD(MTH_FIELD(f->method,declaringClass),name)));
+                printf(":%s", string2c(MTH_FIELD(f->method,name)));
+                printf(":%s line=%d\n", string2c(MTH_FIELD(f->method,signature)), f->line);
+            }
         }
     }
 }
@@ -1098,7 +1112,7 @@ jint is_class_son_of(Object *json, Object *jof) {
 }
 
 jint check_cast(VM *vm, Object *object, Object *cls) {
-    if(!object) return 0;
+    if(!object) return 1;
     int r = is_class_son_of(object->cls, cls);
     //printf("check_cast: %s -> ",string2c(object->cls->name));
     //printf("%s = %d\n", string2c(cls->name), r);
@@ -1139,7 +1153,7 @@ void throw_exception(VM *vm, Object *exception) {
             se->file_name = CLS_FIELD(mth->declaringClass,source_file);
             se->method_name = mth->name;
             se->line_number = f->line; //get_line_number(f->method->instance, f->pc);
-            ((ObjectPtr*)arr->instance)[i-1] = (Object*)seo;
+            ((ObjectPtr*)arr->instance)[fp - i] = (Object*)seo;
         }
         ((ThrowableFields*)exception->instance)->stack_trace = arr;
     }
@@ -1179,7 +1193,7 @@ void throw_classnotfoundexception(VM *vm, Object *name) {
         CALL_JVM_V(vm, mth, &args[0]);
     }
     
-    printf("Class Not Found! : %s\n", string2c(name));
+    //printf("Class Not Found! : %s\n", string2c(name));
     throw_exception(vm, exp);
 }
 
@@ -1384,7 +1398,7 @@ void vm_test() {
     //vm->frames = &frame;
     */
     
-    for(int i=0; i<10; i++) {
+    for(int i=0; i<1; i++) {
         jlong t;
         
         t = mil();

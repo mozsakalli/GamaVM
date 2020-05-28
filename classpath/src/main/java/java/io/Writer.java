@@ -1,24 +1,17 @@
 /*
- * Copyright (c) 2012, Codename One and/or its affiliates. All rights reserved.
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * This code is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Codename One designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the LICENSE file that accompanied this code.
- *  
- * This code is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * version 2 for more details (a copy is included in the LICENSE file that
- * accompanied this code).
- * 
- * You should have received a copy of the GNU General Public License version
- * 2 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- * 
- * Please contact Codename One through http://www.codenameone.com/ if you 
- * need additional information or have any questions.
+ * Copyright (C) 2019 Digitoy Games.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package java.io;
@@ -26,7 +19,7 @@ package java.io;
  * Abstract class for writing to character streams. The only methods that a subclass must implement are write(char[], int, int), flush(), and close(). Most subclasses, however, will override some of the methods defined here in order to provide higher efficiency, additional functionality, or both.
  * Since: JDK1.1, CLDC 1.0 See Also:OutputStreamWriter, Reader
  */
-public abstract class Writer implements Appendable, AutoCloseable {
+public abstract class Writer implements Closeable {
     /**
      * The object used to synchronize operations on this stream. For efficiency, a character-stream object may use an object other than itself to protect critical sections. A subclass should therefore use the object in this field rather than this or a synchronized method.
      */
@@ -103,26 +96,4 @@ public abstract class Writer implements Appendable, AutoCloseable {
         }
     }
 
-    public Writer append(CharSequence csq) throws IOException {
-        write(csq.toString());
-        return this;
-    }
-
-    public Writer append(char c) throws IOException {
-        write(c);
-        return this;
-    }
-
-    public Writer append(CharSequence csq, int start, int end) throws IOException {
-        return append(csq.subSequence(start, end));
-        
-    }
-
-    
-    
-    
-    
-
-    
-    
 }

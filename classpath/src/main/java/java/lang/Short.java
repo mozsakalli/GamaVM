@@ -1,130 +1,83 @@
 /*
- * Copyright (c) 2012, Codename One and/or its affiliates. All rights reserved.
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * This code is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Codename One designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the LICENSE file that accompanied this code.
- *  
- * This code is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * version 2 for more details (a copy is included in the LICENSE file that
- * accompanied this code).
- * 
- * You should have received a copy of the GNU General Public License version
- * 2 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- * 
- * Please contact Codename One through http://www.codenameone.com/ if you 
- * need additional information or have any questions.
+ * Copyright (C) 2019 Digitoy Games.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package java.lang;
-/**
- * The Short class is the standard wrapper for short values.
- * Since: JDK1.1, CLDC 1.0
- */
+
 public final class Short extends Number implements Comparable<Short> {
-    /**
-     * The maximum value a Short can have.
-     * See Also:Constant Field Values
-     */
-    public static final short MAX_VALUE=32767;
 
-    /**
-     * The minimum value a Short can have.
-     * See Also:Constant Field Values
-     */
-    public static final short MIN_VALUE=-32768;
+    public static final Class TYPE = short[].class.getComponentType();
 
-    private short value;
-    
-    /**
-     * Constructs a Short object initialized to the specified short value.
-     * value - the initial value of the Short
-     */
-    public Short(short value){
-         this.value = value;
+    public static final short MIN_VALUE = -32768;
+    public static final short MAX_VALUE = 32767;
+
+    private final short value;
+
+    public Short(short value) {
+        this.value = value;
     }
 
-    /**
-     * Compares this object to the specified object.
-     */
-    public boolean equals(java.lang.Object obj){
-        return obj.getClass() == getClass() && ((Short)obj).value == value;
+    public static Short valueOf(short value) {
+        return new Short(value);
     }
 
-    /**
-     * Returns a hashcode for this Short.
-     */
-    public int hashCode(){
+    public int compareTo(Short o) {
+        return value - o.value;
+    }
+
+    public boolean equals(Object o) {
+        return o instanceof Short && ((Short) o).value == value;
+    }
+
+    public int hashCode() {
         return value;
     }
 
-    /**
-     * Assuming the specified String represents a short, returns that short's value. Throws an exception if the String cannot be parsed as a short. The radix is assumed to be 10.
-     */
-    public static short parseShort(java.lang.String s) throws java.lang.NumberFormatException{
-        return (short)Integer.parseInt(s);
+    public String toString() {
+        return toString(value);
     }
 
-    /**
-     * Assuming the specified String represents a short, returns that short's value in the radix specified by the second argument. Throws an exception if the String cannot be parsed as a short.
-     */
-    public static short parseShort(java.lang.String s, int radix) throws java.lang.NumberFormatException{
-        return (short)Integer.parseInt(s, radix);
+    public static String toString(short v, int radix) {
+        return Long.toString(v, radix);
     }
 
-    /**
-     * Returns the value of this Short as a short.
-     */
-    public short shortValue(){
-        return value; //TODO codavaj!!
+    public static String toString(short v) {
+        return toString(v, 10);
     }
 
-    /**
-     * Returns a String object representing this Short's value.
-     */
-    public java.lang.String toString(){
-        return Integer.toString(value);
+    public byte byteValue() {
+        return (byte) value;
     }
 
-    /**
-     * Returns the object instance of i
-     * @param i the primitive
-     * @return object instance
-     */
-    public static Short valueOf(short i) {
-        return new Short(i);
+    public short shortValue() {
+        return value;
     }
 
-    @Override
     public int intValue() {
         return value;
     }
 
-    @Override
     public long longValue() {
         return value;
     }
 
-    @Override
     public float floatValue() {
-        return value;
+        return (float) value;
     }
 
-    @Override
     public double doubleValue() {
-        return value;
-    }
-
-    public static int compare(short f1, short f2) {
-        return f1 - f2;
-    }
-
-    public int compareTo(Short another) {
-        return value < another.value ? -1 : value > another.value ? 1 : 0;
+        return (double) value;
     }
 }

@@ -1,135 +1,92 @@
 /*
- * Copyright (c) 2012, Codename One and/or its affiliates. All rights reserved.
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * This code is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Codename One designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the LICENSE file that accompanied this code.
- *  
- * This code is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * version 2 for more details (a copy is included in the LICENSE file that
- * accompanied this code).
- * 
- * You should have received a copy of the GNU General Public License version
- * 2 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- * 
- * Please contact Codename One through http://www.codenameone.com/ if you 
- * need additional information or have any questions.
+ * Copyright (C) 2019 Digitoy Games.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package java.lang;
-/**
- * The Byte class is the standard wrapper for byte values.
- * Since: JDK1.1, CLDC 1.0
- */
+
 public final class Byte extends Number implements Comparable<Byte> {
-    /**
-     * The maximum value a Byte can have.
-     * See Also:Constant Field Values
-     */
+
+    public static final Class TYPE = byte[].class.getComponentType();
+
+    public static final byte MIN_VALUE = -128;
     public static final byte MAX_VALUE = 127;
 
-    /**
-     * The minimum value a Byte can have.
-     * See Also:Constant Field Values
-     */
-    public static final byte MIN_VALUE = -128;
+    private final byte value;
 
-    private byte value;
-    
-    /**
-     * Constructs a Byte object initialized to the specified byte value.
-     * value - the initial value of the Byte
-     */
-    public Byte(byte value){
-         this.value = value;
+    public Byte(byte value) {
+        this.value = value;
     }
 
-    /**
-     * Returns the value of this Byte as a byte.
-     */
-    public byte byteValue(){
-        return value; 
+    public static Byte valueOf(byte value) {
+        return new Byte(value);
     }
 
-    /**
-     * Compares this object to the specified object.
-     */
-    public boolean equals(java.lang.Object obj){
-        return obj != null && obj.getClass() == getClass() && ((Byte)obj).value == value;
+    public boolean equals(Object o) {
+        return o instanceof Byte && ((Byte) o).value == value;
     }
 
-    /**
-     * Returns a hashcode for this Byte.
-     */
-    public int hashCode(){
-        return value & 0xff;
+    public int hashCode() {
+        return value;
     }
 
-    /**
-     * Assuming the specified String represents a byte, returns that byte's value. Throws an exception if the String cannot be parsed as a byte. The radix is assumed to be 10.
-     */
-    public static byte parseByte(java.lang.String s) throws java.lang.NumberFormatException{
-        return parseByte(s, 10);
+    public String toString() {
+        return toString(value);
     }
 
-    /**
-     * Assuming the specified String represents a byte, returns that byte's value. Throws an exception if the String cannot be parsed as a byte.
-     */
-    public static byte parseByte(java.lang.String s, int radix) throws java.lang.NumberFormatException{
-        int intValue = Integer.parseInt(s, radix);
-        byte result = (byte) intValue;
-        if (result == intValue) {
-            return result;
-        }
-        throw new NumberFormatException("Value out of range for byte: \"" + s + "\"");
+    public int compareTo(Byte o) {
+        return value - o.value;
     }
 
-    /**
-     * Returns a String object representing this Byte's value.
-     */
-    public java.lang.String toString(){
-        return Integer.toString(value);
+    public static String toString(byte v, int radix) {
+        return Long.toString(v, radix);
     }
 
-    /**
-     * Returns the object instance of i
-     * @param i the primitive
-     * @return object instance
-     */
-    public static Byte valueOf(byte i) {
-        return new Byte(i);
+    public static String toString(byte v) {
+        return toString(v, 10);
     }
 
-    @Override
+    public static byte parseByte(String s) {
+        return (byte) Integer.parseInt(s);
+    }
+
+    public byte byteValue() {
+        return value;
+    }
+
+    public short shortValue() {
+        return value;
+    }
+
     public int intValue() {
         return value;
     }
 
-    @Override
     public long longValue() {
         return value;
     }
 
-    @Override
     public float floatValue() {
-        return value;
+        return (float) value;
     }
 
-    @Override
     public double doubleValue() {
-        return value;
+        return (double) value;
     }
-
-    public static int compare(byte f1, byte f2) {
-        return f1 - f2;
+    
+    public static int toUnsignedInt(byte x) {
+        return ((int) x) & 0xff;
     }
-
-    public int compareTo(Byte another) {
-        return value < another.value ? -1 : value > another.value ? 1 : 0;
-    }
+    
 }

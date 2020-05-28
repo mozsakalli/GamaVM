@@ -1,23 +1,21 @@
 /*
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ * Copyright (C) 2019 Digitoy Games.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package java.util;
 
-import java.io.Serializable;
 import java.lang.reflect.Array;
 
 /**
@@ -3581,23 +3579,20 @@ public class Arrays {
                 Class<?> elemClass = elem.getClass();
                 if (elemClass.isArray()) {
                     // element is an array type
-                    if (isPrimitiveArray(elem)) {
-                        sb.append(toStringObj((Object)elem));
+
+                    // get the declared Class of the array (element)
+                    //Class<?> elemElemClass = elemClass.getComponentType();
+                    // element is an Object[], so we assert that
+                    if (deepToStringImplContains(origArrays, elem)) {
+                        sb.append("[...]"); //$NON-NLS-1$
                     } else {
-                        // get the declared Class of the array (element)
-                        //Class<?> elemElemClass = elemClass.getComponentType();
-                        // element is an Object[], so we assert that
-                        if (deepToStringImplContains(origArrays, elem)) {
-                            sb.append("[...]"); //$NON-NLS-1$
-                        } else {
-                            Object[] newArray = (Object[]) elem;
-                            Object[] newOrigArrays = new Object[origArrays.length + 1];
-                            System.arraycopy(origArrays, 0, newOrigArrays, 0,
-                                    origArrays.length);
-                            newOrigArrays[origArrays.length] = newArray;
-                            // make the recursive call to this method
-                            deepToStringImpl(newArray, newOrigArrays, sb);
-                        }
+                        Object[] newArray = (Object[]) elem;
+                        Object[] newOrigArrays = new Object[origArrays.length + 1];
+                        System.arraycopy(origArrays, 0, newOrigArrays, 0,
+                                origArrays.length);
+                        newOrigArrays[origArrays.length] = newArray;
+                        // make the recursive call to this method
+                        deepToStringImpl(newArray, newOrigArrays, sb);
                     }
                 } else { // element is NOT an array, just an Object
                     sb.append(array[i]);
@@ -3607,47 +3602,7 @@ public class Arrays {
         sb.append(']');
         return sb.toString();
     }
-    
-    private static boolean isPrimitiveArray(Object arr) {
-        return arr instanceof int[]
-                || arr instanceof byte[]
-                || arr instanceof char[]
-                || arr instanceof boolean[]
-                || arr instanceof long[]
-                || arr instanceof short[]
-                || arr instanceof double[]
-                || arr instanceof float[];
-    }
-    
 
-    private static String toStringObj(Object arr) {
-        if (arr instanceof Object[]) {
-            return toString((Object[])arr);
-        }
-        if (arr instanceof int[]) {
-            return toString((int[])arr);
-        }
-        if (arr instanceof byte[]) {
-            return toString((byte[])arr);
-        }
-        if (arr instanceof char[]) {
-            return toString((char[])arr);
-        }
-        if (arr instanceof short[]) {
-            return toString((short[])arr);
-        }
-        if (arr instanceof long[]) {
-            return toString((long[])arr);
-        }
-        if (arr instanceof double[]) {
-            return toString((double[])arr);
-        }
-        if (arr instanceof float[]) {
-            return toString((float[])arr);
-        }
-        return String.valueOf(arr);
-    }
-    
     /**
      * Utility method used to assist the implementation of
      * {@link #deepToString(Object[])}.
@@ -3707,17 +3662,6 @@ public class Arrays {
             throw new ArrayIndexOutOfBoundsException();
         }
         throw new IllegalArgumentException();
-    }
-    
-    public static <T> T[] copyOf(T[] original, int newLength,  Class<? extends T[]> newType) {
-        T[] arr = (T[])Array.newInstance(newType.getComponentType(), newLength);
-        int len = Math.min(original.length, newLength);
-        System.arraycopy(original, 0, arr, 0, len);
-        return arr;
-    }
-    
-    public static <T> T[] copyOf(T[] original, int newLength) {
-        return copyOf(original, newLength, (Class<T[]>)original.getClass());
     }
 
     /**
@@ -3863,83 +3807,6 @@ public class Arrays {
         }
         throw new IllegalArgumentException();
     }
-    
-    public static boolean[] copyOf(boolean[] original) {
-        return copyOfRange(original, 0, original.length);
-    }
-    
-    public static boolean[] copyOf(boolean[] original, int newlen) {
-        return copyOfRange(original, 0, newlen);
-    }
-    
-    public static char[] copyOf(char[] original) {
-        return copyOfRange(original, 0, original.length);
-    }
-    
-    public static char[] copyOf(char[] original, int newlen) {
-        return copyOfRange(original, 0, newlen);
-    }
-    
-    public static double[] copyOf(double[] original) {
-        return copyOfRange(original, 0, original.length);
-    }
-    public static double[] copyOf(double[] original, int newlen) {
-        return copyOfRange(original, 0, newlen);
-    }
-    
-    public static float[] copyOf(float[] original) {
-        return copyOfRange(original, 0, original.length);
-    }
-    public static float[] copyOf(float[] original, int newlen) {
-        return copyOfRange(original, 0, newlen);
-    }
-    
-    public static long[] copyOf(long[] original) {
-        return copyOfRange(original, 0, original.length);
-    }
-    
-    public static long[] copyOf(long[] original, int newlen) {
-        return copyOfRange(original, 0, newlen);
-    }
-    
-    public static int[] copyOf(int[] original) {
-        return copyOfRange(original, 0, original.length);
-    }
-    
-    public static int[] copyOf(int[] original, int newlen) {
-        return copyOfRange(original, 0, newlen);
-    }
-    
-    public static byte[] copyOf(byte[] original) {
-        return copyOfRange(original, 0, original.length);
-    }
-    
-    public static byte[] copyOf(byte[] original, int newlen) {
-        return copyOfRange(original, 0, newlen);
-    }
-    
-    public static short[] copyOf(short[] original) {
-        return copyOfRange(original, 0, original.length);
-    }
-    
-    public static <T,U> T[] copyOfRange(U[] original,
-                    int from,
-                    int to,
-                    Class<? extends T[]> newType) {
-        if (from < 0 || to > original.length) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-        T[] out = (T[])Array.newInstance(newType.getComponentType(), to-from);
-        System.arraycopy(original, from, out, 0, to-from);
-        
-        return out;
-    }
-    
-    public static <T> T[] copyOfRange(T[] original,
-                  int from,
-                  int to) {
-        return copyOfRange(original, from, to, (Class<T[]>)original.getClass());
-    }
 
     /**
      * Copies elements in original array to a new array, from index
@@ -4048,4 +3915,76 @@ public class Arrays {
         }
         throw new IllegalArgumentException();
     }
+    
+    public static <T> T[] copyOfRange(T[] original, int start, int end) {
+        int originalLength = original.length; // For exception priority compatibility.
+        if (start > end) {
+            throw new IllegalArgumentException();
+        }
+        if (start < 0 || start > originalLength) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        int resultLength = end - start;
+        int copyLength = Math.min(resultLength, originalLength - start);
+        T[] result = (T[]) Array.newInstance(original.getClass().getComponentType(), resultLength);
+        System.arraycopy(original, start, result, 0, copyLength);
+        return result;
+    }    
+    
+    public static boolean[] copyOf(boolean[] original, int newLength) {
+        if (newLength < 0) {
+            throw new NegativeArraySizeException("The array size is negative.");
+        }
+        return copyOfRange(original, 0, newLength);
+    }
+
+    public static byte[] copyOf(byte[] original, int newLength) {
+        if (newLength < 0) {
+            throw new NegativeArraySizeException("The array size is negative.");
+        }
+        return copyOfRange(original, 0, newLength);
+    }
+
+    public static char[] copyOf(char[] original, int newLength) {
+        if (newLength < 0) {
+            throw new NegativeArraySizeException("The array size is negative.");
+        }
+        return copyOfRange(original, 0, newLength);
+    }
+
+    public static double[] copyOf(double[] original, int newLength) {
+        if (newLength < 0) {
+            throw new NegativeArraySizeException("The array size is negative.");
+        }
+        return copyOfRange(original, 0, newLength);
+    }
+
+    public static float[] copyOf(float[] original, int newLength) {
+        if (newLength < 0) {
+            throw new NegativeArraySizeException("The array size is negative.");
+        }
+        return copyOfRange(original, 0, newLength);
+    }
+
+    public static int[] copyOf(int[] original, int newLength) {
+        if (newLength < 0) {
+            throw new NegativeArraySizeException("The array size is negative.");
+        }
+        return copyOfRange(original, 0, newLength);
+    }
+
+    public static long[] copyOf(long[] original, int newLength) {
+        if (newLength < 0) {
+            throw new NegativeArraySizeException("The array size is negative.");
+        }
+        return copyOfRange(original, 0, newLength);
+    }
+
+    public static short[] copyOf(short[] original, int newLength) {
+        if (newLength < 0) {
+            throw new NegativeArraySizeException("The array size is negative.");
+        }
+        return copyOfRange(original, 0, newLength);
+    }
+    
 }

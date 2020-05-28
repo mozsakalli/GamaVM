@@ -122,10 +122,10 @@ void java_lang_System_nanoTime(VM *vm, Object *method, VAR *args) {
     #endif
 }
 
-void java_lang_VM_getClass(VM *vm, Object *method, VAR *args) {
+void gamavm_VM_getClass(VM *vm, Object *method, VAR *args) {
     vm->frames[vm->FP].retVal.O = args[0].O ? (Object*)args[0].O->cls : NULL;
 }
-void java_lang_VM_getAddress(VM *vm, Object *method, VAR *args) {
+void gamavm_VM_getAddress(VM *vm, Object *method, VAR *args) {
     vm->frames[vm->FP].retVal.J = (jlong)args[0].O;
 }
 
@@ -258,6 +258,16 @@ jlong get_nsobject_handle(VM *vm, Object *o) {
     
     return *FIELD_PTR_J(o, handle_field_offset);
 }
+void set_nsobject_handle(VM *vm, Object *o, jlong value) {
+    static int handle_field_offset = -1;
+    if(handle_field_offset == -1) {
+        Object *field = resolve_field(vm, "gamavm/apple/NSObject", "handle", 0);
+        if(vm->exception || !field) return;
+        handle_field_offset = ((FieldFields*)field->instance)->offset;
+    }
+    
+    *FIELD_PTR_J(o, handle_field_offset) = value;
+}
 
 void gamavm_apple_ObjC_sel_registerName(VM *vm, Object *method, VAR *args) {
     jlong ret = 0;
@@ -292,8 +302,20 @@ F('f', float, numberWithFloat, floatValue, index); \
 F('d', double, numberWithDouble, doubleValue, index); \
 F('B', _Bool, numberWithBool, boolValue, index)
 
-void objc_to_java(VM *vm, const char *type, void *buffer, VAR *result) {
+void objc_to_java(VM *vm, const char *type, void *buffer, VAR *result, int is_long) {
     switch(type[0]) {
+        case '@': // An object (whether statically typed or typed id)
+        {
+            id x = (__bridge id)*((void **)buffer);
+            //            NSLog(@"stack %@", stack);
+            if (x) {
+                if(is_long) result->J = (jlong)x;
+            } else {
+                if(is_long) result->J = 0; else result->D = 0;
+            }
+        }
+        break;
+            
         default:
             printf("!!!!!!!! Unknown OBJC Type: %c !!!!!!!!!\n", type[0]);
             break;
@@ -309,8 +331,8 @@ case ch: \
 }
 
 //https://github.com/torus/Lua-Objective-C-Bridge/blob/master/LuaBridge.m
-void gamavm_apple_ObjC_call(VM *vm, Object *method, VAR *args) {
-    if(!args[0].O || !args[1].O) {
+void gamavm_apple_ObjC_callObject(VM *vm, Object *method, VAR *args) {
+    if(!args[0].O || !args[1].O || !args[2].O) {
         throw_nullpointerexception(vm);
         return;
     }
@@ -325,9 +347,11 @@ void gamavm_apple_ObjC_call(VM *vm, Object *method, VAR *args) {
     [inv retainArguments];
     NSUInteger numarg = [sig numberOfArguments] - 2;
     
-    Object *params = args[1].O;
+    Object *params = args[3].O;
     if(!params || params->length != numarg) {
         throw_nullpointerexception(vm);
+        [inv dealloc];
+        [sig dealloc];
         return;
     }
     
@@ -340,14 +364,27 @@ void gamavm_apple_ObjC_call(VM *vm, Object *method, VAR *args) {
     [inv invoke];
     
     const char *rettype = [sig methodReturnType];
-    void *buffer = NULL;
-    if (rettype[0] != 'v') { // don't get return value from void function
+    if(rettype[0] == '@') {
         NSUInteger len = [[inv methodSignature] methodReturnLength];
-        buffer = malloc(len);
+        void *buffer = malloc(len);
         [inv getReturnValue:buffer];
-        objc_to_java(vm, rettype, buffer, &vm->frames[vm->FP].retVal);
+        jlong handle = 0;
+        id x = (__bridge id)*((void **)buffer);
+        if (x) handle = (jlong)x;
         free(buffer);
+        
+        if(handle != 0) {
+            Object *ret = alloc_object(vm, args[2].O);
+            set_nsobject_handle(vm, ret, handle);
+            vm->frames[vm->FP].retVal.O = ret;
+        } else {
+            vm->frames[vm->FP].retVal.O = NULL;
+        }
+    } else {
+        throw_nullpointerexception(vm);
     }
+    [inv dealloc];
+    [sig dealloc];
 }
 
 NativeMethodInfo NATIVES[] = {
@@ -361,9 +398,9 @@ NativeMethodInfo NATIVES[] = {
     {.cls = "java/lang/System", .name = "gc", .sign = "()V", .handle = &java_lang_System_gc},
     {.cls = "java/lang/System$SystemOutStream", .name = "printImpl", .sign = "(Ljava/lang/String;)V", .handle = &java_lang_System_SystemOutStream_printImpl},
 
-    //java/lang/VM
-    {.cls = "java/lang/VM", .name = "getClass", .sign = "(Ljava/lang/Object;)Ljava/lang/Class;", .handle = &java_lang_VM_getClass},
-    {.cls = "java/lang/VM", .name = "getAddress", .sign = "(Ljava/lang/Object;)J", .handle = &java_lang_VM_getAddress},
+    //gamavm/VM
+    {.cls = "gamavm/VM", .name = "getClass", .sign = "(Ljava/lang/Object;)Ljava/lang/Class;", .handle = &gamavm_VM_getClass},
+    {.cls = "gamavm/VM", .name = "getAddress", .sign = "(Ljava/lang/Object;)J", .handle = &gamavm_VM_getAddress},
 
     //java/lang/Math
     {.cls = "java/lang/Math", .name = "abs", .sign = "(D)D", .handle = &java_lang_Math_abs_D},
@@ -374,6 +411,10 @@ NativeMethodInfo NATIVES[] = {
 
     //java/lang/Float
     {.cls = "java/lang/Float", .name = "toStringImpl", .sign = "(FZ)Ljava/lang/String;", .handle = &java_lang_Float_toStringImpl},
+
+    {.cls = "gamavm/apple/ObjC", .name = "objc_getClass", .sign = "(Ljava/lang/String;)J", .handle = &gamavm_apple_ObjC_objc_getClass},
+    {.cls = "gamavm/apple/ObjC", .name = "sel_registerName", .sign = "(Ljava/lang/String;)J", .handle = &gamavm_apple_ObjC_sel_registerName},
+    {.cls = "gamavm/apple/ObjC", .name = "callObject", .sign = "(Lgamavm/apple/NSObject;Lgamavm/apple/Selector;Ljava/lang/Class;[Ljava/lang/Object;)Lgamavm/apple/NSObject;", .handle = &gamavm_apple_ObjC_callObject},
 
     {.cls = NULL}
 };

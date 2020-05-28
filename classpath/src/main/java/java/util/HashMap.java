@@ -442,14 +442,14 @@ public class HashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
         return m;
     }
 
-    final native Entry<K,V> findNonNullKeyEntry(Object key, int index, int keyHash);/* {
+    final Entry<K,V> findNonNullKeyEntry(Object key, int index, int keyHash){
         Entry<K,V> m = elementData[index];
         while (m != null
                 && (m.origKeyHash != keyHash || !areEqualKeys(key, m.key))) {
             m = m.next;
         }
         return m;
-    }*/
+    }
 
     final Entry<K,V> findNullKeyEntry() {
         Entry<K,V> m = elementData[0];
@@ -754,7 +754,11 @@ public class HashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
         return key.hashCode();
 }
 
-    native static boolean areEqualKeys(Object key1, Object key2);
+    static boolean areEqualKeys(Object key1, Object key2) {
+        if(key1 == key2)
+            return true;
+        return key1.equals(key2);
+    }
         
     
 }

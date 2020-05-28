@@ -26,4 +26,6 @@ public class VM {
     public static native Class getClass(Object o);
     public static native Object allocObject(Class cls);
     public static native Object allocArray(Class cls, int length);
+    public static native int getArrayLength(Object array);
+    
 }

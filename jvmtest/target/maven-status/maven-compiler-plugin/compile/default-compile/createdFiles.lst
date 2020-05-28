@@ -1,5 +1,7 @@
-gamavm/apple/ObjC.class
 Main.class
 gamavm/apple/Selector.class
+gamavm/apple/ObjC.class
 gamavm/apple/NSObject.class
+gamavm/apple/NSMutableObject.class
 gamavm/apple/ObjCClass.class
+gamavm/apple/SKPaymentQueue.class

@@ -1,38 +1,25 @@
 /*
- * Copyright (c) 2012, Codename One and/or its affiliates. All rights reserved.
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * This code is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Codename One designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the LICENSE file that accompanied this code.
- *  
- * This code is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * version 2 for more details (a copy is included in the LICENSE file that
- * accompanied this code).
- * 
- * You should have received a copy of the GNU General Public License version
- * 2 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- * 
- * Please contact Codename One through http://www.codenameone.com/ if you 
- * need additional information or have any questions.
+ * Copyright (C) 2019 Digitoy Games.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package java.lang;
-/**
- * The Character class wraps a value of the primitive type char in an object. An object of type Character contains a single field whose type is char.
- * In addition, this class provides several methods for determining the type of a character and converting characters from uppercase to lowercase and vice versa.
- * Character information is based on the Unicode Standard, version 3.0. However, in order to reduce footprint, by default the character property and case conversion operations in CLDC are available only for the ISO Latin-1 range of characters. Other Unicode character blocks can be supported as necessary.
- * Since: JDK1.0, CLDC 1.0
- */
-public final class Character implements Comparable<Character>{
-    /**
-     * The maximum radix available for conversion to and from Strings.
-     * See Also:Integer.toString(int, int), Integer.valueOf(java.lang.String), Constant Field Values
-     */
+
+public final class Character{
+    
+    public final static Class TYPE = char[].class.getComponentType();
+    
     public static final int MAX_RADIX=36;
 
     /**
@@ -216,7 +203,9 @@ public final class Character implements Comparable<Character>{
      * The given character is mapped to its lowercase equivalent; if the character has no lowercase equivalent, the character itself is returned.
      * Note that by default CLDC only supports the ISO Latin-1 range of characters.
      */
-    public static native char toLowerCase(char ch);
+    public static char toLowerCase(char ch) {
+        return (char)toLowerCase((int)ch);
+    }
 
     /**
      * Returns the lower case equivalent for the specified code point if it is
@@ -228,7 +217,17 @@ public final class Character implements Comparable<Character>{
      * @return if {@code codePoint} is an upper case character then its lower
      *         case counterpart, otherwise just {@code codePoint}.
      */
-    public static native int toLowerCase(int codePoint);
+    public static int toLowerCase(int codePoint) {
+        if ('A' <= codePoint && codePoint <= 'Z') {
+            return (char) (codePoint - ('A' - 'a'));
+        }
+        /*if (codePoint < 181) {
+            return codePoint;
+        }
+        return toUpperCaseImpl(codePoint);*/
+        return codePoint;
+        
+    }
     
     /**
      * Returns a String object representing this character's value. Converts this Character object to a string. The result is a string whose length is 1. The string's sole component is the primitive char value represented by this object.
@@ -1074,18 +1073,6 @@ public final class Character implements Comparable<Character>{
         return isWhitespace((int) c);
     }
 
-    public static boolean isSpaceChar(char c) {
-        return c == ' ';
-    }
-
-    public static byte getDirectionality(char ch) {
-        throw new UnsupportedOperationException("Character.getDirectionality() not supported on this platform");
-    }
-    
-    public static int getType(char ch) {
-        throw new UnsupportedOperationException("Character.getType() not supported on this platform");
-    }
-    
     /**
      * Returns true if the given code point is a Unicode whitespace character.
      * The exact set of characters considered as whitespace varies with Unicode version.
@@ -1121,9 +1108,8 @@ public final class Character implements Comparable<Character>{
         // Let icu4c worry about non-BMP code points.
         return false;
     }
-
-    public int compareTo(Character another) {
-        return toString().compareTo(String.valueOf(another.value));
-    }
     
+    public static String toString(char value) {
+        return String.valueOf(value);
+    }    
 }

@@ -1,6 +1,8 @@
 
 import gamavm.apple.ObjC;
 import gamavm.apple.ObjCClass;
+import gamavm.apple.SKPaymentQueue;
+import gamavm.apple.Selector;
 
 
 
@@ -25,7 +27,11 @@ import gamavm.apple.ObjCClass;
  */
 public class Main {
     public static void main() {
-        ObjCClass cls = ObjCClass.get("SKPaymentQueue");
+        System.out.println(SKPaymentQueue.defaultQueue().getHandle());
+        System.out.println("float = "+(3.4567f));
+        System.out.println("double = "+(3.4567d));
+        System.out.println("long = "+(34567l));
+        System.out.println("int = "+(3));
     }
 
     public static void main(String...args) {

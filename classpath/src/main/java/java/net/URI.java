@@ -1,25 +1,19 @@
 /*
- * Copyright (c) 2012, Eric Coolman, Codename One and/or its affiliates. All rights reserved.
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * This code is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Codename One designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the LICENSE file that accompanied this code.
- *  
- * This code is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * version 2 for more details (a copy is included in the LICENSE file that
- * accompanied this code).
- * 
- * You should have received a copy of the GNU General Public License version
- * 2 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- * 
- * Please contact Codename One through http://www.codenameone.com/ if you 
- * need additional information or have any questions.
+ * Copyright (C) 2019 Digitoy Games.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package java.net;
 
 import java.util.ArrayList;
@@ -217,8 +211,6 @@ public class URI {
      * Constructor for building URNs. The ssp and fragment should be unencoded
      * values - they will be encoded as required.
      *
-     * Examples: mailto:user@codenameone.com sms:+5555551212 tel:+5555551212
-     * isbn:9781935182962
      *
      * @param scheme
      * @param ssp the unencoded scheme specific part (everything except the
@@ -889,9 +881,9 @@ public class URI {
         }
         Iterator<Integer> iter = removals.iterator();
         while (iter.hasNext()) {
-            segments.remove(iter.next().intValue());
+            segments.remove(iter.next());
         }
-        StringBuilder buffer = new StringBuilder();
+        StringBuffer buffer = new StringBuffer();
         for (int i = 0; i < segments.size(); i++) {
             String segment = segments.get(i);
             if (i == 0) {

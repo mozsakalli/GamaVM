@@ -11,10 +11,14 @@ package gamavm.apple;
  */
 public class NSObject {
     
-    long handle;
+    protected long handle;
+    
+    public long getHandle() {
+        return handle;
+    }
     
     @Override
     protected void finalize() throws Exception {
-        
+        //todo: dealloc
     }
 }
