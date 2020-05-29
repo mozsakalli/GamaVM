@@ -17,11 +17,11 @@
 #include "opcodes.h"
 
 
-typedef char jbyte;
-typedef char jbool;
+typedef signed char jbyte;
+typedef unsigned char jbool;
 typedef unsigned short jchar;
 typedef short jshort;
-typedef short jushort;
+typedef unsigned short jushort;
 typedef int jint;
 typedef float jfloat;
 typedef long long jlong;

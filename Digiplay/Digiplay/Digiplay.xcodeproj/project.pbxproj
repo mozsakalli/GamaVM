@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		450176A4246819E600589EDC /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = 450176A3246819E600589EDC /* miniz.c */; };
-		451DDF63244D5CBB0064EE50 /* digiplay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 451DDF62244D5CBB0064EE50 /* digiplay.cpp */; };
+		451DDF63244D5CBB0064EE50 /* digiplay.c in Sources */ = {isa = PBXBuildFile; fileRef = 451DDF62244D5CBB0064EE50 /* digiplay.c */; };
 		451DDF66244D5E2A0064EE50 /* geom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 451DDF65244D5E2A0064EE50 /* geom.cpp */; };
 		452A59302468F6BA00ACF01E /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 452A592F2468F6BA00ACF01E /* assets */; };
 		453391BC247A439B00564DB1 /* gc.c in Sources */ = {isa = PBXBuildFile; fileRef = 453391BB247A439B00564DB1 /* gc.c */; };
@@ -24,7 +24,7 @@
 		450176A2246819E500589EDC /* miniz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
 		450176A3246819E600589EDC /* miniz.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
 		451DDF61244D5CBB0064EE50 /* digiplay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = digiplay.h; sourceTree = "<group>"; };
-		451DDF62244D5CBB0064EE50 /* digiplay.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = digiplay.cpp; sourceTree = "<group>"; };
+		451DDF62244D5CBB0064EE50 /* digiplay.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = digiplay.c; sourceTree = "<group>"; };
 		451DDF64244D5E2A0064EE50 /* geom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = geom.h; sourceTree = "<group>"; };
 		451DDF65244D5E2A0064EE50 /* geom.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = geom.cpp; sourceTree = "<group>"; };
 		452A592F2468F6BA00ACF01E /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = Digiplay/assets; sourceTree = "<group>"; };
@@ -87,7 +87,7 @@
 				45D416CA2445E159006F4EF6 /* Info.plist */,
 				45D416CB2445E159006F4EF6 /* main.mm */,
 				451DDF61244D5CBB0064EE50 /* digiplay.h */,
-				451DDF62244D5CBB0064EE50 /* digiplay.cpp */,
+				451DDF62244D5CBB0064EE50 /* digiplay.c */,
 				451DDF64244D5E2A0064EE50 /* geom.h */,
 				451DDF65244D5E2A0064EE50 /* geom.cpp */,
 				45FDAC5124673F2A00611F96 /* jvm.h */,
@@ -179,7 +179,7 @@
 				45D416CC2445E159006F4EF6 /* main.mm in Sources */,
 				450176A4246819E600589EDC /* miniz.c in Sources */,
 				45ACD593247462D6008DD07B /* compiler.c in Sources */,
-				451DDF63244D5CBB0064EE50 /* digiplay.cpp in Sources */,
+				451DDF63244D5CBB0064EE50 /* digiplay.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

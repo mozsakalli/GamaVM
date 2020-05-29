@@ -10,7 +10,10 @@
 #define digiplay_h
 
 #include <stdio.h>
+/*
 #include "geom.h"
+
+
 
 namespace digiplay {
 
@@ -388,7 +391,7 @@ public:
                 Sprite2D::IterateChildren(this, [](void* p) { ((Sprite2D*)p)->InvalidateContentIfRequired(); });
             invalidated = true;
         }
-        /* todo
+         todo
         if (_invokeLaterCount > 0)
         {
             for (int i = 0; i < _invokeLaterCount; i++)
@@ -401,7 +404,7 @@ public:
         
         var currentTime = Platform.GetTimer();
         UpdateBehaviours(currentTime, true);
-        */
+        
         
         if (InvalidationCounter != 0)
         {
@@ -411,13 +414,13 @@ public:
                 Sprite2D::IterateChildren(this, [](void* p) { ((Sprite2D*)p)->InvalidateContentIfRequired(); });
             invalidated = true;
         }
-        /* todo
+         todo
         if(invalidated && Scene2D.currentScene != null && !Scene2D.currentScene._invalidationCalled)
         {
             Scene2D.currentScene._invalidationCalled = true;
             Scene2D.currentScene.InitCompleted();
         }
-         */
+         
     }
     
     void Render() {
@@ -428,4 +431,5 @@ public:
 
 
 }
+*/
 #endif /* digiplay_h */
