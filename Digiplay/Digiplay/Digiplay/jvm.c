@@ -521,7 +521,7 @@ Object *parse_class(VM *vm,char *data, void **entries) {
                         Object *attrName = cls->cp[tmp].value.O;
                         int len = READ_U4(data); data += 4;
                         if(compare_string_cstring(attrName, "LocalVariableTable")) {
-                            int lvCount = READ_U2(data); data += 2;
+                            int lvCount = m->localVarTableSize = READ_U2(data); data += 2;
                             //LocalVarInfo tmpLocals[m->maxLocals];
                             m->localVarTable = (LocalVarInfo*)malloc(lvCount * sizeof(LocalVarInfo));
                             for(int z=0; z<lvCount; z++) {

@@ -562,7 +562,31 @@ public:
     JdwpEventSet *next;
     
     static JdwpEventSet *head, *tail;
-    
+    static JdwpEventSet *getByRequestId(int requestId) {
+        JdwpEventSet *ptr = head;
+        while(ptr) {
+            if(ptr->requestId == requestId) return ptr;
+            ptr = ptr->next;
+        }
+        return nullptr;
+    }
+
+    static JdwpEventSet *removeByRequestId(int requestId) {
+        JdwpEventSet *pre = nullptr;
+        JdwpEventSet *ptr = head;
+        while(ptr) {
+            if(ptr->requestId == requestId) {
+                if(!pre) head = head->next;
+                else pre->next = ptr->next;
+                if(head == nullptr) tail = nullptr;
+                return ptr;
+            }
+            pre = ptr;
+            ptr = ptr->next;
+        }
+        return nullptr;
+    }
+
     JdwpEventSet(JdwpPacket *req) {
         requestId = jdwpEventRequestSerial++;
         eventKind = req->readByte();

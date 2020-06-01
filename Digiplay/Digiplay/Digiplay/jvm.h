@@ -157,6 +157,7 @@ typedef struct __attribute__ ((packed)) MethodFields {
     struct Object *declaringClass;
     Object *name;
     Object *signature;
+    jint localVarTableSize;
     LocalVarInfo *localVarTable;
     jint argCount;
     jint *argMap;

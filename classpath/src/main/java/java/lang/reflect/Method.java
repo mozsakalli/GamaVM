@@ -9,6 +9,7 @@ public class Method {
     Class declaringClass;
     String name;
     String signature;
+    int localVarTableSize;
     Object localVarTable;
     int argCount;
     Object argMap;

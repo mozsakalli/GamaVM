@@ -89,15 +89,40 @@ int jdwp_get_class_type(Object *clazz) {
     }
 }
 
+int jdwp_method_count_args(Object *method) {
+    Object *signature = ((MethodFields*)method->instance)->signature;
+    Object *chars = ((StringFields*)signature->instance)->chars;
+    jchar *ch = (jchar*)chars->instance;
+    ch++; //(
+    int count = 0;
+    int jcount = 0;
+    
+    if((MTH_FIELD(method, accessFlags) & ACC_STATIC) == 0) {
+        count++;
+    }
+    while(1) {
+        if(*ch == ')') break;
+        count++;
+        while(*ch == '[') ch++;
+        if(*ch == 'L') {
+            while(*ch != ';') ch++;
+        }
+        if(*ch == 'D' || *ch == 'J') count++;
+        ch++;
+    }
+    return count;
+}
+
+
 void jdwp_eventset_set(JdwpEventSet *set) {
     if(set) {
         switch(set->eventKind) {
             case JDWP_EVENTKIND_SINGLE_STEP: {
-                printf("!!!!!!!!! JDWP_EVENTKIND_SINGLE_STEP\n");
+                printf("!!!!!!!!! SET JDWP_EVENTKIND_SINGLE_STEP\n");
             } break;
                 
             case JDWP_EVENTKIND_BREAKPOINT: {
-                printf("!!!!!!!!! JDWP_EVENTKIND_BREAKPOINT\n");
+                printf("!!!!!!!!! SET JDWP_EVENTKIND_BREAKPOINT\n");
                 for (int i = 0; i < set->modifiers; i++) {
                     JdwpEventSetMod *mod = set->mods[i];
                     if (mod->type == 7) {
@@ -120,6 +145,37 @@ void jdwp_eventset_set(JdwpEventSet *set) {
     }
 }
 
+void jdwp_eventset_clear(JdwpEventSet *set) {
+    if(set) {
+        switch(set->eventKind) {
+            case JDWP_EVENTKIND_SINGLE_STEP: {
+                printf("!!!!!!!!! CLEAR JDWP_EVENTKIND_SINGLE_STEP\n");
+            } break;
+                
+            case JDWP_EVENTKIND_BREAKPOINT: {
+                printf("!!!!!!!!! CLEAR JDWP_EVENTKIND_BREAKPOINT\n");
+                for (int i = 0; i < set->modifiers; i++) {
+                    JdwpEventSetMod *mod = set->mods[i];
+                    if (mod->type == 7) {
+                        int index = (int)mod->location.index;
+                        MethodFields *mf = (MethodFields*)mod->location.method->instance;
+                        mf->breakpoint--;
+                        if(mf->breakpoint < 0) mf->breakpoint = 0;
+                        mf->lineNumberTable[index].breakpoint = 0;
+                        printf("!!!!!!!! clear breakpoint at %s:%d type:%d\n", string2c(mf->name), mf->lineNumberTable[index].line, mod->location.type);
+                        //jdwp_set_breakpoint(JDWP_EVENTSET_SET, mod->loc.classID, mod->loc.methodID,
+                        //                    mod->loc.execIndex);
+                    }
+                }
+
+            } break;
+                
+            case JDWP_EVENTKIND_CLASS_PREPARE: {
+                printf("!!!!!!!!! CLEAR JDWP_EVENTKIND_CLASS_PREPARE\n");
+            } break;
+        }
+    }
+}
 int jdwp_send_breakpoint_event(Object *method, int index) {
     JdwpEventSet *set = JdwpEventSet::head;
     while(set) {
@@ -224,10 +280,37 @@ void jdwp_process_packet(JdwpPacket *req,VM* vm, Object *method, int line) {
             resp->complete(req->id, JDWP_ERROR_NONE);
         } break;
             
+        case JDWP_CMD_ReferenceType_Signature: { //0x0201
+            Object *cls = req->readObject();
+            ClassFields *cf = (ClassFields*)cls->instance;
+            if(!cf->elementClass) {
+                resp->writeCString((char*)"L");
+                resp->writeCString(string2c(cf->name));
+                resp->writeCString((char*)";");
+            } else resp->writeCString(string2c(cf->name));
+            resp->complete(req->id, JDWP_ERROR_NONE);
+        } break;
+            
         case JDWP_CMD_ReferenceType_ClassLoader: //0x0202
             resp->writeLong(0);
             resp->complete(req->id, JDWP_ERROR_NONE);
             break;
+            
+        case JDWP_CMD_ReferenceType_Fields: {//0x0204
+            Object *cls = req->readObject();
+            Object *fields = CLS_FIELD(cls, fields);
+            if(fields) {
+                resp->writeInt(fields->length);
+                for(int i=0; i<fields->length; i++) {
+                    Object *field = ((Object**)fields->instance)[i];
+                    resp->writeObject(field);
+                    resp->writeCString(string2c(FLD_FIELD(field,name)));
+                    resp->writeCString(string2c(FLD_FIELD(field,signature)));
+                    resp->writeInt(FLD_FIELD(field, accessFlags));
+                }
+            } else resp->writeInt(0);
+            resp->complete(req->id, JDWP_ERROR_NONE);
+        } break;
             
         case JDWP_CMD_ReferenceType_Methods: {//0x0205
             Object *cls = req->readObject();
@@ -258,7 +341,30 @@ void jdwp_process_packet(JdwpPacket *req,VM* vm, Object *method, int line) {
             if(name) resp->writeCString(string2c(name)); else resp->writeCString((char*)"");
             resp->complete(req->id, JDWP_ERROR_NONE);
         } break;
+            
+        case JDWP_CMD_ReferenceType_Interfaces: { //0x020a
+            Object *cls = req->readObject();
+            Object *interfaces = CLS_FIELD(cls, interfaces);
+            if(interfaces) {
+                resp->writeInt(interfaces->length);
+                for(int i=0; i<interfaces->length; i++)
+                    resp->writeObject(((Object**)interfaces->instance)[i]);
+            } else resp->writeInt(0);
+            resp->complete(req->id, JDWP_ERROR_NONE);
+        } break;
+            
+        case JDWP_CMD_ReferenceType_ClassObject: { //0x020b
+            Object *ref = req->readObject();
+            resp->writeObject(ref);
+            resp->complete(req->id, JDWP_ERROR_NONE);
+        } break;
 
+        case JDWP_CMD_ClassType_Superclass: { //0x0301
+            Object *cls = req->readObject();
+            resp->writeObject(CLS_FIELD(cls, superClass));
+            resp->complete(req->id, JDWP_ERROR_NONE);
+        } break;
+            
         case JDWP_CMD_Method_LineTable: { //0x0601
             Object *cls = req->readObject();
             Object *method = req->readObject();
@@ -282,6 +388,36 @@ void jdwp_process_packet(JdwpPacket *req,VM* vm, Object *method, int line) {
                 }
                 resp->complete(req->id, JDWP_ERROR_NONE);
             } else resp->complete(req->id, JDWP_ERROR_INVALID_METHODID);
+        } break;
+            
+        case JDWP_CMD_Method_VariableTable: { // 0x602
+            Object *cls = req->readObject();
+            Object *mth = req->readObject();
+            MethodFields *m = (MethodFields*)mth->instance;
+            resp->writeInt(m->argCount);
+            resp->writeInt(m->localVarTableSize);
+            for(int i=0; i<m->localVarTableSize; i++) {
+                LocalVarInfo *v = &m->localVarTable[i];
+                int startline = get_line_number(m, v->start);
+                int endline = get_line_number(m, v->start + v->length);
+                resp->writeLong(startline);
+                resp->writeCString(string2c(v->name));
+                resp->writeCString(string2c(v->signature));
+                resp->writeInt(endline - startline + 1);
+                resp->writeInt(v->index); //local var index
+            }
+            resp->complete(req->id, JDWP_ERROR_NONE);
+        } break;
+            
+        case JDWP_CMD_ObjectReference_ReferenceType: { //0x0901
+            Object *o = req->readObject();
+            resp->writeByte(jdwp_get_class_type(o->cls));
+            resp->writeObject(o->cls);
+            resp->complete(req->id, JDWP_ERROR_NONE);
+        } break;
+            
+        case JDWP_CMD_ObjectReference_GetValues: { //0x0902
+            
         } break;
             
         case JDWP_CMD_ThreadReference_Name: { //0x0b01
@@ -350,6 +486,23 @@ void jdwp_process_packet(JdwpPacket *req,VM* vm, Object *method, int line) {
             JdwpEventSet *set = new JdwpEventSet(req);
             jdwp_eventset_set(set);
             resp->writeInt(set->requestId);
+            resp->complete(req->id, JDWP_ERROR_NONE);
+        } break;
+            
+        case JDWP_CMD_EventRequest_Clear: { //0x0f02
+            int eventKind = req->readByte();
+            int requestId = req->readInt();
+            JdwpEventSet *set = JdwpEventSet::removeByRequestId(requestId);
+            if(set) {
+                jdwp_eventset_clear(set);
+                delete set;
+            }
+        } break;
+            
+        case JDWP_CMD_ClassObjectReference_ReflectedType: { //0x1101
+            Object *cls = req->readObject();
+            resp->writeByte(jdwp_get_class_type(cls));
+            resp->writeObject(cls);
             resp->complete(req->id, JDWP_ERROR_NONE);
         } break;
             
