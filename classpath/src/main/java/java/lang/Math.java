@@ -55,7 +55,7 @@ public final class Math {
      * </ul>
      */
     public static double abs(double d) {
-        return Double.longBitsToDouble(Double.doubleToRawLongBits(d) & 0x7fffffffffffffffL);
+        return d < 0 ? -d : d;
     }
 
     /**
@@ -70,7 +70,7 @@ public final class Math {
      * </ul>
      */
     public static float abs(float f) {
-        return Float.intBitsToFloat(Float.floatToRawIntBits(f) & 0x7fffffff);
+        return f < 0 ? -f : f;
     }
 
     /**

@@ -139,6 +139,7 @@ typedef struct LocalVarInfo {
 typedef struct LineNumberInfo {
     unsigned short pc;
     unsigned short line;
+    unsigned short breakpoint;
 } LineNumberInfo;
 
 typedef struct CatchInfo {
@@ -173,6 +174,8 @@ typedef struct __attribute__ ((packed)) MethodFields {
     void *code;
     jint codeSize;
     void *compiled;
+    
+    jint breakpoint;
 } MethodFields;
 
 typedef struct CPItem {
@@ -185,6 +188,9 @@ typedef struct CPItem {
 #define CLS_FIELD(o,name) (((ClassFields*)((Object*)o)->instance)->name)
 #define MTH_FIELD(o,name) (((MethodFields*)((Object*)o)->instance)->name)
 #define FLD_FIELD(o,name) (((FieldFields*)((Object*)o)->instance)->name)
+
+#define CLASS_HAS_REF           (1 << 30)
+#define CLASS_HAS_GLOBAL_REF    (1 << 29)
 
 typedef struct __attribute__ ((packed)) ClassFields {
     jint accessFlags;
@@ -276,6 +282,7 @@ typedef struct VM {
     jint itable_counter;
     
     StringPool *strings;
+    Object *jdwpTick;
     
     struct {
         int R;
@@ -327,7 +334,10 @@ typedef struct NativeMethodInfo {
 #define GLOBAL_PTR(f,t) *((t*)(f->declaringClass->globals+f->offset))
 
 typedef void (*JVM_CALL)(VM*,Object*,VAR*);
-
+#ifdef __cplusplus
+extern "C" {
+#endif
+    
 //extern void interpreter_compile(VM *vm, Method *method, char *buf, int size);
 //extern void interpreter_execute_direct(VM *vm, Method *method, VAR *args);
 extern Object *resolve_class(VM *vm, void *name, int isString);
@@ -335,6 +345,7 @@ extern Object *resolve_class_by_index(VM *vm, Object *cls, int index);
 extern Object *resolve_array_class_by_index(VM *vm, Object *cls, int index);
 extern Object *resolve_method(VM *vm, void *clsName, void *name, void *signature, int isString);
 extern Object *resolve_method_by_index(VM *vm, Object *cls, int index);
+extern Object *find_method_recursive(Object *clso, void *name, void *signature, int isString);
 extern Object *resolve_field(VM *vm, void *clsName, void *name, int isString);
 extern Object *resolve_field_by_index(VM *vm,Object *cls, int index);
 
@@ -343,6 +354,7 @@ extern ObjectPtr alloc_object(VM *vm,Object *cls);
 extern ObjectPtr alloc_object_array(VM *vm, Object *cls, int length);
 extern ObjectPtr alloc_prim_array(VM *vm, Object *cls, int length);
 extern Object* alloc_string(VM *vm, char *chars);
+extern Object* alloc_string_utf(VM *vm, jchar *chars, jint len);
 
 extern Object* alloc_string_utf_nogc(VM *vm, jchar *chars, jint len);
 extern Object* alloc_string_nogc(VM *vm, char *chars);
@@ -370,6 +382,9 @@ void throw_castexception(VM *vm, Object *son, Object *of);
 
 CatchInfo *find_catch_block(VM *vm, Object *method, Object *exception, int pc);
 
+extern inline void call_void_method(VM *vm, Object *method, VAR *args);
+extern inline jbool call_boolean_method(VM *vm, Object *method, VAR *args);
+
 extern Object java_lang_String;
 extern Object java_lang_C1D;
 extern Object java_lang_Class;
@@ -377,5 +392,11 @@ extern Object java_lang_Class;
 //void print_stack_trace(VM *vm);
 
 extern char *string2c(Object *jstr);
+extern Object* parse_utf8(VM *vm, char *data, int length, int intern);
+extern jint compare_string(void *str1, void *str2, int isString);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* jvm_h */

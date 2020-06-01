@@ -10,15 +10,9 @@
 #include <sys/time.h>
 #include <time.h>
 #include <stddef.h>
+#import <objc/runtime.h>
+#include "jvm.h"
 
-@interface AppDelegate : NSObject<UIApplicationDelegate>
-@end
-@implementation AppDelegate
--(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions{
-    
-    return YES;
-}
-@end
 
 long long millis() {
     struct timeval now;
@@ -38,29 +32,41 @@ extern "C" {
     }
 }
 
-typedef struct TT {
-    int length;
-    char C[0];
-} TT;
-int main(int argc, char * argv[]) {
+static BOOL didfin(id self, SEL _cmd,.../*, UIApplication *app, NSDictionary *opt*/) {
+    va_list args;
+    va_start(args, _cmd);
+    void *vapp = va_arg(args, void*);
+    void *vopt = va_arg(args, void*);
+    va_end(args);
+    UIApplication *app = (UIApplication*)vapp;
+    Class cls = [[app delegate] class];
+    
+    printf("Worked!!! %p %p %s\n",vapp, vopt,class_getName(cls));
+    return YES;
+}
+
+int mainx(int argc, char * argv[]) {
     /*
-    printf("%d\n", sizeof(TT));
+    id nsobject = objc_getClass("NSObject");
+    id uiappdelegate = objc_getProtocol("UIApplicationDelegate");
+    Class mydel = objc_allocateClassPair(nsobject, "MyDelegate", 0);
+    SEL sel = sel_registerName("application:didFinishLaunchingWithOptions:");
+    printf("add-proto: %d\n",class_addProtocol(mydel, uiappdelegate));
+    objc_method_description mth = protocol_getMethodDescription(uiappdelegate, sel, false, true);
+    printf("add-method: %d\n",class_addMethod(mydel, sel, (IMP)didfin, mth.types));
+    objc_registerClassPair(mydel);
+    //Method mth = class_getInstanceMethod(uiappdelegate, sel);
     
-    TT *t = (TT*)malloc(sizeof(TT) + 10 * sizeof(int));
-    t->length = 10;
-    for(int i=0; i<t->length; i++)
-        *((int*)t->C + i) = i;
+    printf("proto: %s\n", mth.types);
+    UIApplicationMain(argc, argv, nil, @"MyDelegate");
+    return 0;
     
-    for(int i=0; i<t->length; i++)
-        printf("%d\n", *((int*)t->C + i));
-    */
-    vm_test();
-     
+    //vm_test();
+     */
     //NSString * appDelegateClassName;
-    @autoreleasepool {
+    vm_test();
         // Setup code that might create autoreleased objects goes here.
         //appDelegateClassName = NSStringFromClass([AppDelegate class]);
-    }
     //return UIApplicationMain(argc, argv, nil, appDelegateClassName);
     return 0;
 }

@@ -26,7 +26,7 @@ public class Method {
     Object code;
     int codeSize;
     Object compiled;
-    
+    int breakpoint;
     
     public Class getDeclaringClass() {
         return declaringClass;

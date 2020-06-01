@@ -109,8 +109,19 @@ void digiplay_Digiplay_quad_new(VM *vm, Object *method, VAR *args) {
         ret->quads = (Quad*)malloc(sizeof(Quad) * capacity);
         ret->capacity = capacity;
     }
-    ret->size = 0;
+    ret->size = capacity;
     RETURN_LONG(ret);
+}
+void digiplay_Digiplay_quad_resize(VM *vm, Object *method, VAR *args) {
+    QuadList *ql = (QuadList*)args[0].J;
+    jint capacity = args[1].I;
+    if(ql) {
+        if(capacity > 0 && capacity < ql->capacity) {
+            ql->quads = realloc(ql->quads, sizeof(Quad) * capacity);
+            ql->capacity = capacity;
+        }
+        ql->size = capacity;
+    }
 }
 void digiplay_Digiplay_quad_delete(VM *vm, Object *method, VAR *args) {
     if(args[0].J) {
@@ -156,10 +167,28 @@ void digiplay_Digiplay_quad_update(VM *vm, Object *method, VAR *args) {
         }
     }
 }
-
+void digiplay_Digiplay_quad_set(VM *vm, Object *method, VAR *args) {
+    QuadList *ql = (QuadList*)args[0].J;
+    int index = args[1].I;
+    if(ql && index >= 0 && index < ql->capacity) {
+        Quad *q = &ql->quads[index];
+        q->tl.x = args[2].F;
+        q->tl.y = args[3].F;
+        q->br.x = args[4].F;
+        q->br.y = args[5].F;
+        q->uv1.x = args[6].F;
+        q->uv1.y = args[7].F;
+        q->uv2.x = args[8].F;
+        q->uv2.y = args[9].F;
+        q->uv3.x = args[10].F;
+        q->uv3.y = args[11].F;
+        q->uv4.x = args[12].F;
+        q->uv4.y = args[13].F;
+    }
+}
 
 static Matrix2D *Matrix2DCache = NULL;
-void digiplay_Digiplay_matrix2d_new(VM *vm, Object *method, VAR *args) {
+void digiplay_Digiplay_Matrix2d_alloc(VM *vm, Object *method, VAR *args) {
     Matrix2D *ret = Matrix2DCache;
     if(ret) {
         Matrix2DCache = Matrix2DCache->next;
@@ -168,7 +197,7 @@ void digiplay_Digiplay_matrix2d_new(VM *vm, Object *method, VAR *args) {
     }
     RETURN_LONG(ret);
 }
-void digiplay_Disiplay_matrix2d_delete(VM *vm, Object *method, VAR *args) {
+void digiplay_Disiplay_Matrix2d_delete(VM *vm, Object *method, VAR *args) {
     if(args[0].J) {
         Matrix2D *mat = (Matrix2D*)args[0].J;
         mat->next = Matrix2DCache;

@@ -1,8 +1,7 @@
 
-import gamavm.apple.ObjC;
-import gamavm.apple.ObjCClass;
-import gamavm.apple.SKPaymentQueue;
-import gamavm.apple.Selector;
+import gamavm.jdwp.Jdwp;
+
+
 
 
 
@@ -26,16 +25,20 @@ import gamavm.apple.Selector;
  * @author mustafa
  */
 public class Main {
+    
     public static void main() {
-        System.out.println(SKPaymentQueue.defaultQueue().getHandle());
-        System.out.println("float = "+(3.4567f));
-        System.out.println("double = "+(3.4567d));
-        System.out.println("long = "+(34567l));
-        System.out.println("int = "+(3));
+        System.out.println("-- main --");
+        while(true) {
+            byte[] b = new byte[120];
+            b[10] = (byte)1;
+            System.gc();
+        }
+        //IosPlatform.run(new MyGame());
+    }
+    
+    public static void main(String...args) {
     }
 
-    public static void main(String...args) {
-        main();
-    }
+
 
 }

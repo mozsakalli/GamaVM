@@ -8,10 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		450176A4246819E600589EDC /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = 450176A3246819E600589EDC /* miniz.c */; };
+		45115C8F2481A71D006BD699 /* digiplay_native.m in Sources */ = {isa = PBXBuildFile; fileRef = 45115C8E2481A71D006BD699 /* digiplay_native.m */; };
+		451CAC702483C70000518755 /* jdwp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 451CAC6E2483C70000518755 /* jdwp.cpp */; };
 		451DDF63244D5CBB0064EE50 /* digiplay.c in Sources */ = {isa = PBXBuildFile; fileRef = 451DDF62244D5CBB0064EE50 /* digiplay.c */; };
 		451DDF66244D5E2A0064EE50 /* geom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 451DDF65244D5E2A0064EE50 /* geom.cpp */; };
 		452A59302468F6BA00ACF01E /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 452A592F2468F6BA00ACF01E /* assets */; };
+		4531EA912481EABF0071A7BF /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4531EA902481EABF0071A7BF /* Metal.framework */; };
 		453391BC247A439B00564DB1 /* gc.c in Sources */ = {isa = PBXBuildFile; fileRef = 453391BB247A439B00564DB1 /* gc.c */; };
+		4538510B2481F61D00ADD963 /* digiplay_metal.m in Sources */ = {isa = PBXBuildFile; fileRef = 4538510A2481F61D00ADD963 /* digiplay_metal.m */; };
 		4574CD43248038E6005B582F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4574CD4124803811005B582F /* StoreKit.framework */; };
 		45ACD593247462D6008DD07B /* compiler.c in Sources */ = {isa = PBXBuildFile; fileRef = 45ACD592247462D6008DD07B /* compiler.c */; };
 		45CF602B24792E68000FDA18 /* natives.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CF602A24792E68000FDA18 /* natives.m */; };
@@ -23,12 +27,17 @@
 /* Begin PBXFileReference section */
 		450176A2246819E500589EDC /* miniz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
 		450176A3246819E600589EDC /* miniz.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
+		45115C8E2481A71D006BD699 /* digiplay_native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = digiplay_native.m; sourceTree = "<group>"; };
+		451CAC6E2483C70000518755 /* jdwp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = jdwp.cpp; sourceTree = "<group>"; };
+		451CAC6F2483C70000518755 /* jdwp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jdwp.h; sourceTree = "<group>"; };
 		451DDF61244D5CBB0064EE50 /* digiplay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = digiplay.h; sourceTree = "<group>"; };
 		451DDF62244D5CBB0064EE50 /* digiplay.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = digiplay.c; sourceTree = "<group>"; };
 		451DDF64244D5E2A0064EE50 /* geom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = geom.h; sourceTree = "<group>"; };
 		451DDF65244D5E2A0064EE50 /* geom.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = geom.cpp; sourceTree = "<group>"; };
 		452A592F2468F6BA00ACF01E /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = Digiplay/assets; sourceTree = "<group>"; };
+		4531EA902481EABF0071A7BF /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		453391BB247A439B00564DB1 /* gc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gc.c; sourceTree = "<group>"; };
+		4538510A2481F61D00ADD963 /* digiplay_metal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = digiplay_metal.m; sourceTree = "<group>"; };
 		4574CD4124803811005B582F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		45ACD592247462D6008DD07B /* compiler.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = compiler.c; sourceTree = "<group>"; };
 		45CF602924792E68000FDA18 /* natives.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = natives.h; sourceTree = "<group>"; };
@@ -47,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4531EA912481EABF0071A7BF /* Metal.framework in Frameworks */,
 				4574CD43248038E6005B582F /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -57,6 +67,7 @@
 		4574CD4024803811005B582F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4531EA902481EABF0071A7BF /* Metal.framework */,
 				4574CD4124803811005B582F /* StoreKit.framework */,
 			);
 			name = Frameworks;
@@ -99,6 +110,10 @@
 				45CF602924792E68000FDA18 /* natives.h */,
 				45CF602A24792E68000FDA18 /* natives.m */,
 				453391BB247A439B00564DB1 /* gc.c */,
+				45115C8E2481A71D006BD699 /* digiplay_native.m */,
+				4538510A2481F61D00ADD963 /* digiplay_metal.m */,
+				451CAC6E2483C70000518755 /* jdwp.cpp */,
+				451CAC6F2483C70000518755 /* jdwp.h */,
 			);
 			path = Digiplay;
 			sourceTree = "<group>";
@@ -175,8 +190,11 @@
 				45CF602B24792E68000FDA18 /* natives.m in Sources */,
 				451DDF66244D5E2A0064EE50 /* geom.cpp in Sources */,
 				45FDAC5324673F2A00611F96 /* jvm.c in Sources */,
+				45115C8F2481A71D006BD699 /* digiplay_native.m in Sources */,
 				453391BC247A439B00564DB1 /* gc.c in Sources */,
 				45D416CC2445E159006F4EF6 /* main.mm in Sources */,
+				4538510B2481F61D00ADD963 /* digiplay_metal.m in Sources */,
+				451CAC702483C70000518755 /* jdwp.cpp in Sources */,
 				450176A4246819E600589EDC /* miniz.c in Sources */,
 				45ACD593247462D6008DD07B /* compiler.c in Sources */,
 				451DDF63244D5CBB0064EE50 /* digiplay.c in Sources */,

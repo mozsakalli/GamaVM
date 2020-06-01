@@ -14,8 +14,10 @@ public class ObjC {
     
     public native static long sel_registerName(String name);
     public native static long objc_getClass(String name);
-
-
+    public native static long objc_getProtocol(String name);
+    public native static long objc_allocateClassPair(long superClass, String name);
+    public native static boolean class_addProtocol(long cls, long proto);
+    
     public native static long callLong(NSObject target,Selector selector, Object...args);
     public native static double callDouble(NSObject target,Selector selector, Object...args);
     public native static String callString(NSObject target,Selector selector, Object...args);

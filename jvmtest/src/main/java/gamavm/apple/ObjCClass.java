@@ -27,4 +27,14 @@ public class ObjCClass extends NSObject {
         }
         return cls;
     }
+    
+    public static ObjCClass register(Class cls) {
+        /*
+        Class[] interfaces = cls.getInterfaces();
+        for(Class intf : interfaces) {
+            String protocolName = intf.getSimpleName();
+            
+        }*/
+        return null;
+    }
 }

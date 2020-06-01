@@ -10,6 +10,9 @@
 #include "miniz.h"
 #include "natives.h"
 
+extern void jdwp_start(char *host, int port);
+extern void jdwp_tick(VM *vm, Object *method, int line);
+
 extern void *__platform_read_file(const char* path, int *size);
 
 
@@ -42,26 +45,6 @@ jint compare_string_cstring(Object* jstr1, const char *str2) {
 
 jint compare_string(void *str1, void *str2, int isString) {
     return isString ? compare_string_string((Object*)str1, (Object*)str2) : compare_string_cstring((Object*)str1, (const char *)str2);
-}
-
-Object *str_intern(VM *vm, Object *str) {
-    /*
-    StringPool *ptr = vm->strings;
-    while(ptr) {
-        if(compare_string_string(ptr->str, str)) {
-            free(str->chars);
-            free(str);
-            return ptr->str;
-        }
-        ptr = ptr->next;
-    }
-    
-    ptr = (StringPool*)malloc(sizeof(StringPool));
-    ptr->str = str;
-    ptr->next = vm->strings;
-    vm->strings = ptr;
-    */
-    return str;
 }
 
 char *string2c(Object *jstr) {
@@ -142,7 +125,7 @@ Object *vm_find_string(VM *vm, jchar *utf, jint len) {
 }
 
 
-Object* parse_utf8(VM *vm, char *data, int length) {
+Object* parse_utf8(VM *vm, char *data, int length, int intern) {
     char *end = data + length;
     char *ptr = data;
     int jlen = 0;
@@ -179,13 +162,15 @@ Object* parse_utf8(VM *vm, char *data, int length) {
         }
     }
     
-    Object *str = vm_find_string(vm, buf, strlen);
+    Object *str = intern ? vm_find_string(vm, buf, strlen) : NULL;
     if(!str) {
         str = alloc_string_utf_nogc(vm, &buf[0], strlen);
-        StringPool *sp = (StringPool*)malloc(sizeof(StringPool));
-        sp->str = str;
-        sp->next = vm->strings;
-        vm->strings = sp;
+        if(intern) {
+            StringPool *sp = (StringPool*)malloc(sizeof(StringPool));
+            sp->str = str;
+            sp->next = vm->strings;
+            vm->strings = sp;
+        }
     }
     return str;//alloc_string_utf_nogc(vm, &buf[0], strlen);
 }
@@ -233,7 +218,7 @@ char *parse_constant_pool(VM *vm, char *data, CPItem** cpTarget) {
         case 1: //CONSTANT_Utf8
             {
                 int len = READ_U2(data); data += 2;
-                cp[i].value.O = (Object*)parse_utf8(vm, data, len);
+                cp[i].value.O = (Object*)parse_utf8(vm, data, len, 1);
                 //printf("CP = %s\n", string2c(cp[i].value.O));
                 cp[i].type = 'O';
                 data += len;
@@ -557,6 +542,7 @@ Object *parse_class(VM *vm,char *data, void **entries) {
                             for(int q=0; q<m->lineNumberTableSize; q++) {
                                 m->lineNumberTable[q].pc = READ_U2(data); data += 2;
                                 m->lineNumberTable[q].line = READ_U2(data); data += 2;
+                                m->lineNumberTable[q].breakpoint = 0;
                             }
                         } else
                         data += len;
@@ -697,6 +683,24 @@ Object *find_method(Object *clso, void *name, void *signature, int isString) {
     return NULL;
 }
 
+Object *find_method_recursive(Object *clso, void *name, void *signature, int isString) {
+    ClassFields *cls = clso->instance;
+    while(cls) {
+        if(cls->methods) {
+            Object **methods = (Object**)cls->methods->instance;
+            for(int i=0; i<cls->methods->length; i++) {
+                MethodFields *m = methods[i]->instance;
+                if(compare_string(m->name, name, isString) && compare_string(m->signature, signature, isString))
+                    return methods[i];
+            }
+        }
+        if(cls->superClass)
+            cls = cls->superClass->instance;
+        else break;
+    }
+    return NULL;
+}
+
 Object *find_field(Object *clso, void *name, int isString) {
     ClassFields *cls = clso->instance;
     Object **fields = (Object**)cls->fields->instance;
@@ -725,6 +729,10 @@ jint get_prim_size(int chr) {
 jint get_signature_size(Object *signature) {
     jint chr = ARRAY_DATA_C(((StringFields*)signature->instance)->chars)[0];
     return get_prim_size(chr);
+}
+jint is_signature_ref(Object *signature) {
+    jint chr = ARRAY_DATA_C(((StringFields*)signature->instance)->chars)[0];
+    return chr == 'L' || chr == '[';
 }
 
 Object *find_override_method(Object *cls, Object *method) {
@@ -1022,6 +1030,16 @@ Object *resolve_field_by_index(VM *vm,Object *cls, int index) {
     printf(":%s\n",string2c(signature));*/
     return resolve_field(vm, clsName, name, 1);
 }
+
+void call_void_method(VM *vm, Object *method, VAR *args) {
+    ((JVM_CALL)((MethodFields*)method->instance)->entry)(vm, method, args);
+}
+
+jbool call_boolean_method(VM *vm, Object *method, VAR *args) {
+    ((JVM_CALL)((MethodFields*)method->instance)->entry)(vm, method, args);
+    return vm->frames[vm->FP].retVal.I;
+}
+
 /*
 ObjectPtr alloc_object(VM *vm,Class *cls) {
     int size = sizeof(Object) + cls->instanceSize;
@@ -1369,6 +1387,8 @@ void vm_test() {
     resolve_class(vm, "java/lang/reflect/Method", 0);
     resolve_class(vm, "[Ljava/lang/reflect/Field;", 0);
     resolve_class(vm, "[Ljava/lang/reflect/Method;", 0);
+    
+    jdwp_start("127.0.0.1", 10000);
 
     //Class *cls = resolve_class_c(vm, "com/digitoygames/compiler/Test");
     
@@ -1382,6 +1402,8 @@ void vm_test() {
         printf("Method not found!!\n");
         return;
     }
+    
+    ((JVM_CALL)((MethodFields*)method->instance)->entry)(vm, method, NULL);
     //cls->listNext = vm->classes;
     //vm->classes = cls;
     
@@ -1397,7 +1419,7 @@ void vm_test() {
     vm->fp = 1;
     //vm->frames = &frame;
     */
-    
+    /*
     for(int i=0; i<1; i++) {
         jlong t;
         

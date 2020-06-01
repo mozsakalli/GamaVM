@@ -1223,6 +1223,8 @@ void vm_compile_method(VM *vm, MethodFields *method, void **handlers) {
     method->compiled = ctx.ops;
 }
 
+extern void jdwp_tick(VM *vm, Object *method, int line);
+
 void vm_interpret_method(VM *vm, Object *omethod, VAR *args) {
     static void* handlers[] = {
         &&OP_UNIMPLEMENTED,
@@ -1423,7 +1425,12 @@ void vm_interpret_method(VM *vm, Object *omethod, VAR *args) {
     //Frame *frame = &vm->frames[++vm->fp];
     
     OP* op = &((OP*)method->compiled)[0];
-#define NEXT(d) /*printf("%d: OP=0x%x CODE=%d\n",op->pc, op->bc, op->code); */op += d; goto *op->handler;
+#define NEXT(d) { \
+    vm->frames[fp].line = op->line; \
+    jdwp_tick(vm, omethod, op->line); \
+    op += d; \
+    goto *op->handler; \
+}
 #define NULL_CHECK(o) \
 if(!o) { \
     vm->frames[fp].line = op->line; \
@@ -2128,11 +2135,11 @@ OP_LSHR: //78
     sp--;
     NEXT(1);
 OP_IUSHR: //79
-    printf("Missing op: 0x%x\n", op->bc);
-    return;
+    stack[sp-2].I = (((unsigned int)stack[sp-2].I) >> (0x1f & ((unsigned int)stack[sp-1].I)));
+    sp--;
 OP_LUSHR: //80
-    printf("Missing op: 0x%x\n", op->bc);
-    return;
+    stack[sp-2].J = (((unsigned long long)stack[sp-2].J) >> (0x3f & ((unsigned long long)stack[sp-1].I)));
+    sp--;
 OP_IAND: //81
     stack[sp-2].I &= stack[sp-1].I;
     sp--;

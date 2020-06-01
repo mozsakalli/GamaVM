@@ -40,7 +40,7 @@ public final class Class<T> {
     Field[] fields;
     Method[] methods;
     Class[] interfaces;
-    Object listNext;
+    public Class listNext;
     String name;
     Class superClass;
     Class elementClass;

@@ -14,6 +14,12 @@
 #include <mach/mach_time.h>
 #endif
 #import <objc/runtime.h>
+#import <Metal/Metal.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <netdb.h>
 
 void java_lang_Object_clone(VM *vm, Object *method, VAR *args) {
     void *result = NULL;
@@ -350,8 +356,8 @@ void gamavm_apple_ObjC_callObject(VM *vm, Object *method, VAR *args) {
     Object *params = args[3].O;
     if(!params || params->length != numarg) {
         throw_nullpointerexception(vm);
-        [inv dealloc];
-        [sig dealloc];
+        //[inv dealloc];
+        //[sig dealloc];
         return;
     }
     
@@ -383,9 +389,32 @@ void gamavm_apple_ObjC_callObject(VM *vm, Object *method, VAR *args) {
     } else {
         throw_nullpointerexception(vm);
     }
-    [inv dealloc];
-    [sig dealloc];
+    //[inv dealloc];
+    //[sig dealloc];
 }
+
+void gamavm_jdwp_Jdwp_socketConnect(VM *vm, Object *method, VAR *args) {
+    struct hostent *host = gethostbyname(string2c(args[0].O));
+    int fd = 0;
+    if(host) {
+        fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+        struct sockaddr_in sock_addr;
+        memset((char *) &sock_addr, 0, sizeof(sock_addr));
+        sock_addr.sin_family = AF_INET;
+        sock_addr.sin_port = htons(args[1].I);
+        sock_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
+        memset(&(sock_addr.sin_zero), 0, sizeof((sock_addr.sin_zero)));
+        
+        if(connect(fd, (struct sockaddr *) &sock_addr, sizeof(sock_addr)) == -1) {
+            close(fd);
+            fd = 0;
+        }
+        fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) | O_NONBLOCK);
+    }
+    vm->frames[vm->FP].retVal.I = fd;
+}
+
+extern void digiplay_ios_IosPlatform_run(VM *vm, Object *method, VAR *args);
 
 NativeMethodInfo NATIVES[] = {
     //java/lang/Object
@@ -415,6 +444,11 @@ NativeMethodInfo NATIVES[] = {
     {.cls = "gamavm/apple/ObjC", .name = "objc_getClass", .sign = "(Ljava/lang/String;)J", .handle = &gamavm_apple_ObjC_objc_getClass},
     {.cls = "gamavm/apple/ObjC", .name = "sel_registerName", .sign = "(Ljava/lang/String;)J", .handle = &gamavm_apple_ObjC_sel_registerName},
     {.cls = "gamavm/apple/ObjC", .name = "callObject", .sign = "(Lgamavm/apple/NSObject;Lgamavm/apple/Selector;Ljava/lang/Class;[Ljava/lang/Object;)Lgamavm/apple/NSObject;", .handle = &gamavm_apple_ObjC_callObject},
+
+    //{.cls = "gamavm/apple/uikit/UIApplication", .name = "main", .sign = "(Lgamavm/apple/uikit/UIApplicationDelegate;)V", .handle = &gamavm_apple_uikit_UIApplication_main},
+    {.cls = "digiplay/ios/IosPlatform", .name = "run", .sign = "()V", .handle = &digiplay_ios_IosPlatform_run},
+
+    {.cls = "gamavm/jdwp/Jdwp", .name = "socketConnect", .sign = "(Ljava/lang/String;I)I", .handle = &gamavm_jdwp_Jdwp_socketConnect},
 
     {.cls = NULL}
 };

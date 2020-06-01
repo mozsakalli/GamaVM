@@ -135,6 +135,19 @@ Object* alloc_string(VM *vm, char *chars) {
     return str;
 }
 
+Object* alloc_string_utf(VM *vm, jchar *chars, jint len) {
+    Object* jchars = alloc_prim_array(vm, &java_lang_C1D, len);
+    memcpy(jchars->instance, chars, len * sizeof(jchar));
+    
+    Object *str = alloc_object_nogc(vm, &java_lang_String);
+    StringFields *fields = str->instance;
+    fields->length = len;
+    fields->chars = jchars;
+    str->gc.atomic = 1;
+
+    return str;
+}
+
 ObjectPtr alloc_object_nogc(VM *vm,Object *clso) {
     ObjectPtr o = (ObjectPtr)malloc(sizeof(Object));
     o->cls = clso;
@@ -361,8 +374,8 @@ void gc_sweep(VM *vm) {
     int blk_ndx = vm->gc_blockptr;
     int count = 0;
     int version = vm->gc_version;
-    while(blk && count < COUNT_PER_TICK) {
-        while(blk_ndx < HEAP_OBJECT_COUNT && count++ < COUNT_PER_TICK) {
+    while(blk && count < COUNT_PER_TICK * 3) {
+        while(blk_ndx < HEAP_OBJECT_COUNT && count++ < COUNT_PER_TICK * 3) {
             Object *o = &blk->objects[blk_ndx];
             if(!o->gc.free && o->gc.version != version) {
 
