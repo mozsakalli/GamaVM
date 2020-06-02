@@ -158,6 +158,8 @@ typedef struct __attribute__ ((packed)) MethodFields {
     struct Object *declaringClass;
     Object *name;
     Object *signature;
+    Object *returnType;
+
     jint localVarTableSize;
     LocalVarInfo *localVarTable;
     jint argCount;
@@ -364,6 +366,8 @@ extern Object* alloc_string_utf_nogc(VM *vm, jchar *chars, jint len);
 extern Object* alloc_string_nogc(VM *vm, char *chars);
 extern ObjectPtr alloc_object_array_nogc(VM *vm, Object *cls, int length);
 extern ObjectPtr alloc_object_nogc(VM *vm,Object *clso);
+extern void gc_pause();
+extern void gc_resume();
 
 extern jint is_class_son_of(Object *son, Object *of);
 extern jint check_cast(VM *vm, Object *object, Object *cls);

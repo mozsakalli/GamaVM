@@ -29,8 +29,8 @@ public class Main {
     public static void main(String...args) throws Exception {
         System.out.println(Test.main() );
         //String f = "/Users/mustafa/Work/experimental/jjj/compiler/target/classes/com/digitoygames/compiler/StbTTF.class";
-        //String f = "/Users/mustafa/Work/experimental/jjj/classpath/target/classes/java/lang/Long.class";
-        String f = "/Users/mustafa/Work/experimental/jjj/jvmtest/target/classes/Main.class";
+        String f = "/Users/mustafa/Work/GamaVM/classpath/target/classes/java/util/ArrayList.class";
+        //String f = "/Users/mustafa/Work/experimental/jjj/jvmtest/target/classes/Main.class";
         Clazz src = new Clazz(new FileInputStream(f));
         ClassCompiler cc = new ClassCompiler(src);
         SourceWriter out = new SourceWriter();

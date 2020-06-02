@@ -32,7 +32,8 @@ public class Main {
             b[10] = (byte)1;
             System.gc();
             time = System.currentTimeMillis() - time;
-            System.out.println("took: "+time+" for "+getVal(time));
+            int v = getVal(time);
+            System.out.println("took: "+time+" for "+v);
         }
         //IosPlatform.run(new MyGame());
     }

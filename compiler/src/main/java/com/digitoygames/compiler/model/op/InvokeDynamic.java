@@ -31,8 +31,8 @@ public class InvokeDynamic extends Op {
 
     @Override
     public void execute(Method method, Stack stack) {
-        BootstrapM method.declaringClass.getBootstrapMethods()[cp.items[index].index1];
-        super.execute(method, stack); //To change body of generated methods, choose Tools | Templates.
+        //BootstrapM method.declaringClass.getBootstrapMethods()[cp.items[index].index1];
+        //super.execute(method, stack); //To change body of generated methods, choose Tools | Templates.
     }
     
     

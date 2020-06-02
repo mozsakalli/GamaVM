@@ -198,6 +198,7 @@ void parse_setup_method_args(MethodFields *method) {
         if(*ch == 'D' || *ch == 'J') jcount++;
         ch++;
     }
+    
     method->argMap = (jint*)malloc(sizeof(jint) * count);
     memcpy(method->argMap, tmp, sizeof(jint) * count);
     method->argCount = count;

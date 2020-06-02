@@ -15,16 +15,9 @@ JdwpEventSet *JdwpEventSet::head = nullptr;
 JdwpEventSet *JdwpEventSet::tail = nullptr;
 JdwpClient jdwp_client;
 int jdwp_server_fd;
-
-typedef struct JdwpStep {
-    int fp;
-    int line;
-    Object *clazz;
-    Object *method;
-} JdwpStep;
-
 int jdwp_step_fp = -1;
 int jdwp_skip_line = -1;
+int jdwp_invoking = 0;
 
 int jdwp_listen(int port) {
     struct sockaddr_in serv_addr;
@@ -279,6 +272,114 @@ int jdwp_send_step_event(Object *method, int line) {
     return 0;
 }
 
+void jdwp_invoke_method(JdwpPacket *req, JdwpPacket *resp, int isStatic) {
+    Object *cls = nullptr;
+    Object *object = nullptr;
+    if(isStatic) {
+        cls = req->readObject();
+        req->readObject(); //thread
+    } else {
+        object = req->readObject();
+        req->readObject(); //thread
+        cls = req->readObject();
+    }
+    Object *method = req->readObject();
+    int argCount = req->readInt();
+    int start = 0;
+    if(!isStatic) {
+        start = 1;
+        argCount++;
+    }
+    VAR args[argCount];
+    for(int i=start; i<argCount; i++) {
+        int tag = req->readByte();
+        switch(tag) {
+            case 'B':
+            case 'Z':
+                args[i].I = req->readByte();
+                break;
+                
+            case 'S':
+            case 'C':
+                args[i].I = req->readShort();
+                break;
+                
+            case 'I':
+                args[i].I = req->readInt();
+                break;
+                
+            case 'F':
+                args[i].F = req->readFloat();
+                break;
+                
+            case 'J':
+                args[i].J = req->readLong();
+                break;
+                
+            case 'D':
+                args[i].D = req->readDouble();
+                break;
+                
+            default:
+                args[i].O = req->readObject();
+                break;
+        }
+    }
+    if(!isStatic) args[0].O = object;
+    jdwp_invoking = 1;
+    ((JVM_CALL)((MethodFields*)method->instance)->entry)(jdwpVM, method, &args[0]);
+    jdwp_invoking = 0;
+    StringFields *str = (StringFields*)MTH_FIELD(method, signature)->instance;
+    jchar *ch = (jchar*)str->chars->instance;
+    while(*ch != ')') ch++;
+    ch++;
+    int kind = *ch=='L' || *ch=='[' ? 'O' : *ch;
+    VAR *ret = &jdwpVM->frames[jdwpVM->FP].retVal;
+    switch(kind) {
+        case 'B':
+        case 'Z':
+            resp->writeByte(kind);
+            resp->writeByte(ret->I);
+            break;
+        case 'C':
+        case 'S':
+            resp->writeByte(kind);
+            resp->writeShort(ret->I);
+            break;
+        case 'I':
+            resp->writeByte(kind);
+            resp->writeInt(ret->I);
+            break;
+        case 'F':
+            resp->writeByte(kind);
+            resp->writeFloat(ret->F);
+            break;
+        case 'J':
+            resp->writeByte(kind);
+            resp->writeLong(ret->J);
+            break;
+        case 'D':
+            resp->writeByte(kind);
+            resp->writeDouble(ret->D);
+            break;
+
+        case 'V':
+            resp->writeByte('L');
+            resp->writeLong(0);
+            break;
+            
+        default: {
+            Object *o = ret->O;
+            if(!o) resp->writeByte('L');
+            else if(o->cls == &java_lang_String) resp->writeByte(JDWP_TAG_STRING);
+            else if(o->cls == &java_lang_Class) resp->writeByte(JDWP_TYPETAG_CLASS);
+            //todo: thread
+            else resp->writeByte('L');
+            resp->writeObject(o);
+        } break;
+    }
+}
+
 void jdwp_process_packet(JdwpPacket *req) {
     JdwpPacket *resp = new JdwpPacket();
     resp->reset();
@@ -406,6 +507,33 @@ void jdwp_process_packet(JdwpPacket *req) {
             } else resp->complete(req->id, JDWP_ERROR_INVALID_CLASS);
         } break;
             
+        case JDWP_CMD_ReferenceType_GetValues: { //0x0206
+            Object *cls = req->readObject();
+            //Object *cls = o->cls;
+            printf("GetValues for: %s\n",string2c(CLS_FIELD(cls, name)));
+            int count = req->readInt();
+            resp->writeInt(count);
+            for(int i=0; i<count; i++) {
+                Object *field = req->readObject();
+                FieldFields *ff = (FieldFields*)field->instance;
+                printf("-- field: %s", string2c(ff->name));
+                printf(" %s\n", string2c(ff->signature));
+                void *base = ((ClassFields*)cls->instance)->globals;
+                resp->writeValue(ff->signature, (void*)((char*)base + ff->offset));
+            }
+            resp->complete(req->id, JDWP_ERROR_NONE);
+
+            /*
+            Object *o = req->readObject();
+            int count = req->readInt();
+            Object *fields = CLS_FIELD(o->cls, fields);
+            resp->writeInt(count);
+            for(int i=0; i<count; i++) {
+                Object *field = ((Object**)fields->instance)[i];
+                
+            }*/
+        } break;
+            
         case JDWP_CMD_ReferenceType_SourceFile: { //0x0207
             Object *cls = req->readObject();
             Object *name = nullptr;
@@ -516,6 +644,21 @@ void jdwp_process_packet(JdwpPacket *req) {
             resp->complete(req->id, JDWP_ERROR_NONE);
         } break;
             
+        case JDWP_CMD_ObjectReference_InvokeMethod: { //0x0906
+            jdwp_invoke_method(req, resp, 0);
+            resp->complete(req->id, JDWP_ERROR_NONE);
+        } break;
+            
+        case JDWP_CMD_ObjectReference_DisableCollection: { //0x0907
+            gc_pause();
+            resp->complete(req->id, JDWP_ERROR_NONE);
+        } break;
+            
+        case JDWP_CMD_ObjectReference_EnableCollection: { //0x0908
+            gc_resume();
+            resp->complete(req->id, JDWP_ERROR_NONE);
+        } break;
+            
         case JDWP_CMD_StringReference_Value: { //0x0a01
             Object *str = req->readObject();
             resp->writeString(str);
@@ -546,18 +689,14 @@ void jdwp_process_packet(JdwpPacket *req) {
             
         case JDWP_CMD_ThreadReference_Frames: { //0x0b06
             jlong thread = req->readLong();
-            int startFrame = jdwpVM->FP - req->readInt();
+            int startFrame = req->readInt()+1;
             int length = req->readInt();
-            int endFrame = length <= 0 ? 1 : startFrame - length;
-            /*
-            int deepth = jdwpVM->FP;
-            if (length == -1) {
-                length = deepth - startFrame;
-            } else if(length > jdwpVM->FP)
-                length = jdwpVM->FP;*/
-            resp->writeInt(startFrame - endFrame);
-            for (int i = startFrame; i > endFrame; i--) {
-                if (i >= startFrame && i < startFrame + length) {
+            startFrame = jdwpVM->FP;
+            int endFrame = length <= 0 ? 1 : startFrame - length + 1;
+            if(endFrame < 1) endFrame = 1;
+            resp->writeInt(startFrame - endFrame + 1);
+            for (int i = startFrame; i >= endFrame; i--) {
+                //if (i >= startFrame && i < startFrame + length) {
                     Frame *frame = &jdwpVM->frames[i];
                     resp->writeLong((jlong)frame);
                     JdwpLocation loc;
@@ -568,7 +707,7 @@ void jdwp_process_packet(JdwpPacket *req) {
                     loc.method = method;
                     loc.index = jdwp_get_line_index(method, frame->line);
                     resp->writeLocation(&loc);
-                }
+                //}
             }
             resp->complete(req->id, JDWP_ERROR_NONE);
         } break;
@@ -704,6 +843,19 @@ void jdwp_process_packet(JdwpPacket *req) {
 
 extern "C" {
 
+int jdwp_process_client() {
+    int count = 0;
+    if(jdwp_client.fd <= 0) return 0;
+    JdwpPacket *req = jdwp_client.readPacket();
+    while(req) {
+        count++;
+        jdwp_process_packet(req);
+        req = jdwp_client.readPacket();
+    }
+    return count;
+}
+
+
 void jdwp_start(char *host, int port) {
 #if SERVER
     jdwp_server_fd = jdwp_listen(10000);
@@ -712,23 +864,20 @@ void jdwp_start(char *host, int port) {
         return;
     }
 #else
-    int fd = jdwp_connect(host, port);
-    if(fd <= 0) {
-        printf("Can't connect to JDWP server %s:%d\n", host, port);
-        return;
+    printf("Connecting to JDWP server %s:%d\n", host, port);
+    while(1) {
+        int fd = jdwp_connect(host, port);
+        if(fd <= 0) {
+            //printf("Can't connect to JDWP server %s:%d\n", host, port);
+            //return;
+        } else {
+            jdwp_client.fd = fd;
+            break;
+        }
     }
-    jdwp_client.fd = fd;
     printf("Connected to JDWP server %s:%d\n", host, port);
 #endif
-}
-
-void jdwp_process_client() {
-    if(jdwp_client.fd <= 0) return;
-    JdwpPacket *req = jdwp_client.readPacket();
-    while(req) {
-        jdwp_process_packet(req);
-        req = jdwp_client.readPacket();
-    }
+    jdwp_suspended = 1;
 }
 
 void jdwp_tick(VM *vm, Object *method, int line) {
@@ -753,6 +902,8 @@ void jdwp_tick(VM *vm, Object *method, int line) {
     jdwp_process_client();
     jdwp_client.flush();
 
+    if(jdwp_invoking) return;
+    
     if(jdwp_step_fp != -1) {
         if(line != jdwp_skip_line && vm->FP <= jdwp_step_fp) {
             if(jdwp_send_step_event(method, line)) {

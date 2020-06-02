@@ -254,9 +254,10 @@ int vm_compiler_cp_type(int type) {
 
 int vm_compiler_method_type(CPItem *cp, int index) {
     StringFields *str = (StringFields*)cp[cp[cp[index].index2].index2].value.O->instance;
-    char type = ARRAY_DATA_C(str->chars)[str->length-1];
-    if(type == ';') return 'O';
-    return type;
+    jchar *ch = (jchar*)str->chars->instance;
+    while(*ch != ')') ch++;
+    ch++;
+    return *ch=='L' || *ch=='[' ? 'O' : *ch;
 }
 
 int vm_compiler_field_type(CPItem *cp, int index) {
@@ -1427,9 +1428,9 @@ void vm_interpret_method(VM *vm, Object *omethod, VAR *args) {
     
     OP* op = &((OP*)method->compiled)[0];
 #define NEXT(d) { \
+    op += d; \
     vm->frames[fp].line = op->line; \
     jdwp_tick(vm, omethod, op->line); \
-    op += d; \
     goto *op->handler; \
 }
 #define NULL_CHECK(o) \

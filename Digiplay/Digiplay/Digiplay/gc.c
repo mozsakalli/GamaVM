@@ -13,15 +13,6 @@
 
 #define HEAP_OBJECT_COUNT    32768
 
-/*
-typedef struct __attribute__ ((packed)) HeapFree {
-    struct HeapFree *next;
-    void* tmp;
-    int tmp1;
-    int tmp2;
-} HeapFree;
-*/
-
 typedef struct HeapBlock {
     Object objects[HEAP_OBJECT_COUNT];
     struct HeapBlock *next;
@@ -410,7 +401,11 @@ void gc_sweep(VM *vm) {
     }
 }
 
+int gc_paused = 0;
+
 void gc_step(VM *vm) {
+    if(gc_paused) return;
+    
     static int gc_counter = 0;
     //if(++gc_counter < 5) return;
     //gc_counter = 0;
@@ -439,4 +434,13 @@ void gc_step(VM *vm) {
             gc_sweep(vm);
             break;
     }
+}
+
+
+void gc_pause() {
+    gc_paused = 1;
+}
+
+void gc_resume() {
+    gc_paused = 0;
 }
