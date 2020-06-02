@@ -95,8 +95,9 @@ public static unsafe float Cos(float degree)
 */
 
 static QuadList *QuadCache = NULL;
-void digiplay_Digiplay_quad_new(VM *vm, Object *method, VAR *args) {
+void digiplay_Digiplay_Quad_alloc(VM *vm, Object *method, VAR *args) {
     jint capacity = args[0].I;
+    if(capacity <= 0) { RETURN_LONG(0); return; }
     QuadList *ret = QuadCache;
     if(ret) {
         QuadCache = QuadCache->next;
@@ -112,7 +113,7 @@ void digiplay_Digiplay_quad_new(VM *vm, Object *method, VAR *args) {
     ret->size = capacity;
     RETURN_LONG(ret);
 }
-void digiplay_Digiplay_quad_resize(VM *vm, Object *method, VAR *args) {
+void digiplay_Digiplay_Quad_resize(VM *vm, Object *method, VAR *args) {
     QuadList *ql = (QuadList*)args[0].J;
     jint capacity = args[1].I;
     if(ql) {
@@ -123,14 +124,14 @@ void digiplay_Digiplay_quad_resize(VM *vm, Object *method, VAR *args) {
         ql->size = capacity;
     }
 }
-void digiplay_Digiplay_quad_delete(VM *vm, Object *method, VAR *args) {
+void digiplay_Digiplay_Quad_delete(VM *vm, Object *method, VAR *args) {
     if(args[0].J) {
         QuadList *ql = (QuadList*)args[0].J;
         ql->next = QuadCache;
         QuadCache = ql;
     }
 }
-void digiplay_Digiplay_quad_update(VM *vm, Object *method, VAR *args) {
+void digiplay_Digiplay_Quad_update(VM *vm, Object *method, VAR *args) {
     if(args[0].J && args[1].J) {
         QuadList *ql = (QuadList*)args[0].J;
         Matrix2D *matrix = (Matrix2D*)args[1].J;
@@ -167,7 +168,7 @@ void digiplay_Digiplay_quad_update(VM *vm, Object *method, VAR *args) {
         }
     }
 }
-void digiplay_Digiplay_quad_set(VM *vm, Object *method, VAR *args) {
+void digiplay_Digiplay_Quad_set(VM *vm, Object *method, VAR *args) {
     QuadList *ql = (QuadList*)args[0].J;
     int index = args[1].I;
     if(ql && index >= 0 && index < ql->capacity) {
