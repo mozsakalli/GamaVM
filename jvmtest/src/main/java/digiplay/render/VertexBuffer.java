@@ -22,6 +22,6 @@ package digiplay.render;
  */
 public class VertexBuffer {
     
-    public native int addQuads(QuadList quads, int offset, int count, int color);
+    public native int addQuads(QuadGeometry quads, int offset, int count, int color);
     
 }

@@ -19,6 +19,8 @@ int jdwp_step_fp = -1;
 int jdwp_skip_line = -1;
 int jdwp_invoking = 0;
 
+#define JDWPLOG(...) /*printf(__VA_ARGS__)*/
+
 int jdwp_listen(int port) {
     struct sockaddr_in serv_addr;
     int fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -129,7 +131,7 @@ void jdwp_eventset_set(JdwpEventSet *set) {
     if(set) {
         switch(set->eventKind) {
             case JDWP_EVENTKIND_SINGLE_STEP: {
-                printf("!!!!!!!!! SET JDWP_EVENTKIND_SINGLE_STEP\n");
+                JDWPLOG("!!!!!!!!! SET JDWP_EVENTKIND_SINGLE_STEP\n");
                 for (int i = 0; i < set->modifiers; i++) {
                     JdwpEventSetMod *mod = set->mods[i];
                     if (mod->type == 10) {
@@ -161,7 +163,7 @@ void jdwp_eventset_set(JdwpEventSet *set) {
             } break;
                 
             case JDWP_EVENTKIND_BREAKPOINT: {
-                printf("!!!!!!!!! SET JDWP_EVENTKIND_BREAKPOINT\n");
+                JDWPLOG("!!!!!!!!! SET JDWP_EVENTKIND_BREAKPOINT\n");
                 for (int i = 0; i < set->modifiers; i++) {
                     JdwpEventSetMod *mod = set->mods[i];
                     if (mod->type == 7) {
@@ -170,7 +172,7 @@ void jdwp_eventset_set(JdwpEventSet *set) {
                         mf->breakpoint++;
                         mf->lineNumberTable[index].breakpoint = set->requestId;
                         jdwp_step_fp = -1;
-                        printf("!!!!!!!! set breakpoint at %s:%d type:%d\n", string2c(mf->name), mf->lineNumberTable[index].line, mod->location.type);
+                        JDWPLOG("!!!!!!!! set breakpoint at %s:%d type:%d\n", string2c(mf->name), mf->lineNumberTable[index].line, mod->location.type);
                         //jdwp_set_breakpoint(JDWP_EVENTSET_SET, mod->loc.classID, mod->loc.methodID,
                         //                    mod->loc.execIndex);
                     }
@@ -179,7 +181,7 @@ void jdwp_eventset_set(JdwpEventSet *set) {
             } break;
                 
             case JDWP_EVENTKIND_CLASS_PREPARE: {
-                printf("!!!!!!!!! JDWP_EVENTKIND_CLASS_PREPARE\n");
+                JDWPLOG("!!!!!!!!! JDWP_EVENTKIND_CLASS_PREPARE\n");
             } break;
         }
     }
@@ -189,12 +191,12 @@ void jdwp_eventset_clear(JdwpEventSet *set) {
     if(set) {
         switch(set->eventKind) {
             case JDWP_EVENTKIND_SINGLE_STEP: {
-                printf("!!!!!!!!! CLEAR JDWP_EVENTKIND_SINGLE_STEP\n");
+                JDWPLOG("!!!!!!!!! CLEAR JDWP_EVENTKIND_SINGLE_STEP\n");
                 jdwp_step_fp = -1;
             } break;
                 
             case JDWP_EVENTKIND_BREAKPOINT: {
-                printf("!!!!!!!!! CLEAR JDWP_EVENTKIND_BREAKPOINT\n");
+                JDWPLOG("!!!!!!!!! CLEAR JDWP_EVENTKIND_BREAKPOINT\n");
                 for (int i = 0; i < set->modifiers; i++) {
                     JdwpEventSetMod *mod = set->mods[i];
                     if (mod->type == 7) {
@@ -203,7 +205,7 @@ void jdwp_eventset_clear(JdwpEventSet *set) {
                         mf->breakpoint--;
                         if(mf->breakpoint < 0) mf->breakpoint = 0;
                         mf->lineNumberTable[index].breakpoint = 0;
-                        printf("!!!!!!!! clear breakpoint at %s:%d type:%d\n", string2c(mf->name), mf->lineNumberTable[index].line, mod->location.type);
+                        JDWPLOG("!!!!!!!! clear breakpoint at %s:%d type:%d\n", string2c(mf->name), mf->lineNumberTable[index].line, mod->location.type);
                         //jdwp_set_breakpoint(JDWP_EVENTSET_SET, mod->loc.classID, mod->loc.methodID,
                         //                    mod->loc.execIndex);
                     }
@@ -212,7 +214,7 @@ void jdwp_eventset_clear(JdwpEventSet *set) {
             } break;
                 
             case JDWP_EVENTKIND_CLASS_PREPARE: {
-                printf("!!!!!!!!! CLEAR JDWP_EVENTKIND_CLASS_PREPARE\n");
+                JDWPLOG("!!!!!!!!! CLEAR JDWP_EVENTKIND_CLASS_PREPARE\n");
             } break;
         }
     }
@@ -263,7 +265,7 @@ int jdwp_send_step_event(Object *method, int line) {
                 p->completeEvent();
                 jdwp_client.queuePacket(p);
                 
-                printf("!! single step: line=%d index=%d\n", line, loc.index);
+                JDWPLOG("!! single step: line=%d index=%d\n", line, loc.index);
                 return 1;
             }
         }
@@ -284,6 +286,7 @@ void jdwp_invoke_method(JdwpPacket *req, JdwpPacket *resp, int isStatic) {
         cls = req->readObject();
     }
     Object *method = req->readObject();
+    MethodFields *mf = (MethodFields*)method->instance;
     int argCount = req->readInt();
     int start = 0;
     if(!isStatic) {
@@ -378,6 +381,10 @@ void jdwp_invoke_method(JdwpPacket *req, JdwpPacket *resp, int isStatic) {
             resp->writeObject(o);
         } break;
     }
+    
+    //todo: send real exception if any
+    resp->writeByte('L');
+    resp->writeLong(0);
 }
 
 void jdwp_process_packet(JdwpPacket *req) {
@@ -385,7 +392,6 @@ void jdwp_process_packet(JdwpPacket *req) {
     resp->reset();
     
     int cmd = (req->commandSet << 8) + req->command;
-    //printf(">>> JDWP Command: 0x%x\n", cmd);
     switch(cmd) {
         case JDWP_CMD_VirtualMachine_Version: //0x0101
             resp->writeCString((char*)"jdwp 1.2");
@@ -399,7 +405,6 @@ void jdwp_process_packet(JdwpPacket *req) {
         case JDWP_CMD_VirtualMachine_ClassesBySignature: { //0x0102
             JdwpString *signature = req->readString();
             Object *cls = jdwp_find_class(signature->toClassName(), 1);
-            printf("class: %s -> %p\n", string2c(signature->str), cls);
             if(cls) {
                 resp->writeInt(1);
                 resp->writeByte(jdwp_get_class_type(cls));
@@ -435,6 +440,14 @@ void jdwp_process_packet(JdwpPacket *req) {
             resp->complete(req->id, JDWP_ERROR_NONE);
             break;
             
+        case JDWP_CMD_VirtualMachine_Exit:
+            jdwp_suspended = 0;
+            jdwp_client.reset();
+            JdwpEventSet::reset();
+            delete resp;
+            gc_resume();
+            return;
+            
         case JDWP_CMD_VirtualMachine_Capabilities: // 0x010c
             resp->writeByte(0);//canWatchFieldModification
             resp->writeByte(0);//canWatchFieldAccess
@@ -458,9 +471,6 @@ void jdwp_process_packet(JdwpPacket *req) {
                 char tmp[256];
                 sprintf(tmp, "L%s;", string2c(cf->name));
                 resp->writeCString(tmp);
-                //resp->writeCString((char*)"L");
-                //resp->writeCString(string2c(cf->name));
-                //resp->writeCString((char*)";");
             } else resp->writeCString(string2c(cf->name));
             resp->complete(req->id, JDWP_ERROR_NONE);
         } break;
@@ -509,15 +519,11 @@ void jdwp_process_packet(JdwpPacket *req) {
             
         case JDWP_CMD_ReferenceType_GetValues: { //0x0206
             Object *cls = req->readObject();
-            //Object *cls = o->cls;
-            printf("GetValues for: %s\n",string2c(CLS_FIELD(cls, name)));
             int count = req->readInt();
             resp->writeInt(count);
             for(int i=0; i<count; i++) {
                 Object *field = req->readObject();
                 FieldFields *ff = (FieldFields*)field->instance;
-                printf("-- field: %s", string2c(ff->name));
-                printf(" %s\n", string2c(ff->signature));
                 void *base = ((ClassFields*)cls->instance)->globals;
                 resp->writeValue(ff->signature, (void*)((char*)base + ff->offset));
             }
@@ -574,7 +580,6 @@ void jdwp_process_packet(JdwpPacket *req) {
             if(method) {
                 MethodFields *mf = (MethodFields*)method->instance;
                 LineNumberInfo *info = mf->lineNumberTable;
-                printf("--- lines of %s\n", string2c(mf->name));
                 if(!info) {
                     resp->writeLong(-1);
                     resp->writeLong(-1);
@@ -586,7 +591,6 @@ void jdwp_process_packet(JdwpPacket *req) {
                     for(int i=0; i<mf->lineNumberTableSize; i++) {
                         resp->writeLong(i);//info[i].pc);
                         resp->writeInt(info[i].line);
-                        printf(" ------- %d:%d\n", i, info[i].line);
                     }
                 }
                 resp->complete(req->id, JDWP_ERROR_NONE);
@@ -629,14 +633,11 @@ void jdwp_process_packet(JdwpPacket *req) {
         case JDWP_CMD_ObjectReference_GetValues: { //0x0902
             Object *o = req->readObject();
             Object *cls = o->cls;
-            printf("GetValues for: %s\n",string2c(CLS_FIELD(cls, name)));
             int count = req->readInt();
             resp->writeInt(count);
             for(int i=0; i<count; i++) {
                 Object *field = req->readObject();
                 FieldFields *ff = (FieldFields*)field->instance;
-                printf("-- field: %s", string2c(ff->name));
-                printf(" %s\n", string2c(ff->signature));
                 int isstatic = (ff->accessFlags & ACC_STATIC) != 0;
                 void *base = isstatic ? ((ClassFields*)cls->instance)->globals : o->instance;
                 resp->writeValue(ff->signature, (void*)((char*)base + ff->offset));
@@ -909,8 +910,7 @@ void jdwp_tick(VM *vm, Object *method, int line) {
             if(jdwp_send_step_event(method, line)) {
                 jdwp_suspended = 1;
                 jdwp_skip_line = line;
-                //jdwp_step_fp = -1;
-                printf("!!!!! SINGLE STEP !!!!\n");
+                JDWPLOG("!!!!! SINGLE STEP !!!!\n");
             }
         }
         /*

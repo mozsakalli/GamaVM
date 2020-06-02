@@ -714,6 +714,16 @@ public:
         }
         return nullptr;
     }
+    
+    static void reset() {
+        JdwpEventSet *ptr = head;
+        while(ptr) {
+            JdwpEventSet *n = ptr->next;
+            delete ptr;
+            ptr = n;
+        }
+        head = tail = nullptr;
+    }
 
     JdwpEventSet(JdwpPacket *req) {
         requestId = jdwpEventRequestSerial++;

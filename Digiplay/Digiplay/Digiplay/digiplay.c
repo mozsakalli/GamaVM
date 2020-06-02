@@ -204,7 +204,7 @@ void digiplay_Disiplay_Matrix2d_delete(VM *vm, Object *method, VAR *args) {
         Matrix2DCache = mat;
     }
 }
-void digiplay_Digiplay_matrix2d_compose(VM *vm, Object *method, VAR *args) {
+void digiplay_Digiplay_Matrix2d_compose(VM *vm, Object *method, VAR *args) {
     if(args[0].J) {
         Matrix2D *mat = (Matrix2D*)args[0].J;
         float x = args[1].F;
@@ -238,7 +238,7 @@ void digiplay_Digiplay_matrix2d_compose(VM *vm, Object *method, VAR *args) {
     }
 }
 
-void digiplay_Digiplay_matrix2d_multiply(VM *vm, Object *method, VAR *args) {
+void digiplay_Digiplay_Matrix2d_multiply(VM *vm, Object *method, VAR *args) {
     if(args[0].J && args[1].J && args[2].J) {
         Matrix2D *lhs = (Matrix2D*)args[0].J;
         Matrix2D *rhs = (Matrix2D*)args[1].J;

@@ -16,18 +16,53 @@
 
 package digiplay.render;
 
-import digiplay.Matrix2D;
-
 /**
  *
  * @author mustafa
  */
-public class QuadList {
+public class QuadGeometry {
+
+    //x,y,z x4 = 12
+    //uv x4    = 8
+    //
+    float[] buffer;
+    int size;
+    int version;
+    QuadGeometry next;
     
-    long handle;
+    static QuadGeometry CACHE;
+    
+    public static QuadGeometry alloc(int size) {
+        QuadGeometry r = CACHE;
+        if(r != null) {
+            CACHE = CACHE.next;
+            r.next = null;
+            if(r.size < size) {
+                r.buffer = new float[size];
+            }
+            r.size = size;
+        } else r = new QuadGeometry(size);
+        return r;
+    }
+    
+    public QuadGeometry(int size) {
+        buffer = new float[size];
+        this.size = size;
+    }
+    
+    public void set(int index, 
+            float x1, float y1, float z1, 
+            float x2, float y2, float z2, 
+            float x3, float y3, float z3, 
+            float x4, float y4, float z4, 
+            float u1, float v1, float u2, float v2, 
+            float u3, float v3, float u4, float v4) {
+    }
+    
+    /*
     int version;
     
-    public QuadList(int capacity) {
+    public QuadGeometry(int capacity) {
         handle = alloc(capacity);
     }
     
@@ -43,5 +78,5 @@ public class QuadList {
             float u3, float v3, float u4, float v4);
     
     public native void applyMatrix(Matrix2D matrix);
-    
+    */
 }

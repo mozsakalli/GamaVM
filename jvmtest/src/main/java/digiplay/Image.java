@@ -16,7 +16,7 @@
 
 package digiplay;
 
-import digiplay.render.QuadList;
+import digiplay.render.QuadGeometry;
 import digiplay.render.Texture2D;
 
 /**
@@ -25,12 +25,12 @@ import digiplay.render.Texture2D;
  */
 public class Image extends Sprite2D {
     
-    QuadList quad;
+    QuadGeometry quad;
     Texture2D texture;
     
     @Override
     public void invalidateContent() {
-        if(quad == null) quad = new QuadList(1);
+        if(quad == null) quad = new QuadGeometry(1);
         float x2 = getNaturalWidth();
         float y2 = getNaturalHeight();
         quad.set(0, 0, 0, x2, 0, x2, y2, 0, y2, x, x, y, x, x, x, x, x, x, x, x, x);
