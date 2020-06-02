@@ -315,9 +315,9 @@ Object *alloc_class(VM *vm, Object *name) {
     else if(compare_string_cstring(name, "java/lang/String")) boot = &java_lang_String;
     else if(compare_string_cstring(name, "java/lang/Class")) boot = &java_lang_Class;
     else if(compare_string_cstring(name, "java/lang/reflect/Field")) boot = &java_lang_reflect_Field;
-    else if(compare_string_cstring(name, "[java/lang/reflect/Field;")) boot = &java_lang_reflect_Field1D;
+    else if(compare_string_cstring(name, "[Ljava/lang/reflect/Field;")) boot = &java_lang_reflect_Field1D;
     else if(compare_string_cstring(name, "java/lang/reflect/Method")) boot = &java_lang_reflect_Method;
-    else if(compare_string_cstring(name, "[java/lang/reflect/Method;")) boot = &java_lang_reflect_Method1D;
+    else if(compare_string_cstring(name, "[Ljava/lang/reflect/Method;")) boot = &java_lang_reflect_Method1D;
     else if(compare_string_cstring(name, "B")) boot = &java_lang_B;
     else if(compare_string_cstring(name, "Z")) boot = &java_lang_Z;
     else if(compare_string_cstring(name, "C")) boot = &java_lang_C;
@@ -776,6 +776,9 @@ void clInit(VM *vm, Object *clso) {
             Object** fields = (Object**)cls->fields->instance;
             for(int i=0; i<cls->fields->length; i++) {
                 FieldFields *f = fields[i]->instance;
+                //printf("field-cls: %s for %d\n",string2c(cls->name), i);
+                //printf("sign: %s\n", string2c(f->signature));
+                //f->type = resolve_class_by_signature(vm, f->signature, 1);
                 int size = get_signature_size(f->signature);
                 if(IS_STATIC(f)) {
                     f->offset = globalSize;
@@ -1332,7 +1335,13 @@ void vm_test() {
     memset(java_lang_reflect_Method1D.instance, 0, sizeof(ClassFields));
     CLS_FIELD(&java_lang_reflect_Method1D, instanceSize) = sizeof(ClassFields);
     CLS_FIELD(&java_lang_reflect_Method1D, elementClass) = &java_lang_reflect_Method;
-    
+
+    memset(&java_lang_reflect_Field1D, 0, sizeof(Object));
+    java_lang_reflect_Field1D.instance = malloc(sizeof(ClassFields));
+    memset(java_lang_reflect_Field1D.instance, 0, sizeof(ClassFields));
+    CLS_FIELD(&java_lang_reflect_Field1D, instanceSize) = sizeof(ClassFields);
+    CLS_FIELD(&java_lang_reflect_Field1D, elementClass) = &java_lang_reflect_Field;
+
     //vm->stack = (VAR*)gc_alloc_global(vm, sizeof(VAR) * MAX_STACK);
     memset(&java_lang_C1D, 0, sizeof(Object));
     java_lang_C1D.cls = &java_lang_Class;

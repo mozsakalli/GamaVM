@@ -126,6 +126,7 @@ typedef struct __attribute__ ((packed)) FieldFields {
     Object *name;
     Object *signature;
     jint offset;
+    struct Object *type;
 } FieldFields;
 
 typedef struct LocalVarInfo {
@@ -229,8 +230,9 @@ typedef struct __attribute__ ((packed)) ClassFields {
 typedef struct Frame {
     Object *method;
     jint line;
-    VAR *stack;
-    VAR *local;
+    VAR *sp;
+    //VAR *stack;
+    //VAR *local;
     VAR retVal;
 } Frame;
 
@@ -343,6 +345,7 @@ extern "C" {
 //extern void interpreter_execute_direct(VM *vm, Method *method, VAR *args);
 extern Object *resolve_class(VM *vm, void *name, int isString);
 extern Object *resolve_class_by_index(VM *vm, Object *cls, int index);
+extern Object *resolve_class_by_signature(VM *vm, void *name, int isString);
 extern Object *resolve_array_class_by_index(VM *vm, Object *cls, int index);
 extern Object *resolve_method(VM *vm, void *clsName, void *name, void *signature, int isString);
 extern Object *resolve_method_by_index(VM *vm, Object *cls, int index);
@@ -389,6 +392,8 @@ extern inline jbool call_boolean_method(VM *vm, Object *method, VAR *args);
 extern Object java_lang_String;
 extern Object java_lang_C1D;
 extern Object java_lang_Class;
+extern Object java_lang_reflect_Method;
+extern Object java_lang_reflect_Field;
 
 //void print_stack_trace(VM *vm);
 

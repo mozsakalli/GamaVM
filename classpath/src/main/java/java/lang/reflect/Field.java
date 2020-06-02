@@ -7,8 +7,13 @@ public class Field {
     String name;
     String signature;
     int offset;
+    Class type;
     
     public String getName() {
         return name;
     }
+    
+    public Class getType() {
+        return type;
+    } 
 }

@@ -19,17 +19,26 @@
  */
 public class Main {
     
+    static int getVal(long l) {
+        int v = (int)l;
+        v++;
+        return v;
+    }
     public static void main() {
         System.out.println("-- main --");
         while(true) {
+            long time = System.currentTimeMillis();
             byte[] b = new byte[120];
             b[10] = (byte)1;
             System.gc();
+            time = System.currentTimeMillis() - time;
+            System.out.println("took: "+time+" for "+getVal(time));
         }
         //IosPlatform.run(new MyGame());
     }
     
     public static void main(String...args) {
+        main();
     }
 
 

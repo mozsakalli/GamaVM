@@ -1422,6 +1422,7 @@ void vm_interpret_method(VM *vm, Object *omethod, VAR *args) {
     Object *field;
     jint fp = ++vm->FP;
     vm->frames[fp].method = omethod;
+    vm->frames[fp].sp = local;
     //Frame *frame = &vm->frames[++vm->fp];
     
     OP* op = &((OP*)method->compiled)[0];

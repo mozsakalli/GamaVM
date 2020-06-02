@@ -6,6 +6,7 @@ digiplay/Game.class
 digiplay/Matrix2D.class
 gamavm/apple/uikit/UIResponder.class
 Main.class
+digiplay/net/Socket.class
 digiplay/render/VertexBuffer.class
 gamavm/apple/ObjC.class
 gamavm/apple/uikit/UIApplication.class

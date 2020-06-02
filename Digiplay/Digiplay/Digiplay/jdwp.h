@@ -343,7 +343,7 @@ public:
         commandSet = readByte();
         command = readByte();
         
-        printf("packet: payload=%d id=%d cmd=0x%x\n", payload, id, (commandSet<<8)|command);
+        //printf("packet: payload=%d id=%d cmd=0x%x\n", payload, id, (commandSet<<8)|command);
     }
     
     int readN(int len) {
@@ -519,6 +519,130 @@ public:
         writeLong(loc->index);
     }
 
+    void writeValue(Object *signature, void *ptr) {
+        StringFields *str = (StringFields*)signature->instance;
+        jchar *chars = (jchar*)str->chars->instance;
+        switch(chars[0]) {
+            case 'B':
+            case 'Z':
+                writeByte(chars[0]);
+                writeByte(*(jbyte*)ptr);
+                break;
+                
+            case 'S':
+            case 'C':
+                writeByte(chars[0]);
+                writeShort(*(jshort*)ptr);
+                break;
+
+            case 'I':
+            case 'F':
+                writeByte(chars[0]);
+                writeInt(*(jint*)ptr);
+                break;
+
+            case 'J':
+            case 'D':
+                writeByte(chars[0]);
+                writeLong(*(jlong*)ptr);
+                break;
+
+            case '[':
+                writeByte('[');
+                writeObject(*(Object**)ptr);
+                break;
+                
+            default:
+                if(compare_string((void*)signature, (void*)"Ljava/lang/String;", 0))
+                    writeByte(JDWP_TAG_STRING);
+                else if(compare_string((void*)signature, (void*)"Ljava/lang/Class;", 0))
+                    writeByte(JDWP_TYPETAG_CLASS);
+                else if(compare_string((void*)signature, (void*)"Ljava/lang/Thread;", 0))
+                    writeByte(JDWP_TAG_THREAD);
+                else writeByte('L');
+                writeObject(*(Object**)ptr);
+                break;
+        }
+    }
+    
+    void writeArray(Object *arr, int index, int len) {
+        jchar *chars = (jchar*)((StringFields*)CLS_FIELD(arr->cls, name)->instance)->chars->instance;
+        writeByte(chars[1]);
+        writeInt(len);
+        switch(chars[1]) {
+            case 'B':
+            case 'Z': {
+                jbyte *data = (jbyte*)arr->instance;
+                for(int i=index; i<index+len; i++) writeByte(data[i]);
+            } break;
+            case 'C':
+            case 'S': {
+                jshort *data = (jshort*)arr->instance;
+                for(int i=index; i<index+len; i++) writeShort(data[i]);
+            } break;
+            case 'I':
+            case 'F': {
+                jint *data = (jint*)arr->instance;
+                for(int i=index; i<index+len; i++) writeInt(data[i]);
+            } break;
+            case 'J':
+            case 'D': {
+                jlong *data = (jlong*)arr->instance;
+                for(int i=index; i<index+len; i++) writeLong(data[i]);
+            } break;
+            default: {
+                Object **data = (Object**)arr->instance;
+                for(int i=index; i<index+len; i++) {
+                    Object *o = data[i];
+                    if(!o) {
+                        writeByte('L');
+                        writeLong(0);
+                    } else {
+                        writeValue(CLS_FIELD(o->cls,name), (void*)&o);
+                    }
+                }
+            } break;
+        }
+    }
+    
+    void writeString(Object *strobject) {
+        StringFields *str = (StringFields*)strobject->instance;
+        jchar *chars = (jchar*)str->chars->instance;
+        int len = 0;
+        for (int i = str->start; i < str->start+str->length; i++) {
+            int c = chars[i] & 0xff;
+            if (c <= 0x7F) {
+                len += 1;
+            } else if (c <= 0x7FF) {
+                len += 2;
+            } else if (c <= 0xFFFF) {
+                len += 3;
+            } else {
+                len += 4;
+            }
+        }
+        
+        writeInt(len);
+        ensure(len);
+        for (int i = str->start; i < str->start+str->length; i++) {
+            int c = chars[i] & 0xff;
+            if (c <= 0x7F) {
+                writeByte(c);
+            } else if (c <= 0x7FF) {
+                writeByte(0xC0 | (c >> 6));
+                writeByte(0x80 | (c & 63));
+            } else if (c <= 0xFFFF) {
+                writeByte(0xE0 | (c >> 12));
+                writeByte(0x80 | ((c >> 6) & 63));
+                writeByte(0x80 | (c & 63));
+            } else {
+                writeByte(0xF0 | (c >> 18));
+                writeByte(0x80 | ((c >> 12) & 63));
+                writeByte(0x80 | ((c >> 6) & 63));
+                writeByte(0x80 | (c & 63));
+            }
+        }
+    }
     /*
     void writeString(String str) {
         byte[] buffer = str.getBytes();
@@ -559,7 +683,7 @@ class JdwpEventSet {
 public:
     int requestId, eventKind, suspendPolicy, modifiers;
     JdwpEventSetMod **mods;
-    JdwpEventSet *next;
+    JdwpEventSet *next = nullptr;
     
     static JdwpEventSet *head, *tail;
     static JdwpEventSet *getByRequestId(int requestId) {
@@ -579,6 +703,10 @@ public:
                 if(!pre) head = head->next;
                 else pre->next = ptr->next;
                 if(head == nullptr) tail = nullptr;
+                else if(ptr == tail) {
+                    tail = pre;
+                    tail->next = nullptr;
+                }
                 return ptr;
             }
             pre = ptr;
@@ -686,7 +814,7 @@ public:
         int r = (int)rr;
         if(r >= 0) {
             bufSize += r;
-            printf("---- readsome: %d\n", r);
+            //printf("---- readsome: %d\n", r);
             return true;
         }
         //fd = 0;
@@ -727,7 +855,7 @@ public:
         if(pending4) {
             payload = ((buf.buffer[0]&0xff)<<24)|((buf.buffer[1]&0xff)<<16)|((buf.buffer[2]&0xff)<<8)|((buf.buffer[3]&0xff));
             pending4 = false;
-            printf("--- payload: %d\n", payload);
+            //printf("--- payload: %d\n", payload);
             if(!readSome(payload - bufSize)) return nullptr;
         }
         
