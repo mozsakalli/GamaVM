@@ -29,10 +29,12 @@ public class MyGame implements Game {
     @Override
     public void begin() {
         Stage2D.I.setup(new Point2D(1024,768));
+        /*
         Image img = new Image();
         Stage2D.I.addChild(img);
         
         System.out.println("game:begin");
+        */
     }
 
     @Override

@@ -622,8 +622,8 @@
             filePath = "Digiplay/compiler.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2371"
-            endingLineNumber = "2371"
+            startingLineNumber = "2374"
+            endingLineNumber = "2374"
             landmarkName = "vm_interpret_method(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -956,8 +956,8 @@
             filePath = "Digiplay/compiler.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2355"
-            endingLineNumber = "2355"
+            startingLineNumber = "2358"
+            endingLineNumber = "2358"
             landmarkName = "vm_interpret_method(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -972,8 +972,8 @@
             filePath = "Digiplay/compiler.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2175"
-            endingLineNumber = "2175"
+            startingLineNumber = "2178"
+            endingLineNumber = "2178"
             landmarkName = "vm_interpret_method(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1536,6 +1536,22 @@
             endingLineNumber = "444"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "116FF08C-47A0-4F0F-907B-0385F20B5408"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Digiplay/digiplay_ios.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
+            landmarkName = "-updateTimerFired"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

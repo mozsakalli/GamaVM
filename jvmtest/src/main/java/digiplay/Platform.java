@@ -45,6 +45,12 @@ public abstract class Platform {
         long now = System.currentTimeMillis();
         int delta = (int)(now - lastTime);
         lastTime = now;
+        try {
+            game.update();
+            game.render();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         //System.out.println("Step - "+delta);
         System.gc();
     }

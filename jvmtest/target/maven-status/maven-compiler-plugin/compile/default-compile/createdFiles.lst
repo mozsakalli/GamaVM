@@ -22,7 +22,6 @@ digiplay/render/RenderDevice.class
 digiplay/ios/IosPlatform.class
 digiplay/Platform.class
 gamavm/apple/NSMutableObject.class
-digiplay/render/QuadList.class
 digiplay/Sprite2D.class
 digiplay/Digiplay.class
 digiplay/Files.class

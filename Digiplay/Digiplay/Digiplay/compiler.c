@@ -1638,7 +1638,10 @@ OP_NEWARRAY:
             op->var.O = (Object*)resolve_class(vm, "[I", 0);
             break;
         default:
-            printf("Unknown new array type: %d\n", op->index);
+            vm->FP--;
+            vm->SP -= method->maxStack + method->maxLocals;
+            throw_nullpointerexception(vm);
+            //printf("Unknown new array type: %d\n", op->index);
             return;
     }
     if(vm->exception) goto __EXCEPTION;
