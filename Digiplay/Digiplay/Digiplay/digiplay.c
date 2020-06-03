@@ -42,7 +42,7 @@ typedef struct Matrix2D {
 
 #define RETURN_LONG(v) vm->frames[vm->FP].retVal.J = (jlong)(v)
 #define RETURN_FLOAT(v) vm->frames[vm->FP].retVal.J = (jfloat)(v)
-
+/*
 #define sin_precision   100 // gradations per degree, adjust to suit
 #define sin_modulus     (360 * sin_precision)
 static float SinTable[sin_modulus];
@@ -62,37 +62,9 @@ void digiplay_Digiplay_math_sindeg(VM *vm, Object *method, VAR *args) {
 void digiplay_Digiplay_math_cosdeg(VM *vm, Object *method, VAR *args) {
     RETURN_FLOAT(cosdeg(args[0].F));
 }
-/*
-[MethodImpl(MethodImplOptions.AggressiveInlining)]
-public static unsafe float CosDeg(float degree)
-{
-    fixed (float* ptr = sinTable)
-    {
-        var a = (int)((degree + 90) * precision + 0.5f);
-        return a >= 0 ? ptr[a % modulus] : -ptr[(-a) % modulus];
-    }
-}
-
-[MethodImpl(MethodImplOptions.AggressiveInlining)]
-public unsafe static float Sin(float radian)
-{
-    fixed (float* ptr = sinTable)
-    {
-        var a = (int)(radian / PI * 180 * precision + 0.5f);
-        return a >= 0 ? ptr[a % modulus] : -ptr[(-a) % modulus];
-    }
-}
-
-[MethodImpl(MethodImplOptions.AggressiveInlining)]
-public static unsafe float Cos(float degree)
-{
-    fixed (float* ptr = sinTable)
-    {
-        var a = (int)((degree / PI * 180 + 90) * precision + 0.5f);
-        return a >= 0 ? ptr[a % modulus] : -ptr[(-a) % modulus];
-    }
-}
 */
+#define sindeg(a) sin((a)/180.0*M_PI)
+#define cosdeg(a) cos((a)/180.0*M_PI)
 
 static QuadList *QuadCache = NULL;
 void digiplay_Digiplay_Quad_alloc(VM *vm, Object *method, VAR *args) {
@@ -205,6 +177,7 @@ void digiplay_Disiplay_Matrix2d_delete(VM *vm, Object *method, VAR *args) {
         Matrix2DCache = mat;
     }
 }
+
 void digiplay_Digiplay_Matrix2d_compose(VM *vm, Object *method, VAR *args) {
     if(args[0].J) {
         Matrix2D *mat = (Matrix2D*)args[0].J;
@@ -269,6 +242,43 @@ void digiplay_Digiplay_Matrix2d_multiply(VM *vm, Object *method, VAR *args) {
     }
 }
 
+NativeMethodInfo digiplay_native_methods[] = {
+    /*
+    //java/lang/Object
+    {.cls = "java/lang/Object", .name = "clone", .sign = "()Ljava/lang/Object;", .handle = &java_lang_Object_clone},
+
+    //java/lang/System
+    {.cls = "java/lang/System", .name = "arraycopy", .sign = "(Ljava/lang/Object;ILjava/lang/Object;II)V", .handle = &java_lang_System_arraycopy},
+    {.cls = "java/lang/System", .name = "currentTimeMillis", .sign = "()J", .handle = &java_lang_System_currentTimeMillis},
+    {.cls = "java/lang/System", .name = "nanoTime", .sign = "()J", .handle = &java_lang_System_nanoTime},
+    {.cls = "java/lang/System", .name = "gc", .sign = "()V", .handle = &java_lang_System_gc},
+    {.cls = "java/lang/System$SystemOutStream", .name = "printImpl", .sign = "(Ljava/lang/String;)V", .handle = &java_lang_System_SystemOutStream_printImpl},
+
+    //gamavm/VM
+    {.cls = "gamavm/VM", .name = "getClass", .sign = "(Ljava/lang/Object;)Ljava/lang/Class;", .handle = &gamavm_VM_getClass},
+    {.cls = "gamavm/VM", .name = "getAddress", .sign = "(Ljava/lang/Object;)J", .handle = &gamavm_VM_getAddress},
+
+    //java/lang/Math
+    {.cls = "java/lang/Math", .name = "abs", .sign = "(D)D", .handle = &java_lang_Math_abs_D},
+    {.cls = "java/lang/Math", .name = "abs", .sign = "(F)F", .handle = &java_lang_Math_abs_F},
+
+    //java/lang/Double
+    {.cls = "java/lang/Double", .name = "toStringImpl", .sign = "(DZ)Ljava/lang/String;", .handle = &java_lang_Double_toStringImpl},
+
+    //java/lang/Float
+    {.cls = "java/lang/Float", .name = "toStringImpl", .sign = "(FZ)Ljava/lang/String;", .handle = &java_lang_Float_toStringImpl},
+
+    {.cls = "gamavm/apple/ObjC", .name = "objc_getClass", .sign = "(Ljava/lang/String;)J", .handle = &gamavm_apple_ObjC_objc_getClass},
+    {.cls = "gamavm/apple/ObjC", .name = "sel_registerName", .sign = "(Ljava/lang/String;)J", .handle = &gamavm_apple_ObjC_sel_registerName},
+    {.cls = "gamavm/apple/ObjC", .name = "callObject", .sign = "(Lgamavm/apple/NSObject;Lgamavm/apple/Selector;Ljava/lang/Class;[Ljava/lang/Object;)Lgamavm/apple/NSObject;", .handle = &gamavm_apple_ObjC_callObject},
+
+    //{.cls = "gamavm/apple/uikit/UIApplication", .name = "main", .sign = "(Lgamavm/apple/uikit/UIApplicationDelegate;)V", .handle = &gamavm_apple_uikit_UIApplication_main},
+    {.cls = "digiplay/ios/IosPlatform", .name = "run", .sign = "()V", .handle = &digiplay_ios_IosPlatform_run},
+
+    {.cls = "gamavm/jdwp/Jdwp", .name = "socketConnect", .sign = "(Ljava/lang/String;I)I", .handle = &gamavm_jdwp_Jdwp_socketConnect},
+    */
+    {.cls = NULL}
+};
 /*
 #include "digiplay.h"
 
