@@ -84,20 +84,6 @@ MTLRenderPassDescriptor *metal_get_pass() {
     return MetalFramebuffer;
 }
 
-void metal_digiplay_GL_begin(VM *vm, Object *method, VAR *args) {
-    //metal_cmdBuffer = [metal_cmdQueue commandBuffer];
-    //[metal_cmdBuffer retain];
-}
-void metal_digiplay_GL_end(VM *vm, Object *method, VAR *args) {
-    /*
-    metal_close_encoder();
-    [metal_cmdBuffer presentDrawable:MetalDrawable];
-    [metal_cmdBuffer commit];
-    [metal_cmdBuffer release];
-    metal_cmdBuffer = nil;
-     */
-}
-
 void metal_digiplay_GL_viewport(VM *vm, Object *method, VAR *args) {
     metal_vp.originX = args[0].I;
     metal_vp.originY = args[1].I;
@@ -110,12 +96,13 @@ void metal_digiplay_GL_viewport(VM *vm, Object *method, VAR *args) {
 }
 
 void metal_digiplay_GL_clearColor(VM *vm, Object *method, VAR *args) {
-    MetalFramebuffer.colorAttachments[0].clearColor = MTLClearColorMake(args[0].F, args[1].F, args[2].F, args[3].F);
+    metal_get_pass().colorAttachments[0].clearColor = MTLClearColorMake(args[0].F, args[1].F, args[2].F, args[3].F);
 }
 
 void metal_digiplay_GL_clear(VM *vm, Object *method, VAR *args) {
     metal_clear_flags = args[0].I;
     metal_close_encoder();
+    metal_get_encoder();
 }
 
 void metal_digiplay_GL_drawElements(VM *vm, Object *method, VAR *args) {
