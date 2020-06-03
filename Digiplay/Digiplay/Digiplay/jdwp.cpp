@@ -5,6 +5,8 @@
 //  Created by mustafa on 31.05.2020.
 //  Copyright © 2020 mustafa. All rights reserved.
 //
+#ifdef JDWP_ENABLE
+
 
 #include "jdwp.h"
 
@@ -944,3 +946,6 @@ void jdwp_tick(VM *vm, Object *method, int line) {
 }
 
 } //extern "C"
+
+
+#endif

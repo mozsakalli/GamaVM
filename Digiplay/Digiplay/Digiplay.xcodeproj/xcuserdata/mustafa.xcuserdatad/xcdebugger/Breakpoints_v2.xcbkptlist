@@ -480,7 +480,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1155"
             endingLineNumber = "1155"
-            landmarkName = "throw_exception(vm, exception)"
+            landmarkName = "get_line_number(method, pc)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -608,8 +608,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1156"
             endingLineNumber = "1156"
-            landmarkName = "throw_exception(vm, exception)"
-            landmarkType = "9">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

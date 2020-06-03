@@ -1224,7 +1224,11 @@ void vm_compile_method(VM *vm, MethodFields *method, void **handlers) {
     method->compiled = ctx.ops;
 }
 
+#ifdef JDWP_ENABLE
 extern void jdwp_tick(VM *vm, Object *method, int line);
+#else
+#define jdwp_tick
+#endif
 
 void vm_interpret_method(VM *vm, Object *omethod, VAR *args) {
     static void* handlers[] = {

@@ -6,6 +6,8 @@
 //  Copyright © 2020 mustafa. All rights reserved.
 //
 
+#ifdef JDWP_ENABLE
+
 #ifndef jdwp_hpp
 #define jdwp_hpp
 
@@ -907,3 +909,5 @@ public:
 
 
 #endif /* jdwp_hpp */
+
+#endif

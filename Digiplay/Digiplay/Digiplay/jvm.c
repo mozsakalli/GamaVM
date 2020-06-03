@@ -10,8 +10,11 @@
 #include "miniz.h"
 #include "natives.h"
 
+#ifdef JDWP_ENABLE
 extern void jdwp_start(char *host, int port);
-extern void jdwp_tick(VM *vm, Object *method, int line);
+#else
+#define jdwp_start
+#endif
 
 extern void *__platform_read_file(const char* path, int *size);
 
