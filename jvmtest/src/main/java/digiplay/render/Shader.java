@@ -24,4 +24,15 @@ public class Shader {
     
     long deviceHandle;
     
+    
+    public Shader(String vertex, String fragment) {
+        deviceHandle = internalCreate(vertex, fragment);
+    }
+    
+    private native long internalCreate(String vertex, String fragment);
+    
+    @Override
+    protected native void finalize() throws Throwable;
+    
+    
 }

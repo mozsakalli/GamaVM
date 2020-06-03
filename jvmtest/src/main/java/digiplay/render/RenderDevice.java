@@ -19,7 +19,7 @@ package digiplay.render;
  *
  * @author mustafa
  */
-public class RenderDevice {
+public abstract class RenderDevice {
 
     public final static int PM_VIEWPORT = (1 << 0);
     public final static int PM_INDEXBUF = (1 << 1);
@@ -67,6 +67,41 @@ public class RenderDevice {
 
     int pendingMask;
 
+    public void resetStates() { 
+        /*
+        m_curIndexBuf = 1;
+        m_newIndexBuf = 0;
+
+        m_curBlendEq = RDIBlendEquationModes.SUBTRACT;
+        m_newBlendEq = RDIBlendEquationModes.ADD;
+        m_blendEqBuffer = -1;
+
+        m_curSrcFactor = RDIBlendFactors.ZERO;
+        m_newSrcFactor = RDIBlendFactors.ONE;
+
+        m_curDstFactor = RDIBlendFactors.ONE;
+        m_newDstFactor = RDIBlendFactors.ZERO;
+
+        m_curCullMode = RDICullModes.NONE;
+        m_newCullMode = RDICullModes.BACK;
+
+        m_curDepthMask = false;
+        m_newDepthMask = true;
+        
+        m_depthTestEnabled = false;
+        m_curDepthTest = RDITestModes.GREATER;
+        m_newDepthTest = RDITestModes.LESS;
+
+        for (i in 0...m_caps.maxTextureUnits)
+            setTexture(i, 0, 0);
+
+        m_activeVertexAttribsMask = 0;
+
+        m_pendingMask = 0xFFFFFFFF;
+        commitStates();
+        */
+    }    
+    
     public void setViewPort(int x, int y, int width, int height) {
         vpX = x;
         vpY = y;
@@ -83,4 +118,11 @@ public class RenderDevice {
         pendingMask |= PM_SCISSOR;
     }
 
+    
+    //=============================================================================
+    // drawcalls and clears
+    //=============================================================================
+    public abstract void clear(int flags, float r, float g, float b, float a, int depth);
+    //public function draw(_primType:Int, _type:Int, _numInds:Int, _offset:Int):Void { throw "NOT IMPLEMENTED"; }
+    //public function drawArrays(_primType:Int, _offset:Int, _size:Int):Void { throw "NOT IMPLEMENTED"; }    
 }

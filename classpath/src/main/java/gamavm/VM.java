@@ -29,6 +29,11 @@ public class VM {
     
     public static native Object allocObject(Class cls);
     public static native Object allocArray(Class cls, int length);
+    public static native long allocMem(int size);
+    public static native void deallocMem(long ptr);
+    public static native void setShort(long ptr, int value);
+    public static native void setFloat(long ptr, float value);
+    
     public static native int getArrayLength(Object array);
     
 }

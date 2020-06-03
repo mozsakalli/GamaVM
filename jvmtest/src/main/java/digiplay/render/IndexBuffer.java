@@ -22,4 +22,28 @@ package digiplay.render;
  */
 public class IndexBuffer {
 
+    long deviceHandle;
+    short[] buffer;
+    int size;
+    public boolean dirty;
+    
+    public IndexBuffer(int size) {
+        buffer = new short[size];
+    }
+    
+    public void set(int index, int val) {
+        buffer[index] = (short)val;
+    }
+    
+    public void set(int index, int val0, int val1, int val2) {
+        buffer[index++] = (short)val0;
+        buffer[index++] = (short)val1;
+        buffer[index] = (short)val2;
+    }
+    
+    @Override
+    protected native void finalize() throws Throwable;
+    
+    public native void bind();
+    
 }

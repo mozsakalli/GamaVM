@@ -22,6 +22,21 @@ package digiplay.render;
  */
 public class VertexBuffer {
     
-    public native int addQuads(QuadGeometry quads, int offset, int count, int color);
+    long deviceHandle;
+    float[] buffer;
+    int size;
+    int stride;
+    public boolean dirty;
+    
+    public VertexBuffer(int size, int stride) {
+        buffer = new float[size * stride];
+        this.size = size;
+        this.stride = stride;
+    }
+   
+    @Override
+    protected native void finalize() throws Throwable;
+    
+    public native void bind();
     
 }
