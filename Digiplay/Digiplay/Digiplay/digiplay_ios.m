@@ -20,8 +20,13 @@ static CGPoint SafeScreenTopLeft;
 static CGPoint SafeScreenBottomRight;
 static BOOL IsTouching;
 static CGPoint TouchPosition;
+
 CAMetalLayer* MetalLayer;
 id<MTLDevice> MetalDevice = nil;
+id<CAMetalDrawable> MetalDrawable;
+id<MTLTexture> MetalDepth = nil;
+id<MTLTexture> MetalStencil = nil;
+MTLRenderPassDescriptor *MetalFramebuffer;
 
 @interface DigiplayView : UIView
 @end
@@ -36,6 +41,7 @@ id<MTLDevice> MetalDevice = nil;
 }
 
 +(Class)layerClass {
+    
     Class cls = NSClassFromString(@"CAMetalLayer");
     if(cls) {
         MetalDevice = MTLCreateSystemDefaultDevice();
@@ -65,6 +71,8 @@ id<MTLDevice> MetalDevice = nil;
     if(!MetalDevice) {
         if(framebuffer == -1)
             [self createOpenGLBuffers];
+    } else {
+        //if(!MetalDrawable) [self createMetalBuffers];
     }
     
     if([self respondsToSelector:NSSelectorFromString(@"safeAreaInsets")]) {
@@ -81,6 +89,8 @@ id<MTLDevice> MetalDevice = nil;
     if(self.window) {
         if(!MetalDevice) {
             if(framebuffer == -1) [self createOpenGLBuffers];
+        } else {
+            //if(!MetalDrawable) [self createMetalBuffers];
         }
     }
 }
@@ -93,6 +103,8 @@ id<MTLDevice> MetalDevice = nil;
     }
 }
 extern void vm_test();
+extern void metal_begin_frame();
+extern void metal_end_frame();
 Object *digiplayIosPlatform;
 Object *digiplayPlatformStepMethod;
 VM *gamaVM;
@@ -104,9 +116,21 @@ VM *gamaVM;
         vm_test();
     }
     
+    if(MetalDevice) {
+        [self createMetalBuffers];
+        metal_begin_frame();
+    }
+    
     if(gamaVM && digiplayPlatformStepMethod) {
         VAR args[1] = { {.O = digiplayIosPlatform} };
         call_void_method(gamaVM,digiplayPlatformStepMethod, &args[0]);
+    }
+    if(!MetalDevice)
+        [self present];
+    else {
+        metal_end_frame();
+        [MetalDrawable release];
+        MetalDrawable = nil;
     }
 }
 
@@ -167,10 +191,49 @@ VM *gamaVM;
     }
 }
 
+-(void) createMetalBuffers {
+    if(!MetalDrawable) {
+    MetalDrawable=[MetalLayer nextDrawable];
+    [MetalDrawable retain];
+    /*
+    if (MetalDepth==nil) {
+        MTLTextureDescriptor *td=[MTLTextureDescriptor new];
+        td.pixelFormat=MTLPixelFormatDepth32Float;
+        td.width=[MetalDrawable.texture width];
+        td.height=[MetalDrawable.texture height];
+        td.usage=MTLStorageModePrivate;
+        MetalDepth=[MetalDevice newTextureWithDescriptor:td];
+        td.pixelFormat=MTLPixelFormatStencil8;
+        MetalStencil=[MetalDevice newTextureWithDescriptor:td];
+    }*/
+    MetalFramebuffer.colorAttachments[0].texture=MetalDrawable.texture;
+    MetalFramebuffer.depthAttachment.texture=MetalDepth;
+    MetalFramebuffer.depthAttachment.loadAction=MTLLoadActionClear;
+    MetalFramebuffer.stencilAttachment.texture=MetalStencil;
+    MetalFramebuffer.stencilAttachment.loadAction=MTLLoadActionClear;
+    int framebufferWidth=[MetalDrawable.texture width];
+    int framebufferHeight=[MetalDrawable.texture height];
+    MetalFramebuffer.colorAttachments[0].loadAction=MTLLoadActionClear;
+    MetalFramebuffer.colorAttachments[0].clearColor=MTLClearColorMake(1,1,1,1);
+    
+    //gpu_metal_init();
+    /*
+    if ((lfbw!=framebufferWidth)||(lfbh!=framebufferHeight))
+        gdr_surfaceChanged(framebufferWidth,framebufferHeight);
+    lfbw=framebufferWidth;
+    lfbh=framebufferHeight;
+     */
+    }
+}
+
+extern void metal_setup_natives();
 -(void) initMetal {
 //#ifndef TARGET_OS_SIMULATOR
     //todo
     MetalLayer = (CAMetalLayer*)self.layer;
+    MetalFramebuffer=[MTLRenderPassDescriptor renderPassDescriptor];
+    [MetalFramebuffer retain];
+    metal_setup_natives();
 //#endif
 }
 
@@ -252,12 +315,18 @@ VM *gamaVM;
     return YES;
 }
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    //__digiplay_notify_haxe("app:background", NULL);
+    if(gamaVM) {
+        Object *mth = resolve_method(gamaVM, "digiplay/Platform", "pause", "()V", 0);
+        VAR args[1] = { {.O = digiplayIosPlatform}};
+        if(mth) call_void_method(gamaVM, mth, &args[0]);
+    }
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    //__digiplay_notify_haxe("app:foreground", NULL);
-    //val_call0(H->get());
-    //value o = alloc_empty_object();
+    if(gamaVM) {
+        Object *mth = resolve_method(gamaVM, "digiplay/Platform", "resume", "()V", 0);
+        VAR args[1] = { {.O = digiplayIosPlatform}};
+        if(mth) call_void_method(gamaVM, mth, &args[0]);
+    }
  }
 @end
 

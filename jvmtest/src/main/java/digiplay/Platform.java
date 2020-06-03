@@ -55,5 +55,12 @@ public abstract class Platform {
         System.gc();
     }
     
+    private void pause() {
+        
+    }
+    
+    private void resume() {
+        
+    }
     
 }

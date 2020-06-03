@@ -1,6 +1,6 @@
 
+import digiplay.GL;
 import digiplay.Game;
-import digiplay.Image;
 import digiplay.Point2D;
 import digiplay.Stage2D;
 
@@ -39,12 +39,14 @@ public class MyGame implements Game {
 
     @Override
     public void update() {
-        Stage2D.I.update();
+        //Stage2D.I.update();
     }
 
     @Override
     public void render() {
-        Stage2D.I.render();
+        GL.clearColor(1, 0, 0, 1);
+        GL.viewport(0, 0, digiplay.Digiplay.graphics.getScreenWidth(), digiplay.Digiplay.graphics.getScreenHeight());
+        GL.clear(GL.COLOR_BUFFER_BIT);
     }
 
 }

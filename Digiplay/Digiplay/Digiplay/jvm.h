@@ -354,6 +354,7 @@ extern Object *resolve_method_by_index(VM *vm, Object *cls, int index);
 extern Object *find_method_recursive(Object *clso, void *name, void *signature, int isString);
 extern Object *resolve_field(VM *vm, void *clsName, void *name, int isString);
 extern Object *resolve_field_by_index(VM *vm,Object *cls, int index);
+extern void* resolve_native_method(VM *vm, Object *method);
 
 extern void alloc_init(VM *vm);
 extern ObjectPtr alloc_object(VM *vm,Object *cls);
@@ -387,6 +388,7 @@ void throw_nullpointerexception(VM *vm);
 void throw_classnotfoundexception(VM *vm, Object *name);
 void throw_arrayboundsexception(VM *vm, int index, int length);
 void throw_castexception(VM *vm, Object *son, Object *of);
+void throw_unsatisfiedlinkerror(VM *vm, Object *method);
 
 CatchInfo *find_catch_block(VM *vm, Object *method, Object *exception, int pc);
 
@@ -404,6 +406,7 @@ extern Object java_lang_reflect_Field;
 extern char *string2c(Object *jstr);
 extern Object* parse_utf8(VM *vm, char *data, int length, int intern);
 extern jint compare_string(void *str1, void *str2, int isString);
+extern jint compare_string_cstring(Object* jstr1, const char *str2);
 
 #ifdef __cplusplus
 }

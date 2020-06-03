@@ -393,30 +393,10 @@ void gamavm_apple_ObjC_callObject(VM *vm, Object *method, VAR *args) {
     //[sig dealloc];
 }
 
-void gamavm_jdwp_Jdwp_socketConnect(VM *vm, Object *method, VAR *args) {
-    struct hostent *host = gethostbyname(string2c(args[0].O));
-    int fd = 0;
-    if(host) {
-        fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-        struct sockaddr_in sock_addr;
-        memset((char *) &sock_addr, 0, sizeof(sock_addr));
-        sock_addr.sin_family = AF_INET;
-        sock_addr.sin_port = htons(args[1].I);
-        sock_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
-        memset(&(sock_addr.sin_zero), 0, sizeof((sock_addr.sin_zero)));
-        
-        if(connect(fd, (struct sockaddr *) &sock_addr, sizeof(sock_addr)) == -1) {
-            close(fd);
-            fd = 0;
-        }
-        fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) | O_NONBLOCK);
-    }
-    vm->frames[vm->FP].retVal.I = fd;
-}
 
 extern void digiplay_ios_IosPlatform_run(VM *vm, Object *method, VAR *args);
 
-NativeMethodInfo NATIVES[] = {
+NativeMethodInfo gamavm_natives[] = {
     //java/lang/Object
     {.cls = "java/lang/Object", .name = "clone", .sign = "()Ljava/lang/Object;", .handle = &java_lang_Object_clone},
 
@@ -448,10 +428,33 @@ NativeMethodInfo NATIVES[] = {
     //{.cls = "gamavm/apple/uikit/UIApplication", .name = "main", .sign = "(Lgamavm/apple/uikit/UIApplicationDelegate;)V", .handle = &gamavm_apple_uikit_UIApplication_main},
     {.cls = "digiplay/ios/IosPlatform", .name = "run", .sign = "()V", .handle = &digiplay_ios_IosPlatform_run},
 
-    {.cls = "gamavm/jdwp/Jdwp", .name = "socketConnect", .sign = "(Ljava/lang/String;I)I", .handle = &gamavm_jdwp_Jdwp_socketConnect},
-
     {.cls = NULL}
 };
 
+extern NativeMethodInfo digiplay_GL_NATIVES[];
+
+void* find_native_method(NativeMethodInfo *ptr, Object *cls, Object *name, Object *sign) {
+    while (ptr && ptr->cls) {
+        if(compare_string_cstring(cls, ptr->cls) &&
+           compare_string_cstring(name, ptr->name) &&
+           compare_string_cstring(sign, ptr->sign)) {
+            return ptr->handle;
+        }
+        ptr++;
+    }
+    return NULL;
+}
+
+void* resolve_native_method(VM *vm, Object *method) {
+    Object *name = MTH_FIELD(method, name);
+    Object *sign = MTH_FIELD(method, signature);
+    Object *cls = CLS_FIELD(MTH_FIELD(method, declaringClass), name);
+    void *ret = find_native_method(&gamavm_natives[0], cls, name, sign);
+    if(ret) return ret;
+    ret = find_native_method(&digiplay_GL_NATIVES[0], cls, name, sign);
+    if(ret) return ret;
+
+    return NULL;
+}
 
 

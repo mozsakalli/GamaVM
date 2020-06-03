@@ -156,6 +156,7 @@ java/lang/invoke/MethodHandles$Lookup.class
 java/util/Hashtable$6$1.class
 java/io/FilterOutputStream.class
 java/lang/annotation/IncompleteAnnotationException.class
+java/lang/UnsatisfiedLinkError.class
 java/nio/channels/Channel.class
 java/io/ByteArrayInputStream.class
 java/util/AbstractMap$SimpleImmutableEntry.class

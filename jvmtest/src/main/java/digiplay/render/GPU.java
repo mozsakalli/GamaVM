@@ -5,7 +5,8 @@ package digiplay.render;
  * @author mustafa
  */
 public class GPU {
-    static int pendingMask, vpX, vpY, vpW, vpH, scX, scY, scW, scH;
+    static int pendingMask, vpX, vpY, vpW, vpH, scX, scY, scW, scH,
+            blendSrc = -1, blendDst = -1, cullMode, depthMask, depthTest;
     
     static VertexBuffer currentVBO;
     static IndexBuffer currentIBO;
@@ -39,10 +40,10 @@ public class GPU {
     public final static int BLENDFUNC_DST_COLOR = 8;
     public final static int BLENDFUNC_ONE_MINUS_DST_COLOR = 9;
     
-    public final static int CLEAR_NONE = 0;
-    public final static int CLEAR_COLOR = 1;
-    public final static int CLEAR_DEPTH = 2;
-    public final static int CLEAR_ALL = 3;
+    //public final static int CLEAR_NONE      = 0;
+    public final static int CLEAR_COLOR     = 1;
+    public final static int CLEAR_DEPTH     = 2;
+    public final static int CLEAR_STENCIL   = 4;
 
     public final static int PRIM_LINES = 0;
     public final static int PRIM_LINESSTRIP = 1;
@@ -50,7 +51,25 @@ public class GPU {
     public final static int PRIM_TRISTRIP = 3;
     public final static int PRIM_QUADS = 4;
     
+    public static void commit() {
+        commit(0xFFFFFFFF);
+    }
+    public native static void commit(int flags);
+    
     public native static void clear(int flags, float r, float g, float b, float a, float depth);
-    public native static void setBlending(int src, int dst);
+    
+    public static void setViewport(int x, int y, int width, int height) {
+        vpX = x;
+        vpY = y;
+        vpW = width;
+        vpH = height;
+        pendingMask |= PM_VIEWPORT;
+    }
+    
+    public static void setBlending(int src, int dst) {
+        blendSrc = src;
+        blendDst = dst;
+        pendingMask |= PM_BLEND;
+    }
     
 }

@@ -16,6 +16,11 @@ extern void jdwp_start(char *host, int port);
 #define jdwp_start
 #endif
 
+typedef struct NativeLink {
+    NativeMethodInfo *methods;
+    struct NativeLink *next;
+} NativeLink;
+
 extern void *__platform_read_file(const char* path, int *size);
 
 
@@ -346,26 +351,8 @@ Object *alloc_class(VM *vm, Object *name) {
     return boot;
 }
 
-void* vm_resolve_native_method(VM *vm, Object *method) {
-    NativeMethodInfo *ptr = &NATIVES[0];
-
-    Object *name = MTH_FIELD(method, name);
-    Object *sign = MTH_FIELD(method, signature);
-    Object *cls = CLS_FIELD(MTH_FIELD(method, declaringClass), name);
-    
-    while (ptr && ptr->cls) {
-        if(compare_string_cstring(cls, ptr->cls) &&
-           compare_string_cstring(name, ptr->name) &&
-           compare_string_cstring(sign, ptr->sign)) {
-            return ptr->handle;
-        }
-        ptr++;
-    }
-    return NULL;
-}
-
 void vm_invoke_native(VM *vm, Object *method, VAR *args) {
-    void *handler = vm_resolve_native_method(vm, method);
+    void *handler = resolve_native_method(vm, method);
     if(handler) {
         MethodFields *m = method->instance;
         m->entry = handler;
@@ -373,11 +360,13 @@ void vm_invoke_native(VM *vm, Object *method, VAR *args) {
         return;
     }
 
-    
+    throw_unsatisfiedlinkerror(vm, method);
+    /*
     printf("!!! Native !!! %s", string2c(CLS_FIELD(MTH_FIELD(method, declaringClass),name)));
     printf(":%s",string2c(MTH_FIELD(method,name)));
     printf(":%s\n",string2c(MTH_FIELD(method,signature)));
     throw_nullpointerexception(vm);
+    */
 }
  
 Object *parse_class(VM *vm,char *data, void **entries) {
@@ -955,7 +944,7 @@ Object *resolve_class(VM *vm, void *name, int isString) {
     cls = load_class(vm, name, isString);
     
     if(!cls) {
-        throw_classnotfoundexception(vm, isString ? (Object*)name : alloc_string_nogc(vm, (char*)name));
+        throw_classnotfoundexception(vm, isString ? (Object*)name : alloc_string(vm, (char*)name));
         return NULL;
     }
     if(cls) {
@@ -1234,8 +1223,10 @@ void throw_arrayboundsexception(VM *vm, int index, int length) {
     }
     Object *exp = alloc_object(vm, npe);
     if(mth) {
-        //VAR args[2] = {{ .O = exp }, { .O = name }};
-        //call_java_V(vm, mth, &args[0]);
+        char tmp[128];
+        sprintf(tmp, "%d of %d", index, length);
+        VAR args[2] = {{ .O = exp }, { .O = alloc_string(vm, tmp) }};
+        CALL_JVM_V(vm, mth, &args[0]);
     }
     throw_exception(vm, exp);
 }
@@ -1244,7 +1235,7 @@ void throw_castexception(VM *vm, Object *son, Object *of) {
     static Object *npe = NULL;
     static Object *mth = NULL;
     if(!npe) {
-        npe = resolve_class(vm, "java/lang/ArrayClassCastException", 0);
+        npe = resolve_class(vm, "java/lang/ClassCastException", 0);
         if(vm->exception) return;
         
         mth = find_method(npe, "<init>", "(Ljava/lang/String;)V", 0);
@@ -1252,8 +1243,37 @@ void throw_castexception(VM *vm, Object *son, Object *of) {
     }
     Object *exp = alloc_object(vm, npe);
     if(mth) {
+        //char tmp[128];
+        //char *ptr = sprintf(tmp, "%s", string2c(son))
         //VAR args[2] = {{ .O = exp }, { .O = name }};
         //call_java_V(vm, mth, &args[0]);
+    }
+    throw_exception(vm, exp);
+}
+
+void throw_unsatisfiedlinkerror(VM *vm, Object *method) {
+    static Object *npe = NULL;
+    static Object *mth = NULL;
+    if(!npe) {
+        npe = resolve_class(vm, "java/lang/UnsatisfiedLinkError", 0);
+        if(vm->exception) return;
+        
+        mth = find_method(npe, "<init>", "(Ljava/lang/String;)V", 0);
+        if(vm->exception) return;
+    }
+    Object *exp = alloc_object(vm, npe);
+    if(mth) {
+        char tmp[256];
+        char *ptr = &tmp[0];
+        Object *dc = ((MethodFields*)method->instance)->declaringClass;
+        Object *clsName = CLS_FIELD(dc, name);
+        ptr += sprintf(tmp,"%s",string2c(clsName));
+        ptr += sprintf(ptr,":%s",string2c(MTH_FIELD(method,name)));
+        ptr += sprintf(ptr,":%s",string2c(MTH_FIELD(method,signature)));
+        
+        VAR args[2] = {{ .O = exp }, { .O = alloc_string(vm, tmp) }};
+        CALL_JVM_V(vm, mth, &args[0]);
+
     }
     throw_exception(vm, exp);
 }
