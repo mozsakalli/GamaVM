@@ -645,6 +645,15 @@ public:
             }
         }
     }
+    
+    void writeClassSignature(Object *cls) {
+        ClassFields *cf = (ClassFields*)cls->instance;
+        if(!cf->elementClass) {
+            char tmp[256];
+            sprintf(tmp, "L%s;", string2c(cf->name));
+            writeCString(tmp);
+        } else writeCString(string2c(cf->name));
+    }
     /*
     void writeString(String str) {
         byte[] buffer = str.getBytes();

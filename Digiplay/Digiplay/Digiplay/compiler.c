@@ -914,9 +914,22 @@ void vm_process_bb(MethodFields *method, BB *bb, void **handlers) {
                         bb->stack[bb->sp++] = v2;
                         bb->stack[bb->sp++] = v1;
                         op->handler = handlers[OP_DUPX1];
-                    }
-                        break;
+                    } break;
                         
+                    case op_pop2: {
+                        switch(bb->stack[bb->sp-1]) {
+                            case 'J':
+                            case 'D':
+                                op->handler = handlers[OP_POP];
+                                bb->sp--;
+                                break;
+                            default:
+                                op->handler = handlers[OP_POP2];
+                                bb->sp -= 2;
+                                break;
+                        }
+                    } break;
+                    
                     default:
                         printf("Unknown stack operation 0x%x\n", op->bc);
                         return;
@@ -1631,17 +1644,29 @@ OP_NEWARRAY:
         case 5:
             op->var.O = (Object*)resolve_class(vm, "[C", 0);
             break;
+        case 6:
+            op->var.O = (Object*)resolve_class(vm, "[F", 0);
+            break;
+        case 7:
+            op->var.O = (Object*)resolve_class(vm, "[D", 0);
+            break;
         case 8:
             op->var.O = (Object*)resolve_class(vm, "[B", 0);
             break;
+        case 9:
+            op->var.O = (Object*)resolve_class(vm, "[S", 0);
+            break;
         case 10:
             op->var.O = (Object*)resolve_class(vm, "[I", 0);
+            break;
+        case 11:
+            op->var.O = (Object*)resolve_class(vm, "[J", 0);
             break;
         default:
             vm->FP--;
             vm->SP -= method->maxStack + method->maxLocals;
             throw_nullpointerexception(vm);
-            //printf("Unknown new array type: %d\n", op->index);
+            printf("Unknown new array type: %d\n", op->index);
             return;
     }
     if(vm->exception) goto __EXCEPTION;

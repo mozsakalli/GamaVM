@@ -23,20 +23,20 @@ package digiplay.render;
 public class VertexBuffer {
     
     long deviceHandle;
-    float[] buffer;
     int size;
     int stride;
     public boolean dirty;
     
     public VertexBuffer(int size, int stride) {
-        buffer = new float[size * stride];
         this.size = size;
         this.stride = stride;
     }
-   
+
+    public native void lock();
+    public native void unlock();
+    
     @Override
     protected native void finalize() throws Throwable;
     
-    public native void bind();
     
 }

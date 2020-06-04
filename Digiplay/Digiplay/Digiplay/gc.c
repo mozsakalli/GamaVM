@@ -38,7 +38,7 @@ HeapBlock *alloc_heap_block() {
     }
     b->objects[HEAP_OBJECT_COUNT-1].cls = NULL;
     b->used = 0;
-    printf("HeapBlock %p -> %p\n", &b->objects[0], &b->objects[HEAP_OBJECT_COUNT-1]);
+    //printf("HeapBlock %p -> %p\n", &b->objects[0], &b->objects[HEAP_OBJECT_COUNT-1]);
     return b;
 }
 Object *alloc_heap(VM *vm) {

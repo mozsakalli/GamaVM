@@ -407,6 +407,9 @@ extern char *string2c(Object *jstr);
 extern Object* parse_utf8(VM *vm, char *data, int length, int intern);
 extern jint compare_string(void *str1, void *str2, int isString);
 extern jint compare_string_cstring(Object* jstr1, const char *str2);
+extern jint string_startswith_c(Object* jstr1, const char *str2, int reqlen);
+extern jint string_startswith(Object *vstr1, Object *vstr2, int len);
+
 
 #ifdef __cplusplus
 }

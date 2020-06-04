@@ -12,8 +12,10 @@
 
 #ifdef JDWP_ENABLE
 extern void jdwp_start(char *host, int port);
+extern int jdwp_send_classload_event(Object *cls);
 #else
 #define jdwp_start
+#define jdwp_send_classload_event
 #endif
 
 typedef struct NativeLink {
@@ -53,6 +55,29 @@ jint compare_string_cstring(Object* jstr1, const char *str2) {
 
 jint compare_string(void *str1, void *str2, int isString) {
     return isString ? compare_string_string((Object*)str1, (Object*)str2) : compare_string_cstring((Object*)str1, (const char *)str2);
+}
+
+jint string_startswith(Object *vstr1, Object *vstr2, int len) {
+    StringFields *str1 = vstr1->instance;
+    StringFields *str2 = vstr2->instance;
+    if(len == 0) len = str2->length;
+    if(str1->length < len || str2->length < len) return 0;
+    jchar *ch1 = ARRAY_DATA_C(str1->chars) + str1->start;
+    jchar *ch2 = ARRAY_DATA_C(str2->chars) + str2->start;
+    for(int i=0; i<len; i++) if(ch1[i] != ch2[i]) return 0;
+    return 1;
+}
+
+jint string_startswith_c(Object* jstr1, const char *str2, int reqlen) {
+    if(!jstr1) return 0;
+    int len = (int)strlen(str2);
+    if(reqlen == 0) reqlen = len;
+    else if(len < reqlen) return 0;
+    StringFields *str1 = jstr1->instance;
+    if(str1->length < reqlen) return 0;
+    jchar *ch1 = ARRAY_DATA_C(str1->chars) + str1->start;
+    for(int i=0; i<reqlen; i++) if(ch1[i] != str2[i]) return 0;
+    return 1;
 }
 
 char *string2c(Object *jstr) {
@@ -881,6 +906,8 @@ void clInit(VM *vm, Object *clso) {
         if(clInit) {
             ((JVM_CALL)(MTH_FIELD(clInit, entry)))(vm, clInit, NULL);
         }
+        
+        jdwp_send_classload_event(clso);
     }
 }
 
@@ -1395,7 +1422,6 @@ void vm_test() {
         p->initialized = 1;
         p->primitiveType = i + 1;
         p->instanceSize = get_prim_size((char)primNames[i][0]);
-        printf("prim: %s = %d\n", primNames[i], p->instanceSize);
         p->listNext = vm->classes;
         vm->classes = po;
     }

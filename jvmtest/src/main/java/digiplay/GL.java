@@ -329,12 +329,21 @@ public class GL {
     public static final int INVALID_FRAMEBUFFER_OPERATION = 0x0506;
     public static final int VERTEX_PROGRAM_POINT_SIZE = 0x8642;
     
-    public native static void begin();
-    public native static void end();
-    
     public native static void viewport(int x, int y, int width, int height);
     public native static void clearColor(float red, float green, float blue, float alpha);
     public native static void clear(int mask);
     
-    public native static long compileShader(String vertex, String fragment);
+    public native static long compileProgram(String vertex, String fragment);
+    public native static void useProgram(long program);
+    public native static long attribLocation(long program, String name);
+    public native static long uniformLocation(long program, String name);
+    
+    public native static void blendFunc(int src, int dst);
+    
+    public native static long createVertexBuffer();
+    public native static void bufferVertexData(long vbo, float[] data, int offset, int length);
+    public native static long createIndexBuffer();
+    public native static void bufferIndexData(long ibo, short[] data, int offset, int length);
+    
+    
 }

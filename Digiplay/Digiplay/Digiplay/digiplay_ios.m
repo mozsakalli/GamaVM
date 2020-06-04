@@ -14,7 +14,6 @@
 
 #include "jvm.h"
 
-
 //static CGSize ScreenSize;
 static CGPoint SafeScreenTopLeft;
 static CGPoint SafeScreenBottomRight;
@@ -41,7 +40,7 @@ MTLRenderPassDescriptor *MetalFramebuffer;
 }
 
 +(Class)layerClass {
-    
+#ifdef METAL_ENABLED
     Class cls = NSClassFromString(@"CAMetalLayer");
     if(cls) {
         MetalDevice = MTLCreateSystemDefaultDevice();
@@ -50,6 +49,7 @@ MTLRenderPassDescriptor *MetalFramebuffer;
             return cls;
         }
     }
+#endif
     return [CAEAGLLayer class];
 }
 

@@ -21,6 +21,14 @@ package digiplay.render;
  */
 public abstract class RenderDevice {
 
+    int pendingMask;
+
+    //viewport
+    int vpX, vpY, vpWidth, vpHeight;
+    //scissor
+    int scX, scY, scWidth, scHeight;
+    
+    
     public final static int PM_VIEWPORT = (1 << 0);
     public final static int PM_INDEXBUF = (1 << 1);
     public final static int PM_VERTLAYOUT = (1 << 2);
@@ -49,10 +57,10 @@ public abstract class RenderDevice {
     public final static int BLENDFUNC_DST_COLOR = 8;
     public final static int BLENDFUNC_ONE_MINUS_DST_COLOR = 9;
     
-    public final static int CLEAR_NONE = 0;
-    public final static int CLEAR_COLOR = 1;
-    public final static int CLEAR_DEPTH = 2;
-    public final static int CLEAR_ALL = 3;
+    public final static int CLEAR_NONE      = 0;
+    public final static int CLEAR_COLOR     = 1;
+    public final static int CLEAR_DEPTH     = 2;
+    public final static int CLEAR_STENCIL   = 4;
 
     public final static int PRIM_LINES = 0;
     public final static int PRIM_LINESSTRIP = 1;
@@ -60,13 +68,10 @@ public abstract class RenderDevice {
     public final static int PRIM_TRISTRIP = 3;
     public final static int PRIM_QUADS = 4;
     
-    //viewport
-    int vpX, vpY, vpWidth, vpHeight;
-    //scissor
-    int scX, scY, scWidth, scHeight;
 
-    int pendingMask;
-
+    public native void commit(int flags);
+    public void commit() { commit(0xFFFFFFFF); }
+    
     public void resetStates() { 
         /*
         m_curIndexBuf = 1;
@@ -122,7 +127,7 @@ public abstract class RenderDevice {
     //=============================================================================
     // drawcalls and clears
     //=============================================================================
-    public abstract void clear(int flags, float r, float g, float b, float a, int depth);
+    public native void clear(int flags, float r, float g, float b, float a, int depth, int stencil);
     //public function draw(_primType:Int, _type:Int, _numInds:Int, _offset:Int):Void { throw "NOT IMPLEMENTED"; }
     //public function drawArrays(_primType:Int, _offset:Int, _size:Int):Void { throw "NOT IMPLEMENTED"; }    
 }

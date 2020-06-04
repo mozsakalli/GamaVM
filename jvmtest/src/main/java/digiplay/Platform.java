@@ -31,13 +31,17 @@ public abstract class Platform {
     boolean initialized;
     
     private void resize(int width, int height, int safeLeft, int safeTop, int safeRight, int safeBottom) {
-        Graphics g = Digiplay.graphics;
-        if(g != null) {
-            g.resize(width, height, safeLeft, safeTop, safeRight, safeBottom);
-        }
-        if(!initialized) {
-            initialized = true;
-            game.begin();
+        try {
+            Graphics g = Digiplay.graphics;
+            if(g != null) {
+                g.resize(width, height, safeLeft, safeTop, safeRight, safeBottom);
+            }
+            if(!initialized) {
+                initialized = true;
+                game.begin();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
     

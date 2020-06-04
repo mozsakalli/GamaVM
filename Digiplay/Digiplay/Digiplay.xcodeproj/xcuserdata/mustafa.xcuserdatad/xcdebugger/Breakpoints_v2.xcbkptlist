@@ -30,8 +30,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1466"
-            endingLineNumber = "1466"
+            startingLineNumber = "1493"
+            endingLineNumber = "1493"
             landmarkName = "vm_test()"
             landmarkType = "9">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "363"
-            endingLineNumber = "363"
+            startingLineNumber = "388"
+            endingLineNumber = "388"
             landmarkName = "vm_invoke_native(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -78,8 +78,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
+            startingLineNumber = "233"
+            endingLineNumber = "233"
             landmarkName = "parse_setup_method_args(method)"
             landmarkType = "9">
          </BreakpointContent>
@@ -94,8 +94,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "446"
-            endingLineNumber = "446"
+            startingLineNumber = "471"
+            endingLineNumber = "471"
             landmarkName = "parse_class(vm, data, entries)"
             landmarkType = "9">
          </BreakpointContent>
@@ -110,8 +110,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "372"
-            endingLineNumber = "372"
+            startingLineNumber = "397"
+            endingLineNumber = "397"
             landmarkName = "parse_class(vm, data, entries)"
             landmarkType = "9">
          </BreakpointContent>
@@ -126,8 +126,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "473"
-            endingLineNumber = "473"
+            startingLineNumber = "498"
+            endingLineNumber = "498"
             landmarkName = "parse_class(vm, data, entries)"
             landmarkType = "9">
          </BreakpointContent>
@@ -142,8 +142,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1417"
-            endingLineNumber = "1417"
+            startingLineNumber = "1444"
+            endingLineNumber = "1444"
             landmarkName = "vm_test()"
             landmarkType = "9">
          </BreakpointContent>
@@ -158,8 +158,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "476"
-            endingLineNumber = "476"
+            startingLineNumber = "501"
+            endingLineNumber = "501"
             landmarkName = "parse_class(vm, data, entries)"
             landmarkType = "9">
          </BreakpointContent>
@@ -174,8 +174,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "475"
-            endingLineNumber = "475"
+            startingLineNumber = "500"
+            endingLineNumber = "500"
             landmarkName = "parse_class(vm, data, entries)"
             landmarkType = "9">
          </BreakpointContent>
@@ -190,8 +190,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1452"
-            endingLineNumber = "1452"
+            startingLineNumber = "1479"
+            endingLineNumber = "1479"
             landmarkName = "vm_test()"
             landmarkType = "9">
          </BreakpointContent>
@@ -206,8 +206,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "278"
-            endingLineNumber = "278"
+            startingLineNumber = "303"
+            endingLineNumber = "303"
             landmarkName = "parse_constant_pool(vm, data, cpTarget)"
             landmarkType = "9">
          </BreakpointContent>
@@ -222,8 +222,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "900"
-            endingLineNumber = "900"
+            startingLineNumber = "927"
+            endingLineNumber = "927"
             landmarkName = "resolve_class_by_signature(vm, name, isString)"
             landmarkType = "9">
          </BreakpointContent>
@@ -238,8 +238,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "587"
-            endingLineNumber = "587"
+            startingLineNumber = "612"
+            endingLineNumber = "612"
             landmarkName = "find_aot_class(name, isString)"
             landmarkType = "9">
          </BreakpointContent>
@@ -254,8 +254,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1420"
-            endingLineNumber = "1420"
+            startingLineNumber = "1447"
+            endingLineNumber = "1447"
             landmarkName = "vm_test()"
             landmarkType = "9">
          </BreakpointContent>
@@ -270,8 +270,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1421"
-            endingLineNumber = "1421"
+            startingLineNumber = "1448"
+            endingLineNumber = "1448"
             landmarkName = "vm_test()"
             landmarkType = "9">
          </BreakpointContent>
@@ -286,8 +286,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "917"
-            endingLineNumber = "917"
+            startingLineNumber = "944"
+            endingLineNumber = "944"
             landmarkName = "resolve_class(vm, name, isString)"
             landmarkType = "9">
          </BreakpointContent>
@@ -302,8 +302,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "736"
-            endingLineNumber = "736"
+            startingLineNumber = "761"
+            endingLineNumber = "761"
             landmarkName = "find_override_method(cls, method)"
             landmarkType = "9">
          </BreakpointContent>
@@ -318,8 +318,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1137"
-            endingLineNumber = "1137"
+            startingLineNumber = "1164"
+            endingLineNumber = "1164"
             landmarkName = "get_line_number(method, pc)"
             landmarkType = "9">
          </BreakpointContent>
@@ -334,8 +334,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1453"
-            endingLineNumber = "1453"
+            startingLineNumber = "1480"
+            endingLineNumber = "1480"
             landmarkName = "vm_test()"
             landmarkType = "9">
          </BreakpointContent>
@@ -350,8 +350,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "493"
-            endingLineNumber = "493"
+            startingLineNumber = "518"
+            endingLineNumber = "518"
             landmarkName = "parse_class(vm, data, entries)"
             landmarkType = "9">
          </BreakpointContent>
@@ -430,8 +430,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "544"
-            endingLineNumber = "544"
+            startingLineNumber = "569"
+            endingLineNumber = "569"
             landmarkName = "parse_class(vm, data, entries)"
             landmarkType = "9">
          </BreakpointContent>
@@ -478,8 +478,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1144"
-            endingLineNumber = "1144"
+            startingLineNumber = "1171"
+            endingLineNumber = "1171"
             landmarkName = "get_line_number(method, pc)"
             landmarkType = "9">
          </BreakpointContent>
@@ -494,8 +494,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1152"
-            endingLineNumber = "1152"
+            startingLineNumber = "1179"
+            endingLineNumber = "1179"
             landmarkName = "throw_exception(vm, exception)"
             landmarkType = "9">
          </BreakpointContent>
@@ -526,8 +526,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
+            startingLineNumber = "246"
+            endingLineNumber = "246"
             landmarkName = "parse_constant_pool(vm, data, cpTarget)"
             landmarkType = "9">
          </BreakpointContent>
@@ -542,8 +542,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1422"
-            endingLineNumber = "1422"
+            startingLineNumber = "1449"
+            endingLineNumber = "1449"
             landmarkName = "vm_test()"
             landmarkType = "9">
          </BreakpointContent>
@@ -558,8 +558,8 @@
             filePath = "Digiplay/compiler.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1455"
-            endingLineNumber = "1455"
+            startingLineNumber = "1468"
+            endingLineNumber = "1468"
             landmarkName = "vm_interpret_method(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -590,8 +590,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1204"
-            endingLineNumber = "1204"
+            startingLineNumber = "1231"
+            endingLineNumber = "1231"
             landmarkName = "throw_classnotfoundexception(vm, name)"
             landmarkType = "9">
          </BreakpointContent>
@@ -606,8 +606,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1145"
-            endingLineNumber = "1145"
+            startingLineNumber = "1172"
+            endingLineNumber = "1172"
             landmarkName = "unknown"
             landmarkType = "0">
          </BreakpointContent>
@@ -622,8 +622,8 @@
             filePath = "Digiplay/compiler.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2374"
-            endingLineNumber = "2374"
+            startingLineNumber = "2396"
+            endingLineNumber = "2396"
             landmarkName = "vm_interpret_method(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -638,8 +638,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "737"
-            endingLineNumber = "737"
+            startingLineNumber = "762"
+            endingLineNumber = "762"
             landmarkName = "find_override_method(cls, method)"
             landmarkType = "9">
          </BreakpointContent>
@@ -654,8 +654,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "557"
-            endingLineNumber = "557"
+            startingLineNumber = "582"
+            endingLineNumber = "582"
             landmarkName = "parse_class(vm, data, entries)"
             landmarkType = "9">
          </BreakpointContent>
@@ -924,8 +924,8 @@
             filePath = "Digiplay/compiler.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1097"
-            endingLineNumber = "1097"
+            startingLineNumber = "1110"
+            endingLineNumber = "1110"
             landmarkName = "vm_compile_method(vm, method, handlers)"
             landmarkType = "9">
          </BreakpointContent>
@@ -940,8 +940,8 @@
             filePath = "Digiplay/compiler.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1055"
-            endingLineNumber = "1055"
+            startingLineNumber = "1068"
+            endingLineNumber = "1068"
             landmarkName = "vm_compile_method(vm, method, handlers)"
             landmarkType = "9">
          </BreakpointContent>
@@ -956,8 +956,8 @@
             filePath = "Digiplay/compiler.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2358"
-            endingLineNumber = "2358"
+            startingLineNumber = "2380"
+            endingLineNumber = "2380"
             landmarkName = "vm_interpret_method(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -972,8 +972,8 @@
             filePath = "Digiplay/compiler.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2178"
-            endingLineNumber = "2178"
+            startingLineNumber = "2200"
+            endingLineNumber = "2200"
             landmarkName = "vm_interpret_method(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -988,8 +988,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
+            startingLineNumber = "111"
+            endingLineNumber = "111"
             landmarkName = "print_stack_trace(vm)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1004,8 +1004,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "84"
-            endingLineNumber = "84"
+            startingLineNumber = "109"
+            endingLineNumber = "109"
             landmarkName = "print_stack_trace(vm)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1052,8 +1052,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1431"
-            endingLineNumber = "1431"
+            startingLineNumber = "1458"
+            endingLineNumber = "1458"
             landmarkName = "vm_test()"
             landmarkType = "9">
          </BreakpointContent>
@@ -1084,8 +1084,8 @@
             filePath = "Digiplay/compiler.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1425"
-            endingLineNumber = "1425"
+            startingLineNumber = "1438"
+            endingLineNumber = "1438"
             landmarkName = "vm_interpret_method(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1102,24 +1102,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "845"
             endingLineNumber = "845"
-            landmarkName = "readPacket()"
+            landmarkName = "queuePacket(p)"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "910C88A7-19EE-4EDC-8FE4-2E8911C12A0C"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Digiplay/jdwp.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "234"
-            endingLineNumber = "234"
-            landmarkName = "jdwp_send_breakpoint_event(method, index)"
-            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1132,8 +1116,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "746"
-            endingLineNumber = "746"
+            startingLineNumber = "795"
+            endingLineNumber = "795"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1148,8 +1132,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "837"
-            endingLineNumber = "837"
+            startingLineNumber = "886"
+            endingLineNumber = "886"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1164,8 +1148,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "748"
-            endingLineNumber = "748"
+            startingLineNumber = "797"
+            endingLineNumber = "797"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1182,7 +1166,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "848"
             endingLineNumber = "848"
-            landmarkName = "readPacket()"
+            landmarkName = "queuePacket(p)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1198,8 +1182,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "338"
             endingLineNumber = "338"
-            landmarkName = "start(bytes, ptr)"
-            landmarkType = "7">
+            landmarkName = "JdwpPacket"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1212,8 +1196,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "440"
-            endingLineNumber = "440"
+            startingLineNumber = "486"
+            endingLineNumber = "486"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1228,8 +1212,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "836"
-            endingLineNumber = "836"
+            startingLineNumber = "885"
+            endingLineNumber = "885"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1244,8 +1228,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "203"
-            endingLineNumber = "203"
+            startingLineNumber = "301"
+            endingLineNumber = "301"
             landmarkName = "jdwp_eventset_clear(set)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1260,8 +1244,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "598"
-            endingLineNumber = "598"
+            startingLineNumber = "647"
+            endingLineNumber = "647"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1276,8 +1260,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "618"
-            endingLineNumber = "618"
+            startingLineNumber = "667"
+            endingLineNumber = "667"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1292,8 +1276,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "872"
-            endingLineNumber = "872"
+            startingLineNumber = "926"
+            endingLineNumber = "926"
             landmarkName = "jdwp_start(host, port)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1308,10 +1292,10 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "843"
-            endingLineNumber = "843"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "892"
+            endingLineNumber = "892"
+            landmarkName = "jdwp_process_packet(req)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1324,8 +1308,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "862"
-            endingLineNumber = "862"
+            startingLineNumber = "916"
+            endingLineNumber = "916"
             landmarkName = "jdwp_start(host, port)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1340,8 +1324,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "601"
-            endingLineNumber = "601"
+            startingLineNumber = "650"
+            endingLineNumber = "650"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1356,8 +1340,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "484"
-            endingLineNumber = "484"
+            startingLineNumber = "533"
+            endingLineNumber = "533"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1372,8 +1356,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "634"
-            endingLineNumber = "634"
+            startingLineNumber = "683"
+            endingLineNumber = "683"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1388,8 +1372,8 @@
             filePath = "Digiplay/jvm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1413"
-            endingLineNumber = "1413"
+            startingLineNumber = "1440"
+            endingLineNumber = "1440"
             landmarkName = "vm_test()"
             landmarkType = "9">
          </BreakpointContent>
@@ -1420,8 +1404,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "763"
-            endingLineNumber = "763"
+            startingLineNumber = "812"
+            endingLineNumber = "812"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1436,8 +1420,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "134"
-            endingLineNumber = "134"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
             landmarkName = "jdwp_eventset_set(set)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1452,8 +1436,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "692"
-            endingLineNumber = "692"
+            startingLineNumber = "741"
+            endingLineNumber = "741"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1468,8 +1452,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "649"
-            endingLineNumber = "649"
+            startingLineNumber = "698"
+            endingLineNumber = "698"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1484,8 +1468,8 @@
             filePath = "Digiplay/compiler.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1499"
-            endingLineNumber = "1499"
+            startingLineNumber = "1512"
+            endingLineNumber = "1512"
             landmarkName = "vm_interpret_method(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1500,8 +1484,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "439"
-            endingLineNumber = "439"
+            startingLineNumber = "485"
+            endingLineNumber = "485"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1509,31 +1493,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "52C72345-4391-4BC2-815F-B1C41CC9E923"
+            uuid = "A1D43E68-28DB-45C6-BF44-0C04EB15386D"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "278"
-            endingLineNumber = "278"
-            landmarkName = "jdwp_invoke_method(req, resp, isStatic)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A1D43E68-28DB-45C6-BF44-0C04EB15386D"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Digiplay/jdwp.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "444"
-            endingLineNumber = "444"
+            startingLineNumber = "490"
+            endingLineNumber = "490"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1552,22 +1520,6 @@
             endingLineNumber = "125"
             landmarkName = "-updateTimerFired"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "B6F0C71D-6A03-4913-87BF-EC1801D6FF28"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Digiplay/digiplay_opengl.c"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "16"
-            endingLineNumber = "16"
-            landmarkName = "ogl_digiplay_GL_viewport(vm, method, args)"
-            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1631,6 +1583,198 @@
             startingLineNumber = "88"
             endingLineNumber = "88"
             landmarkName = "metal_digiplay_GL_viewport(vm, method, args)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "81656D5B-413F-4FBB-97DE-A6C7D229199A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Digiplay/digiplay_opengl.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "ogl_digiplay_GL_compileProgram(vm, method, args)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "462991AE-F44A-4A8D-9DFA-4E1D74C2AA04"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Digiplay/digiplay_opengl.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
+            landmarkName = "ogl_digiplay_GL_uniformLocation(vm, method, args)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E192F021-5273-443E-81DE-57D7A95C7359"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Digiplay/compiler.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "920"
+            endingLineNumber = "920"
+            landmarkName = "vm_process_bb(method, bb, handlers)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7DEF488A-A31A-482E-BBA5-B04B2390BB2A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Digiplay/jdwp.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "195"
+            endingLineNumber = "195"
+            landmarkName = "jdwp_send_classload_event(cls)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D9844AF0-C82B-4631-895E-D5551A32FD0C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Digiplay/jdwp.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "199"
+            endingLineNumber = "199"
+            landmarkName = "jdwp_send_classload_event(cls)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C3BC9895-4D7F-4398-80BE-6721264CF473"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Digiplay/jdwp.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "487"
+            endingLineNumber = "487"
+            landmarkName = "jdwp_process_packet(req)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5F3635FA-F460-4ECC-8133-2D1D2DA73638"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Digiplay/jdwp.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "259"
+            endingLineNumber = "259"
+            landmarkName = "jdwp_eventset_set(set)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0F99096D-0A5E-4A74-A70A-EDCF9C62BAF0"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Digiplay/jdwp.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
+            landmarkName = "jdwp_send_classload_event(cls)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6060BFAD-AA26-41AA-AB37-497105454200"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Digiplay/jdwp.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "191"
+            endingLineNumber = "191"
+            landmarkName = "jdwp_send_classload_event(cls)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7A3F7193-243A-4070-B06F-3224636AFC65"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Digiplay/jdwp.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "192"
+            endingLineNumber = "192"
+            landmarkName = "jdwp_send_classload_event(cls)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "478CB4BE-C996-4B1C-866F-49CA2BC3A76E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Digiplay/digiplay_opengl.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "111"
+            endingLineNumber = "111"
+            landmarkName = "ogl_digiplay_GL_bufferIndexData(vm, method, args)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7899E3B7-741C-497F-A14C-0032AA165A81"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Digiplay/digiplay_opengl.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "ogl_digiplay_GL_bufferVertexData(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

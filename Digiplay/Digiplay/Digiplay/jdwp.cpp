@@ -21,7 +21,7 @@ int jdwp_step_fp = -1;
 int jdwp_skip_line = -1;
 int jdwp_invoking = 0;
 
-#define JDWPLOG(...) /*printf(__VA_ARGS__)*/
+#define JDWPLOG(...) printf(__VA_ARGS__)
 
 int jdwp_listen(int port) {
     struct sockaddr_in serv_addr;
@@ -128,6 +128,95 @@ int jdwp_method_count_args(Object *method) {
     return count;
 }
 
+int jdwp_send_breakpoint_event(Object *method, int index) {
+    JdwpEventSet *set = JdwpEventSet::head;
+    while(set) {
+        for(int i=0; i<set->modifiers; i++) {
+            JdwpEventSetMod *mod = set->mods[i];
+            if(mod->type == 7 && mod->location.method == method && mod->location.index == index) {
+                JdwpPacket *p = new JdwpPacket();
+                p->reset();
+                p->writeByte(set->suspendPolicy);
+                p->writeInt(1);
+                p->writeByte(set->eventKind);
+                p->writeInt(set->requestId);
+                p->writeLong(JDWP_THREAD_ID);
+                p->writeLocation(&mod->location);
+                p->completeEvent();
+                jdwp_client.queuePacket(p);
+                return 1;
+            }
+        }
+        set = set->next;
+    }
+    return 0;
+}
+
+int jdwp_send_step_event(Object *method, int line) {
+    JdwpEventSet *set = JdwpEventSet::head;
+    while(set) {
+        for(int i=0; i<set->modifiers; i++) {
+            JdwpEventSetMod *mod = set->mods[i];
+            if(mod->type == 10) {
+                JdwpPacket *p = new JdwpPacket();
+                p->reset();
+                p->writeByte(set->suspendPolicy);
+                p->writeInt(1);
+                p->writeByte(set->eventKind);
+                p->writeInt(set->requestId);
+                p->writeLong(JDWP_THREAD_ID);
+                JdwpLocation loc;
+                loc.clazz = MTH_FIELD(method, declaringClass);
+                loc.type = jdwp_get_class_type(loc.clazz);
+                loc.method = method;
+                loc.index = jdwp_get_line_index(method, line);
+                p->writeLocation(&loc);
+                p->completeEvent();
+                jdwp_client.queuePacket(p);
+                
+                JDWPLOG("!! single step: line=%d index=%d\n", line, loc.index);
+                return 1;
+            }
+        }
+        set = set->next;
+    }
+    return 0;
+}
+
+extern "C" int jdwp_send_classload_event(Object *cls) {
+    /*
+    JdwpEventSet *set = JdwpEventSet::head;
+    Object *clsName = CLS_FIELD(cls, name);
+    while(set) {
+        if(set->eventKind == JDWP_EVENTKIND_CLASS_PREPARE && set->modifiers > 0) {
+            for(int i=0; i<set->modifiers; i++) {
+                JdwpEventSetMod *mod = set->mods[i];
+                if(mod->type == 5) {
+                    int matches = 0;
+                    Object *pattern = mod->classPattern->str;
+                    matches = compare_string((void*)pattern, clsName, 1);
+                    if(matches) {
+                        JdwpPacket *p = new JdwpPacket();
+                        p->reset();
+                        p->writeByte(set->suspendPolicy);
+                        p->writeInt(1);
+                        p->writeByte(set->eventKind);
+                        p->writeInt(set->requestId);
+                        p->writeLong(JDWP_THREAD_ID);
+                        p->writeByte(jdwp_get_class_type(cls));
+                        p->writeObject(cls);
+                        p->writeClassSignature(cls);
+                        p->writeInt(JDWP_CLASS_STATUS_INITIALIZED | JDWP_CLASS_STATUS_PREPARED | JDWP_CLASS_STATUS_VERIFIED);
+                        p->completeEvent();
+                        jdwp_client.queuePacket(p);
+                    }
+                }
+            }
+        }
+        set = set->next;
+    }*/
+    return 0;
+}
 
 void jdwp_eventset_set(JdwpEventSet *set) {
     if(set) {
@@ -183,7 +272,16 @@ void jdwp_eventset_set(JdwpEventSet *set) {
             } break;
                 
             case JDWP_EVENTKIND_CLASS_PREPARE: {
+                Object *ptr = jdwpVM->classes;
+                while(ptr) {
+                    jdwp_send_classload_event(ptr);
+                    ptr = CLS_FIELD(ptr, listNext);
+                }
                 JDWPLOG("!!!!!!!!! JDWP_EVENTKIND_CLASS_PREPARE\n");
+            } break;
+                
+            default: {
+                JDWPLOG("!!!!!! UNKNOWN EVENT SET: %d\n", set->eventKind);
             } break;
         }
     }
@@ -221,60 +319,8 @@ void jdwp_eventset_clear(JdwpEventSet *set) {
         }
     }
 }
-int jdwp_send_breakpoint_event(Object *method, int index) {
-    JdwpEventSet *set = JdwpEventSet::head;
-    while(set) {
-        for(int i=0; i<set->modifiers; i++) {
-            JdwpEventSetMod *mod = set->mods[i];
-            if(mod->type == 7 && mod->location.method == method && mod->location.index == index) {
-                JdwpPacket *p = new JdwpPacket();
-                p->reset();
-                p->writeByte(set->suspendPolicy);
-                p->writeInt(1);
-                p->writeByte(set->eventKind);
-                p->writeInt(set->requestId);
-                p->writeLong(JDWP_THREAD_ID);
-                p->writeLocation(&mod->location);
-                p->completeEvent();
-                jdwp_client.queuePacket(p);
-                return 1;
-            }
-        }
-        set = set->next;
-    }
-    return 0;
-}
 
-int jdwp_send_step_event(Object *method, int line) {
-    JdwpEventSet *set = JdwpEventSet::head;
-    while(set) {
-        for(int i=0; i<set->modifiers; i++) {
-            JdwpEventSetMod *mod = set->mods[i];
-            if(mod->type == 10) {
-                JdwpPacket *p = new JdwpPacket();
-                p->reset();
-                p->writeByte(set->suspendPolicy);
-                p->writeInt(1);
-                p->writeByte(set->eventKind);
-                p->writeInt(set->requestId);
-                p->writeLong(JDWP_THREAD_ID);
-                JdwpLocation loc;
-                loc.clazz = MTH_FIELD(method, declaringClass);
-                loc.type = jdwp_get_class_type(loc.clazz);
-                loc.method = method;
-                loc.index = jdwp_get_line_index(method, line);
-                p->writeLocation(&loc);
-                p->completeEvent();
-                jdwp_client.queuePacket(p);
-                
-                JDWPLOG("!! single step: line=%d index=%d\n", line, loc.index);
-                return 1;
-            }
-        }
-        set = set->next;
-    }
-    return 0;
-}
+
 
 void jdwp_invoke_method(JdwpPacket *req, JdwpPacket *resp, int isStatic) {
     Object *cls = nullptr;
@@ -394,6 +440,7 @@ void jdwp_process_packet(JdwpPacket *req) {
     resp->reset();
     
     int cmd = (req->commandSet << 8) + req->command;
+    JDWPLOG(">>> Packet: 0x%x\n", cmd);
     switch(cmd) {
         case JDWP_CMD_VirtualMachine_Version: //0x0101
             resp->writeCString((char*)"jdwp 1.2");
@@ -412,8 +459,7 @@ void jdwp_process_packet(JdwpPacket *req) {
                 resp->writeByte(jdwp_get_class_type(cls));
                 resp->writeObject(cls);
                 resp->writeInt(JDWP_CLASS_STATUS_INITIALIZED | JDWP_CLASS_STATUS_PREPARED | JDWP_CLASS_STATUS_VERIFIED);
-                //todo: event_on_class_prepare(NULL, cl);
-
+                jdwp_send_classload_event(cls);
             } else {
                 resp->writeInt(0);
             }
@@ -468,12 +514,15 @@ void jdwp_process_packet(JdwpPacket *req) {
             
         case JDWP_CMD_ReferenceType_Signature: { //0x0201
             Object *cls = req->readObject();
+            resp->writeClassSignature(cls);
+            /*
             ClassFields *cf = (ClassFields*)cls->instance;
             if(!cf->elementClass) {
                 char tmp[256];
                 sprintf(tmp, "L%s;", string2c(cf->name));
                 resp->writeCString(tmp);
             } else resp->writeCString(string2c(cf->name));
+            */
             resp->complete(req->id, JDWP_ERROR_NONE);
         } break;
             
@@ -841,6 +890,11 @@ void jdwp_process_packet(JdwpPacket *req) {
     }
     
     jdwp_client.queuePacket(resp);
+    if(cmd == JDWP_CMD_VirtualMachine_Version) {
+        resp = new JdwpPacket;
+        resp->onVMStartEvent();
+        jdwp_client.queuePacket(resp);
+    }
 }
 
 
