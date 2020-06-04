@@ -125,6 +125,19 @@ void ogl_digiplay_GL_bufferIndexData(VM *vm, Object *method, VAR *args) {
     }
 }
 
+void ogl_digiplay_GL_useProgram(VM *vm, Object *method, VAR *args) {
+    glUseProgram(args[0].J);
+}
+void ogl_digiplay_GL_enableVertexAttribArray(VM *vm, Object *method, VAR *args) {
+    glEnableVertexAttribArray(args[0].J);
+}
+void ogl_digiplay_GL_disableVertexAttribArray(VM *vm, Object *method, VAR *args) {
+    glDisableVertexAttribArray(args[0].J);
+}
+void ogl_digiplay_GL_vertexAttribPointer(VM *vm, Object *method, VAR *args) {
+    glVertexAttribPointer(args[0].J, args[1].I, args[2].I, args[3].I, args[4].I, args[5].I);
+}
+
 #define GL "digiplay/GL"
 NativeMethodInfo digiplay_GL_NATIVES[] = {
     {.cls = GL, .name = "viewport", .sign = "(IIII)V", .handle = &ogl_digiplay_GL_viewport},
@@ -137,6 +150,10 @@ NativeMethodInfo digiplay_GL_NATIVES[] = {
     {.cls = GL, .name = "createIndexBuffer", .sign = "()J", .handle = &ogl_digiplay_GL_createVertexBuffer},
     {.cls = GL, .name = "bufferVertexData", .sign = "(J[FII)V", .handle = &ogl_digiplay_GL_bufferVertexData},
     {.cls = GL, .name = "bufferIndexData", .sign = "(J[SII)V", .handle = &ogl_digiplay_GL_bufferIndexData},
+    {.cls = GL, .name = "useProgram", .sign = "(J)V", .handle = &ogl_digiplay_GL_useProgram},
+    {.cls = GL, .name = "enableVertexAttribArray", .sign = "(J)V", .handle = &ogl_digiplay_GL_enableVertexAttribArray},
+    {.cls = GL, .name = "disableVertexAttribArray", .sign = "(J)V", .handle = &ogl_digiplay_GL_disableVertexAttribArray},
+    {.cls = GL, .name = "vertexAttribPointer", .sign = "(JIIZII)V", .handle = &ogl_digiplay_GL_vertexAttribPointer},
 
     {.cls = NULL}
 };

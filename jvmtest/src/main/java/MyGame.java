@@ -1,6 +1,9 @@
 
+import digiplay.Camera;
+import digiplay.Digiplay;
 import digiplay.GL;
 import digiplay.Game;
+import digiplay.Matrix3D;
 import digiplay.Point2D;
 import digiplay.Stage2D;
 
@@ -29,6 +32,8 @@ public class MyGame implements Game {
     long program;
     long attrPos, uniProj;
     long vbo, ibo;
+    
+    Matrix3D projection;
     
     @Override
     public void begin() {
@@ -81,6 +86,8 @@ public class MyGame implements Game {
         GL.bufferIndexData(ibo, new short[]{
             0,1,2
         }, 0, 0);
+        projection = new Camera().setupFor2D(Digiplay.graphics.getScreenWidth(), Digiplay.graphics.getScreenHeight());
+        
         System.out.println("program = "+program+" pos="+attrPos+" proj="+uniProj);
         /*
         Image img = new Image();
@@ -100,6 +107,11 @@ public class MyGame implements Game {
         GL.clearColor(0, 0, 0, 1);
         GL.viewport(0, 0, digiplay.Digiplay.graphics.getScreenWidth(), digiplay.Digiplay.graphics.getScreenHeight());
         GL.clear(GL.COLOR_BUFFER_BIT);
+        GL.useProgram(program);
+        GL.enableVertexAttribArray(attrPos);
+        GL.vertexAttribPointer(0, 0, 0, true, 0, 0);
+        GL.uniformMatrix4f(uniProj, projection.raw, false);
+        GL.drawElements(GL.TRIANGLES, 3, 0);
     }
 
 }

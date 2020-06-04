@@ -18,6 +18,7 @@
 		4538510B2481F61D00ADD963 /* digiplay_metal.m in Sources */ = {isa = PBXBuildFile; fileRef = 4538510A2481F61D00ADD963 /* digiplay_metal.m */; };
 		4574CD43248038E6005B582F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4574CD4124803811005B582F /* StoreKit.framework */; };
 		45ACD593247462D6008DD07B /* compiler.c in Sources */ = {isa = PBXBuildFile; fileRef = 45ACD592247462D6008DD07B /* compiler.c */; };
+		45BCA60B248937AA009ACD58 /* gfx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45BCA609248937AA009ACD58 /* gfx.cpp */; };
 		45C4F68524881585009C8355 /* digiplay_opengl.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C4F68424881585009C8355 /* digiplay_opengl.c */; };
 		45C4F68724882527009C8355 /* jvm_natives.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C4F68624882527009C8355 /* jvm_natives.c */; };
 		45CF602B24792E68000FDA18 /* natives.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CF602A24792E68000FDA18 /* natives.m */; };
@@ -42,6 +43,8 @@
 		4538510A2481F61D00ADD963 /* digiplay_metal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = digiplay_metal.m; sourceTree = "<group>"; };
 		4574CD4124803811005B582F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		45ACD592247462D6008DD07B /* compiler.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = compiler.c; sourceTree = "<group>"; };
+		45BCA609248937AA009ACD58 /* gfx.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gfx.cpp; sourceTree = "<group>"; };
+		45BCA60A248937AA009ACD58 /* gfx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gfx.h; sourceTree = "<group>"; };
 		45C4F68424881585009C8355 /* digiplay_opengl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = digiplay_opengl.c; sourceTree = "<group>"; };
 		45C4F68624882527009C8355 /* jvm_natives.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = jvm_natives.c; sourceTree = "<group>"; };
 		45CF602924792E68000FDA18 /* natives.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = natives.h; sourceTree = "<group>"; };
@@ -120,6 +123,8 @@
 				451CAC6F2483C70000518755 /* jdwp.h */,
 				45C4F68424881585009C8355 /* digiplay_opengl.c */,
 				45C4F68624882527009C8355 /* jvm_natives.c */,
+				45BCA609248937AA009ACD58 /* gfx.cpp */,
+				45BCA60A248937AA009ACD58 /* gfx.h */,
 			);
 			path = Digiplay;
 			sourceTree = "<group>";
@@ -194,6 +199,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				45CF602B24792E68000FDA18 /* natives.m in Sources */,
+				45BCA60B248937AA009ACD58 /* gfx.cpp in Sources */,
 				451DDF66244D5E2A0064EE50 /* geom.cpp in Sources */,
 				45FDAC5324673F2A00611F96 /* jvm.c in Sources */,
 				45C4F68724882527009C8355 /* jvm_natives.c in Sources */,

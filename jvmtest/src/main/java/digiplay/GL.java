@@ -329,6 +329,8 @@ public class GL {
     public static final int INVALID_FRAMEBUFFER_OPERATION = 0x0506;
     public static final int VERTEX_PROGRAM_POINT_SIZE = 0x8642;
     
+    public native static void enable(int feature);
+    public native static void disable(int feature);
     public native static void viewport(int x, int y, int width, int height);
     public native static void clearColor(float red, float green, float blue, float alpha);
     public native static void clear(int mask);
@@ -345,5 +347,12 @@ public class GL {
     public native static long createIndexBuffer();
     public native static void bufferIndexData(long ibo, short[] data, int offset, int length);
     
+    public native static void uniformMatrix4f(long uniform, float[] matrix, boolean transpose);
+    
+    public native static void enableVertexAttribArray(long index);
+    public native static void disableVertexAttribArray(long index);
+    public native static void vertexAttribPointer(long index, int size, int type, boolean normalized, int strideInBytes, int offsetInBytes);
+    
+    public native static void drawElements(int primitive, int numIndex, int firstIndex);
     
 }

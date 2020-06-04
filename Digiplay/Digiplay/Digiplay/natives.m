@@ -145,6 +145,15 @@ void java_lang_Math_abs_F(VM *vm, Object *method, VAR *args) {
     if(v < 0) v = -v;
     vm->frames[vm->FP].retVal.F = v;
 }
+void java_lang_Math_tan_D(VM *vm, Object *method, VAR *args) {
+    vm->frames[vm->FP].retVal.D = tan(args[0].D);
+}
+void java_lang_Math_sin_D(VM *vm, Object *method, VAR *args) {
+    vm->frames[vm->FP].retVal.D = sin(args[0].D);
+}
+void java_lang_Math_cos_D(VM *vm, Object *method, VAR *args) {
+    vm->frames[vm->FP].retVal.D = cos(args[0].D);
+}
 
 void java_lang_Double_toStringImpl(VM *vm, Object *method, VAR *args) {
     jdouble d = args[0].D;
@@ -413,6 +422,7 @@ NativeMethodInfo gamavm_natives[] = {
 
     //java/lang/Math
     {.cls = "java/lang/Math", .name = "abs", .sign = "(D)D", .handle = &java_lang_Math_abs_D},
+    {.cls = "java/lang/Math", .name = "abs", .sign = "(F)F", .handle = &java_lang_Math_abs_F},
     {.cls = "java/lang/Math", .name = "abs", .sign = "(F)F", .handle = &java_lang_Math_abs_F},
 
     //java/lang/Double
