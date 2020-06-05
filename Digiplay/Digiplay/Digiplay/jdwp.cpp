@@ -672,7 +672,7 @@ void jdwp_process_packet(JdwpPacket *req) {
                 resp->writeLong(startindex);
                 resp->writeCString(string2c(v->name));
                 resp->writeCString(string2c(v->signature));
-                resp->writeInt(endindex - startindex + 1);
+                resp->writeInt(endindex - startindex);
                 resp->writeInt(v->index); //local var index
             }
             resp->complete(req->id, JDWP_ERROR_NONE);
@@ -986,7 +986,7 @@ void jdwp_tick(VM *vm, Object *method, int line) {
                 
             }
         }*/
-    } else {
+    } else if(line != jdwp_skip_line) {
         MethodFields *mf = (MethodFields*)method->instance;
         if(mf->breakpoint && mf->lineNumberTableSize > 0) {
             for(int i=0; i<mf->lineNumberTableSize; i++)
@@ -1000,6 +1000,7 @@ void jdwp_tick(VM *vm, Object *method, int line) {
                 }
         }
     }
+    
     jdwp_client.flush();
 
     while(jdwp_suspended) {

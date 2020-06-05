@@ -1980,8 +1980,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1005"
-            endingLineNumber = "1005"
+            startingLineNumber = "1006"
+            endingLineNumber = "1006"
             landmarkName = "jdwp_tick(vm, method, line)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1996,8 +1996,8 @@
             filePath = "Digiplay/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1009"
-            endingLineNumber = "1009"
+            startingLineNumber = "1010"
+            endingLineNumber = "1010"
             landmarkName = "jdwp_tick(vm, method, line)"
             landmarkType = "9">
          </BreakpointContent>

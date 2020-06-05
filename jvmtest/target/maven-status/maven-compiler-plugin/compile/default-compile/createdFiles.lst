@@ -20,13 +20,16 @@ digiplay/ios/IosGraphics.class
 digiplay/render/Texture.class
 digiplay/Camera.class
 digiplay/Metal.class
+MyGame$T.class
 digiplay/Image.class
 digiplay/render/Shader.class
 gamavm/apple/uikit/UIWindow.class
+digiplay/Shader2D.class
 digiplay/render/Texture2D.class
 digiplay/render/QuadGeometry.class
 digiplay/QuadMesh.class
 MyGame.class
+digiplay/QuadBatch.class
 Main.class
 digiplay/net/Socket.class
 gamavm/apple/ObjC.class

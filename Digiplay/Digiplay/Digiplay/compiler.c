@@ -1483,7 +1483,7 @@ OP_CONST_CLS:
         if(vm->exception) goto __EXCEPTION;
         op->var.O = cls;
         op->handler = handlers[OP_CONST];
-        NEXT(0);
+        REDISPATCH();
     }
 OP_LOADLOCAL:       //2
     stack[sp++] = local[op->index];
@@ -1575,7 +1575,7 @@ OP_GETFIELD:        //13
             return;
     }
     //op->handler = handlers[op->bc == op_getstatic ? OP_GETSTATICRESOLVED : OP_GETFIELDRESOLVED];
-    NEXT(0);
+    REDISPATCH();
 OP_PUTFIELD:        //14
     field = resolve_field_by_index(vm, method->declaringClass, op->index);
     if(vm->exception) goto __EXCEPTION;
@@ -1596,7 +1596,7 @@ OP_PUTFIELD:        //14
             return;
     }
     //op->handler = handlers[op->bc == op_putstatic ? OP_PUTSTATICRESOLVED : OP_PUTFIELDRESOLVED];
-    NEXT(0);
+    REDISPATCH();
 
 OP_IFEQ:            //15
     sp--;
@@ -1677,7 +1677,7 @@ OP_NEWARRAY:
     }
     if(vm->exception) goto __EXCEPTION;
     op->handler = handlers[OP_NEWARRAYRESOLVED];
-    NEXT(0);
+    REDISPATCH();
 }
 OP_NEWARRAYRESOLVED:
     stack[sp-1].O = alloc_prim_array(vm, op->var.O, stack[sp-1].I);
@@ -1686,7 +1686,7 @@ OP_NEW:             //10
     op->var.O = (Object*)resolve_class_by_index(vm,method->declaringClass,op->index);
     if(vm->exception) goto __EXCEPTION;
     op->handler = handlers[OP_NEWRESOLVED];
-    NEXT(0);
+    REDISPATCH();
 OP_NEWRESOLVED:
     stack[sp].O = alloc_object(vm, op->var.O); sp++;
     NEXT(1)
@@ -1695,7 +1695,7 @@ OP_ANEWARRAY:
     op->var.O = (Object*)resolve_array_class_by_index(vm, method->declaringClass, op->index);
     if(vm->exception) goto __EXCEPTION;
     op->handler = handlers[OP_ANEWARRAYRESOLVED];
-    NEXT(0);
+    REDISPATCH();
     }
 OP_ANEWARRAYRESOLVED:
     stack[sp-1].O = alloc_object_array(vm, op->var.O, stack[sp-1].I);
@@ -2214,7 +2214,7 @@ OP_CHECKCAST:
     op->var.O = (Object*)resolve_class_by_index(vm, method->declaringClass, op->index);
     if(vm->exception) goto __EXCEPTION;
     op->handler = handlers[OP_CHECKCASTRESOLVED];
-    NEXT(0);
+    REDISPATCH();
 OP_CHECKCASTRESOLVED:
     if(!check_cast(vm, stack[sp-1].O, op->var.O)) {
         vm->frames[fp].line = op->line;
