@@ -15,6 +15,7 @@ int jdwp_suspended = 0;
 int JdwpPacket::eventRequestSerial = 0x10000000;
 JdwpEventSet *JdwpEventSet::head = nullptr;
 JdwpEventSet *JdwpEventSet::tail = nullptr;
+JdwpString *JdwpString::cache = nullptr;
 JdwpClient jdwp_client;
 int jdwp_server_fd;
 int jdwp_step_fp = -1;
@@ -440,7 +441,7 @@ void jdwp_process_packet(JdwpPacket *req) {
     resp->reset();
     
     int cmd = (req->commandSet << 8) + req->command;
-    JDWPLOG(">>> Packet: 0x%x\n", cmd);
+    //JDWPLOG(">>> Packet: 0x%x\n", cmd);
     switch(cmd) {
         case JDWP_CMD_VirtualMachine_Version: //0x0101
             resp->writeCString((char*)"jdwp 1.2");
@@ -488,13 +489,21 @@ void jdwp_process_packet(JdwpPacket *req) {
             resp->complete(req->id, JDWP_ERROR_NONE);
             break;
             
-        case JDWP_CMD_VirtualMachine_Exit:
+        case JDWP_CMD_VirtualMachine_Exit: //0x010a
             jdwp_suspended = 0;
             jdwp_client.reset();
             JdwpEventSet::reset();
             delete resp;
             gc_resume();
             return;
+            
+        case JDWP_CMD_VirtualMachine_CreateString: { //0x010b
+            JdwpString *str = req->readString();
+            str->next = JdwpString::cache;
+            JdwpString::cache = str;
+            resp->writeObject(str->str);
+            resp->complete(req->id, JDWP_ERROR_NONE);
+        } break;
             
         case JDWP_CMD_VirtualMachine_Capabilities: // 0x010c
             resp->writeByte(0);//canWatchFieldModification
@@ -890,11 +899,11 @@ void jdwp_process_packet(JdwpPacket *req) {
     }
     
     jdwp_client.queuePacket(resp);
-    if(cmd == JDWP_CMD_VirtualMachine_Version) {
+    /*if(cmd == JDWP_CMD_VirtualMachine_Version) {
         resp = new JdwpPacket;
         resp->onVMStartEvent();
         jdwp_client.queuePacket(resp);
-    }
+    }*/
 }
 
 

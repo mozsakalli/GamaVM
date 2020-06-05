@@ -16,7 +16,6 @@
 		4531EA912481EABF0071A7BF /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4531EA902481EABF0071A7BF /* Metal.framework */; };
 		453391BC247A439B00564DB1 /* gc.c in Sources */ = {isa = PBXBuildFile; fileRef = 453391BB247A439B00564DB1 /* gc.c */; };
 		4538510B2481F61D00ADD963 /* digiplay_metal.m in Sources */ = {isa = PBXBuildFile; fileRef = 4538510A2481F61D00ADD963 /* digiplay_metal.m */; };
-		4574CD43248038E6005B582F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4574CD4124803811005B582F /* StoreKit.framework */; };
 		45ACD593247462D6008DD07B /* compiler.c in Sources */ = {isa = PBXBuildFile; fileRef = 45ACD592247462D6008DD07B /* compiler.c */; };
 		45BCA60B248937AA009ACD58 /* gfx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45BCA609248937AA009ACD58 /* gfx.cpp */; };
 		45C4F68524881585009C8355 /* digiplay_opengl.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C4F68424881585009C8355 /* digiplay_opengl.c */; };
@@ -41,7 +40,6 @@
 		4531EA902481EABF0071A7BF /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		453391BB247A439B00564DB1 /* gc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gc.c; sourceTree = "<group>"; };
 		4538510A2481F61D00ADD963 /* digiplay_metal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = digiplay_metal.m; sourceTree = "<group>"; };
-		4574CD4124803811005B582F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		45ACD592247462D6008DD07B /* compiler.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = compiler.c; sourceTree = "<group>"; };
 		45BCA609248937AA009ACD58 /* gfx.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gfx.cpp; sourceTree = "<group>"; };
 		45BCA60A248937AA009ACD58 /* gfx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gfx.h; sourceTree = "<group>"; };
@@ -64,7 +62,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4531EA912481EABF0071A7BF /* Metal.framework in Frameworks */,
-				4574CD43248038E6005B582F /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,7 +72,6 @@
 			isa = PBXGroup;
 			children = (
 				4531EA902481EABF0071A7BF /* Metal.framework */,
-				4574CD4124803811005B582F /* StoreKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -333,10 +329,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7TN55SRW8B;
+				DEVELOPMENT_TEAM = GY3YVBHBT9;
 				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = JDWP_ENABLE;
 				INFOPLIST_FILE = Digiplay/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -347,8 +346,9 @@
 				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = Digiplay/lib/iOS/x86_64;
 				OTHER_CFLAGS = "-fshort-wchar";
 				OTHER_LDFLAGS = "-lgc";
-				PRODUCT_BUNDLE_IDENTIFIER = com.digitoygames.digiplay;
+				PRODUCT_BUNDLE_IDENTIFIER = com.musty.deneme;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -358,11 +358,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7TN55SRW8B;
+				DEVELOPMENT_TEAM = GY3YVBHBT9;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				INFOPLIST_FILE = Digiplay/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -373,8 +375,9 @@
 				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = Digiplay/lib/iOS/x86_64;
 				OTHER_CFLAGS = "-fshort-wchar";
 				OTHER_LDFLAGS = "-lgc";
-				PRODUCT_BUNDLE_IDENTIFIER = com.digitoygames.digiplay;
+				PRODUCT_BUNDLE_IDENTIFIER = com.musty.deneme;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

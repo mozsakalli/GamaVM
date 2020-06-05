@@ -15,6 +15,7 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Graphics.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/RenderDevice.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIApplicationDelegate.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/QuadBatch.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/Selector.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Shader.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIView.java
@@ -43,4 +44,5 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Digiplay.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIWindow.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/Shader.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Shader2D.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/ios/IosGraphics.java

@@ -1,4 +1,7 @@
 
+import digiplay.Camera;
+import digiplay.Digiplay;
+import digiplay.Matrix3D;
 import digiplay.ios.IosPlatform;
 
 /*
@@ -26,7 +29,9 @@ public class Main {
         IosPlatform.run(new MyGame());
     }
     
+    
     public static void main(String...args) {
+        //System.out.println(nextDouble());
         main();
     }
 

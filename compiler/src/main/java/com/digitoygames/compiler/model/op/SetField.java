@@ -24,7 +24,7 @@ public class SetField extends Op {
             //code += ref+"->declaringClass->globals["+ref+"->offset]."+type+"=";
         } else {
             StackValue base = stack.pop();
-            code += "((char*)"+base.value+" + "+ref+"->offset.I) = "+base.value;
+            code += "((char*)"+base.value+" + "+ref+"->offset.I) = ";
         }
         code +=val.value;
     }

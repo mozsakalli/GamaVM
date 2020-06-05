@@ -829,7 +829,6 @@ void vm_process_bb(MethodFields *method, BB *bb, void **handlers) {
         }
         OP *op = &bb->ops[i];
         op->handler = handlers[OP_UNIMPLEMENTED];
-        //printf("    %d:%d OP: 0x%x\n", i, op->pc, op->bc);
         switch(op->code) {
             case OP_NOP:
                 op->handler = handlers[OP_NOP];
@@ -883,8 +882,9 @@ void vm_process_bb(MethodFields *method, BB *bb, void **handlers) {
                 break;
                 
             case OP_BINARY:
-                if(op->bc < OP_INEG || op->bc > OP_DNEG)
+                if(op->bc < op_ineg || op->bc > op_dneg)
                     bb->stack[--bb->sp] = op->type;
+                else bb->stack[bb->sp-1] = op->type;
                 op->handler = handlers[op->bc - op_iadd + OP_IADD];
                 break;
                 
@@ -1020,6 +1020,7 @@ void vm_process_bb(MethodFields *method, BB *bb, void **handlers) {
                 printf(" at line=%d pc=%d\n",get_line_number(method, op->pc), op->pc);
                 return;
         }
+        //printf("    %d:%d OP: 0x%x sp:%d\n", i, op->pc, op->bc, bb->sp);
     }
 }
 
@@ -1044,8 +1045,8 @@ void vm_compile_method(VM *vm, MethodFields *method, void **handlers) {
     COMPILERCTX ctx;
     memset(&ctx, 0, sizeof(ctx));
     ctx.method = method;
-    
-    //pm("Compiling", method);
+    if(!strcmp(string2c(method->name),"setupFor2D"))
+        printf("...");
     vm_compiler_build_ops(&ctx);
     //printf("OP-Count: %d\n", ctx.opCount);
     //fix jump targets
@@ -1422,7 +1423,7 @@ void vm_interpret_method(VM *vm, Object *omethod, VAR *args) {
     //pm("Executing", method);
     //printf("SP=%d\n", vm->SP);
     if(!method->compiled) {
-        //printf("Compiling...\n");
+        //pm("Compiling", omethod);
         vm_compile_method(vm, method, &handlers[0]);
     }
     //printf("Started...\n");
@@ -2171,9 +2172,11 @@ OP_LSHR: //78
 OP_IUSHR: //79
     stack[sp-2].I = (((unsigned int)stack[sp-2].I) >> (0x1f & ((unsigned int)stack[sp-1].I)));
     sp--;
+    NEXT(1);
 OP_LUSHR: //80
     stack[sp-2].J = (((unsigned long long)stack[sp-2].J) >> (0x3f & ((unsigned long long)stack[sp-1].I)));
     sp--;
+    NEXT(1);
 OP_IAND: //81
     stack[sp-2].I &= stack[sp-1].I;
     sp--;

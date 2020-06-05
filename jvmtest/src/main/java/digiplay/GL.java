@@ -346,6 +346,8 @@ public class GL {
     public native static void bufferVertexData(long vbo, float[] data, int offset, int length);
     public native static long createIndexBuffer();
     public native static void bufferIndexData(long ibo, short[] data, int offset, int length);
+    public native static void bindVertexBuffer(long vbo);
+    public native static void bindIndexBuffer(long ibo);
     
     public native static void uniformMatrix4f(long uniform, float[] matrix, boolean transpose);
     

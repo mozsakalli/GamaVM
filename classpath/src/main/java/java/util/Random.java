@@ -1,6 +1,29 @@
 package java.util;
 
-public class Random{
+public class Random {
+    
+    int seed;
+    
+    public Random() {
+        this((int)System.nanoTime());
+    }
+    
+    public Random(int seed) {
+        this.seed = seed;
+    }
+    
+    public int nextInt() {
+        seed = 214013 * seed + 2531011;
+        return (seed >> 16) & 0x7FFF;        
+    }
+    
+    public int nextInt(int max) {
+        return (int)(nextDouble() * max);
+    }
+    public double nextDouble() {
+        return nextInt() / (double)Short.MAX_VALUE;
+    }
+    /*
     private static final long multiplier = 0x5deece66dL;
 
     private long seed;
@@ -52,5 +75,5 @@ public class Random{
     public void setSeed(long seed){
         this.seed = (seed ^ multiplier) & ((1L << 48) - 1);
     }
-
+    */
 }

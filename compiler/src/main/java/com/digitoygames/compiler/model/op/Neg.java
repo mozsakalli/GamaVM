@@ -9,7 +9,8 @@ public class Neg extends Op {
     @Override
     public void execute(Method method, Stack stack) {
         StackValue tmp = method.allocTemp(type);
-        code = tmp.value+"=-"+tmp.value;
+        StackValue val = stack.pop();
+        code = tmp.value+"=-"+val.value;// tmp.value+"=-"+tmp.value;
         stack.push(tmp);
     }
 }

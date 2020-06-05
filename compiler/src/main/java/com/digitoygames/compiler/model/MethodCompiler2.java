@@ -46,7 +46,7 @@ public class MethodCompiler2 {
     }
     public void compile(SourceWriter out) throws Exception {
         String key = method.declaringClass.getName()+":"+method.getName()+":"+method.getSignature();
-        if(key.equals("java/util/IdentityHashMap$IdentityHashMapIterator:hasNext:()Z"))
+        if(method.getName().equals("setupFor2D"))
             System.out.println("");
         System.out.println(key);
         out.println("void %s(VM *vm, Method *method, VAR *args) {",method.getAOTName()).indent()
@@ -151,9 +151,9 @@ public class MethodCompiler2 {
                 System.out.print(" From:"+sb.id);
             //if(b.parent != null) System.out.print(" PB:"+b.parent.id);
             System.out.println();
-            for(Op o : b.ops) {
-                System.out.println("   "+o);
-            }
+            //for(Op o : b.ops) {
+            //    System.out.println("   "+o);
+            //}
         }*/
     }
     
@@ -164,6 +164,7 @@ public class MethodCompiler2 {
             if(!executed.contains(b))
                 executeBlock(b, executed);
 
+        System.out.println("BB:"+bb.id);
         StringBuilder code = new StringBuilder();
         BasicBlock parent = bb.sources.isEmpty() ? null : bb.sources.iterator().next();
         if(parent != null) {
@@ -182,6 +183,7 @@ public class MethodCompiler2 {
         Op lastOp = bb.ops.isEmpty() ? null : bb.ops.get(bb.ops.size() - 1);
         for(Op o : bb.ops) {
             o.execute(method, bb.stack);
+            System.out.println("   "+o.pc+":"+o.getClass().getSimpleName()+":"+o+" : stack="+bb.stack.size());
             if(o == lastOp && o instanceof Branch) {
                 bb.buildSpills(method, code);
             }

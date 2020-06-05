@@ -299,6 +299,10 @@ typedef struct JdwpLocation {
 class JdwpString {
 public:
     Object *str = nullptr;
+    
+    JdwpString *next = nullptr;
+    static JdwpString *cache;
+    
     JdwpString(Object *str) : str(str) {}
     ~JdwpString() {
         if(str) {
@@ -317,6 +321,16 @@ public:
             sf->length -= 2;
         }
         return str;
+    }
+    
+    static void reset() {
+        JdwpString *ptr = cache;
+        while(ptr) {
+            JdwpString *n = ptr->next;
+            delete ptr;
+            ptr = n;
+        }
+        cache = nullptr;
     }
 };
 

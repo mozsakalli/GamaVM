@@ -77,13 +77,16 @@ public class Camera {
         //float width = Device.screenWidth;
         //float height = Device.screenHeight;
         //GL.Viewport(0, 0, (int)width, (int)height);
-        x = width / 2;
-        y = height / 2;
+        targetX = x = width / 2;
+        targetY = y = height / 2;
         //Camera.z = -height / Z;
         YUp = -1;
         fov = FOV;
         far = 100000;
         z = -height / ZDIVISOR;
+        targetZ = 0;
+        this.width = width;
+        this.height = height;
         dirty = true;
         return getCombinedMatrix();
     }

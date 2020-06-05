@@ -154,6 +154,9 @@ void java_lang_Math_sin_D(VM *vm, Object *method, VAR *args) {
 void java_lang_Math_cos_D(VM *vm, Object *method, VAR *args) {
     vm->frames[vm->FP].retVal.D = cos(args[0].D);
 }
+void java_lang_Math_sqrt_D(VM *vm, Object *method, VAR *args) {
+    vm->frames[vm->FP].retVal.D = sqrt(args[0].D);
+}
 
 void java_lang_Double_toStringImpl(VM *vm, Object *method, VAR *args) {
     jdouble d = args[0].D;
@@ -262,6 +265,12 @@ void java_lang_Float_toStringImpl(VM *vm, Object *method, VAR *args) {
     
     vm->frames[vm->FP].retVal.O = (Object*)alloc_string(vm, s);
 }
+
+void java_lang_Float_intBitsToFloat(VM *vm, Object *method, VAR *args) {
+    float *f = (float*)&args[0].I;
+    vm->frames[vm->FP].retVal.F = *f;
+}
+
 
 jlong get_nsobject_handle(VM *vm, Object *o) {
     static int handle_field_offset = -1;
@@ -423,13 +432,17 @@ NativeMethodInfo gamavm_natives[] = {
     //java/lang/Math
     {.cls = "java/lang/Math", .name = "abs", .sign = "(D)D", .handle = &java_lang_Math_abs_D},
     {.cls = "java/lang/Math", .name = "abs", .sign = "(F)F", .handle = &java_lang_Math_abs_F},
-    {.cls = "java/lang/Math", .name = "abs", .sign = "(F)F", .handle = &java_lang_Math_abs_F},
+    {.cls = "java/lang/Math", .name = "cos", .sign = "(D)D", .handle = &java_lang_Math_cos_D},
+    {.cls = "java/lang/Math", .name = "sin", .sign = "(D)D", .handle = &java_lang_Math_sin_D},
+    {.cls = "java/lang/Math", .name = "tan", .sign = "(D)D", .handle = &java_lang_Math_tan_D},
+    {.cls = "java/lang/Math", .name = "sqrt", .sign = "(D)D", .handle = &java_lang_Math_sqrt_D},
 
     //java/lang/Double
     {.cls = "java/lang/Double", .name = "toStringImpl", .sign = "(DZ)Ljava/lang/String;", .handle = &java_lang_Double_toStringImpl},
 
     //java/lang/Float
     {.cls = "java/lang/Float", .name = "toStringImpl", .sign = "(FZ)Ljava/lang/String;", .handle = &java_lang_Float_toStringImpl},
+    {.cls = "java/lang/Float", .name = "intBitsToFloat", .sign = "(I)F", .handle = &java_lang_Float_intBitsToFloat},
 
     {.cls = "gamavm/apple/ObjC", .name = "objc_getClass", .sign = "(Ljava/lang/String;)J", .handle = &gamavm_apple_ObjC_objc_getClass},
     {.cls = "gamavm/apple/ObjC", .name = "sel_registerName", .sign = "(Ljava/lang/String;)J", .handle = &gamavm_apple_ObjC_sel_registerName},
