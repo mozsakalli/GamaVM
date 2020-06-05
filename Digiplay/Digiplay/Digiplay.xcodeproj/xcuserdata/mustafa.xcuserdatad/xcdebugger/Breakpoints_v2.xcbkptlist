@@ -1534,8 +1534,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "157"
             endingLineNumber = "157"
-            landmarkName = "-createOpenGLBuffers"
-            landmarkType = "7">
+            landmarkName = "DigiplayView"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1550,7 +1550,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "99"
             endingLineNumber = "99"
-            landmarkName = "metal_digiplay_GL_clearColor(vm, method, args)"
+            landmarkName = "metal_digiplay_GL_viewport(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1566,7 +1566,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "103"
             endingLineNumber = "103"
-            landmarkName = "metal_digiplay_GL_clear(vm, method, args)"
+            landmarkName = "metal_digiplay_GL_clearColor(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1582,7 +1582,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "88"
             endingLineNumber = "88"
-            landmarkName = "metal_digiplay_GL_viewport(vm, method, args)"
+            landmarkName = "metal_get_pass()"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1999,6 +1999,38 @@
             startingLineNumber = "1010"
             endingLineNumber = "1010"
             landmarkName = "jdwp_tick(vm, method, line)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "92F45D7B-1325-46B4-BFB5-B55DE9F10655"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Digiplay/digiplay_metal.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "113"
+            endingLineNumber = "113"
+            landmarkName = "metal_digiplay_GL_compileProgram(vm, method, args)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "60F45A8B-9424-4DC0-9782-2918523E0AEC"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Digiplay/digiplay_metal.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "160"
+            endingLineNumber = "160"
+            landmarkName = "metal_digiplay_GL_attribLocation(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

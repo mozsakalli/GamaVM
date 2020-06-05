@@ -31,6 +31,10 @@ MTLRenderPipelineDescriptor* metal_pipelineDesc;
 int metal_clear_flags = 0;
 MTLViewport metal_vp;
 
+typedef struct MetalShader {
+    MTLRenderPipelineDescriptor *renderPipelineDesc;
+} MetalShader;
+
 void metal_close_encoder() {
     if(metal_cmdEncoder) {
         [metal_cmdEncoder endEncoding];
@@ -105,8 +109,77 @@ void metal_digiplay_GL_clear(VM *vm, Object *method, VAR *args) {
     metal_get_encoder();
 }
 
-void metal_digiplay_GL_drawElements(VM *vm, Object *method, VAR *args) {
+void metal_digiplay_GL_compileProgram(VM *vm, Object *method, VAR *args) {
+    if(!args[0].O) {
+        throw_nullpointerexception(vm);
+        return;
+    }
+    //MTLRenderPipelineDescriptor *desc = [[MTLRenderPipelineDescriptor alloc] init];
+    NSError *err;
+    id<MTLLibrary> l=[MetalDevice newLibraryWithSource:[NSString stringWithUTF8String:string2c(args[0].O)] options:nil error:&err];
+    if(err) {
+        NSLog(@"%@",[err description]);
+        vm->frames[vm->FP].retVal.J = -1;
+        return;
+    }
+    id<MTLFunction> vertex = [l newFunctionWithName:@"vmain"];
+    if(!vertex) {
+        vm->frames[vm->FP].retVal.J = -1;
+        return;
+    }
+    /*
+    l=[MetalDevice newLibraryWithSource:[NSString stringWithUTF8String:string2c(args[1].O)] options:nil error:&err];
+    if(err) {
+        NSLog(@"%@",[err description]);
+        vm->frames[vm->FP].retVal.J = -1;
+        return;
+    }*/
+    id<MTLFunction> fragment = [l newFunctionWithName:@"fmain"];
+    if(!fragment) {
+        vm->frames[vm->FP].retVal.J = -1;
+        return;
+    }
     
+    MetalShader *shader = malloc(sizeof(MetalShader));
+    shader->renderPipelineDesc = [[MTLRenderPipelineDescriptor alloc] init];
+    shader->renderPipelineDesc.vertexFunction = vertex;
+    shader->renderPipelineDesc.fragmentFunction = fragment;
+    vm->frames[vm->FP].retVal.J = (jlong)shader;
+}
+
+void metal_digiplay_GL_attribLocation(VM *vm, Object *method, VAR *args) {
+    MetalShader *shader = (MetalShader*)args[0].J;
+    if(!shader || !args[1].O) {
+        throw_nullpointerexception(vm);
+        return;
+    }
+    
+    char *name = string2c(args[1].O);
+    for (MTLVertexAttribute* attr in shader->renderPipelineDesc.vertexFunction.vertexAttributes) {
+        if (strcmp(name, [[attr name] UTF8String]) == 0) {
+            vm->frames[vm->FP].retVal.J = attr.attributeIndex;
+            return;
+        }
+    }
+    vm->frames[vm->FP].retVal.J = -1;
+}
+
+void metal_digiplay_GL_uniformLocation(VM *vm, Object *method, VAR *args) {
+    MetalShader *shader = (MetalShader*)args[0].J;
+    if(!shader || !args[1].O) {
+        throw_nullpointerexception(vm);
+        return;
+    }
+    
+    
+    char *name = string2c(args[1].O);
+    for (MTLVertexAttribute* attr in shader->renderPipelineDesc.vertexFunction.vertexAttributes) {
+        if (strcmp(name, [[attr name] UTF8String]) == 0) {
+            vm->frames[vm->FP].retVal.J = attr.attributeIndex;
+            return;
+        }
+    }
+    vm->frames[vm->FP].retVal.J = -1;
 }
 
 extern NativeMethodInfo digiplay_GL_NATIVES[];
@@ -114,6 +187,8 @@ void metal_setup_natives() {
     digiplay_GL_NATIVES[0].handle = &metal_digiplay_GL_viewport;
     digiplay_GL_NATIVES[1].handle = &metal_digiplay_GL_clearColor;
     digiplay_GL_NATIVES[2].handle = &metal_digiplay_GL_clear;
+    digiplay_GL_NATIVES[3].handle = &metal_digiplay_GL_compileProgram;
+    digiplay_GL_NATIVES[4].handle = &metal_digiplay_GL_attribLocation;
 }
 /*
 #define GL "digiplay/GL"

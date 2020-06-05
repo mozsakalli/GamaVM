@@ -6,6 +6,8 @@
 //  Copyright © 2020 mustafa. All rights reserved.
 //
 
+#define METAL_ENABLED
+
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <Metal/Metal.h>

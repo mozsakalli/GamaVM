@@ -199,6 +199,7 @@ NativeMethodInfo digiplay_GL_NATIVES[] = {
     {.cls = GL, .name = "clear", .sign = "(I)V", .handle = &ogl_digiplay_GL_clear},
     {.cls = GL, .name = "compileProgram", .sign = "(Ljava/lang/String;Ljava/lang/String;)J", .handle = &ogl_digiplay_GL_compileProgram},
     {.cls = GL, .name = "attribLocation", .sign = "(JLjava/lang/String;)J", .handle = &ogl_digiplay_GL_attribLocation},
+    /*
     {.cls = GL, .name = "uniformLocation", .sign = "(JLjava/lang/String;)J", .handle = &ogl_digiplay_GL_uniformLocation},
     {.cls = GL, .name = "createVertexBuffer", .sign = "()J", .handle = &ogl_digiplay_GL_createVertexBuffer},
     {.cls = GL, .name = "createIndexBuffer", .sign = "()J", .handle = &ogl_digiplay_GL_createVertexBuffer},
@@ -214,6 +215,6 @@ NativeMethodInfo digiplay_GL_NATIVES[] = {
     {.cls = GL, .name = "drawElements", .sign = "(III)V", .handle = &ogl_digiplay_GL_drawElements},
     {.cls = GL, .name = "enable", .sign = "(I)V", .handle = &ogl_digiplay_GL_enable},
     {.cls = GL, .name = "disable", .sign = "(I)V", .handle = &ogl_digiplay_GL_disable},
-
+    */
     {.cls = NULL}
 };
