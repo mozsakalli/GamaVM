@@ -46,9 +46,6 @@ public class MethodCompiler2 {
     }
     public void compile(SourceWriter out) throws Exception {
         String key = method.declaringClass.getName()+":"+method.getName()+":"+method.getSignature();
-        if(method.getName().equals("setupFor2D"))
-            System.out.println("");
-        System.out.println(key);
         out.println("void %s(VM *vm, Method *method, VAR *args) {",method.getAOTName()).indent()
            .println("Frame *frame = &vm->frames[++vm->fp];")
            .println("frame->method = method;");
@@ -62,14 +59,14 @@ public class MethodCompiler2 {
         //for(Op o : ops)
         //    System.out.println("    "+o.pc+":"+o);
         List<BasicBlock> blocks = BasicBlock.build(method, code, ops);
-        for(BasicBlock bb : blocks) {
+        /*for(BasicBlock bb : blocks) {
             out.println("BB"+bb.id);
             if(!bb.sources.isEmpty()) {
             for(BasicBlock src : bb.sources)
                 out.print("   src="+src.id);
             out.ln();
             }
-        }
+        }*/
         Set<BasicBlock> executed = new HashSet();
         for(BasicBlock bb : blocks)
             executeBlock(bb, executed);
@@ -164,7 +161,7 @@ public class MethodCompiler2 {
             if(!executed.contains(b))
                 executeBlock(b, executed);
 
-        System.out.println("BB:"+bb.id);
+        //System.out.println("BB:"+bb.id);
         StringBuilder code = new StringBuilder();
         BasicBlock parent = bb.sources.isEmpty() ? null : bb.sources.iterator().next();
         if(parent != null) {
@@ -183,7 +180,7 @@ public class MethodCompiler2 {
         Op lastOp = bb.ops.isEmpty() ? null : bb.ops.get(bb.ops.size() - 1);
         for(Op o : bb.ops) {
             o.execute(method, bb.stack);
-            System.out.println("   "+o.pc+":"+o.getClass().getSimpleName()+":"+o+" : stack="+bb.stack.size());
+            //System.out.println("   "+o.pc+":"+o.getClass().getSimpleName()+":"+o+" : stack="+bb.stack.size());
             if(o == lastOp && o instanceof Branch) {
                 bb.buildSpills(method, code);
             }
