@@ -1451,6 +1451,11 @@ void vm_interpret_method(VM *vm, Object *omethod, VAR *args) {
     jdwp_tick(vm, omethod, op->line); \
     goto *op->handler; \
 }
+
+#define REDISPATCH() { \
+    goto *op->handler; \
+}
+
 #define NULL_CHECK(o) \
 if(!o) { \
     vm->frames[fp].line = op->line; \
@@ -1544,7 +1549,7 @@ OP_INVOKE:          //12
             printf("Unknown Invoke type: %d\n", op->bc);
             return;
     }
-    NEXT(0)
+    REDISPATCH();
 }
     
 OP_GETFIELD:        //13

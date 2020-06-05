@@ -441,7 +441,7 @@ void jdwp_process_packet(JdwpPacket *req) {
     resp->reset();
     
     int cmd = (req->commandSet << 8) + req->command;
-    //JDWPLOG(">>> Packet: 0x%x\n", cmd);
+    JDWPLOG(">>> Packet: 0x%x\n", cmd);
     switch(cmd) {
         case JDWP_CMD_VirtualMachine_Version: //0x0101
             resp->writeCString((char*)"jdwp 1.2");
