@@ -35,37 +35,33 @@ import java.util.List;
  * an object: Since: JDK1.0, CLDC 1.0
  */
 public final class Class<T> {
-    
-    int accessFlags;
-    Field[] fields;
-    Method[] methods;
-    Class[] interfaces;
-    public Class listNext;
     String name;
     Class superClass;
+    Class[] interfaces;
     Class elementClass;
-    int primitiveType;
-    int superIndex;
-            
-    Object cp;
-    int initialized;
+    int flags;
+    Class next;
+    Field[] fields;
+    Method[] methods;
+    String sourceFile;
+    Object global;
     int instanceSize;
-    Object globals;
-    
-    int iofVersion;
-    int iofCount;
-    Object iofTable;
-    
+    int primitiveSize;
+    Class arrayClass;
+    Object cp;
+    int linked;
+    Object finalizer;
+    int instanceOffsetCount;
+    Object instanceOffsets;  //for fast marking
     int maxMethodIndex;
-    
     int vTableSize;
     Object vtable;
     
     int iTableSize;
     Object itable;
-    
-    Method finalizer;
-    String source_file;
+
+    int allParentCount;
+    Class[] allParents;
     
     public native static java.lang.Class forName(java.lang.String className);
     
@@ -78,11 +74,11 @@ public final class Class<T> {
     }
     
     public boolean isPrimitive() {
-        return primitiveType != 0;
+        return primitiveSize != 0;
     }
     
     public int getModifiers() {
-        return accessFlags;
+        return flags;
     }
     
     public Constructor getConstructor(Class[] args) {

@@ -1,35 +1,26 @@
 package java.lang.reflect;
 
 public class Method {
-    int accessFlags;
-    int nameIndex;
-    int signatureIndex;
-    int maxStack;
-    int maxLocals;
-    Class declaringClass;
     String name;
     String signature;
-    Class returnType;
-    
-    int localVarTableSize;
-    Object localVarTable;
-    int argCount;
+    Class declaringClass;
+    int flags;
     Object argMap;
-    int iTableIndex;
-    int vTableIndex;
-    
+    int argCount;
+    int maxStack;
+    int maxLocals;
+    int codeSize;
+    Object code;
     int lineNumberTableSize;
     Object lineNumberTable;
     int catchTableSize;
     Object catchTable;
-    
+    int localVarTableSize;
+    Object localVarTable;
+    int iTableIndex;
+    int vTableIndex;
     Object entry;
-    
-    //interpreter
-    Object code;
-    int codeSize;
     Object compiled;
-    int breakpoint;
     
     public Class getDeclaringClass() {
         return declaringClass;

@@ -26,11 +26,16 @@ import digiplay.ios.IosPlatform;
 public class Main {
     
     public static void main() {
-        IosPlatform.run(new MyGame());
+        System.out.println("Hello GamaVM!");
+        //IosPlatform.run(new MyGame());
     }
     
-    
+    static void t(Object o) {
+        String str = (String)o;
+        System.out.println("check-cast");
+    }
     public static void main(String...args) {
+        t(null);
         //System.out.println(nextDouble());
         main();
     }

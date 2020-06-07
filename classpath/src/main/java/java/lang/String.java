@@ -28,7 +28,6 @@ public final class String implements java.lang.CharSequence, Comparable<String> 
     public final int offset;
     public final int count;
     private int hashCode = 0;
-    Object __native;
 
     
     private static final char[] ZERO_CHAR = new char[0];

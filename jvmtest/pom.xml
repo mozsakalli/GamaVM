@@ -38,7 +38,7 @@
                             <goal>shade</goal> 
                         </goals> 
                         <configuration>
-                            <outputFile>/Users/mustafa/Work/GamaVM/Digiplay/Digiplay/Digiplay/assets/jvm_test.jar</outputFile>
+                            <outputFile>/Users/mustafa/Work/GamaVM/digi/digi/assets/jvm_test.jar</outputFile>
                         </configuration>
                     </execution> 
                     
