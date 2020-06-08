@@ -94,8 +94,8 @@
             filePath = "digi/interpret.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1726"
-            endingLineNumber = "1726"
+            startingLineNumber = "1731"
+            endingLineNumber = "1731"
             landmarkName = "vm_interpret_exec(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -110,8 +110,8 @@
             filePath = "digi/interpret.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1723"
-            endingLineNumber = "1723"
+            startingLineNumber = "1728"
+            endingLineNumber = "1728"
             landmarkName = "vm_interpret_exec(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -350,8 +350,8 @@
             filePath = "digi/interpret.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2446"
-            endingLineNumber = "2446"
+            startingLineNumber = "2451"
+            endingLineNumber = "2451"
             landmarkName = "vm_interpret_exec(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -366,8 +366,8 @@
             filePath = "digi/interpret.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2445"
-            endingLineNumber = "2445"
+            startingLineNumber = "2450"
+            endingLineNumber = "2450"
             landmarkName = "vm_interpret_exec(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -382,9 +382,57 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "663"
-            endingLineNumber = "663"
+            startingLineNumber = "691"
+            endingLineNumber = "691"
             landmarkName = "jdwp_process_packet(req)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "17849DCC-212A-4B4C-BFE7-26D53EC5D517"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/jdwp.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "272"
+            endingLineNumber = "272"
+            landmarkName = "jdwp_eventset_set(set)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9323CC7A-ACB9-4A5F-8016-5E57F77FD722"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/vm.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "75"
+            endingLineNumber = "75"
+            landmarkName = "vm_main(vm, className, methodName, signature)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BA0E9327-F7CD-4399-84A0-454B06DE19AE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/jdwp.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
+            landmarkName = "jdwp_send_breakpoint_event(method, index)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

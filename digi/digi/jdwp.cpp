@@ -106,6 +106,15 @@ int jdwp_get_line_index(Object *method, int line) {
     return -1;
 }
 
+int jdwp_get_pc_index(Object *method, int pc) {
+    if(!method) return -1;
+    Method *mf = (Method*)method->instance;
+    if(mf->lineNumberTableSize <= 0) return -1;
+    for(int i=0; i<mf->lineNumberTableSize; i++)
+        if(mf->lineNumberTable[i].pc == pc) return i;
+    return -1;
+}
+
 int jdwp_method_count_args(Object *method) {
     Object *signature = ((Method*)method->instance)->signature;
     Object *chars = ((String*)signature->instance)->chars;
@@ -667,10 +676,10 @@ void jdwp_process_packet(JdwpPacket *req) {
             resp->writeInt(m->localVarTableSize);
             for(int i=0; i<m->localVarTableSize; i++) {
                 LocalVarInfo *v = &m->localVarTable[i];
-                int startline = get_line_number(m, v->start);
-                int startindex = jdwp_get_line_index(mth, startline);
-                int endline = get_line_number(m, v->start + v->length);
-                int endindex = jdwp_get_line_index(mth, endline);
+                //int startline = get_line_number(m, v->start);
+                int startindex = jdwp_get_pc_index(mth, v->start);
+                //int endline = get_line_number(m, v->start + v->length);
+                int endindex = jdwp_get_pc_index(mth, v->start + v->length);
                 if(endindex < startindex) {
                     int tmp = startindex;
                     startindex = endindex;
