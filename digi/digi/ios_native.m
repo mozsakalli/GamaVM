@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#include "gamavm.h"
+#include "vm.h"
 #include "miniz.h"
 
 void *read_file(const char* path, int *size) {

@@ -21,6 +21,7 @@ public class Method {
     int vTableIndex;
     Object entry;
     Object compiled;
+    int breakpoint;
     
     public Class getDeclaringClass() {
         return declaringClass;

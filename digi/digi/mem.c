@@ -6,7 +6,7 @@
 //  Copyright © 2020 mustafa. All rights reserved.
 //
 
-#include "gamavm.h"
+#include "vm.h"
 
 HeapBlock *alloc_heap_block() {
     HeapBlock *b = (HeapBlock*)malloc(sizeof(HeapBlock));
@@ -54,6 +54,7 @@ Object *alloc_object(VM *vm, Object *cls, int atomic) {
     o->length = 0;
     o->gc.version = vm->gcVersion;
     o->gc.atomic = atomic;
+    o->gc.free = 0;
     
     int size = CLS(cls, instanceSize);
     if(size > 0) {
@@ -74,6 +75,7 @@ Object *alloc_array(VM *vm, Object *cls, int length, int atomic) {
 
 Object *alloc_class(VM *vm) {
     Object *cls = alloc_object(vm, vm->jlClass, 1);
+    CLS(cls, vm) = vm;
     return cls;
 }
 

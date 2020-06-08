@@ -6,7 +6,7 @@
 //  Copyright © 2020 mustafa. All rights reserved.
 //
 
-#include "gamavm.h"
+#include "vm.h"
 
 jint get_prim_size(int chr) {
     switch(chr) {
@@ -165,7 +165,7 @@ void link_class(VM *vm, Object *clsObject) {
     
     //Setup Interface Table
     if(cls->superClass) {
-        cls->itable = realloc(cls->itable, sizeof(Object*) * CLS(cls->superClass,iTableSize));
+        cls->itable = vm_alloc(sizeof(Object*) * CLS(cls->superClass,iTableSize));
         memcpy(cls->itable, CLS(cls->superClass,itable), sizeof(Object*) * CLS(cls->superClass,iTableSize));
         cls->iTableSize = CLS(cls->superClass,iTableSize);
     }
@@ -199,7 +199,7 @@ void link_class(VM *vm, Object *clsObject) {
     if(!IS_INTERFACE(cls->flags)) {
         //Setup Virtual Table
         if(cls->superClass) {
-            cls->vtable = realloc(cls->vtable, sizeof(Object*) * CLS(cls->superClass,vTableSize));
+            cls->vtable = vm_alloc(sizeof(Object*) * CLS(cls->superClass,vTableSize));
             memcpy(cls->vtable, CLS(cls->superClass,vtable), sizeof(Object*) * CLS(cls->superClass,vTableSize));
             cls->vTableSize = CLS(cls->superClass,vTableSize);
         }
@@ -431,20 +431,3 @@ jint is_class_child_of(VM *vm, Object *json, Object *jof) {
     return 0;
 }
 
-void vm_native_exec(VM *vm, Object *method, VAR *args) {
-    void *handler = resolve_native_method(vm, method);
-    if(handler) {
-        Method *m = method->instance;
-        m->entry = handler;
-        ((VM_CALL)handler)(vm, method, args);
-        return;
-    }
-
-    throw_unsatisfiedlink(vm, method);
-    /*
-    printf("!!! Native !!! %s", string2c(CLS_FIELD(MTH_FIELD(method, declaringClass),name)));
-    printf(":%s",string2c(MTH_FIELD(method,name)));
-    printf(":%s\n",string2c(MTH_FIELD(method,signature)));
-    throw_nullpointerexception(vm);
-    */
-}

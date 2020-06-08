@@ -6,7 +6,7 @@
 //  Copyright © 2020 mustafa. All rights reserved.
 //
 
-#include "gamavm.h"
+#include "vm.h"
 
 
 int get_utf8_length(char *data, int length) {

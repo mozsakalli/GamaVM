@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-
-extern void gamavm_main(char *className, char *methodName, char *signature);
+#include "vm.h"
+//extern void gamavm_main(char *className, char *methodName, char *signature);
 
 int main(int argc, char * argv[]) {
     NSString * appDelegateClassName;
@@ -17,6 +17,8 @@ int main(int argc, char * argv[]) {
         //appDelegateClassName = NSStringFromClass([AppDelegate class]);
     }
     //return UIApplicationMain(argc, argv, nil, appDelegateClassName);
-    gamavm_main("Main", "main", "()V");
+    //gamavm_main("Main", "main", "()V");
+    VM *vm = vm_init();
+    vm_main(vm, "Main", "main", "()V");
     return 0;
 }

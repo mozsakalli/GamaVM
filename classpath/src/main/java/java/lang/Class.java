@@ -62,6 +62,7 @@ public final class Class<T> {
 
     int allParentCount;
     Class[] allParents;
+    Object vm;
     
     public native static java.lang.Class forName(java.lang.String className);
     

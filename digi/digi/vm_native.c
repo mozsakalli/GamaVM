@@ -6,7 +6,7 @@
 //  Copyright © 2020 mustafa. All rights reserved.
 //
 
-#include "gamavm.h"
+#include "vm.h"
 #include <sys/time.h>
 #include <time.h>
 #ifdef __APPLE__
@@ -35,6 +35,7 @@ void java_lang_Object_clone(VM *vm, Object *method, VAR *args) {
     vm->frames[vm->FP].ret.O = result;
 }
 
+/// java/lang/System
 void java_lang_System_arraycopy(VM *vm, Object *method, VAR *args) {
     Object *src = args[0].O;
     jint srcOffset = args[1].I;
@@ -100,6 +101,10 @@ void java_lang_System_nanoTime(VM *vm, Object *method, VAR *args) {
         clock_gettime(CLOCK_MONOTONIC, &now);
         vm->frames[vm->FP].ret.J = now.tv_sec * 1000000000LL + now.tv_nsec;
     #endif
+}
+
+void java_lang_System_gc(VM *vm, Object *method, VAR *args) {
+    gc_step(vm);
 }
 
 void java_lang_Math_abs_D(VM *vm, Object *method, VAR *args) {
@@ -238,10 +243,16 @@ void java_lang_Float_intBitsToFloat(VM *vm, Object *method, VAR *args) {
     vm->frames[vm->FP].ret.F = *f;
 }
 
+
 extern void java_lang_System_SystemOutStream_printImpl(VM *vm, Object *method, VAR *args);
 
 NativeMethodInfo vm_native_methods[] = {
     {"java/lang/System:arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V", &java_lang_System_arraycopy},
     {"java/lang/System$SystemOutStream:printImpl:(Ljava/lang/String;)V", &java_lang_System_SystemOutStream_printImpl},
+    {"java/lang/System:gc:()V", &java_lang_System_gc},
+    {"java/lang/System:nanoTime:()J", &java_lang_System_nanoTime},
+    {"java/lang/System:currentTimeMillis:()J", &java_lang_System_currentTimeMillis},
+    
+    {"java/lang/Double:toStringImpl:(DZ)Ljava/lang/String;", java_lang_Double_toStringImpl},
     NULL
 };

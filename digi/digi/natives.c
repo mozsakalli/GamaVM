@@ -6,7 +6,19 @@
 //  Copyright © 2020 mustafa. All rights reserved.
 //
 
-#include "gamavm.h"
+#include "vm.h"
+
+void vm_native_exec(VM *vm, Object *method, VAR *args) {
+    void *handler = resolve_native_method(vm, method);
+    if(handler) {
+        Method *m = method->instance;
+        m->entry = handler;
+        ((VM_CALL)handler)(vm, method, args);
+        return;
+    }
+
+    throw_unsatisfiedlink(vm, method);
+}
 
 extern NativeMethodInfo vm_native_methods[];
 /// EXTRAEXTERNS

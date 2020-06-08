@@ -7,7 +7,7 @@
 //
 
 #include <stdio.h>
-#include "gamavm.h"
+#include "vm.h"
 #include "opcodes.h"
 
 enum {
@@ -1456,7 +1456,7 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
     Object *field;
     jint fp = ++vm->FP;
     vm->frames[fp].method = omethod;
-    //vm->frames[fp].SP = local;
+    vm->frames[fp].SP = local;
     //Frame *frame = &vm->frames[++vm->fp];
     
     OP* op = &((OP*)method->compiled)[0];
@@ -1967,14 +1967,17 @@ OP_INVOKEVIRTUAL:
     {
         Object *om = op->var.O;
         Method *m = om->instance;
-        //printf("--- invoke-virtual: %s", string2c(CLS_FIELD(m->declaringClass,name)));
-        //printf(":%s",string2c(m->name));
-        //printf(":%s\n",string2c(m->signature));
+        //printf("--- invoke-virtual: %s", string_to_ascii(CLS(m->declaringClass,name)));
+        //printf(":%s",string_to_ascii(m->name));
+        //printf(":%s\n",string_to_ascii(m->signature));
 
         int call_sp = sp - m->argCount;
         SAVE_PC;
         Object *object = stack[call_sp].O;
         NULL_CHECK(object);
+        Class *cls = object->cls->instance;
+        if(m->vTableIndex >= cls->vTableSize)
+            printf("VTABLW!!!!!!!!!!!!\n");
         //printf(" ---- %s\n", string2c(CLS_FIELD(object->cls,name)));
         Object *vmethod = CLS(object->cls,vtable)[m->vTableIndex];
         if(!vmethod) {

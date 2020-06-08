@@ -6,7 +6,7 @@
 //  Copyright © 2020 mustafa. All rights reserved.
 //
 
-#include "gamavm.h"
+#include "vm.h"
 
 #define READ_U4(data) ((unsigned char)data[0] << 24) | ((unsigned char)data[1] << 16) | ((unsigned char)data[2] << 8) | (unsigned char)data[3];
 #define READ_U2(data) ((unsigned char)data[0] << 8) | (unsigned char)data[1];
@@ -325,7 +325,7 @@ int parse_class(VM *vm, char *data, Object *clsObject) {
             Object *mname = MTH(mth, name);
             if(!IS_STATIC(MTH(mth,flags)) && STRLEN(mname)==7 &&
                compare_chars(L"finalize", STRCHARS(mname), 7)) {
-                CLS(clsObject, finalizer) = MTH(mth, entry);
+                CLS(clsObject, finalizer) = mth;
             }
         }
     }

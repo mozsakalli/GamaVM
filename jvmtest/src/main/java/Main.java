@@ -27,6 +27,14 @@ public class Main {
     
     public static void main() {
         System.out.println("Hello GamaVM!");
+        for(int i=0; i<1000; i++) {
+            byte b[] = new byte[1024*124];
+            System.gc();
+        }
+        for(;;) {
+            System.out.println(Math.random()+"/"+System.currentTimeMillis()+"/>>");
+            System.gc();
+        }
         //IosPlatform.run(new MyGame());
     }
     

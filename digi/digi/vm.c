@@ -6,13 +6,12 @@
 //  Copyright © 2020 mustafa. All rights reserved.
 //
 
-#include "gamavm.h"
+#include "vm.h"
 
-VM *gamaVM = NULL;
+//VM *gamaVM = NULL;
 
-
-void gamavm_main(char *className, char *methodName, char *signature) {
-    gamaVM = vm_alloc(sizeof(VM));
+VM* vm_init() {
+    VM *gamaVM = vm_alloc(sizeof(VM));
     
     gamaVM->jlClass = vm_alloc(sizeof(Object));
     gamaVM->jlClass->gc.atomic = 1;
@@ -44,7 +43,7 @@ void gamavm_main(char *className, char *methodName, char *signature) {
         CLS(gamaVM->primClasses[i], primitiveSize) = primitiveSizes[i];
         CLS(gamaVM->primClasses[i], linked) = 1;
         CLS(gamaVM->primClasses[i], next) = gamaVM->classes;
-        gamaVM->classes = CLS(gamaVM->primClasses[i], next);
+        gamaVM->classes = gamaVM->primClasses[i];
     }
     
     resolve_class(gamaVM, L"java/lang/Object", 16, 0, gamaVM->jlObject);
@@ -54,6 +53,10 @@ void gamavm_main(char *className, char *methodName, char *signature) {
     resolve_class(gamaVM, L"java/lang/StackTraceElement", 27, 0, gamaVM->jlSTE);
     resolve_class(gamaVM, L"java/lang/String", 16, 0, gamaVM->jlString);
     
+    return gamaVM;
+}
+
+void vm_main(VM *vm, char *className, char *methodName, char *signature) {
     int clsLen;
     jchar *clName = char_to_jchar(className, &clsLen);
     int nameLen;
@@ -61,11 +64,11 @@ void gamavm_main(char *className, char *methodName, char *signature) {
     int signLen;
     jchar *sign = char_to_jchar(signature, &signLen);
     
-    gamaVM->mainMethod = resolve_method(gamaVM, clName, clsLen, name, nameLen, sign, signLen);
-    if(!gamaVM->mainMethod) {
+    vm->mainMethod = resolve_method(vm, clName, clsLen, name, nameLen, sign, signLen);
+    if(!vm->mainMethod) {
         printf("Can't find main method: %s:%s:%s\n", className, methodName, signature);
         return;
     }
     
-    CALLVM_V(gamaVM, gamaVM->mainMethod, NULL);
+    CALLVM_V(vm, vm->mainMethod, NULL);
 }

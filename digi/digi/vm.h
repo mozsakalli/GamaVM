@@ -184,6 +184,7 @@ typedef struct __attribute__ ((packed)) Method {
     jint vTableIndex;
     void *entry;
     void *compiled;
+    jint breakpoint;
 } Method;
 
 typedef struct CPItem {
@@ -211,7 +212,7 @@ typedef struct __attribute__ ((packed)) Class {
     Object *arrayClass;
     CPItem *cp;
     jint linked;
-    void *finalizer;
+    Object *finalizer;
     jint instanceOffsetCount;
     jint *instanceOffsets;  //for fast marking
     jint maxMethodIndex;
@@ -222,12 +223,13 @@ typedef struct __attribute__ ((packed)) Class {
     Object **itable;
     
     jint allParentCount;
-    Object **allParents;    
+    Object **allParents;
+    struct VM *vm;
 } Class;
 
 #define STR(o,f) ((String*)o->instance)->f
 #define STRLEN(o) (STR(o,length))
-#define STRCHARS(o) ((jchar*)(STR(o,chars)->instance + STR(o,offset)))
+#define STRCHARS(o) ((jchar*)((jchar*)(STR(o,chars)->instance) + STR(o,offset)))
 typedef struct __attribute__ ((packed)) String {
     Object *chars;
     jint offset;
@@ -247,6 +249,7 @@ typedef struct Frame {
     Object *method;
     jint line;
     VAR ret;
+    VAR *SP;
 } Frame;
 
 #define MAX_FRAMES  2048
@@ -267,14 +270,29 @@ typedef struct VM {
     Object *jlObject, *jlClass, *jlMethod, *jlField, *jlString, *jlSTE;
     Object *primClasses[9];
     Object *exception;
-    int gcVersion;
     Frame frames[MAX_FRAMES];
     VAR stack[MAX_STACK];
     int FP,SP;
     int iTableCounter;
     int vTableCounter;
     Object *mainMethod;
+    
+    int gcVersion, gcStep;
+    void *gcPtr;
+    int gcBlockPtr;
+    struct {
+        int R;
+        int W;
+        int S;
+        int C;
+        Object** Q;
+    } markQueue;
+
 } VM;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef void (*VM_CALL)(VM*,Object*,VAR*);
 inline static void CALLVM_V(VM *vm, Object *method, VAR *args) {
@@ -289,11 +307,15 @@ extern Object *alloc_array(VM *vm, Object *cls, int length, int atomic);
 extern Object *alloc_string_ascii(VM *vm, char *chars, int atomic);
 extern Object *alloc_string_java(VM *vm, jchar *chars, int len, int atomic);
 extern Object *alloc_string_utf8(VM *vm, char *chars, int datalen, int atomic);
+extern void gc_step(VM *vm);
+extern void gc_pause();
+extern void gc_resume();
 
 /// CLASS
 extern Object *get_arrayclass_of(VM *vm, Object *cls);
 extern Object *resolve_class(VM *vm, jchar *name, jint len, int link, Object *target);
 extern Object *resolve_class_by_index(VM *vm, Object *cls, int index);
+extern Object *find_class(VM *vm, jchar *name, jint len);
 extern Object *find_class_method(VM *vm, Object *cls, jchar *name, jint nlen, jchar *sign, int slen);
 extern Object *find_method(VM *vm, Object *cls, jchar *name, jint nlen, jchar *sign, int slen);
 extern Object *resolve_method(VM *vm, jchar *clsName, int clslen, jchar *name, int nlen, jchar *signature, int slen);
@@ -310,8 +332,7 @@ inline static jint check_cast(VM *vm, Object *object, Object *cls) {
 
 /// PARSE
 extern int parse_class(VM *vm, char *data, Object *clsObject);
-
-
+extern int get_line_number(Method *method, int pc);
 /// UTF
 extern int get_utf8_length(char *data, int length);
 extern void decode_utf8(char *data, int length, jchar* buf);
@@ -328,17 +349,29 @@ extern void throw_cast(VM *vm, Object *son, Object *of);
 extern void throw_unsatisfiedlink(VM *vm, Object *method);
 
 /// NATIVE
+typedef struct ObjectHolder {
+    Object *object;
+    VM *vm;
+} ObjectHolder;
+
 typedef struct NativeMethodInfo {
     const char *signature;
     void *method;
 } NativeMethodInfo;
 extern void *resolve_native_method(VM *vm, Object *method);
 
+/// VM
+extern VM *vm_init();
+extern void vm_destroy();
+extern void vm_main(VM *vm, char *className, char *methodName, char *signature);
 extern void vm_interpret_exec(VM *vm, Object *omethod, VAR *args);
 extern void vm_native_exec(VM *vm, Object *omethod, VAR *args);
 
 extern void *read_class_file(jchar *name, int len);
 
+#ifdef __cplusplus
+}
+#endif
 
 #define FIELD_PTR(object,offset) ((object)->instance+offset)
 #define FIELD_PTR_TYPE(object,offset,type) ((type*)FIELD_PTR(object,offset))
