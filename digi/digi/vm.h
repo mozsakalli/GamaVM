@@ -349,11 +349,6 @@ extern void throw_cast(VM *vm, Object *son, Object *of);
 extern void throw_unsatisfiedlink(VM *vm, Object *method);
 
 /// NATIVE
-typedef struct ObjectHolder {
-    Object *object;
-    VM *vm;
-} ObjectHolder;
-
 typedef struct NativeMethodInfo {
     const char *signature;
     void *method;
