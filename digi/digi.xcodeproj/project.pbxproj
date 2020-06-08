@@ -11,8 +11,10 @@
 		4507300C248CE66B001379B2 /* class.c in Sources */ = {isa = PBXBuildFile; fileRef = 4507300B248CE66B001379B2 /* class.c */; };
 		4507300E248CF04B001379B2 /* parse.c in Sources */ = {isa = PBXBuildFile; fileRef = 4507300D248CF04B001379B2 /* parse.c */; };
 		45073010248CF1DD001379B2 /* utf.c in Sources */ = {isa = PBXBuildFile; fileRef = 4507300F248CF1DD001379B2 /* utf.c */; };
-		45073012248D4BD7001379B2 /* native_ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 45073011248D4BD7001379B2 /* native_ios.m */; };
+		45073012248D4BD7001379B2 /* ios_native.m in Sources */ = {isa = PBXBuildFile; fileRef = 45073011248D4BD7001379B2 /* ios_native.m */; };
 		45073014248D4D0B001379B2 /* exception.c in Sources */ = {isa = PBXBuildFile; fileRef = 45073013248D4D0B001379B2 /* exception.c */; };
+		45407D68248E0EA6008462C5 /* vm_native.c in Sources */ = {isa = PBXBuildFile; fileRef = 45407D67248E0EA5008462C5 /* vm_native.c */; };
+		45407D6A248E1515008462C5 /* natives.c in Sources */ = {isa = PBXBuildFile; fileRef = 45407D69248E1515008462C5 /* natives.c */; };
 		4595C88E248D6FD2008E4CAA /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 4595C88D248D6FD2008E4CAA /* assets */; };
 		4595C891248D7314008E4CAA /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = 4595C890248D7314008E4CAA /* miniz.c */; };
 		4595C893248D79F4008E4CAA /* interpret.c in Sources */ = {isa = PBXBuildFile; fileRef = 4595C892248D79F4008E4CAA /* interpret.c */; };
@@ -26,8 +28,10 @@
 		4507300B248CE66B001379B2 /* class.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = class.c; sourceTree = "<group>"; };
 		4507300D248CF04B001379B2 /* parse.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parse.c; sourceTree = "<group>"; };
 		4507300F248CF1DD001379B2 /* utf.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = utf.c; sourceTree = "<group>"; };
-		45073011248D4BD7001379B2 /* native_ios.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = native_ios.m; sourceTree = "<group>"; };
+		45073011248D4BD7001379B2 /* ios_native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ios_native.m; sourceTree = "<group>"; };
 		45073013248D4D0B001379B2 /* exception.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = exception.c; sourceTree = "<group>"; };
+		45407D67248E0EA5008462C5 /* vm_native.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = vm_native.c; sourceTree = "<group>"; };
+		45407D69248E1515008462C5 /* natives.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = natives.c; sourceTree = "<group>"; };
 		4595C88D248D6FD2008E4CAA /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = digi/assets; sourceTree = "<group>"; };
 		4595C88F248D7314008E4CAA /* miniz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
 		4595C890248D7314008E4CAA /* miniz.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
@@ -81,12 +85,14 @@
 				4507300B248CE66B001379B2 /* class.c */,
 				4507300D248CF04B001379B2 /* parse.c */,
 				4507300F248CF1DD001379B2 /* utf.c */,
-				45073011248D4BD7001379B2 /* native_ios.m */,
+				45073011248D4BD7001379B2 /* ios_native.m */,
 				45073013248D4D0B001379B2 /* exception.c */,
 				4595C88F248D7314008E4CAA /* miniz.h */,
 				4595C890248D7314008E4CAA /* miniz.c */,
 				4595C892248D79F4008E4CAA /* interpret.c */,
 				4595C894248D7B1C008E4CAA /* opcodes.h */,
+				45407D67248E0EA5008462C5 /* vm_native.c */,
+				45407D69248E1515008462C5 /* natives.c */,
 			);
 			path = digi;
 			sourceTree = "<group>";
@@ -160,15 +166,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45407D6A248E1515008462C5 /* natives.c in Sources */,
 				45E739B6248C4FB8004E55EB /* gamavm.c in Sources */,
 				45E739AE248C4F2A004E55EB /* main.m in Sources */,
 				4507300C248CE66B001379B2 /* class.c in Sources */,
 				4595C891248D7314008E4CAA /* miniz.c in Sources */,
 				45073014248D4D0B001379B2 /* exception.c in Sources */,
 				45073010248CF1DD001379B2 /* utf.c in Sources */,
+				45407D68248E0EA6008462C5 /* vm_native.c in Sources */,
 				4507300A248CDC09001379B2 /* mem.c in Sources */,
 				4595C893248D79F4008E4CAA /* interpret.c in Sources */,
-				45073012248D4BD7001379B2 /* native_ios.m in Sources */,
+				45073012248D4BD7001379B2 /* ios_native.m in Sources */,
 				4507300E248CF04B001379B2 /* parse.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

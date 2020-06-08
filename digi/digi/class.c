@@ -431,17 +431,8 @@ jint is_class_child_of(VM *vm, Object *json, Object *jof) {
     return 0;
 }
 
-jint check_cast(VM *vm, Object *object, Object *cls) {
-    if(!object) return 1;
-    int r = is_class_child_of(vm, object->cls, cls);
-    //printf("check_cast: %s -> ",string2c(object->cls->name));
-    //printf("%s = %d\n", string2c(cls->name), r);
-    //if(r) return 1;
-    return r;
-}
-
 void vm_native_exec(VM *vm, Object *method, VAR *args) {
-    void *handler = NULL; //resolve_native_method(vm, method);
+    void *handler = resolve_native_method(vm, method);
     if(handler) {
         Method *m = method->instance;
         m->entry = handler;

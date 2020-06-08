@@ -302,8 +302,11 @@ extern Object *find_class_field(VM *vm, Object *cls, jchar *name, jint nlen, jch
 extern Object *find_field(VM *vm, Object *cls, jchar *name, jint nlen, jchar *sign, int slen);
 extern Object *resolve_field(VM *vm, jchar *clsName, int clslen, jchar *name, int namelen, jchar *sign, int slen);
 extern Object *resolve_field_by_index(VM *vm,Object *cls, int index);
-extern jint check_cast(VM *vm, Object *object, Object *cls);
-
+extern jint is_class_child_of(VM *vm, Object *json, Object *jof);
+inline static jint check_cast(VM *vm, Object *object, Object *cls) {
+    if(!object) return 1;
+    return is_class_child_of(vm, object->cls, cls);
+}
 
 /// PARSE
 extern int parse_class(VM *vm, char *data, Object *clsObject);
@@ -324,6 +327,12 @@ extern void throw_arraybounds(VM *vm, int index, int length);
 extern void throw_cast(VM *vm, Object *son, Object *of);
 extern void throw_unsatisfiedlink(VM *vm, Object *method);
 
+/// NATIVE
+typedef struct NativeMethodInfo {
+    const char *signature;
+    void *method;
+} NativeMethodInfo;
+extern void *resolve_native_method(VM *vm, Object *method);
 
 extern void vm_interpret_exec(VM *vm, Object *omethod, VAR *args);
 extern void vm_native_exec(VM *vm, Object *omethod, VAR *args);

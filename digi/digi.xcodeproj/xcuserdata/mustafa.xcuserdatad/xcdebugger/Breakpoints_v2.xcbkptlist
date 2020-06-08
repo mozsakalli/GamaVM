@@ -72,7 +72,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "4CEFF9DB-77D2-4276-AF74-E323C06ED200"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "digi/exception.c"
@@ -177,6 +177,22 @@
             startingLineNumber = "55"
             endingLineNumber = "55"
             landmarkName = "gamavm_main(className, methodName, signature)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F7F3CFE6-40E4-4F17-A763-FC35D363EB45"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/natives.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
+            landmarkName = "resolve_native_method0(vm, signature)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
