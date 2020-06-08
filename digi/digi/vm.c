@@ -70,5 +70,7 @@ void vm_main(VM *vm, char *className, char *methodName, char *signature) {
         return;
     }
     
+    jdwp_start("127.0.0.1", 10000);
+    
     CALLVM_V(vm, vm->mainMethod, NULL);
 }

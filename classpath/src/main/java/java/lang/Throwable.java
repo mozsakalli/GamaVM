@@ -21,7 +21,6 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 
 public class Throwable implements Serializable {
-    int FP;
     private StackTraceElement[] stackTrace;
     private final String detailMessage;
     private Throwable cause = this;

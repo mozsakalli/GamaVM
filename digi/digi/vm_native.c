@@ -14,6 +14,13 @@
 #endif
 #include <math.h>
 
+void gamavm_VM_getClass(VM *vm, Object *method, VAR *args) {
+    vm->frames[vm->FP].ret.O = args[0].O ? (Object*)args[0].O->cls : NULL;
+}
+void gamavm_VM_getAddress(VM *vm, Object *method, VAR *args) {
+    vm->frames[vm->FP].ret.J = (jlong)args[0].O;
+}
+
 void java_lang_Object_clone(VM *vm, Object *method, VAR *args) {
     Object *result = NULL;
     Object *o = args[0].O;
@@ -247,6 +254,9 @@ void java_lang_Float_intBitsToFloat(VM *vm, Object *method, VAR *args) {
 extern void java_lang_System_SystemOutStream_printImpl(VM *vm, Object *method, VAR *args);
 
 NativeMethodInfo vm_native_methods[] = {
+    {"gamavm/VM:getClass:(Ljava/lang/Object;)Ljava/lang/Class;", &gamavm_VM_getClass},
+    {"java/lang/Object:clone:()Ljava/lang/Object;", &java_lang_Object_clone},
+    
     {"java/lang/System:arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V", &java_lang_System_arraycopy},
     {"java/lang/System$SystemOutStream:printImpl:(Ljava/lang/String;)V", &java_lang_System_SystemOutStream_printImpl},
     {"java/lang/System:gc:()V", &java_lang_System_gc},

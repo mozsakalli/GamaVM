@@ -6,7 +6,7 @@
 //  Copyright © 2020 mustafa. All rights reserved.
 //
 
-//#ifdef JDWP_ENABLED
+#ifdef JDWP_ENABLED
 
 #ifndef jdwp_h
 #define jdwp_h
@@ -403,9 +403,9 @@ public:
         return *d;
     }
     
-    JdwpString *readString() {
+    JdwpString *readString(VM *vm) {
         int len = readInt();
-        Object *str = alloc_string_utf8(NULL, buffer.buffer+ptr, len, 1);
+        Object *str = alloc_string_utf8(vm, buffer.buffer+ptr, len, 1);
         ptr += len;
         return new JdwpString(str);
     }
@@ -750,7 +750,7 @@ public:
         head = tail = nullptr;
     }
 
-    JdwpEventSet(JdwpPacket *req) {
+    JdwpEventSet(VM *vm, JdwpPacket *req) {
         requestId = jdwpEventRequestSerial++;
         eventKind = req->readByte();
         suspendPolicy = req->readByte();
@@ -775,7 +775,7 @@ public:
                     break;
                 case 5:
                 case 6:
-                    mod->classPattern = req->readString();
+                    mod->classPattern = req->readString(vm);
                     //utf8_replace_c(mod->classPattern, ".", "/");
                     break;
                 case 7:
@@ -799,7 +799,7 @@ public:
                     mod->instance = (Object*)req->readLong();
                     break;
                 case 12:
-                    mod->sourceNamePattern = req->readString();
+                    mod->sourceNamePattern = req->readString(vm);
                     break;
             }
         }
@@ -933,4 +933,4 @@ public:
 
 #endif /* jdwp_h */
 
-//#endif
+#endif

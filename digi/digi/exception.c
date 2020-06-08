@@ -22,9 +22,9 @@ void throw_exception(VM *vm, Object *exception) {
                 StackTraceElement *se = (StackTraceElement*)seo->instance;
                 Method *mth = f->method->instance;
                 se->declaringClass = CLS(mth->declaringClass,name);
-                se->file_name = CLS(mth->declaringClass,sourceFile);
-                se->method_name = mth->name;
-                se->line_number = f->line;
+                se->fileName = CLS(mth->declaringClass,sourceFile);
+                se->methodName = mth->name;
+                se->lineNumber = f->line;
                 ((Object**)arr->instance)[fp - i] = seo;
             }
             thr->stackTrace = arr;

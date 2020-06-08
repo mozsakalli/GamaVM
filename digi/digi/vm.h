@@ -120,9 +120,9 @@ typedef union VAR {
 
 typedef struct __attribute__ ((packed)) StackTraceElement {
     Object *declaringClass;
-    Object *method_name;
-    Object *file_name;
-    jint line_number;
+    Object *methodName;
+    Object *fileName;
+    jint lineNumber;
 } StackTraceElement;
 
 typedef struct __attribute__ ((packed)) Throwable {
@@ -363,6 +363,14 @@ extern void vm_interpret_exec(VM *vm, Object *omethod, VAR *args);
 extern void vm_native_exec(VM *vm, Object *omethod, VAR *args);
 
 extern void *read_class_file(jchar *name, int len);
+
+#ifdef JDWP_ENABLED
+    extern void jdwp_tick(VM *vm, Object *method, int line);
+    extern void jdwp_start(char *host, int port);
+#else
+    #define jdwp_tick
+    #define jdwp_start
+#endif
 
 #ifdef __cplusplus
 }

@@ -5,7 +5,7 @@
 //  Created by mustafa on 31.05.2020.
 //  Copyright © 2020 mustafa. All rights reserved.
 //
-//#ifdef JDWP_ENABLED
+#ifdef JDWP_ENABLED
 
 
 #include "jdwp.h"
@@ -454,7 +454,7 @@ void jdwp_process_packet(JdwpPacket *req) {
             break;
             
         case JDWP_CMD_VirtualMachine_ClassesBySignature: { //0x0102
-            JdwpString *signature = req->readString();
+            JdwpString *signature = req->readString(jdwpVM);
             Object *sign = signature->toClassName();
             Object *cls = find_class(jdwpVM, STRCHARS(sign), STRLEN(sign)); //jdwp_find_class(signature->toClassName(), 1);
             if(cls) {
@@ -500,7 +500,7 @@ void jdwp_process_packet(JdwpPacket *req) {
             return;
             
         case JDWP_CMD_VirtualMachine_CreateString: { //0x010b
-            JdwpString *str = req->readString();
+            JdwpString *str = req->readString(jdwpVM);
             str->next = JdwpString::cache;
             JdwpString::cache = str;
             resp->writeObject(str->str);
@@ -671,11 +671,21 @@ void jdwp_process_packet(JdwpPacket *req) {
                 int startindex = jdwp_get_line_index(mth, startline);
                 int endline = get_line_number(m, v->start + v->length);
                 int endindex = jdwp_get_line_index(mth, endline);
+                if(endindex < startindex) {
+                    int tmp = startindex;
+                    startindex = endindex;
+                    endindex = tmp;
+                }
                 resp->writeLong(startindex);
                 resp->writeCString(string_to_ascii(v->name));
                 resp->writeCString(string_to_ascii(v->signature));
                 resp->writeInt(endindex - startindex);
                 resp->writeInt(v->index); //local var index
+                /*
+                printf("local: %s:",string_to_ascii(v->name));
+                printf("%s",string_to_ascii(v->signature));
+                printf(" : %d -> %d\n",startline, endline);
+                */
             }
             resp->complete(req->id, JDWP_ERROR_NONE);
         } break;
@@ -804,7 +814,7 @@ void jdwp_process_packet(JdwpPacket *req) {
         } break;
             
         case JDWP_CMD_EventRequest_Set: { //0x0f01
-            JdwpEventSet *set = new JdwpEventSet(req);
+            JdwpEventSet *set = new JdwpEventSet(jdwpVM, req);
             jdwp_eventset_set(set);
             resp->writeInt(set->requestId);
             resp->complete(req->id, JDWP_ERROR_NONE);
@@ -1014,4 +1024,4 @@ void jdwp_tick(VM *vm, Object *method, int line) {
 } //extern "C"
 
 
-//#endif
+#endif

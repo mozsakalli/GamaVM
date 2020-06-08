@@ -29,6 +29,8 @@ public class Main {
         System.out.println("Hello GamaVM!");
         for(int i=0; i<1000; i++) {
             byte b[] = new byte[1024*124];
+            b[10] = 20;
+            System.out.println(b[9]);
             System.gc();
         }
         for(;;) {

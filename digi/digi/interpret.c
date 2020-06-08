@@ -242,9 +242,18 @@ int vm_compiler_cp_type(int type) {
 
 int get_line_number(Method *method, int pc) {
     if(method->lineNumberTable) {
-        for(int i=method->lineNumberTableSize - 1; i>=0; i--)
-            if(method->lineNumberTable[i].pc <= pc)
-                return method->lineNumberTable[i].line;
+        for(int i=0; i<method->lineNumberTableSize; i++) {
+            LineNumberInfo *l = &method->lineNumberTable[i];
+            if(pc >= l->pc) {
+                if(i == method->lineNumberTableSize - 1 ||
+                   pc < method->lineNumberTable[i+1].pc) return l->line;
+            }
+        }
+        /*for(int i=method->lineNumberTableSize - 1; i>=0; i--) {
+            LineNumberInfo *l = &method->lineNumberTable[i];
+            if(l->pc <= pc)
+                return l->line;
+        }*/
     }
     return -1;
 }
@@ -1252,12 +1261,6 @@ void vm_compile_method(VM *vm, Method *method, void **handlers) {
     method->compiled = ctx.ops;
 }
 
-#ifdef JDWP_ENABLE
-extern void jdwp_tick(VM *vm, Object *method, int line);
-#else
-#define jdwp_tick
-#endif
-
 void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
     static void* handlers[] = {
         &&OP_UNIMPLEMENTED,
@@ -1460,13 +1463,24 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
     //Frame *frame = &vm->frames[++vm->fp];
     
     OP* op = &((OP*)method->compiled)[0];
+#ifdef JDWP_ENABLED
+
 #define NEXT(d) { \
     op += d; \
     vm->frames[fp].line = op->line; \
     jdwp_tick(vm, omethod, op->line); \
     goto *op->handler; \
 }
+    
+#else
 
+#define NEXT(d) { \
+    op += d; \
+    goto *op->handler; \
+}
+    
+#endif
+    
 #define REDISPATCH() { \
     goto *op->handler; \
 }
