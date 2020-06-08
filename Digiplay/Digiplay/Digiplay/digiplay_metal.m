@@ -162,6 +162,12 @@ void metal_digiplay_GL_attribLocation(VM *vm, Object *method, VAR *args) {
         }
     }
     vm->frames[vm->FP].retVal.J = -1;
+    
+    MTLRenderPipelineDescriptor *rpd = [[MTLRenderPipelineDescriptor alloc] init];
+    rpd.colorAttachments[0].blendingEnabled = NO;
+    id <MTLRenderPipelineState> pip =
+    [MetalDevice newRenderPipelineStateWithDescriptor:rpd options:MTLPipelineOptionBufferTypeInfo reflection:nil error:nil];
+    [pip ]
 }
 
 void metal_digiplay_GL_uniformLocation(VM *vm, Object *method, VAR *args) {

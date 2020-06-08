@@ -64,4 +64,5 @@ void java_lang_System_SystemOutStream_printImpl(VM *vm, Object *method, VAR *arg
     
     NSString *ns = [[NSString alloc] initWithCharacters:STRCHARS(string) length:STRLEN(string)];
     NSLog(@"%@", ns);
+    [ns release];
 }

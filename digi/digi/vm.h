@@ -400,4 +400,6 @@ extern void *read_class_file(jchar *name, int len);
 #define ARRAY_DATA_D(object) ARRAY_DATA_TYPE(object,jdouble)
 #define ARRAY_DATA_O(object) ARRAY_DATA_TYPE(object,Object*)
 
+#define RETURN_J(v) vm->frames[vm->FP].ret.J = (jlong)(v);
+
 #endif /* gamavm_h */

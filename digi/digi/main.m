@@ -10,7 +10,7 @@
 #include "vm.h"
 //extern void gamavm_main(char *className, char *methodName, char *signature);
 
-int main(int argc, char * argv[]) {
+int mainx(int argc, char * argv[]) {
     NSString * appDelegateClassName;
     @autoreleasepool {
         // Setup code that might create autoreleased objects goes here.
