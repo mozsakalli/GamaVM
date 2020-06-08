@@ -7,6 +7,4 @@
 //
 
 
-typedef struct MAT2D {
-    
-} MAT2D;
+

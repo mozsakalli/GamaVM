@@ -7,26 +7,13 @@
 //
 
 #include "vm.h"
+#include "digiplay.h"
 
 #ifdef __APPLE__
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 #endif
 
-typedef struct __attribute__ ((packed)) VEC2 {
-    float x,y;
-} VEC2;
-typedef struct __attribute__ ((packed)) VEC3 {
-    float x,y,z;
-} VEC3;
-typedef struct __attribute__ ((packed)) COLOR {
-    unsigned char r,g,b,a;
-} COLOR;
-typedef struct __attribute__ ((packed)) VERT2D {
-    VEC3 pos;
-    COLOR color;
-    VEC2 uv;
-} VERT2D;
 
 typedef struct GLShader {
     GLint handle;
@@ -137,11 +124,13 @@ void digiplay_GL_useShader(VM* vm, Method *method, VAR *args) {
 }
 
 typedef struct GLQuadBatch {
-    int blendSrc, blendDst;
+    int blendMode;
     int vertPtr, triPtr;
     VERT2D *vertices;
-    int capacity;
+    int capacity,end;
     int ibo;
+    GLTextrue *texture;
+    int projectionDirty;
 } GLQuadBatch;
 
 void digiplay_GL_createQuadBatch(VM* vm, Method *method, VAR *args) {
@@ -163,14 +152,41 @@ void digiplay_GL_createQuadBatch(VM* vm, Method *method, VAR *args) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, b->ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, b->capacity * 6 * sizeof(short), ibuf, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    
     RETURN_J(b);
 }
 
 void digiplay_GL_resetQuadBatch(VM* vm, Method *method, VAR *args) {
     GLQuadBatch *b = (GLQuadBatch*)args[0].J;
     b->vertPtr = b->triPtr = 0;
+    glDisable(GL_BLEND);
+    b->blendMode = 0;
+    glDisable(GL_SCISSOR_TEST);
+    b->texture = NULL;
 }
 
 void digiplay_GL_quad(VM* vm, Method *method, VAR *args) {
+    GLQuadBatch *b = (GLQuadBatch*)args[0].J;
+    MAT2D *mat = (MAT2D*)args[1].J;
+    if(b->vertPtr+1 >= b->capacity) {
+        //flush
+    }
+    
+    VERT2D *v = &b->vertices[b->vertPtr];
+    v->pos = (VEC3){args[2].F,args[3].F,args[4].F};
+    v->uv = (VEC2){args[5].F,args[6].F};
+    v++;
+    
+    v->pos = (VEC3){args[7].F,args[8].F,args[9].F};
+    v->uv = (VEC2){args[10].F,args[11].F};
+    v++;
+    
+    v->pos = (VEC3){args[12].F,args[13].F,args[14].F};
+    v->uv = (VEC2){args[15].F,args[16].F};
+    v++;
+    
+    v->pos = (VEC3){args[17].F,args[18].F,args[19].F};
+    v->uv = (VEC2){args[20].F,args[21].F};
+    v++;
     
 }

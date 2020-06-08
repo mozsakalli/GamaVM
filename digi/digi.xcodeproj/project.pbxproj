@@ -43,6 +43,7 @@
 		456D45AD248EF1CC00E7C7BD /* ios_main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ios_main.m; sourceTree = "<group>"; };
 		456D45AF248EF53A00E7C7BD /* digiplay.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = digiplay.c; sourceTree = "<group>"; };
 		456D45B3248EF60700E7C7BD /* digiplay_gl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = digiplay_gl.c; sourceTree = "<group>"; };
+		45921786248F04F7003538D4 /* digiplay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = digiplay.h; sourceTree = "<group>"; };
 		4595C88D248D6FD2008E4CAA /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = digi/assets; sourceTree = "<group>"; };
 		4595C88F248D7314008E4CAA /* miniz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
 		4595C890248D7314008E4CAA /* miniz.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
@@ -110,6 +111,7 @@
 				456D45AD248EF1CC00E7C7BD /* ios_main.m */,
 				456D45AF248EF53A00E7C7BD /* digiplay.c */,
 				456D45B3248EF60700E7C7BD /* digiplay_gl.c */,
+				45921786248F04F7003538D4 /* digiplay.h */,
 			);
 			path = digi;
 			sourceTree = "<group>";
