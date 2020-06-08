@@ -1461,6 +1461,7 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
     vm->frames[fp].method = omethod;
     vm->frames[fp].SP = local;
     //Frame *frame = &vm->frames[++vm->fp];
+    int last_jdwp_line = -1;
     
     OP* op = &((OP*)method->compiled)[0];
 #ifdef JDWP_ENABLED
@@ -1468,7 +1469,8 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
 #define NEXT(d) { \
     op += d; \
     vm->frames[fp].line = op->line; \
-    jdwp_tick(vm, omethod, op->line); \
+    jdwp_tick(vm, omethod, op->line, op->line != last_jdwp_line); \
+    last_jdwp_line = op->line; \
     goto *op->handler; \
 }
     

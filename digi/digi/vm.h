@@ -365,7 +365,7 @@ extern void vm_native_exec(VM *vm, Object *omethod, VAR *args);
 extern void *read_class_file(jchar *name, int len);
 
 #ifdef JDWP_ENABLED
-    extern void jdwp_tick(VM *vm, Object *method, int line);
+    extern void jdwp_tick(VM *vm, Object *method, int line, int lineChanged);
     extern void jdwp_start(char *host, int port);
 #else
     #define jdwp_tick

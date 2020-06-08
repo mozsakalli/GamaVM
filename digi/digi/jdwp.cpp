@@ -7,6 +7,7 @@
 //
 #ifdef JDWP_ENABLED
 
+//#define JDWP_SERVER_MODE
 
 #include "jdwp.h"
 
@@ -19,8 +20,8 @@ JdwpString *JdwpString::cache = nullptr;
 JdwpClient jdwp_client;
 int jdwp_server_fd;
 int jdwp_step_fp = -1;
-int jdwp_skip_line = -1;
 int jdwp_invoking = 0;
+int jdwp_suspend_on_start = 1;
 
 #define JDWPLOG(...) printf(__VA_ARGS__)
 
@@ -29,10 +30,11 @@ int jdwp_listen(int port) {
     int fd = socket(AF_INET, SOCK_STREAM, 0);
     int tmp = 1;
     setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &tmp, sizeof(int));
-    memset(&serv_addr, '0', sizeof(serv_addr));
+    memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     serv_addr.sin_port = htons(port);
+    serv_addr.sin_len = sizeof(serv_addr);
 
     bool fail = bind(fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0;
     if(fail) {
@@ -185,7 +187,7 @@ int jdwp_send_step_event(Object *method, int line) {
                 p->completeEvent();
                 jdwp_client.queuePacket(p);
                 
-                JDWPLOG("!! single step: line=%d index=%d\n", line, loc.index);
+                JDWPLOG("!! single step: line=%d index=%d\n", line, (int)loc.index);
                 return 1;
             }
         }
@@ -676,9 +678,7 @@ void jdwp_process_packet(JdwpPacket *req) {
             resp->writeInt(m->localVarTableSize);
             for(int i=0; i<m->localVarTableSize; i++) {
                 LocalVarInfo *v = &m->localVarTable[i];
-                //int startline = get_line_number(m, v->start);
                 int startindex = jdwp_get_pc_index(mth, v->start);
-                //int endline = get_line_number(m, v->start + v->length);
                 int endindex = jdwp_get_pc_index(mth, v->start + v->length);
                 if(endindex < startindex) {
                     int tmp = startindex;
@@ -690,11 +690,6 @@ void jdwp_process_packet(JdwpPacket *req) {
                 resp->writeCString(string_to_ascii(v->signature));
                 resp->writeInt(endindex - startindex);
                 resp->writeInt(v->index); //local var index
-                /*
-                printf("local: %s:",string_to_ascii(v->name));
-                printf("%s",string_to_ascii(v->signature));
-                printf(" : %d -> %d\n",startline, endline);
-                */
             }
             resp->complete(req->id, JDWP_ERROR_NONE);
         } break;
@@ -944,12 +939,20 @@ int jdwp_process_client() {
 
 
 void jdwp_start(char *host, int port) {
-#if SERVER
+#ifdef JDWP_SERVER_MODE
     jdwp_server_fd = jdwp_listen(10000);
     if(!jdwp_server_fd) {
         printf("Can't start JDWP server on port : %d\n",port);
         return;
     }
+    while(1) {
+        int fd = jdwp_accept(jdwp_server_fd);
+        if(fd > 0) {
+            jdwp_client.fd = fd;
+            break;
+        }
+    }
+    JDWPLOG("JDWP Client connected\n");
 #else
     printf("Connecting to JDWP server %s:%d\n", host, port);
     while(1) {
@@ -962,27 +965,21 @@ void jdwp_start(char *host, int port) {
             break;
         }
     }
-    printf("Connected to JDWP server %s:%d\n", host, port);
+    JDWPLOG("Connected to JDWP server %s:%d\n", host, port);
 #endif
     jdwp_suspended = 1;
 }
 
-void jdwp_tick(VM *vm, Object *method, int line) {
+void jdwp_tick(VM *vm, Object *method, int line, int lineChanged) {
     jdwpVM = vm;
-#if SERVER
+#ifdef JDWP_SERVER_MODE
     int fd = jdwp_accept(jdwp_server_fd);
     if(fd > 0) {
         jdwp_client.reset();
         jdwp_client.fd = fd;
-        printf("JDWP client connected\n");
-        //server mode
-        JdwpPacket *p = new JdwpPacket;
-        /*char sign[] = "JDWP-Handshake";
-        p->setBytes((void*)&sign[0], 0, 14);
-        jdwp_client.queuePacket(p);
-        jdwp_client.flush();
-        */
+        JDWPLOG("JDWP client connected\n");
     }
+#else
 #endif
     //printf("-- jdwp tick\n");
     //int suspended = 0;
@@ -992,10 +989,9 @@ void jdwp_tick(VM *vm, Object *method, int line) {
     if(jdwp_invoking) return;
     
     if(jdwp_step_fp != -1) {
-        if(line != jdwp_skip_line && vm->FP <= jdwp_step_fp) {
+        if(lineChanged && vm->FP <= jdwp_step_fp) {
             if(jdwp_send_step_event(method, line)) {
                 jdwp_suspended = 1;
-                jdwp_skip_line = line;
                 JDWPLOG("!!!!! SINGLE STEP !!!!\n");
             }
         }
@@ -1007,15 +1003,16 @@ void jdwp_tick(VM *vm, Object *method, int line) {
                 
             }
         }*/
-    } else if(line != jdwp_skip_line) {
+    }
+    
+    else if(!jdwp_suspended) {
         Method *mf = (Method*)method->instance;
         if(mf->breakpoint && mf->lineNumberTableSize > 0) {
             for(int i=0; i<mf->lineNumberTableSize; i++)
                 if(mf->lineNumberTable[i].line == line && mf->lineNumberTable[i].breakpoint) {
                     if(jdwp_send_breakpoint_event(method, i)) {
                         jdwp_suspended = 1;
-                        jdwp_skip_line = mf->lineNumberTable[i].line;
-                        printf("!!!!! BREAKPOINT !!!! %d:%d\n",i,mf->lineNumberTable[i].line);
+                        JDWPLOG("!!!!! BREAKPOINT !!!! %d:%d\n",i,mf->lineNumberTable[i].line);
                     }
                     break;
                 }
