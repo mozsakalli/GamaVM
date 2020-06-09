@@ -255,6 +255,8 @@ extern void java_lang_System_SystemOutStream_printImpl(VM *vm, Object *method, V
 
 NativeMethodInfo vm_native_methods[] = {
     {"gamavm/VM:getClass:(Ljava/lang/Object;)Ljava/lang/Class;", &gamavm_VM_getClass},
+    {"gamavm/VM:getAddress:(Ljava/lang/Object;)J", &gamavm_VM_getAddress},
+
     {"java/lang/Object:clone:()Ljava/lang/Object;", &java_lang_Object_clone},
     
     {"java/lang/System:arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V", &java_lang_System_arraycopy},

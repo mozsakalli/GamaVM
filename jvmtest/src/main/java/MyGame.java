@@ -63,7 +63,8 @@ public class MyGame implements Game {
     */
     @Override
     public void begin() {
-        batch = new GLQuadBatch(4096);
+        System.out.println("BEGIN");
+        //batch = new GLQuadBatch(4096);
         /*
         Stage2D.I.setup(new Point2D(1024,768));
         batch = new QuadBatch(2048);

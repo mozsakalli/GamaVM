@@ -23,8 +23,8 @@ import digiplay.Platform;
 public class Main {
     
     public static void main() {
-        //Platform.run(new MyGame());
-        
+        Platform.run(new MyGame());
+        /*
         System.out.println("Hello GamaVM!");
         for(int i=0; i<1000; i++) {
             byte b[] = new byte[1024*124];

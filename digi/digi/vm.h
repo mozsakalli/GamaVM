@@ -248,6 +248,7 @@ typedef struct HeapBlock {
 typedef struct Frame {
     Object *method;
     jint line;
+    jint pc;
     VAR ret;
     VAR *SP;
 } Frame;
@@ -365,9 +366,9 @@ extern void vm_native_exec(VM *vm, Object *omethod, VAR *args);
 extern void *read_class_file(jchar *name, int len);
 
 #ifdef JDWP_ENABLED
-    extern void jdwp_tick(VM *vm, Object *method, int line, int lineChanged);
-    extern void jdwp_start(char *host, int port);
-    extern int jdwp_send_classload_event(Object *cls);
+    extern void jdwp_tick(VM *vm, Object *method, int pc, int line, int lineChanged);
+    extern void jdwp_start(VM *vm, char *host, int port);
+    extern int jdwp_send_classload_event(VM *vm, Object *cls);
 #else
     #define jdwp_tick
     #define jdwp_start

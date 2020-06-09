@@ -1467,10 +1467,11 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
 #ifdef JDWP_ENABLED
 
 #define NEXT(d) { \
-    op += d; \
     vm->frames[fp].line = op->line; \
-    jdwp_tick(vm, omethod, op->line, op->line != last_jdwp_line); \
+    vm->frames[fp].pc = op->pc; \
+    jdwp_tick(vm, omethod, op->pc, op->line, op->line != last_jdwp_line); \
     last_jdwp_line = op->line; \
+    op += d; \
     goto *op->handler; \
 }
     

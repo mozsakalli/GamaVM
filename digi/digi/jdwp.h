@@ -323,6 +323,13 @@ public:
         return str;
     }
     
+    void replace(int search, int with) {
+        jchar *chars = STRCHARS(str);
+        int len = STRLEN(str);
+        for(int i=0; i<len; i++)
+            if(chars[i] == search) chars[i] = with;
+    }
+    
     static void reset() {
         JdwpString *ptr = cache;
         while(ptr) {
@@ -776,6 +783,8 @@ public:
                 case 5:
                 case 6:
                     mod->classPattern = req->readString(vm);
+                    printf("JdwpClassPattern: %d: %s\n", requestId, string_to_ascii(mod->classPattern->str));
+                    mod->classPattern->replace('.', '/');
                     //utf8_replace_c(mod->classPattern, ".", "/");
                     break;
                 case 7:

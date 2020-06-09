@@ -228,6 +228,8 @@ void link_class(VM *vm, Object *clsObject) {
         }
     }
     
+    jdwp_send_classload_event(vm, clsObject);
+    
     Object *clInit = find_class_method(vm, clsObject, L"<clinit>", 8, L"()V", 3);
     if(clInit) {
         printf("clInit: %s\n", string_to_ascii(cls->name));
@@ -281,6 +283,7 @@ Object *resolve_class(VM *vm, jchar *name, jint len, int link, Object *target) {
     if(link) {
         link_class(vm, cls);
     }
+    
     return cls;
 }
 
