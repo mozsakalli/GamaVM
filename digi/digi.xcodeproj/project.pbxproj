@@ -17,9 +17,9 @@
 		4540187F248E6D2C004AF6EF /* jdwp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4540187E248E6D2C004AF6EF /* jdwp.cpp */; };
 		45407D68248E0EA6008462C5 /* vm_native.c in Sources */ = {isa = PBXBuildFile; fileRef = 45407D67248E0EA5008462C5 /* vm_native.c */; };
 		45407D6A248E1515008462C5 /* natives.c in Sources */ = {isa = PBXBuildFile; fileRef = 45407D69248E1515008462C5 /* natives.c */; };
+		4540FAB0248F666E00FBB78F /* digiplay_gl.c in Sources */ = {isa = PBXBuildFile; fileRef = 4540FAAF248F666E00FBB78F /* digiplay_gl.c */; };
 		456D45AE248EF1CC00E7C7BD /* ios_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 456D45AD248EF1CC00E7C7BD /* ios_main.m */; };
 		456D45B0248EF53A00E7C7BD /* digiplay.c in Sources */ = {isa = PBXBuildFile; fileRef = 456D45AF248EF53A00E7C7BD /* digiplay.c */; };
-		456D45B4248EF60700E7C7BD /* digiplay_gl.c in Sources */ = {isa = PBXBuildFile; fileRef = 456D45B3248EF60700E7C7BD /* digiplay_gl.c */; };
 		4595C88E248D6FD2008E4CAA /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 4595C88D248D6FD2008E4CAA /* assets */; };
 		4595C891248D7314008E4CAA /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = 4595C890248D7314008E4CAA /* miniz.c */; };
 		4595C893248D79F4008E4CAA /* interpret.c in Sources */ = {isa = PBXBuildFile; fileRef = 4595C892248D79F4008E4CAA /* interpret.c */; };
@@ -40,9 +40,10 @@
 		4540187E248E6D2C004AF6EF /* jdwp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = jdwp.cpp; sourceTree = "<group>"; };
 		45407D67248E0EA5008462C5 /* vm_native.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = vm_native.c; sourceTree = "<group>"; };
 		45407D69248E1515008462C5 /* natives.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = natives.c; sourceTree = "<group>"; };
+		4540FAAF248F666E00FBB78F /* digiplay_gl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = digiplay_gl.c; sourceTree = "<group>"; };
+		4540FAB1248F66A200FBB78F /* digiplay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = digiplay.h; sourceTree = "<group>"; };
 		456D45AD248EF1CC00E7C7BD /* ios_main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ios_main.m; sourceTree = "<group>"; };
 		456D45AF248EF53A00E7C7BD /* digiplay.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = digiplay.c; sourceTree = "<group>"; };
-		456D45B3248EF60700E7C7BD /* digiplay_gl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = digiplay_gl.c; sourceTree = "<group>"; };
 		4595C88D248D6FD2008E4CAA /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = digi/assets; sourceTree = "<group>"; };
 		4595C88F248D7314008E4CAA /* miniz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
 		4595C890248D7314008E4CAA /* miniz.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
@@ -109,7 +110,8 @@
 				4540187E248E6D2C004AF6EF /* jdwp.cpp */,
 				456D45AD248EF1CC00E7C7BD /* ios_main.m */,
 				456D45AF248EF53A00E7C7BD /* digiplay.c */,
-				456D45B3248EF60700E7C7BD /* digiplay_gl.c */,
+				4540FAAF248F666E00FBB78F /* digiplay_gl.c */,
+				4540FAB1248F66A200FBB78F /* digiplay.h */,
 			);
 			path = digi;
 			sourceTree = "<group>";
@@ -189,7 +191,7 @@
 				45E739B6248C4FB8004E55EB /* vm.c in Sources */,
 				45E739AE248C4F2A004E55EB /* main.m in Sources */,
 				4507300C248CE66B001379B2 /* class.c in Sources */,
-				456D45B4248EF60700E7C7BD /* digiplay_gl.c in Sources */,
+				4540FAB0248F666E00FBB78F /* digiplay_gl.c in Sources */,
 				4595C891248D7314008E4CAA /* miniz.c in Sources */,
 				456D45AE248EF1CC00E7C7BD /* ios_main.m in Sources */,
 				45073014248D4D0B001379B2 /* exception.c in Sources */,
