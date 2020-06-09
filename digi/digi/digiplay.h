@@ -25,15 +25,31 @@ typedef struct __attribute__ ((packed)) VERT2D {
 } VERT2D;
 
 typedef struct Mat2D {
-    
+    int meshVersion;
+    float m00;
+    float m10;
+    float m01;
+    float m11;
+    float m02;
+    float m12;
 } MAT2D;
 
 typedef struct Mat3D {
     
 } MAT3D;
 
-typedef struct Quad {
-    
-} Quad;
+typedef struct QuadMeshItem {
+    VEC2 tl, br;
+    VEC2 t1, t2, t3, t4;
+    VEC3 p1, p2, p3, p4;
+} QuadMeshItem;
+
+typedef struct QuadMesh {
+    int version;
+    int capacity;
+    int size;
+    QuadMeshItem *items;
+    struct QuadMesh *next;
+} QuadMesh;
 
 #endif /* digiplay_h */

@@ -131,6 +131,9 @@ typedef struct GLQuadBatch {
     int ibo;
     GLTextrue *texture;
     int projectionDirty;
+    MAT3D projection;
+    MAT2D camera;
+    GLShader *shader;
 } GLQuadBatch;
 
 void digiplay_GL_createQuadBatch(VM* vm, Method *method, VAR *args) {
@@ -156,6 +159,14 @@ void digiplay_GL_createQuadBatch(VM* vm, Method *method, VAR *args) {
     RETURN_J(b);
 }
 
+void digiplay_GL_freeQuadBatch(VM* vm, Method *method, VAR *args) {
+    GLQuadBatch *b = (GLQuadBatch*)args[0].J;
+    if(b) {
+        if(b->vertices) free(b->vertices);
+        free(b);
+    }
+}
+
 void digiplay_GL_resetQuadBatch(VM* vm, Method *method, VAR *args) {
     GLQuadBatch *b = (GLQuadBatch*)args[0].J;
     b->vertPtr = b->triPtr = 0;
@@ -163,30 +174,127 @@ void digiplay_GL_resetQuadBatch(VM* vm, Method *method, VAR *args) {
     b->blendMode = 0;
     glDisable(GL_SCISSOR_TEST);
     b->texture = NULL;
+    b->shader = NULL;
 }
 
-void digiplay_GL_quad(VM* vm, Method *method, VAR *args) {
+void digiplay_GL_drawQuadMesh(VM* vm, Method *method, VAR *args) {
+    int color = args[3].I;
+    float alpha = args[4].F;
+    float a = ((color >> 24) & 0xff)/255.0;
+    alpha *= a;
+    if(alpha <= 0) return;
+    COLOR col;
+    col.r = ((color >> 16) & 0xff)*alpha;
+    col.g = ((color >> 8) & 0xff)*alpha;
+    col.b = ((color >> 0) & 0xff)*alpha;
+    col.a = alpha * 255;
+
     GLQuadBatch *b = (GLQuadBatch*)args[0].J;
     MAT2D *mat = (MAT2D*)args[1].J;
-    if(b->vertPtr+1 >= b->capacity) {
-        //flush
+    QuadMesh *m = (QuadMesh*)args[2].J;
+    QuadMeshItem *q = &m->items[0];
+    VERT2D *v = &b->vertices[b->vertPtr];
+    
+
+    if(m->version != mat->meshVersion) {
+        float m00 = mat->m00;
+        float m01 = mat->m01;
+        float m02 = mat->m02;
+        float m10 = mat->m10;
+        float m11 = mat->m11;
+        float m12 = mat->m12;
+        for(int i=0; i<m->size; i++) {
+            float xm00 = q->tl.x * m00;
+            float xm10 = q->tl.x * m10;
+            float x2m00 = q->br.x * m00;
+            float x2m10 = q->br.x * m10;
+            float ym01 = q->tl.y * m01;
+            float ym11 = q->tl.y * m11;
+            float y2m01 = q->br.y * m01;
+            float y2m11 = q->br.y * m11;
+            float ym01m02 = ym01 + m02;
+            float ym11m12 = ym11 + m12;
+            float y2m01m02 = y2m01 + m02;
+            float y2m11m12 = y2m11 + m12;
+
+            q->p1.x = xm00 + ym01m02;
+            q->p1.y = xm10 + ym11m12;
+            q->p2.x = x2m00 + ym01m02;
+            q->p2.y = x2m10 + ym11m12;
+            q->p3.x = x2m00 + y2m01m02;
+            q->p3.y = x2m10 + y2m11m12;
+            q->p4.x = xm00 + y2m01m02;
+            q->p4.y = xm10 + y2m11m12;
+            q++;
+        }
+        q = &m->items[0];
+        m->version = mat->meshVersion;
     }
     
-    VERT2D *v = &b->vertices[b->vertPtr];
-    v->pos = (VEC3){args[2].F,args[3].F,args[4].F};
-    v->uv = (VEC2){args[5].F,args[6].F};
-    v++;
-    
-    v->pos = (VEC3){args[7].F,args[8].F,args[9].F};
-    v->uv = (VEC2){args[10].F,args[11].F};
-    v++;
-    
-    v->pos = (VEC3){args[12].F,args[13].F,args[14].F};
-    v->uv = (VEC2){args[15].F,args[16].F};
-    v++;
-    
-    v->pos = (VEC3){args[17].F,args[18].F,args[19].F};
-    v->uv = (VEC2){args[20].F,args[21].F};
-    v++;
-    
+    for(int i=0; i<m->size; i++) {
+        if(b->vertPtr == b->capacity) {
+            //flush
+            v = &b->vertices[0];
+        }
+        
+        v->pos =  q->p1;
+        v->uv = q->t1;
+        v->color = col;
+        v++;
+        
+        v->pos = q->p2;
+        v->uv = q->t2;
+        v->color = col;
+        v++;
+        
+        v->pos = q->p3;
+        v->uv = q->t3;
+        v->color = col;
+        v++;
+        
+        v->pos = q->p4;
+        v->uv = q->t4;
+        v->color = col;
+        v++;
+        q++;
+    }
+}
+
+static QuadMesh *QUADCACHE = NULL;
+
+void digiplay_GL_createQuadMesh(VM* vm, Method *method, VAR *args) {
+    int size = args[0].I;
+    QuadMesh *m = QUADCACHE;
+    if(m) {
+        QUADCACHE = QUADCACHE->next;
+    } else {
+        m = (QuadMesh*)vm_alloc(sizeof(QuadMesh));
+    }
+    if(m->capacity < size) {
+        m->items = realloc(m->items, sizeof(QuadMeshItem) * size);
+        m->capacity = size;
+    }
+    m->size = size;
+    m->items = (QuadMeshItem*)malloc(m->capacity * sizeof(QuadMeshItem));
+    RETURN_J(m);
+}
+
+void digiplay_GL_quadMeshSet(VM* vm, Method *method, VAR *args) {
+    QuadMesh *m = (QuadMesh*)args[0].J;
+    int index = args[1].I;
+    if(index < 0 || index >= m->capacity) return;
+    QuadMeshItem *q = &m->items[index];
+    q->tl = (VEC2){args[2].F, args[3].F};
+    q->br = (VEC2){args[4].F, args[5].F};
+    q->t1 = (VEC2){args[6].F, args[7].F};
+    q->t2 = (VEC2){args[8].F, args[9].F};
+    q->t3 = (VEC2){args[10].F, args[11].F};
+    q->t4 = (VEC2){args[12].F, args[13].F};
+    m->version = -1;
+}
+
+void digiplay_GL_quadMeshFree(VM* vm, Method *method, VAR *args) {
+    QuadMesh *m = (QuadMesh*)args[0].J;
+    m->next = QUADCACHE;
+    QUADCACHE = m;
 }
