@@ -1,8 +1,5 @@
 
-import digiplay.Camera;
-import digiplay.Digiplay;
-import digiplay.Matrix3D;
-import digiplay.ios.IosPlatform;
+import digiplay.Platform;
 
 /*
  * Copyright (C) 2019 Digitoy Games.
@@ -26,10 +23,12 @@ import digiplay.ios.IosPlatform;
 public class Main {
     
     public static void main() {
+        //Platform.run(new MyGame());
+        
         System.out.println("Hello GamaVM!");
         for(int i=0; i<1000; i++) {
             byte b[] = new byte[1024*124];
-            b[10] = 20;
+            b[10] = (byte)test(i,i*2,(byte)12);
             System.out.println(b[9]);
             System.gc();
         }
@@ -37,17 +36,18 @@ public class Main {
             System.out.println(Math.random()+"/"+System.currentTimeMillis()+"/>>");
             System.gc();
         }
-        //IosPlatform.run(new MyGame());
+        //IosPlatform.run(new MyGame());*/
     }
     
-    static void t(Object o) {
-        String str = (String)o;
-        System.out.println("check-cast");
+    static int test(long l, int i, byte b) {
+        long v = l*12;
+        v += i;
+        v += b;
+        int iv = (int)v;
+        return iv;
     }
+    
     public static void main(String...args) {
-        t(null);
-        //System.out.println(nextDouble());
-        main();
     }
 
 

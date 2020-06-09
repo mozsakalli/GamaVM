@@ -1,11 +1,6 @@
 
-import digiplay.Digiplay;
+import digiplay.GLQuadBatch;
 import digiplay.Game;
-import digiplay.Point2D;
-import digiplay.QuadBatch;
-import digiplay.Stage2D;
-import java.util.ArrayList;
-import java.util.List;
 
 /*
  * Copyright (C) 2019 Digitoy Games.
@@ -36,6 +31,8 @@ public class MyGame implements Game {
     
     //Matrix3D projection = new Matrix3D();
     
+    GLQuadBatch batch;
+    /*
     QuadBatch batch;
     List<T> items = new ArrayList();
     
@@ -63,8 +60,11 @@ public class MyGame implements Game {
             batch.quad(x, y, width, height, 0xff0000ff);
         }
     }
+    */
     @Override
     public void begin() {
+        batch = new GLQuadBatch(4096);
+        /*
         Stage2D.I.setup(new Point2D(1024,768));
         batch = new QuadBatch(2048);
         for(int i=0; i<1000; i++)
@@ -140,7 +140,6 @@ public class MyGame implements Game {
         
         System.out.println("game:begin");
         */
-        System.out.println(Math.random()*400);
     }
 
     @Override
@@ -150,6 +149,8 @@ public class MyGame implements Game {
 
     @Override
     public void render() {
+        batch.prepare(0, 0);
+        /*
         batch.begin();
         for(int i=0; i<items.size(); i++)
             items.get(i).step(batch);
@@ -165,7 +166,7 @@ public class MyGame implements Game {
             batch.quad(x,y,w,h,
                     0xffff0000);
         }*/
-        batch.flush();
+        //batch.flush();
         /*
         GL.clearColor(0, 1, 0, 1);
         GL.viewport(0, 0, digiplay.Digiplay.graphics.getScreenWidth(), digiplay.Digiplay.graphics.getScreenHeight());

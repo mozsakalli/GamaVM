@@ -199,7 +199,7 @@ int jdwp_send_step_event(Object *method, int line) {
 extern "C" int jdwp_send_classload_event(Object *cls) {
     /*
     JdwpEventSet *set = JdwpEventSet::head;
-    Object *clsName = CLS_FIELD(cls, name);
+    Object *clsName = CLS(cls, name);
     while(set) {
         if(set->eventKind == JDWP_EVENTKIND_CLASS_PREPARE && set->modifiers > 0) {
             for(int i=0; i<set->modifiers; i++) {
@@ -207,7 +207,7 @@ extern "C" int jdwp_send_classload_event(Object *cls) {
                 if(mod->type == 5) {
                     int matches = 0;
                     Object *pattern = mod->classPattern->str;
-                    matches = compare_string((void*)pattern, clsName, 1);
+                    matches = STRLEN(pattern) == STRLEN(clsName) && compare_chars(STRCHARS(pattern), STRCHARS(clsName), STRLEN(clsName));
                     if(matches) {
                         JdwpPacket *p = new JdwpPacket();
                         p->reset();

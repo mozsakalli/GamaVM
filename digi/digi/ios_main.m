@@ -107,7 +107,7 @@ MTLRenderPassDescriptor *MetalFramebuffer;
 //extern void vm_test();
 //extern void metal_begin_frame();
 //extern void metal_end_frame();
-Object *digiplayIosPlatform;
+Object *digiplayPlatform;
 Object *digiplayPlatformStepMethod;
 VM *gamaVM;
 
@@ -115,8 +115,8 @@ VM *gamaVM;
     static int initialized = 0;
     if(!initialized) {
         initialized = 1;
-        //gamaVM = vm_init();
-        //vm_main(gamaVM, "Main", "main", "()V");
+        gamaVM = vm_init();
+        vm_main(gamaVM, "Main", "main", "()V");
     }
     
     if(MetalDevice) {
@@ -125,7 +125,7 @@ VM *gamaVM;
     }
     
     if(gamaVM && digiplayPlatformStepMethod) {
-        VAR args[1] = { {.O = digiplayIosPlatform} };
+        VAR args[1] = { {.O = digiplayPlatform} };
         //call_void_method(gamaVM,digiplayPlatformStepMethod, &args[0]);
     }
     if(!MetalDevice)
@@ -320,14 +320,14 @@ VM *gamaVM;
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     if(gamaVM) {
         //Object *mth = resolve_method(gamaVM, "digiplay/Platform", "pause", "()V", 0);
-        VAR args[1] = { {.O = digiplayIosPlatform}};
+        VAR args[1] = { {.O = digiplayPlatform}};
         //if(mth) call_void_method(gamaVM, mth, &args[0]);
     }
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     if(gamaVM) {
         //Object *mth = resolve_method(gamaVM, "digiplay/Platform", "resume", "()V", 0);
-        VAR args[1] = { {.O = digiplayIosPlatform}};
+        VAR args[1] = { {.O = digiplayPlatform}};
         //if(mth) call_void_method(gamaVM, mth, &args[0]);
     }
  }
@@ -339,18 +339,16 @@ int main(int argc, char * argv[]) {
     }
 }
 
-void digiplay_ios_IosPlatform_run(VM *vm, Object *method, VAR *args) {
-    /*
-    gamaVM = vm;
-    digiplayIosPlatform = args[0].O;
-    digiplayPlatformStepMethod = resolve_method(vm, "digiplay/Platform", "step", "()V", 0);
+void digiplay_Platform_run(VM *vm, Object *method, VAR *args) {
+    digiplayPlatform = args[0].O;
+    digiplayPlatformStepMethod = resolve_method(vm, L"digiplay/Platform",17, L"step",4, L"()V", 3);
     
     CGRect bounds = [[UIScreen mainScreen] bounds];
     CGFloat scale = [[UIScreen mainScreen] scale];
     
-    Object *resize_method = resolve_method(vm, "digiplay/Platform", "resize", "(IIIIII)V", 0);
+    Object *resize_method = resolve_method(vm, L"digiplay/Platform",17, L"resize",6, L"(IIIIII)V", 9);
     VAR vargs[7] = {
-        { .O = digiplayIosPlatform },
+        { .O = digiplayPlatform },
         { .I = (jint)(bounds.size.width * scale) },
         { .I = (jint)(bounds.size.height * scale) },
         { .I = (jint)SafeScreenTopLeft.x },
@@ -358,7 +356,6 @@ void digiplay_ios_IosPlatform_run(VM *vm, Object *method, VAR *args) {
         { .I = (jint)SafeScreenBottomRight.x },
         { .I = (jint)SafeScreenBottomRight.y },
     };
-    call_void_method(vm, resize_method, &vargs[0]);
-     */
+    CALLVM_V(vm, resize_method, &vargs[0]);
 }
 

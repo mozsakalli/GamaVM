@@ -21,54 +21,13 @@ package digiplay;
  * @author mustafa
  */
 public class QuadMesh {
-    //vec3 pos
-    //vec2 uv
-    //vec4(1) color
+    long handle;
     
-    //tl br uv1,uv2,yv3,uv4 p1,p2,p3,p4
-    float[] buffer;
-    int size;
-    QuadMesh next;
-    int version;
-    
-    final static int STRIDE = 24;
-    
-    static QuadMesh CACHE;
-    public static QuadMesh get(int size) {
-        QuadMesh q = CACHE;
-        if(q != null) {
-            CACHE = CACHE.next;
-            if(q.buffer.length < size) q.buffer = new float[size];
-            q.size = size;
-            q.next = null;
-        } else {
-            q = new QuadMesh();
-            q.buffer = new float[size];
-            q.size = size;
-        }
-        
-        return q;
+    public QuadMesh(int size) {
+        handle = create(size);
     }
     
-    public void set(int index, float x1, float y1, float x2, float y2,
-            float u1,float v1, 
-            float u2,float v2, 
-            float u3,float v3, 
-            float u4,float v4 
-            ) {
-        int o = index * STRIDE;
-        buffer[o++] = x1;
-        buffer[o++] = y1;
-        buffer[o++] = x2;
-        buffer[o++] = y2;
-        buffer[o++] = u1;
-        buffer[o++] = v1;
-        buffer[o++] = u2;
-        buffer[o++] = v2;
-        buffer[o++] = u3;
-        buffer[o++] = v3;
-        buffer[o++] = u4;
-        buffer[o++] = v4;
-        
-    }
+    native static long create(int size);
+    
+    public native void set(int index, float x1, float y1, float x2, float y2, float u1, float v1, float u2, float v2, float u3, float v3, float u4, float v4);
 }

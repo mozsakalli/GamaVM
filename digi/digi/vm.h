@@ -367,9 +367,11 @@ extern void *read_class_file(jchar *name, int len);
 #ifdef JDWP_ENABLED
     extern void jdwp_tick(VM *vm, Object *method, int line, int lineChanged);
     extern void jdwp_start(char *host, int port);
+    extern int jdwp_send_classload_event(Object *cls);
 #else
     #define jdwp_tick
     #define jdwp_start
+    #define jdwp_send_classload_event
 #endif
 
 #ifdef __cplusplus

@@ -342,6 +342,8 @@ int parse_class(VM *vm, char *data, Object *clsObject) {
         } else data += len;
     }
 
+    jdwp_send_classload_event(clsObject);
+    
     return 1;
 }
 

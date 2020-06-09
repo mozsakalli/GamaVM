@@ -20,15 +20,29 @@ package digiplay;
  *
  * @author mustafa
  */
-public abstract class Platform {
+public class Platform {
     
     protected Game game;
-    
+    /*
     public abstract Graphics getGraphics();
     public abstract Files getFiles();
+    */
     
     long lastTime = System.currentTimeMillis();
     boolean initialized;
+    int screenWidth, screenHeight, safeLeft, safeTop, safeRight, safeBottom;
+            
+    private Platform(Game game) {
+        this.game = game;
+        //Digiplay.graphics = this.graphics = new IosGraphics();
+    }
+    
+    public static void run(Game game) {
+        Platform p = new Platform(game);
+        Digiplay.platform = p;
+        p.run();
+    }
+    private native void run();
     
     private void resize(int width, int height, int safeLeft, int safeTop, int safeRight, int safeBottom) {
         try {

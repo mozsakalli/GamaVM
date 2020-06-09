@@ -10,13 +10,11 @@ digiplay/render/GPU.class
 gamavm/apple/Bridge.class
 gamavm/apple/NSDictionary.class
 digiplay/render/RenderDevice.class
-digiplay/ios/IosPlatform.class
 digiplay/Platform.class
 gamavm/apple/NSMutableObject.class
 digiplay/Files.class
 digiplay/Matrix3D.class
 digiplay/Graphics.class
-digiplay/ios/IosGraphics.class
 digiplay/render/Texture.class
 digiplay/Camera.class
 digiplay/Metal.class
