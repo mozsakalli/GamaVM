@@ -18,7 +18,6 @@ digiplay/Graphics.class
 digiplay/render/Texture.class
 digiplay/Camera.class
 digiplay/Metal.class
-MyGame$T.class
 digiplay/Image.class
 digiplay/render/Shader.class
 gamavm/apple/uikit/UIWindow.class

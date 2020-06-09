@@ -23,7 +23,11 @@ import digiplay.Platform;
 public class Main {
     
     public static void main() {
-        Platform.run(new MyGame());
+        while(true) {
+            System.out.println("tmp"+Tmp.test(0, 0, (byte)0));
+            try {Thread.sleep(1000);}catch(Exception e){}
+        }
+        //Platform.run(new MyGame());
         /*
         System.out.println("Hello GamaVM!");
         for(int i=0; i<1000; i++) {
@@ -39,15 +43,8 @@ public class Main {
         //IosPlatform.run(new MyGame());*/
     }
     
-    static int test(long l, int i, byte b) {
-        long v = l*12;
-        v += i;
-        v += b;
-        int iv = (int)v;
-        return iv;
-    }
-    
     public static void main(String...args) {
+        main();
     }
 
 
