@@ -19,6 +19,8 @@
 		45407D6A248E1515008462C5 /* natives.c in Sources */ = {isa = PBXBuildFile; fileRef = 45407D69248E1515008462C5 /* natives.c */; };
 		4540FAB0248F666E00FBB78F /* digiplay_gl.c in Sources */ = {isa = PBXBuildFile; fileRef = 4540FAAF248F666E00FBB78F /* digiplay_gl.c */; };
 		45444644249165E400CCDAC1 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45444643249165E400CCDAC1 /* OpenGLES.framework */; };
+		454446462491707000CCDAC1 /* ios_net.m in Sources */ = {isa = PBXBuildFile; fileRef = 454446452491707000CCDAC1 /* ios_net.m */; };
+		4544464824917D4F00CCDAC1 /* invoke.c in Sources */ = {isa = PBXBuildFile; fileRef = 4544464724917D4E00CCDAC1 /* invoke.c */; };
 		456D45AE248EF1CC00E7C7BD /* ios_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 456D45AD248EF1CC00E7C7BD /* ios_main.m */; };
 		456D45B0248EF53A00E7C7BD /* digiplay.c in Sources */ = {isa = PBXBuildFile; fileRef = 456D45AF248EF53A00E7C7BD /* digiplay.c */; };
 		4595C88E248D6FD2008E4CAA /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 4595C88D248D6FD2008E4CAA /* assets */; };
@@ -44,6 +46,8 @@
 		4540FAAF248F666E00FBB78F /* digiplay_gl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = digiplay_gl.c; sourceTree = "<group>"; };
 		4540FAB1248F66A200FBB78F /* digiplay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = digiplay.h; sourceTree = "<group>"; };
 		45444643249165E400CCDAC1 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		454446452491707000CCDAC1 /* ios_net.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ios_net.m; sourceTree = "<group>"; };
+		4544464724917D4E00CCDAC1 /* invoke.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = invoke.c; sourceTree = "<group>"; };
 		456D45AD248EF1CC00E7C7BD /* ios_main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ios_main.m; sourceTree = "<group>"; };
 		456D45AF248EF53A00E7C7BD /* digiplay.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = digiplay.c; sourceTree = "<group>"; };
 		4595C88D248D6FD2008E4CAA /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = digi/assets; sourceTree = "<group>"; };
@@ -124,6 +128,8 @@
 				45407D67248E0EA5008462C5 /* vm_native.c */,
 				45E739B5248C4FB8004E55EB /* vm.c */,
 				45E739B4248C4FB8004E55EB /* vm.h */,
+				454446452491707000CCDAC1 /* ios_net.m */,
+				4544464724917D4E00CCDAC1 /* invoke.c */,
 			);
 			path = digi;
 			sourceTree = "<group>";
@@ -197,6 +203,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4544464824917D4F00CCDAC1 /* invoke.c in Sources */,
 				45407D6A248E1515008462C5 /* natives.c in Sources */,
 				4540187C248E565C004AF6EF /* gc.c in Sources */,
 				4540187F248E6D2C004AF6EF /* jdwp.cpp in Sources */,
@@ -214,6 +221,7 @@
 				45073012248D4BD7001379B2 /* ios_native.m in Sources */,
 				456D45B0248EF53A00E7C7BD /* digiplay.c in Sources */,
 				4507300E248CF04B001379B2 /* parse.c in Sources */,
+				454446462491707000CCDAC1 /* ios_net.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

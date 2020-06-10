@@ -332,7 +332,6 @@ void Java_digiplay_Mat2D_compose(VM *vm, Object *method, VAR *args) {
     
     Mat2D *m = (Mat2D*)*FIELD_PTR_O(args[0].O, 0);
     mat2d_compose(m, args[1].F, args[2].F, args[3].F, args[4].F, args[5].F, args[6].F, args[7].I, args[8].F, args[9].F, args[10].F);
-    m->meshVersion = m->hierarchyVersion = -1;
 }
 void Java_digiplay_Mat2D_identity(VM *vm, Object *method, VAR *args) {
     if(!args[0].O) {
@@ -345,6 +344,7 @@ void Java_digiplay_Mat2D_identity(VM *vm, Object *method, VAR *args) {
 }
 
 extern void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args);
+extern void Java_digiplay_Net_http(VM *vm, Object *method, VAR *args);
 
 NativeMethodInfo digiplay_native_methods[] = {
     {"digiplay/Platform:run:()V", &Java_digiplay_Platform_run},
@@ -353,5 +353,7 @@ NativeMethodInfo digiplay_native_methods[] = {
     {"digiplay/Mat2D:compose:(FFFFFFZFFF)V", &Java_digiplay_Mat2D_compose},
     {"digiplay/Mat2D:identity:()V", &Java_digiplay_Mat2D_identity},
 
+    {"digiplay/Net:http:(Ljava/lang/String;Ljava/lang/String;Ldigiplay/Net$HttpListener;)V", &Java_digiplay_Net_http},
+    
     NULL
 };

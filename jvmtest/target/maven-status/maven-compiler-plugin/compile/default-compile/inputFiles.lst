@@ -4,6 +4,7 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Files.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/NSDictionary.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/NSProtocol.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Action.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Metal.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Mathf.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Graphics.java
@@ -21,6 +22,8 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Game.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Digiplay.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIWindow.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Net.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Action1.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/GLQuadBatch.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/VertexBuffer.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/QuadMesh.java

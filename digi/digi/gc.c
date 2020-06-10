@@ -136,7 +136,7 @@ void gc_sweep(VM *vm) {
     while(blk && count < COUNT_PER_TICK * 3) {
         while(blk_ndx < HEAP_OBJECTS_PER_BLOCK && count++ < COUNT_PER_TICK * 3) {
             Object *o = &blk->objects[blk_ndx];
-            if(!o->gc.free && o->gc.version != version) {
+            if(!o->gc.free && !o->gc.protect && o->gc.version != version) {
                 Class *cls = o->cls->instance;
                 if(cls && cls->finalizer) {
                     VAR args[1] = { {.O = o} };

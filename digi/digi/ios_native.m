@@ -57,7 +57,6 @@ void *read_class_file(jchar *name, int len) {
     return NULL;
 }
 
-
 void java_lang_System_SystemOutStream_printImpl(VM *vm, Object *method, VAR *args) {
     Object *string = args[0].O;
     if(!string) return;

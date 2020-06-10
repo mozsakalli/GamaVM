@@ -29,6 +29,10 @@ id<MTLTexture> MetalDepth = nil;
 id<MTLTexture> MetalStencil = nil;
 MTLRenderPassDescriptor *MetalFramebuffer;
 
+Object *digiplayPlatform;
+Object *digiplayPlatformStepMethod;
+VM *gamaVM;
+
 @interface DigiplayView : UIView
 @end
 
@@ -108,9 +112,7 @@ MTLRenderPassDescriptor *MetalFramebuffer;
 //extern void vm_test();
 //extern void metal_begin_frame();
 //extern void metal_end_frame();
-Object *digiplayPlatform;
-Object *digiplayPlatformStepMethod;
-VM *gamaVM;
+
 
 -(void) updateTimerFired {
     static int initialized = 0;

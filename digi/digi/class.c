@@ -189,7 +189,10 @@ void link_class(VM *vm, Object *clsObject) {
                     Object *override = find_class_method(vm, clsObject, STRCHARS(m->name), STRLEN(m->name), STRCHARS(m->signature), STRLEN(m->signature));
                     if(override) {
                         Method *omm = override->instance;
-                        if(!IS_ABSTRACT(omm->flags)) cls->itable[m->iTableIndex] = override;
+                        if(!IS_ABSTRACT(omm->flags)) {
+                            cls->itable[m->iTableIndex] = override;
+                            omm->iTableIndex = m->iTableIndex;
+                        }
                     }
                 }
             }

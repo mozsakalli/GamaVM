@@ -290,7 +290,7 @@ void Java_digiplay_GLQuadBatch_drawQuadMesh(VM* vm, Method *method, VAR *args) {
     
     QuadMeshItem *q = &m->items[0];
 
-    if(/*m->version != mat->meshVersion*/ 1) {
+    if(m->version != mat->meshVersion) {
         float m00 = mat->m00;
         float m01 = mat->m01;
         float m02 = mat->m02;

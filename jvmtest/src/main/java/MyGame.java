@@ -4,6 +4,8 @@ import digiplay.GLShader2D;
 import digiplay.Game;
 import digiplay.Digiplay;
 import digiplay.Mat2D;
+import digiplay.Net;
+import digiplay.Net.HttpListener;
 import digiplay.QuadMesh;
 
 
@@ -74,8 +76,14 @@ public class MyGame implements Game {
         System.out.println("BEGIN");
         shader = new GLShader2D("gl_FragColor = vec4(1.0,1.0,1.0,1.0);");
         batch = new GLQuadBatch(4096);
-        q = new QuadMesh(1);
-        q.set(0, 0, 0, 200, 200, 0, 0, 0, 0, 0, 0, 0, 0);
+        q = new QuadMesh(100);
+        for(int i=0; i<100; i++) {
+            float w = (float)Math.random()*50+10;
+            float h = (float)Math.random()*50+10;
+            float x = (float)Math.random()*Digiplay.platform.screenWidth;
+            float y = (float)Math.random()*Digiplay.platform.screenHeight;
+            q.set(i, x, y, x+w, y+h, 0, 0, 0, 0, 0, 0, 0, 0);
+        }
         
         /*
         Stage2D.I.setup(new Point2D(1024,768));
@@ -166,7 +174,6 @@ public class MyGame implements Game {
     @Override
     public void render() {
         batch.begin(Digiplay.platform.screenWidth, Digiplay.platform.screenHeight, true, 0xFF300000);
-        q.set(0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0);
         //x+=0.02f;
         //y+=0.5f;
         mat.compose(480, 320, 1, 1, 25, 25, true, r, 0, 0);
@@ -183,6 +190,20 @@ public class MyGame implements Game {
             y = 0;
             dy = speed;
         }
+        byte[] tmp = new byte[1024*500];
+        
+        Net.http("https://www.google.com", null, new HttpListener(){
+            @Override
+            public void onHttpSuccess(byte[] bytes) {
+                System.out.println("Http Success: "+bytes.length);
+            }
+
+            @Override
+            public void onHttpFail() {
+                System.out.println("Http Fail");
+            }
+        
+        });
         /*
         batch.begin();
         for(int i=0; i<items.size(); i++)

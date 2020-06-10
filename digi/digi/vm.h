@@ -106,7 +106,8 @@ typedef struct __attribute__ ((packed)) Object {
     struct {
         char free       : 1;
         char atomic     : 1;
-        char version    : 6;
+        char protect    : 1;
+        char version    : 5;
     } gc;
 } Object;
 
@@ -227,6 +228,8 @@ typedef struct __attribute__ ((packed)) Class {
     struct VM *vm;
 } Class;
 
+typedef Class VMClass;
+
 #define STR(o,f) ((String*)o->instance)->f
 #define STRLEN(o) (STR(o,length))
 #define STRCHARS(o) ((jchar*)((jchar*)(STR(o,chars)->instance) + STR(o,offset)))
@@ -311,6 +314,12 @@ extern Object *alloc_string_utf8(VM *vm, char *chars, int datalen, int atomic);
 extern void gc_step(VM *vm);
 extern void gc_pause();
 extern void gc_resume();
+inline static void gc_protect(Object *o) {
+    if(o) o->gc.protect = 1;
+}
+inline static void gc_unprotect(Object *o) {
+    if(o) o->gc.protect = 0;
+}
 
 /// CLASS
 extern Object *get_arrayclass_of(VM *vm, Object *cls);
@@ -362,6 +371,13 @@ extern void vm_destroy();
 extern void vm_main(VM *vm, char *className, char *methodName, char *signature);
 extern void vm_interpret_exec(VM *vm, Object *omethod, VAR *args);
 extern void vm_native_exec(VM *vm, Object *omethod, VAR *args);
+
+extern void invoke_interface_v(VM* vm, Object *method, VAR *args);
+
+inline static Object *alloc_byte_array(VM *vm, int length, int atomic) {
+    return alloc_array(vm, get_arrayclass_of(vm, vm->primClasses[PRIM_B]), length, atomic);
+}
+
 
 extern void *read_class_file(jchar *name, int len);
 
