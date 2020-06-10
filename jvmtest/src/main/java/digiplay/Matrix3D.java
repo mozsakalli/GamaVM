@@ -389,4 +389,11 @@ public class Matrix3D {
 
     }
 
+    public void t(float x, float y, float z) {
+        float[] ptr = raw;
+        float rx = x * ptr[0] + y * ptr[4] + z * ptr[8] + ptr[12];
+        float ry = x * ptr[1] + y * ptr[5] + z * ptr[9] + ptr[13];
+        float rz = x * ptr[2] + y * ptr[6] + z * ptr[10] + ptr[14];
+        System.out.println(x+","+y+","+z+" -> "+rx+","+ry+","+rz);
+    }
 }

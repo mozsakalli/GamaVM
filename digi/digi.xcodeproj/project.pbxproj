@@ -18,6 +18,7 @@
 		45407D68248E0EA6008462C5 /* vm_native.c in Sources */ = {isa = PBXBuildFile; fileRef = 45407D67248E0EA5008462C5 /* vm_native.c */; };
 		45407D6A248E1515008462C5 /* natives.c in Sources */ = {isa = PBXBuildFile; fileRef = 45407D69248E1515008462C5 /* natives.c */; };
 		4540FAB0248F666E00FBB78F /* digiplay_gl.c in Sources */ = {isa = PBXBuildFile; fileRef = 4540FAAF248F666E00FBB78F /* digiplay_gl.c */; };
+		45444644249165E400CCDAC1 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45444643249165E400CCDAC1 /* OpenGLES.framework */; };
 		456D45AE248EF1CC00E7C7BD /* ios_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 456D45AD248EF1CC00E7C7BD /* ios_main.m */; };
 		456D45B0248EF53A00E7C7BD /* digiplay.c in Sources */ = {isa = PBXBuildFile; fileRef = 456D45AF248EF53A00E7C7BD /* digiplay.c */; };
 		4595C88E248D6FD2008E4CAA /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 4595C88D248D6FD2008E4CAA /* assets */; };
@@ -42,6 +43,7 @@
 		45407D69248E1515008462C5 /* natives.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = natives.c; sourceTree = "<group>"; };
 		4540FAAF248F666E00FBB78F /* digiplay_gl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = digiplay_gl.c; sourceTree = "<group>"; };
 		4540FAB1248F66A200FBB78F /* digiplay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = digiplay.h; sourceTree = "<group>"; };
+		45444643249165E400CCDAC1 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		456D45AD248EF1CC00E7C7BD /* ios_main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ios_main.m; sourceTree = "<group>"; };
 		456D45AF248EF53A00E7C7BD /* digiplay.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = digiplay.c; sourceTree = "<group>"; };
 		4595C88D248D6FD2008E4CAA /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = digi/assets; sourceTree = "<group>"; };
@@ -62,18 +64,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45444644249165E400CCDAC1 /* OpenGLES.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		45444642249165E400CCDAC1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				45444643249165E400CCDAC1 /* OpenGLES.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		45E7398F248C4F25004E55EB = {
 			isa = PBXGroup;
 			children = (
 				4595C88D248D6FD2008E4CAA /* assets */,
 				45E7399A248C4F26004E55EB /* digi */,
 				45E73999248C4F26004E55EB /* Products */,
+				45444642249165E400CCDAC1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};

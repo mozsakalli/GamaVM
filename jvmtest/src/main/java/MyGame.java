@@ -161,16 +161,28 @@ public class MyGame implements Game {
     }
 
     Mat2D mat = new Mat2D();
-    float x=50;
+    float speed = 1f;
+    float x=0,y=0,dy=speed,r=0;
     @Override
     public void render() {
         batch.begin(Digiplay.platform.screenWidth, Digiplay.platform.screenHeight, true, 0xFF300000);
-        q.set(0, x, 50, x+100, 550, 0, 0, 0, 0, 0, 0, 0, 0);
-        x+=0.02f;
-        //mat.compose(480, 320, 1, 1, 480, 320, true, 0, 0, 0);
-        mat.identity();
+        q.set(0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0);
+        //x+=0.02f;
+        //y+=0.5f;
+        mat.compose(480, 320, 1, 1, 25, 25, true, r, 0, 0);
+        r += speed;
+        //mat.identity();
         batch.drawQuadMesh(q, mat, shader,0xFF0000FF, 1, 1);
         batch.end();
+        
+        y += dy;
+        if(y >= 640) {
+            y = 640;
+            dy = -speed;
+        } else if(y <= 0) {
+            y = 0;
+            dy = speed;
+        }
         /*
         batch.begin();
         for(int i=0; i<items.size(); i++)

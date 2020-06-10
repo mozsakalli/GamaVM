@@ -223,6 +223,62 @@ void mat3d_perspective(Mat3D *m, float near, float far, float fovy, float aspect
     m->vals[M33] = 0;
 }
 
+void mat3d_compose(Mat3D *m, float _x, float _y, float _z, float _rx, float _ry, float _rz, float _sx, float _sy, float _sz) {
+    float cx = cos(_rx / 180.0f * M_PI);
+    float cy = cos(_ry / 180.0f * M_PI);
+    float cz = cos(_rz / 180.0f * M_PI);
+    float sx = sin(_rx / 180.0f * M_PI);
+    float sy = sin(_ry / 180.0f * M_PI);
+    float sz = sin(_rz / 180.0f * M_PI);
+    
+    float *ptr = &m->vals[0];
+    ptr[0] = cy * cz * _sx;
+    ptr[1] = cy * sz * _sx;
+    ptr[2] = -sy * _sx;
+    ptr[3] = 0;
+    ptr[4] = (sx * sy * cz - cx * sz) * _sy;
+    ptr[5] = (sx * sy * sz + cx * cz) * _sy;
+    ptr[6] = sx * cy * _sy;
+    ptr[7] = 0;
+    ptr[8] = (cx * sy * cz + sx * sz) * _sz;
+    ptr[9] = (cx * sy * sz - sx * cz) * _sz;
+    ptr[10] = cx * cy * _sz;
+    ptr[11] = 0;
+    ptr[12] = _x;
+    ptr[13] = _y;
+    ptr[14] = _z;
+    ptr[15] = 1;
+}
+
+void mat3d_orthographic(Mat3D *m, float left, float right, float bottom, float top, float near, float far)
+{
+    mat3d_identity(m);
+    float x_orth = 2 / (right - left);
+    float y_orth = 2 / (top - bottom);
+    float z_orth = -2 / (far - near);
+
+    float tx = -(right + left) / (right - left);
+    float ty = -(top + bottom) / (top - bottom);
+    float tz = -(far + near) / (far - near);
+    float *raw = &m->vals[0];
+    raw[M00] = x_orth;
+    raw[M10] = 0;
+    raw[M20] = 0;
+    raw[M30] = 0;
+    raw[M01] = 0;
+    raw[M11] = y_orth;
+    raw[M21] = 0;
+    raw[M31] = 0;
+    raw[M02] = 0;
+    raw[M12] = 0;
+    raw[M22] = z_orth;
+    raw[M32] = 0;
+    raw[M03] = tx;
+    raw[M13] = ty;
+    raw[M23] = tz;
+    raw[M33] = 1;
+}
+
 void mat3d_setup2d(Mat3D *m, float width, float height) {
     float x = width / 2;
     float y = height / 2;
@@ -235,9 +291,24 @@ void mat3d_setup2d(Mat3D *m, float width, float height) {
 
     Mat3D localMatrix, projectionMatrix;
     mat3d_lookAt(&localMatrix, x, y, z,  x, y, 0,  0, YUp, 0);
-    mat3d_perspective(&projectionMatrix, 1, far, fov, width/height);
+    mat3d_perspective(&projectionMatrix, 0, far, fov, width/height);
     mat3d_multiply(&projectionMatrix, &localMatrix, m);
+    /*
+    Mat3D localMatrix, projectionMatrix;
+    float x=0, y=0,z=0;
+    float w=width, h=height;
+    x = -x + w / 2;
+    y = -y + h / 2;
+    z = -z;
+
+    mat3d_compose(&localMatrix, x, y, z,
+    0, 0, 0,
+    1, 1, 1);
+    mat3d_orthographic(&projectionMatrix, 0, w, h, 0, -999999, 999999);
+    mat3d_multiply(&projectionMatrix, &localMatrix, m);
+    */
 }
+
 
 /*
  public void set(float m00, float m10, float m01, float m11, float m02, float m12)

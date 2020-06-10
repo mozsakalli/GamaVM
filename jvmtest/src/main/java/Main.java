@@ -34,8 +34,7 @@ public class Main {
         Matrix3D cm = new Camera().setupFor2D(960, 640);
         Matrix3D r = new Matrix3D();
         Matrix3D.multiply(cm, id, r);
-        for(int i=0; i<16; i++)
-            System.out.println(r.raw[i]);
+        r.t(0, 50, 0);
     }
 
 

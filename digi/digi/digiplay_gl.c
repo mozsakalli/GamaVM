@@ -14,7 +14,6 @@
 #include <OpenGLES/ES2/glext.h>
 #endif
 
-
 typedef struct GLShader {
     GLint handle;
     int apos, acolor, auv, uprojection, uvec4;
@@ -67,6 +66,8 @@ void Java_digiplay_GLShader2D_compile(VM* vm, Method *method, VAR *args) {
     "   vColor = color;\n"
     "   vUv = uv;\n"
     "   vPos = pos;\n"
+    //"   vec2 screen=vec2(960.0,-640.0);\n"
+    //"   gl_Position = vec4(pos.xy * (vec2(2,2)/screen) - clamp(screen,-1.0,1.0), 0.0, 1.0);\n "
     "   gl_Position = projection * vec4(pos.xyz, 1.0);\n"
     "}",1);
 
@@ -98,7 +99,7 @@ void Java_digiplay_GLShader2D_compile(VM* vm, Method *method, VAR *args) {
         glLinkProgram(prg);
         glValidateProgram(prg);
         int linked;
-        glGetProgramiv(prg, GL_LINK_STATUS, & linked);
+        glGetProgramiv(prg, GL_LINK_STATUS, &linked);
         if (linked == GL_FALSE) {
             glDeleteProgram(prg);
             glDeleteShader(vertex);
@@ -173,18 +174,18 @@ void Java_digiplay_GLQuadBatch_begin(VM* vm, Method *method, VAR *args) {
         throw_null(vm);
         return;
     }
-    b->vertPtr = b->triangleCount = 0;
-    glDisable(GL_BLEND);
-    b->blendMode = 0;
-    glDisable(GL_SCISSOR_TEST);
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
-    
-    b->texture = NULL;
-    
     int w = args[1].I;
     int h = args[2].I;
     glViewport(0, 0, w, h);
+
+    b->blendMode = b->vertPtr = b->triangleCount = 0;
+    glDisable(GL_BLEND);
+    glDisable(GL_SCISSOR_TEST);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+    
+    b->texture = NULL;
+    
     mat3d_setup2d(&b->projection, w, h);
     mat3d_identity(&b->camera);
     b->projectionDirty = 1;
@@ -219,6 +220,7 @@ void quad_batch_flush(GLQuadBatch *b) {
         }
         
         if(glCurrentVertexBuffer != b->vertices || 1) {
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
             unsigned char *base = (unsigned char*)&b->vertices[0];
             glEnableVertexAttribArray(glCurrentShader->apos);
             glVertexAttribPointer(glCurrentShader->apos, 3, GL_FLOAT, GL_FALSE, sizeof(VERT2D), base);
@@ -235,7 +237,6 @@ void quad_batch_flush(GLQuadBatch *b) {
     }
     b->triangleCount = b->vertPtr = 0;
 }
-
 
 void Java_digiplay_GLQuadBatch_drawQuadMesh(VM* vm, Method *method, VAR *args) {
     if(!args[0].O || !args[1].O || !args[2].O || !args[3].O) {
@@ -264,6 +265,7 @@ void Java_digiplay_GLQuadBatch_drawQuadMesh(VM* vm, Method *method, VAR *args) {
     if(shader != glCurrentShader) {
         quad_batch_flush(b);
         gl_use_shader(shader);
+        b->projectionDirty = 1;
     }
 
     if(blendMode != b->blendMode) {
@@ -317,6 +319,11 @@ void Java_digiplay_GLQuadBatch_drawQuadMesh(VM* vm, Method *method, VAR *args) {
             //q->p3.y = x2m10 + y2m11m12;
             q->p4 = (VEC3){xm00 + y2m01m02, xm10 + y2m11m12, 0};
             //q->p4.y = xm10 + y2m11m12;
+            /*
+            q->p1 = (VEC3){q->tl.x, q->tl.y, 0};
+            q->p2 = (VEC3){q->br.x, q->tl.y, 0};
+            q->p3 = (VEC3){q->br.x, q->br.y, 0};
+            q->p4 = (VEC3){q->tl.x, q->br.y, 0};*/
             q++;
         }
         q = &m->items[0];
@@ -348,6 +355,7 @@ void Java_digiplay_GLQuadBatch_drawQuadMesh(VM* vm, Method *method, VAR *args) {
         v->pos = q->p4;
         v->uv = q->t4;
         v->color = col;
+        
         v++;
         q++;
         b->triangleCount += 6;
@@ -401,6 +409,7 @@ void Java_digiplay_QuadMesh_set(VM* vm, Method *method, VAR *args) {
     q->t2 = (VEC2){args[8].F, args[9].F};
     q->t3 = (VEC2){args[10].F, args[11].F};
     q->t4 = (VEC2){args[12].F, args[13].F};
+    
     m->version++;
 }
 /*

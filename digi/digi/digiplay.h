@@ -11,16 +11,16 @@
 
 #include <math.h>
 
-typedef struct __attribute__ ((packed)) VEC2 {
+typedef struct VEC2 {
     float x,y;
 } VEC2;
-typedef struct __attribute__ ((packed)) VEC3 {
+typedef struct VEC3 {
     float x,y,z;
 } VEC3;
-typedef struct __attribute__ ((packed)) COLOR {
+typedef struct COLOR {
     unsigned char r,g,b,a;
 } COLOR;
-typedef struct __attribute__ ((packed)) VERT2D {
+typedef struct VERT2D {
     VEC3 pos;
     COLOR color;
     VEC2 uv;

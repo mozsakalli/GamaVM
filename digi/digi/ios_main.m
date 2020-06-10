@@ -58,6 +58,7 @@ MTLRenderPassDescriptor *MetalFramebuffer;
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        [self setContentScaleFactor: [[UIScreen mainScreen] scale] ];
         framebuffer = -1;
         
         if(!MetalDevice)
@@ -122,6 +123,8 @@ VM *gamaVM;
     if(MetalDevice) {
         [self createMetalBuffers];
         //metal_begin_frame();
+    } else {
+        
     }
     
     if(gamaVM && digiplayPlatformStepMethod) {
@@ -160,10 +163,10 @@ VM *gamaVM;
     if([EAGLContext currentContext] != eaglContext)
         [EAGLContext setCurrentContext:eaglContext];
 
-    CGFloat scale = [[UIScreen mainScreen] scale];
+    
+    CGFloat scale = [[self layer] contentsScale];
     int ScreenSizeWidth = (int)(self.layer.bounds.size.width * scale);
     int ScreenSizeHeight = (int)(self.layer.bounds.size.height * scale);
-    
     
     glGenFramebuffers(1, (GLuint*)&framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);

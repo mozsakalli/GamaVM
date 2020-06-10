@@ -264,7 +264,9 @@ NativeMethodInfo vm_native_methods[] = {
     {"java/lang/System:gc:()V", &java_lang_System_gc},
     {"java/lang/System:nanoTime:()J", &java_lang_System_nanoTime},
     {"java/lang/System:currentTimeMillis:()J", &java_lang_System_currentTimeMillis},
-    
-    {"java/lang/Double:toStringImpl:(DZ)Ljava/lang/String;", java_lang_Double_toStringImpl},
+
+    {"java/lang/Float:toStringImpl:(FZ)Ljava/lang/String;", &java_lang_Float_toStringImpl},
+
+    {"java/lang/Double:toStringImpl:(DZ)Ljava/lang/String;", &java_lang_Double_toStringImpl},
     NULL
 };
