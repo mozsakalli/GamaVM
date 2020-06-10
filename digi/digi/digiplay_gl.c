@@ -42,7 +42,7 @@ int gl_create_shader(const char *code, int isVertexShader) {
     return shader;
 }
 
-void digiplay_GL_create2DShader(VM* vm, Method *method, VAR *args) {
+void Java_digiplay_GLShader2D_compile(VM* vm, Method *method, VAR *args) {
     if(!args[0].O) {
         throw_null(vm);
         return;
@@ -73,14 +73,10 @@ void digiplay_GL_create2DShader(VM* vm, Method *method, VAR *args) {
     "varying vec2 vUv;\n"
     "varying vec4 vPos;\n"
     "uniform sampler2D texture;\n"
-    "uniform lowp vec4 userVec4;\n");
-    
-    ptr += sprintf(ptr, string_to_ascii(args[0].O));
-    ptr += sprintf(ptr,
-    "void main()\n"
-    "{\n"
-    "    mainImage(texture);\n"
-    "}");
+    "uniform lowp vec4 userVec4;\n"
+    "void main(){\n");
+    ptr += sprintf(ptr, "%s", string_to_ascii(args[0].O));
+    ptr += sprintf(ptr,"}");
     RETURN_J(0);
     int frag = gl_create_shader(tmp, 0);
     if(vertex == -1 || frag == -1) {
@@ -136,7 +132,7 @@ typedef struct GLQuadBatch {
     GLShader *shader;
 } GLQuadBatch;
 
-void digiplay_GL_createQuadBatch(VM* vm, Method *method, VAR *args) {
+void Java_digiplay_GLQuadBatch_create(VM* vm, Method *method, VAR *args) {
     GLQuadBatch *b = (GLQuadBatch*)vm_alloc(sizeof(GLQuadBatch));
     b->capacity = args[0].I;
     b->vertices = (VERT2D*)malloc(sizeof(VERT2D) * b->capacity * 4);
@@ -159,6 +155,34 @@ void digiplay_GL_createQuadBatch(VM* vm, Method *method, VAR *args) {
     RETURN_J(b);
 }
 
+void Java_digiplay_GLQuadBatch_begin(VM* vm, Method *method, VAR *args) {
+    if(!args[0].O) {
+        throw_null(vm);
+        return;
+    }
+    GLQuadBatch *b = (GLQuadBatch*)*FIELD_PTR_J(args[0].O, 0);
+    if(!b) {
+        throw_null(vm);
+        return;
+    }
+    b->vertPtr = b->triPtr = 0;
+    glDisable(GL_BLEND);
+    b->blendMode = 0;
+    glDisable(GL_SCISSOR_TEST);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    
+    b->texture = NULL;
+    b->shader = NULL;
+    b->projectionDirty = 1;
+    
+    glViewport(0, 0, args[1].I, args[2].I);
+    if(args[3].I) {
+        //todo: clear
+    }
+}
+
+
 void digiplay_GL_freeQuadBatch(VM* vm, Method *method, VAR *args) {
     GLQuadBatch *b = (GLQuadBatch*)args[0].J;
     if(b) {
@@ -167,15 +191,6 @@ void digiplay_GL_freeQuadBatch(VM* vm, Method *method, VAR *args) {
     }
 }
 
-void digiplay_GL_resetQuadBatch(VM* vm, Method *method, VAR *args) {
-    GLQuadBatch *b = (GLQuadBatch*)args[0].J;
-    b->vertPtr = b->triPtr = 0;
-    glDisable(GL_BLEND);
-    b->blendMode = 0;
-    glDisable(GL_SCISSOR_TEST);
-    b->texture = NULL;
-    b->shader = NULL;
-}
 
 void digiplay_GL_drawQuadMesh(VM* vm, Method *method, VAR *args) {
     int color = args[3].I;
@@ -298,3 +313,12 @@ void digiplay_GL_quadMeshFree(VM* vm, Method *method, VAR *args) {
     m->next = QUADCACHE;
     QUADCACHE = m;
 }
+
+
+
+NativeMethodInfo digiplay_gl_methods[] = {
+    {"digiplay/GLShader2D:compile:(Ljava/lang/String;)J", &Java_digiplay_GLShader2D_compile},
+    
+    {"digiplay/GLQuadBatch:create:(I)J", &Java_digiplay_GLQuadBatch_create},
+    NULL
+};

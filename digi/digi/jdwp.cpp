@@ -7,7 +7,7 @@
 //
 #ifdef JDWP_ENABLED
 
-//#define JDWP_SERVER_MODE
+#define JDWP_SERVER_MODE
 
 #include "jdwp.h"
 #include "pthread.h"
@@ -22,7 +22,7 @@ JdwpClient jdwp_client;
 int jdwp_server_fd;
 int jdwp_step_fp = -1;
 int jdwp_invoking = 0;
-int jdwp_suspend_on_start = 1;
+int jdwp_suspend_on_start = 0;
 
 #define JDWPLOG(...) printf(__VA_ARGS__)
 
@@ -974,29 +974,33 @@ void jdwp_start(VM *vm, char *host, int port) {
         printf("Can't start JDWP server on port : %d\n",port);
         return;
     }
-    while(1) {
-        int fd = jdwp_accept(jdwp_server_fd);
-        if(fd > 0) {
-            jdwp_client.fd = fd;
-            break;
+    if(jdwp_suspend_on_start) {
+        while(1) {
+            int fd = jdwp_accept(jdwp_server_fd);
+            if(fd > 0) {
+                jdwp_client.fd = fd;
+                break;
+            }
         }
+        JDWPLOG("JDWP Client connected\n");
     }
-    JDWPLOG("JDWP Client connected\n");
 #else
-    printf("Connecting to JDWP server %s:%d\n", host, port);
-    while(1) {
-        int fd = jdwp_connect(host, port);
-        if(fd <= 0) {
-            //printf("Can't connect to JDWP server %s:%d\n", host, port);
-            //return;
-        } else {
-            jdwp_client.fd = fd;
-            break;
+    if(jdwp_suspend_on_start) {
+        printf("Connecting to JDWP server %s:%d\n", host, port);
+        while(1) {
+            int fd = jdwp_connect(host, port);
+            if(fd <= 0) {
+                //printf("Can't connect to JDWP server %s:%d\n", host, port);
+                //return;
+            } else {
+                jdwp_client.fd = fd;
+                break;
+            }
         }
+        JDWPLOG("Connected to JDWP server %s:%d\n", host, port);
     }
-    JDWPLOG("Connected to JDWP server %s:%d\n", host, port);
 #endif
-    jdwp_suspended = 1;
+    jdwp_suspended = jdwp_suspend_on_start;
     while(jdwp_suspended) {
         jdwp_process_client();
         jdwp_client.flush();
@@ -1006,11 +1010,13 @@ void jdwp_start(VM *vm, char *host, int port) {
 void jdwp_tick(VM *vm, Object *method, int pc, int line, int lineChanged) {
     jdwpVM = vm;
 #ifdef JDWP_SERVER_MODE
-    int fd = jdwp_accept(jdwp_server_fd);
-    if(fd > 0) {
-        jdwp_client.reset();
-        jdwp_client.fd = fd;
-        JDWPLOG("JDWP client connected\n");
+    if(!jdwp_client.fd) {
+        int fd = jdwp_accept(jdwp_server_fd);
+        if(fd > 0) {
+            jdwp_client.reset();
+            jdwp_client.fd = fd;
+            JDWPLOG("JDWP client connected\n");
+        } else return;
     }
 #else
 #endif

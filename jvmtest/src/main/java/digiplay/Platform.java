@@ -30,7 +30,7 @@ public class Platform {
     
     long lastTime = System.currentTimeMillis();
     boolean initialized;
-    int screenWidth, screenHeight, safeLeft, safeTop, safeRight, safeBottom;
+    public int screenWidth, screenHeight, safeLeft, safeTop, safeRight, safeBottom;
             
     private Platform(Game game) {
         this.game = game;

@@ -35,7 +35,7 @@ typedef struct Mat2D {
 } MAT2D;
 
 typedef struct Mat3D {
-    
+    float vals[16];
 } MAT3D;
 
 typedef struct QuadMeshItem {

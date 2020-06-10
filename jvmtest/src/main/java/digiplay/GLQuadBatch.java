@@ -18,7 +18,7 @@ public class GLQuadBatch {
     }
     
     native static long create(int capacity); 
-    public native void prepare(int width, int height);
+    public native void begin(int width, int height, boolean clear, int clearColor);
     
     public native void drawQuadMesh(QuadMesh mesh);
     

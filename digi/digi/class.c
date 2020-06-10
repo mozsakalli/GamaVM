@@ -426,12 +426,12 @@ void build_all_parents(VM *vm, Object *cls) {
 jint is_class_child_of(VM *vm, Object *json, Object *jof) {
     if(!json || !jof) return 0;
     if(json == jof || jof == vm->jlObject) return 1;
-    printf("check-cast: %s -> ",string_to_ascii(CLS(json,name)));
-    printf("%s\n", string_to_ascii(CLS(jof,name)));
+    //printf("check-cast: %s -> ",string_to_ascii(CLS(json,name)));
+    //printf("%s\n", string_to_ascii(CLS(jof,name)));
     Class *son = json->instance;
     if(!son->allParents) build_all_parents(vm, json);
     for(int i=0; i<son->allParentCount; i++) {
-        printf("    %s\n", string_to_ascii(CLS(son->allParents[i],name)));
+        //printf("    %s\n", string_to_ascii(CLS(son->allParents[i],name)));
         if(son->allParents[i] == jof) return 1;
     }
     return 0;

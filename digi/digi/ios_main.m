@@ -126,7 +126,7 @@ VM *gamaVM;
     
     if(gamaVM && digiplayPlatformStepMethod) {
         VAR args[1] = { {.O = digiplayPlatform} };
-        //call_void_method(gamaVM,digiplayPlatformStepMethod, &args[0]);
+        CALLVM_V(gamaVM, digiplayPlatformStepMethod, &args[0]);
     }
     if(!MetalDevice)
         [self present];

@@ -23,24 +23,7 @@ import digiplay.Platform;
 public class Main {
     
     public static void main() {
-        while(true) {
-            System.out.println("tmp"+Tmp.test(0, 0, (byte)0));
-            try {Thread.sleep(1000);}catch(Exception e){}
-        }
-        //Platform.run(new MyGame());
-        /*
-        System.out.println("Hello GamaVM!");
-        for(int i=0; i<1000; i++) {
-            byte b[] = new byte[1024*124];
-            b[10] = (byte)test(i,i*2,(byte)12);
-            System.out.println(b[9]);
-            System.gc();
-        }
-        for(;;) {
-            System.out.println(Math.random()+"/"+System.currentTimeMillis()+"/>>");
-            System.gc();
-        }
-        //IosPlatform.run(new MyGame());*/
+        Platform.run(new MyGame());
     }
     
     public static void main(String...args) {
