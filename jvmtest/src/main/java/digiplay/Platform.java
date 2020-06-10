@@ -30,7 +30,7 @@ public class Platform {
     
     long lastTime = System.currentTimeMillis();
     boolean initialized;
-    public int screenWidth, screenHeight, safeLeft, safeTop, safeRight, safeBottom;
+    public int screenWidth, screenHeight;
             
     private Platform(Game game) {
         this.game = game;
@@ -44,12 +44,16 @@ public class Platform {
     }
     private native void run();
     
-    private void resize(int width, int height, int safeLeft, int safeTop, int safeRight, int safeBottom) {
+    private void resize(int width, int height) {
         try {
+            screenWidth = width;
+            screenHeight = height;
+            /*
             Graphics g = Digiplay.graphics;
             if(g != null) {
                 g.resize(width, height, safeLeft, safeTop, safeRight, safeBottom);
             }
+            */
             if(!initialized) {
                 initialized = true;
                 game.begin();

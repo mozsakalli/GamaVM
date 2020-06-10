@@ -20,14 +20,21 @@ typedef struct GLShader {
     int apos, acolor, auv, uprojection, uvec4;
 } GLShader;
 
+
 typedef struct GLTexture {
     GLint handle;
 } GLTextrue;
 
-typedef struct GLState {
-    
-} GLState;
+GLShader *glCurrentShader = NULL;
+void *glCurrentIndexBuffer = NULL;
+void *glCurrentVertexBuffer = NULL;
 
+
+void gl_use_shader(GLShader *shader) {
+    glUseProgram(shader->handle);
+    glCurrentShader = shader;
+    glCurrentIndexBuffer = glCurrentVertexBuffer = NULL;
+}
 
 int gl_create_shader(const char *code, int isVertexShader) {
     int shader = glCreateShader(isVertexShader ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
@@ -48,13 +55,13 @@ void Java_digiplay_GLShader2D_compile(VM* vm, Method *method, VAR *args) {
         return;
     }
     int vertex = gl_create_shader(
-    "attribute vec4 pos;\n"
+    "attribute vec3 pos;\n"
     "attribute vec2 uv;\n"
     "attribute vec4 color;\n"
     "uniform mat4 projection;\n"
     "varying vec4 vColor;\n"
     "varying vec2 vUv;\n"
-    "varying vec4 vPos;\n"
+    "varying vec3 vPos;\n"
     "void main()\n"
     "{"
     "   vColor = color;\n"
@@ -71,7 +78,7 @@ void Java_digiplay_GLShader2D_compile(VM* vm, Method *method, VAR *args) {
     "#endif\n"
     "varying vec4 vColor;\n"
     "varying vec2 vUv;\n"
-    "varying vec4 vPos;\n"
+    "varying vec3 vPos;\n"
     "uniform sampler2D texture;\n"
     "uniform lowp vec4 userVec4;\n"
     "void main(){\n");
@@ -121,15 +128,15 @@ void digiplay_GL_useShader(VM* vm, Method *method, VAR *args) {
 
 typedef struct GLQuadBatch {
     int blendMode;
-    int vertPtr, triPtr;
+    int vertPtr, triangleCount;
     VERT2D *vertices;
     int capacity,end;
     int ibo;
     GLTextrue *texture;
     int projectionDirty;
-    MAT3D projection;
-    MAT2D camera;
-    GLShader *shader;
+    Mat3D projection;
+    Mat3D camera;
+    Mat3D combinedMatrix;
 } GLQuadBatch;
 
 void Java_digiplay_GLQuadBatch_create(VM* vm, Method *method, VAR *args) {
@@ -149,11 +156,12 @@ void Java_digiplay_GLQuadBatch_create(VM* vm, Method *method, VAR *args) {
     }
     glGenBuffers(1, (GLuint*)&b->ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, b->ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, b->capacity * 6 * sizeof(short), ibuf, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, b->capacity * 6 * sizeof(short), &ibuf[0], GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     
     RETURN_J(b);
 }
+
 
 void Java_digiplay_GLQuadBatch_begin(VM* vm, Method *method, VAR *args) {
     if(!args[0].O) {
@@ -165,7 +173,7 @@ void Java_digiplay_GLQuadBatch_begin(VM* vm, Method *method, VAR *args) {
         throw_null(vm);
         return;
     }
-    b->vertPtr = b->triPtr = 0;
+    b->vertPtr = b->triangleCount = 0;
     glDisable(GL_BLEND);
     b->blendMode = 0;
     glDisable(GL_SCISSOR_TEST);
@@ -173,12 +181,18 @@ void Java_digiplay_GLQuadBatch_begin(VM* vm, Method *method, VAR *args) {
     glDisable(GL_CULL_FACE);
     
     b->texture = NULL;
-    b->shader = NULL;
-    b->projectionDirty = 1;
     
-    glViewport(0, 0, args[1].I, args[2].I);
+    int w = args[1].I;
+    int h = args[2].I;
+    glViewport(0, 0, w, h);
+    mat3d_setup2d(&b->projection, w, h);
+    mat3d_identity(&b->camera);
+    b->projectionDirty = 1;
+
     if(args[3].I) {
-        //todo: clear
+        unsigned int c = args[4].I;
+        glClearColor(((c>>16)&0xff)/255.0, ((c>>8)&0xff)/255.0, (c&0xff)/255.0, ((c>>24)&0xff)/255.0);
+        glClear(GL_COLOR_BUFFER_BIT);
     }
 }
 
@@ -191,27 +205,90 @@ void digiplay_GL_freeQuadBatch(VM* vm, Method *method, VAR *args) {
     }
 }
 
+void quad_batch_flush(GLQuadBatch *b) {
+    if(b->triangleCount > 0 && glCurrentShader) {
+        if(b->projectionDirty) {
+            mat3d_multiply(&b->projection, &b->camera, &b->combinedMatrix);
+            glUniformMatrix4fv(glCurrentShader->uprojection, 1, GL_FALSE, &b->combinedMatrix.vals[0]);
+            b->projectionDirty = 0;
+        }
+        
+        if(b->ibo != (int)glCurrentIndexBuffer) {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, b->ibo);
+            glCurrentIndexBuffer = (void*)b->ibo;
+        }
+        
+        if(glCurrentVertexBuffer != b->vertices || 1) {
+            unsigned char *base = (unsigned char*)&b->vertices[0];
+            glEnableVertexAttribArray(glCurrentShader->apos);
+            glVertexAttribPointer(glCurrentShader->apos, 3, GL_FLOAT, GL_FALSE, sizeof(VERT2D), base);
+            
+            glEnableVertexAttribArray(glCurrentShader->acolor);
+            glVertexAttribPointer(glCurrentShader->acolor, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(VERT2D), base + 12);
+            
+            glEnableVertexAttribArray(glCurrentShader->auv);
+            glVertexAttribPointer(glCurrentShader->auv, 2, GL_FLOAT, GL_FALSE, sizeof(VERT2D), base + 16);
+            
+            glCurrentVertexBuffer = b->vertices;
+        }
+        glDrawElements(GL_TRIANGLES, b->triangleCount, GL_UNSIGNED_SHORT, NULL);
+    }
+    b->triangleCount = b->vertPtr = 0;
+}
 
-void digiplay_GL_drawQuadMesh(VM* vm, Method *method, VAR *args) {
-    int color = args[3].I;
-    float alpha = args[4].F;
+
+void Java_digiplay_GLQuadBatch_drawQuadMesh(VM* vm, Method *method, VAR *args) {
+    if(!args[0].O || !args[1].O || !args[2].O || !args[3].O) {
+        throw_null(vm);
+        return;
+    }
+    GLQuadBatch *b = (GLQuadBatch*)*FIELD_PTR_J(args[0].O, 0);
+    QuadMesh *m = (QuadMesh*)*FIELD_PTR_J(args[1].O, 0);
+    Mat2D *mat = (Mat2D*)*FIELD_PTR_J(args[2].O, 0);
+    GLShader *shader = (GLShader*)*FIELD_PTR_J(args[3].O, 0);
+    if(m->size <= 0) return;
+    
+    int color = args[4].I;
+    float alpha = args[5].F;
+    int blendMode = args[6].I;
     float a = ((color >> 24) & 0xff)/255.0;
     alpha *= a;
     if(alpha <= 0) return;
+    if(alpha > 1) alpha = 1;
     COLOR col;
     col.r = ((color >> 16) & 0xff)*alpha;
     col.g = ((color >> 8) & 0xff)*alpha;
     col.b = ((color >> 0) & 0xff)*alpha;
     col.a = alpha * 255;
 
-    GLQuadBatch *b = (GLQuadBatch*)args[0].J;
-    MAT2D *mat = (MAT2D*)args[1].J;
-    QuadMesh *m = (QuadMesh*)args[2].J;
-    QuadMeshItem *q = &m->items[0];
-    VERT2D *v = &b->vertices[b->vertPtr];
-    
+    if(shader != glCurrentShader) {
+        quad_batch_flush(b);
+        gl_use_shader(shader);
+    }
 
-    if(m->version != mat->meshVersion) {
+    if(blendMode != b->blendMode) {
+        quad_batch_flush(b);
+        switch(blendMode) {
+            case 0:
+                glDisable(GL_BLEND);
+                break;
+                
+            case 1:
+                if(b->blendMode == 0) glEnable(GL_BLEND);
+                glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+                break;
+                
+            case 2:
+                if(b->blendMode == 0) glEnable(GL_BLEND);
+                glBlendFunc(GL_ONE, GL_DST_ALPHA);
+                break;
+        }
+        b->blendMode = blendMode;
+    }
+    
+    QuadMeshItem *q = &m->items[0];
+
+    if(/*m->version != mat->meshVersion*/ 1) {
         float m00 = mat->m00;
         float m01 = mat->m01;
         float m02 = mat->m02;
@@ -232,23 +309,24 @@ void digiplay_GL_drawQuadMesh(VM* vm, Method *method, VAR *args) {
             float y2m01m02 = y2m01 + m02;
             float y2m11m12 = y2m11 + m12;
 
-            q->p1.x = xm00 + ym01m02;
-            q->p1.y = xm10 + ym11m12;
-            q->p2.x = x2m00 + ym01m02;
-            q->p2.y = x2m10 + ym11m12;
-            q->p3.x = x2m00 + y2m01m02;
-            q->p3.y = x2m10 + y2m11m12;
-            q->p4.x = xm00 + y2m01m02;
-            q->p4.y = xm10 + y2m11m12;
+            q->p1 = (VEC3){xm00 + ym01m02,xm10 + ym11m12,0};
+            //q->p1.y = xm10 + ym11m12;
+            q->p2 = (VEC3){x2m00 + ym01m02,x2m10 + ym11m12,0};
+            //q->p2.y = x2m10 + ym11m12;
+            q->p3 = (VEC3){x2m00 + y2m01m02,x2m10 + y2m11m12,0};
+            //q->p3.y = x2m10 + y2m11m12;
+            q->p4 = (VEC3){xm00 + y2m01m02, xm10 + y2m11m12, 0};
+            //q->p4.y = xm10 + y2m11m12;
             q++;
         }
         q = &m->items[0];
         m->version = mat->meshVersion;
     }
     
+    VERT2D *v = &b->vertices[b->vertPtr];
     for(int i=0; i<m->size; i++) {
-        if(b->vertPtr == b->capacity) {
-            //flush
+        if(b->vertPtr == b->capacity*4) {
+            quad_batch_flush(b);
             v = &b->vertices[0];
         }
         
@@ -272,12 +350,23 @@ void digiplay_GL_drawQuadMesh(VM* vm, Method *method, VAR *args) {
         v->color = col;
         v++;
         q++;
+        b->triangleCount += 6;
+        b->vertPtr += 4;
     }
+}
+
+void Java_digiplay_GLQuadBatch_end(VM* vm, Method *method, VAR *args) {
+    if(!args[0].O) {
+        throw_null(vm);
+        return;
+    }
+    GLQuadBatch *b = (GLQuadBatch*)*FIELD_PTR_J(args[0].O, 0);
+    quad_batch_flush(b);
 }
 
 static QuadMesh *QUADCACHE = NULL;
 
-void digiplay_GL_createQuadMesh(VM* vm, Method *method, VAR *args) {
+void Java_digiplay_QuadMesh_create(VM* vm, Method *method, VAR *args) {
     int size = args[0].I;
     QuadMesh *m = QUADCACHE;
     if(m) {
@@ -294,10 +383,17 @@ void digiplay_GL_createQuadMesh(VM* vm, Method *method, VAR *args) {
     RETURN_J(m);
 }
 
-void digiplay_GL_quadMeshSet(VM* vm, Method *method, VAR *args) {
-    QuadMesh *m = (QuadMesh*)args[0].J;
+void Java_digiplay_QuadMesh_set(VM* vm, Method *method, VAR *args) {
+    if(!args[0].O) {
+        throw_null(vm);
+        return;
+    }
+    QuadMesh *m = (QuadMesh*)*FIELD_PTR_J(args[0].O, 0);
     int index = args[1].I;
-    if(index < 0 || index >= m->capacity) return;
+    if(index < 0 || index >= m->capacity) {
+        throw_arraybounds(vm, index, m->capacity);
+        return;
+    }
     QuadMeshItem *q = &m->items[index];
     q->tl = (VEC2){args[2].F, args[3].F};
     q->br = (VEC2){args[4].F, args[5].F};
@@ -305,20 +401,27 @@ void digiplay_GL_quadMeshSet(VM* vm, Method *method, VAR *args) {
     q->t2 = (VEC2){args[8].F, args[9].F};
     q->t3 = (VEC2){args[10].F, args[11].F};
     q->t4 = (VEC2){args[12].F, args[13].F};
-    m->version = -1;
+    m->version++;
 }
-
+/*
 void digiplay_GL_quadMeshFree(VM* vm, Method *method, VAR *args) {
     QuadMesh *m = (QuadMesh*)args[0].J;
     m->next = QUADCACHE;
     QUADCACHE = m;
 }
-
+*/
 
 
 NativeMethodInfo digiplay_gl_methods[] = {
     {"digiplay/GLShader2D:compile:(Ljava/lang/String;)J", &Java_digiplay_GLShader2D_compile},
     
     {"digiplay/GLQuadBatch:create:(I)J", &Java_digiplay_GLQuadBatch_create},
+    {"digiplay/GLQuadBatch:begin:(IIZI)V", &Java_digiplay_GLQuadBatch_begin},
+    {"digiplay/GLQuadBatch:drawQuadMesh:(Ldigiplay/QuadMesh;Ldigiplay/Mat2D;Ldigiplay/GLShader2D;IFI)V", &Java_digiplay_GLQuadBatch_drawQuadMesh},
+    {"digiplay/GLQuadBatch:end:()V", &Java_digiplay_GLQuadBatch_end},
+    
+    {"digiplay/QuadMesh:create:(I)J", &Java_digiplay_QuadMesh_create},
+    {"digiplay/QuadMesh:set:(IFFFFFFFFFFFF)V", &Java_digiplay_QuadMesh_set},
+
     NULL
 };

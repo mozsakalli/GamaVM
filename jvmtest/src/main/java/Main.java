@@ -1,4 +1,6 @@
 
+import digiplay.Camera;
+import digiplay.Matrix3D;
 import digiplay.Platform;
 
 /*
@@ -27,7 +29,13 @@ public class Main {
     }
     
     public static void main(String...args) {
-        main();
+        //main();
+        Matrix3D id = new Matrix3D();
+        Matrix3D cm = new Camera().setupFor2D(960, 640);
+        Matrix3D r = new Matrix3D();
+        Matrix3D.multiply(cm, id, r);
+        for(int i=0; i<16; i++)
+            System.out.println(r.raw[i]);
     }
 
 

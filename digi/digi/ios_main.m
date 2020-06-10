@@ -339,22 +339,18 @@ int main(int argc, char * argv[]) {
     }
 }
 
-void digiplay_Platform_run(VM *vm, Object *method, VAR *args) {
+void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args) {
     digiplayPlatform = args[0].O;
     digiplayPlatformStepMethod = resolve_method(vm, L"digiplay/Platform",17, L"step",4, L"()V", 3);
     
     CGRect bounds = [[UIScreen mainScreen] bounds];
     CGFloat scale = [[UIScreen mainScreen] scale];
     
-    Object *resize_method = resolve_method(vm, L"digiplay/Platform",17, L"resize",6, L"(IIIIII)V", 9);
+    Object *resize_method = resolve_method(vm, L"digiplay/Platform",17, L"resize",6, L"(II)V", 5);
     VAR vargs[7] = {
         { .O = digiplayPlatform },
         { .I = (jint)(bounds.size.width * scale) },
         { .I = (jint)(bounds.size.height * scale) },
-        { .I = (jint)SafeScreenTopLeft.x },
-        { .I = (jint)SafeScreenTopLeft.y },
-        { .I = (jint)SafeScreenBottomRight.x },
-        { .I = (jint)SafeScreenBottomRight.y },
     };
     CALLVM_V(vm, resize_method, &vargs[0]);
 }

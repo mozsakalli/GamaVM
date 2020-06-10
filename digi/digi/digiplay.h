@@ -9,6 +9,8 @@
 #ifndef digiplay_h
 #define digiplay_h
 
+#include <math.h>
+
 typedef struct __attribute__ ((packed)) VEC2 {
     float x,y;
 } VEC2;
@@ -26,17 +28,19 @@ typedef struct __attribute__ ((packed)) VERT2D {
 
 typedef struct Mat2D {
     int meshVersion;
+    int hierarchyVersion;
+    float _cx,_cy,_sx,_sy;
     float m00;
     float m10;
     float m01;
     float m11;
     float m02;
     float m12;
-} MAT2D;
+} Mat2D;
 
 typedef struct Mat3D {
     float vals[16];
-} MAT3D;
+} Mat3D;
 
 typedef struct QuadMeshItem {
     VEC2 tl, br;
@@ -51,5 +55,44 @@ typedef struct QuadMesh {
     QuadMeshItem *items;
     struct QuadMesh *next;
 } QuadMesh;
+
+
+inline static void mat2d_identity(Mat2D *m) {
+     memset(m, 0, sizeof(Mat2D));
+     m->m00 = m->m11 = 1;
+     m->_cx = 1; // cos rotation + skewY;
+     m->_sy = 1; // sin rotation + Math.PI/2 - skewX;
+    m->hierarchyVersion++;
+    m->meshVersion++;
+}
+
+inline static void mat2d_compose(Mat2D *m, float x, float y, float scaleX, float scaleY, float pivotX, float pivotY, int rotSkew, float rotation, float skewX, float skewY) {
+    if(rotSkew) {
+        //rotation = rotation / 180.0f * MathF.PI;
+        m->_cx = cos((rotation + skewY)/180.0f * M_PI);
+        m->_sx = sin((rotation + skewY)/180.0f * M_PI);
+        m->_cy = -sin((rotation - skewX)/180.0f * M_PI); // cos, added PI/2
+        m->_sy = cos((rotation - skewX)/180.0f * M_PI); // sin, added PI/2
+    }
+    
+    float a = m->_cx * scaleX;
+    float b = m->_sx * scaleX;
+    float c = m->_cy * scaleY;
+    float d = m->_sy * scaleY;
+
+    m->m02 = x - ((pivotX * a) + (pivotY * c)); //tx
+    m->m12 = y - ((pivotX * b) + (pivotY * d)); //ty
+    m->m00 = a;
+    m->m10 = b;
+    m->m01 = c;
+    m->m11 = d;
+    m->meshVersion++;
+    m->hierarchyVersion++;
+}
+
+
+extern void mat3d_identity(Mat3D *m);
+extern void mat3d_setup2d(Mat3D *m, float width, float height);
+extern void mat3d_multiply(Mat3D *lhs, Mat3D *rhs, Mat3D *result);
 
 #endif /* digiplay_h */

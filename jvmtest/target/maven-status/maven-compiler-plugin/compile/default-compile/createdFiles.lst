@@ -1,3 +1,4 @@
+digiplay/GLQuadBatch.class
 gamavm/apple/storekit/SKPaymentQueue.class
 digiplay/render/IndexBuffer.class
 digiplay/Game.class
@@ -19,6 +20,7 @@ digiplay/render/Texture.class
 digiplay/Camera.class
 digiplay/Metal.class
 digiplay/Image.class
+digiplay/Mat2D.class
 digiplay/render/Shader.class
 gamavm/apple/uikit/UIWindow.class
 digiplay/Shader2D.class
@@ -37,7 +39,10 @@ gamavm/apple/uikit/UIApplicationDelegate.class
 gamavm/apple/Selector.class
 digiplay/Sprite2D.class
 digiplay/Digiplay.class
+digiplay/Mat3D.class
 digiplay/GL.class
+Tmp.class
+digiplay/GLShader2D.class
 digiplay/Shader.class
 gamavm/apple/uikit/UIViewController.class
 digiplay/Bag.class

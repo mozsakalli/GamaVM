@@ -3,6 +3,8 @@ import digiplay.GLQuadBatch;
 import digiplay.GLShader2D;
 import digiplay.Game;
 import digiplay.Digiplay;
+import digiplay.Mat2D;
+import digiplay.QuadMesh;
 
 
 /*
@@ -36,6 +38,7 @@ public class MyGame implements Game {
     
     GLQuadBatch batch;
     GLShader2D shader;
+    QuadMesh q;
     
     /*
     QuadBatch batch;
@@ -69,8 +72,11 @@ public class MyGame implements Game {
     @Override
     public void begin() {
         System.out.println("BEGIN");
-        shader = new GLShader2D("gl_FragColor = vec4(1.0,0.0,0.0,1.0);");
+        shader = new GLShader2D("gl_FragColor = vec4(1.0,1.0,1.0,1.0);");
         batch = new GLQuadBatch(4096);
+        q = new QuadMesh(1);
+        q.set(0, 0, 0, 200, 200, 0, 0, 0, 0, 0, 0, 0, 0);
+        
         /*
         Stage2D.I.setup(new Point2D(1024,768));
         batch = new QuadBatch(2048);
@@ -154,9 +160,17 @@ public class MyGame implements Game {
         //Stage2D.I.update();
     }
 
+    Mat2D mat = new Mat2D();
+    float x=50;
     @Override
     public void render() {
-        batch.begin(Digiplay.platform.screenWidth, Digiplay.platform.screenHeight, true, 0);
+        batch.begin(Digiplay.platform.screenWidth, Digiplay.platform.screenHeight, true, 0xFF300000);
+        q.set(0, x, 50, x+100, 550, 0, 0, 0, 0, 0, 0, 0, 0);
+        x+=0.02f;
+        //mat.compose(480, 320, 1, 1, 480, 320, true, 0, 0, 0);
+        mat.identity();
+        batch.drawQuadMesh(q, mat, shader,0xFF0000FF, 1, 1);
+        batch.end();
         /*
         batch.begin();
         for(int i=0; i<items.size(); i++)
