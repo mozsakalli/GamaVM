@@ -305,11 +305,11 @@ void jdwp_eventset_set(JdwpEventSet *set) {
             } break;
                 
             case JDWP_EVENTKIND_CLASS_PREPARE: {
-                Object *ptr = jdwpVM->classes;
+                /*Object *ptr = jdwpVM->classes;
                 while(ptr) {
                     jdwp_send_classload_event(jdwpVM, ptr);
                     ptr = CLS(ptr, next);
-                }
+                }*/
                 JDWPLOG("!!!!!!!!! JDWP_EVENTKIND_CLASS_PREPARE\n");
             } break;
                 
@@ -1030,7 +1030,7 @@ void jdwp_tick(VM *vm, Object *method, int pc, int line, int lineChanged) {
             }
         }
     }
-    else if(!jdwp_suspended) {
+    else if(lineChanged){
         Method *mf = (Method*)method->instance;
         if(mf->breakpoint && mf->lineNumberTableSize > 0) {
             for(int i=0; i<mf->lineNumberTableSize; i++)
