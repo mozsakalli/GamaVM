@@ -7,7 +7,7 @@
 //
 #ifdef JDWP_ENABLED
 
-#define JDWP_SERVER_MODE
+//#define JDWP_SERVER_MODE
 
 #include "jdwp.h"
 #include "pthread.h"

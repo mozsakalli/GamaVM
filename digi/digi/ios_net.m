@@ -122,16 +122,10 @@ extern VM *gamaVM;
             }
         }
     }
-    //[self clear];
+    [self clear];
     [self release];
 }
-/*
-// Disable caching so that each time we run this app we are starting with a clean slate.
-- (NSCachedURLResponse *)connection:(NSURLConnection *)connection
-                  willCacheResponse:(NSCachedURLResponse *)cachedResponse
-{
-    return nil;
-}*/
+
 @end
 
 
@@ -147,5 +141,7 @@ void Java_digiplay_Net_http(VM *vm, Object *method, VAR *args) {
         post = [[NSString alloc] initWithCharacters:STRCHARS(args[1].O) length:STRLEN(args[1].O)];
     }
     
+    gc_protect(args[2].O);
     Http *http = [[Http alloc] initWithURLAndPostParams:url postParams:post thiz:args[2].O];
+    [http retain];
 }

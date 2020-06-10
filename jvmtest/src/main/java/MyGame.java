@@ -85,6 +85,18 @@ public class MyGame implements Game {
             q.set(i, x, y, x+w, y+h, 0, 0, 0, 0, 0, 0, 0, 0);
         }
         
+        Net.http("https://www.google.com", null, new HttpListener(){
+            @Override
+            public void onHttpSuccess(byte[] bytes) {
+                System.out.println("Http Success: "+bytes.length);
+            }
+
+            @Override
+            public void onHttpFail() {
+                System.out.println("Http Fail");
+            }
+        
+        });        
         /*
         Stage2D.I.setup(new Point2D(1024,768));
         batch = new QuadBatch(2048);
@@ -192,18 +204,7 @@ public class MyGame implements Game {
         }
         byte[] tmp = new byte[1024*500];
         
-        Net.http("https://www.google.com", null, new HttpListener(){
-            @Override
-            public void onHttpSuccess(byte[] bytes) {
-                System.out.println("Http Success: "+bytes.length);
-            }
 
-            @Override
-            public void onHttpFail() {
-                System.out.println("Http Fail");
-            }
-        
-        });
         /*
         batch.begin();
         for(int i=0; i<items.size(); i++)
