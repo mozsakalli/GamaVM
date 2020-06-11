@@ -29,6 +29,6 @@ public class Throw extends Op {
     @Override
     public void execute(Method method, Stack stack) {
         StackValue ex = stack.pop();
-        code = "throw "+ex.value;
+        code = "throw_exception(vm,"+ex.value+");";
     }
 }

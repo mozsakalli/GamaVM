@@ -13,8 +13,8 @@ public class New extends Op {
     @Override
     public void execute(Method method, Stack stack) {
         StackValue tmp = method.allocTemp(type);
-        code = String.format("if(!cls%d) cls%d=resolve_class(vm,method->declaringClass->cp[method->declaringClass->cp[%d].index1].value.O,1);\n",index,index,index);
-        code += String.format("%s=alloc_object(vm,cls%d)",tmp.value,index);
+        code = String.format("if(!cls%d) cls%d=resolve_class_by_index(vm,method->declaringClass,%d);\n",index,index,index);
+        code += String.format("%s=alloc_object(vm,cls%d,0)",tmp.value,index);
                 //tmp.value+"=new "+cp.getClassName(index);
         stack.push(tmp);
     }

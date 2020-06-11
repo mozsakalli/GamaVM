@@ -11,6 +11,6 @@ public class CheckCast extends Op {
 
     @Override
     public void execute(Method method, Stack stack) {
-        code = "check_cast("+stack.peek(0).value+","+index+")";
+        code = "check_cast(vm,"+stack.peek(0).value+","+index+")";
     }
 }

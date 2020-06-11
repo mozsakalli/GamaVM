@@ -32,7 +32,7 @@ public class Const extends Op {
     public void execute(Method method, Stack stack) {
         StackValue v = new StackValue();
         v.type = type;
-        v.value = String.valueOf(value);
+        v.value = value == null ? "NULL" : String.valueOf(value);
         stack.push(v);
     }
     

@@ -17,9 +17,9 @@ public class NewArray extends Op {
         StackValue tmp = method.allocTemp("O");
 
         if(index < 0) {
-            code = "alloc_array_"+prims[-index - 4]+"(vm,"+length.value+")";
+            code = String.format("alloc_array_%s(vm,%s,0)",prims[-index - 4],length.value);
         } else {
-            code = "=alloc_array_O(vm,"+cp.getClassName(index)+","+length.value+")";
+            code = "=alloc_array_O(vm,"+cp.getClassName(index)+","+length.value+",0)";
         }
         code = tmp.value+"="+code;
         stack.push(tmp);

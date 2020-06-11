@@ -375,8 +375,32 @@ extern void vm_native_exec(VM *vm, Object *omethod, VAR *args);
 
 extern void invoke_interface_v(VM* vm, Object *method, VAR *args);
 
-inline static Object *alloc_byte_array(VM *vm, int length, int atomic) {
+inline static Object *alloc_array_B(VM *vm, int length, int atomic) {
     return alloc_array(vm, get_arrayclass_of(vm, vm->primClasses[PRIM_B]), length, atomic);
+}
+inline static Object *alloc_array_Z(VM *vm, int length, int atomic) {
+    return alloc_array(vm, get_arrayclass_of(vm, vm->primClasses[PRIM_Z]), length, atomic);
+}
+inline static Object *alloc_array_C(VM *vm, int length, int atomic) {
+    return alloc_array(vm, get_arrayclass_of(vm, vm->primClasses[PRIM_C]), length, atomic);
+}
+inline static Object *alloc_array_S(VM *vm, int length, int atomic) {
+    return alloc_array(vm, get_arrayclass_of(vm, vm->primClasses[PRIM_S]), length, atomic);
+}
+inline static Object *alloc_array_I(VM *vm, int length, int atomic) {
+    return alloc_array(vm, get_arrayclass_of(vm, vm->primClasses[PRIM_I]), length, atomic);
+}
+inline static Object *alloc_array_F(VM *vm, int length, int atomic) {
+    return alloc_array(vm, get_arrayclass_of(vm, vm->primClasses[PRIM_F]), length, atomic);
+}
+inline static Object *alloc_array_J(VM *vm, int length, int atomic) {
+    return alloc_array(vm, get_arrayclass_of(vm, vm->primClasses[PRIM_J]), length, atomic);
+}
+inline static Object *alloc_array_D(VM *vm, int length, int atomic) {
+    return alloc_array(vm, get_arrayclass_of(vm, vm->primClasses[PRIM_D]), length, atomic);
+}
+inline static Object *alloc_array_O(VM *vm, Object *cls, int length, int atomic) {
+    return alloc_array(vm, get_arrayclass_of(vm, cls), length, atomic);
 }
 
 

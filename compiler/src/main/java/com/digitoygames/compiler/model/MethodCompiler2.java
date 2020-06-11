@@ -126,7 +126,7 @@ public class MethodCompiler2 {
             out.println(";");
         }
         if(!refs.isEmpty()) {
-            out.print("static Class ");
+            out.print("static Object ");
             int count = 0;
             for(int index : refs) {
                 if(count++ > 0) out.print(",");
@@ -142,8 +142,12 @@ public class MethodCompiler2 {
         //System.out.println("args = "+args);
         for(String argType : args) {
             StackValue local = method.findLocal(index, argType);
-            if(local != null) // set only used locals
-                out.println("%s=args[%d].%s;", local.value,cindex++,argType);
+            if(local != null) { // set only used locals
+                String at = argType;
+                if(at.equals("C") || at.equals("Z") || at.equals("B") || at.equals("S"))
+                    at = "I";
+                out.println("%s=args[%d].%s;", local.value,cindex++,at);
+            }
             index++;
             if(argType.equals("D") || argType.equals("J")) index++;
         }
@@ -155,6 +159,7 @@ public class MethodCompiler2 {
             for(String l : bb.code.split("\n"))
                 out.println(l+";");
         }
+        //out.undent().println("__EXCEPTION:");
         out.undent().println("}");
         /*
         for(BasicBlock b : blocks) {
