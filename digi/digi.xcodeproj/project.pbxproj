@@ -113,8 +113,10 @@
 				4540187B248E565C004AF6EF /* gc.c */,
 				45E739AC248C4F2A004E55EB /* Info.plist */,
 				4595C892248D79F4008E4CAA /* interpret.c */,
+				4544464724917D4E00CCDAC1 /* invoke.c */,
 				456D45AD248EF1CC00E7C7BD /* ios_main.m */,
 				45073011248D4BD7001379B2 /* ios_native.m */,
+				454446452491707000CCDAC1 /* ios_net.m */,
 				4540187E248E6D2C004AF6EF /* jdwp.cpp */,
 				4540187D248E6D2C004AF6EF /* jdwp.h */,
 				45E739AD248C4F2A004E55EB /* main.m */,
@@ -128,8 +130,6 @@
 				45407D67248E0EA5008462C5 /* vm_native.c */,
 				45E739B5248C4FB8004E55EB /* vm.c */,
 				45E739B4248C4FB8004E55EB /* vm.h */,
-				454446452491707000CCDAC1 /* ios_net.m */,
-				4544464724917D4E00CCDAC1 /* invoke.c */,
 			);
 			path = digi;
 			sourceTree = "<group>";

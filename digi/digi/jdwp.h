@@ -862,6 +862,7 @@ public:
             return true;
         }
         //fd = 0;
+        //printf("---- readsome: %d\n", r);
         return false;
     }
     

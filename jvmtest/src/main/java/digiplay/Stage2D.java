@@ -24,7 +24,8 @@ public class Stage2D extends Sprite2D {
     public final static Stage2D I = new Stage2D();
     Point2D designSize;
     float scaleFactor;
-
+    GLQuadBatch quadBatch = new GLQuadBatch(4096);
+    
     public void setup(Point2D size) {
         designSize = size;
         setFlags(Sprite2D.INTERACTIVE | Sprite2D.INTERACTIVE_CHILD | Sprite2D.IN_STAGE);
@@ -32,17 +33,18 @@ public class Stage2D extends Sprite2D {
     }
 
     public void resize() {
-        Graphics g = Digiplay.graphics;
-        System.out.println(g.getScreenWidth() + "x" + g.getScreenHeight());
         float ww = designSize.x;
         float hh = designSize.y;
 
         float ratio = hh / ww;
 
-        float w = g.getScreenWidth();
+        float sw = Digiplay.platform.screenWidth;
+        float sh = Digiplay.platform.screenHeight;
+        
+        float w = sw;
         float h = (int) (w * ratio);
-        if (h - 2 > g.getScreenHeight()) {
-            h = g.getScreenHeight();
+        if (h - 2 > sh) {
+            h = sh;
             w = (int) (h / ratio);
             scaleFactor = h / hh;
         } else {
@@ -53,15 +55,16 @@ public class Stage2D extends Sprite2D {
 
         setScaleX(w / ww);
         setScaleY(h / hh);
-        System.out.println("Stage2D::scaleFactor is " + scaleFactor + " resolution: " + g.getScreenWidth() + "x" + g.getScreenHeight());
+        System.out.println("Stage2D::scaleFactor is " + scaleFactor + " resolution: " + sw + "x" + sh);
 
-        setX((g.getScreenWidth() - w) / 2);
-        setY((g.getScreenHeight() - h) / 2);
+        setX((sw - w) / 2);
+        setY((sh - h) / 2);
 
         setPivotX(0);
         setPivotY(0);
 
     }
+
 
     void invalidateSprite(Sprite2D sprite) {
         sprite.invalidateContentIfRequired();
@@ -104,6 +107,8 @@ public class Stage2D extends Sprite2D {
             }
             invalidated = true;
         }
+        if(invalidated)
+            System.out.println("-- invalidated --");
         /*
             if(invalidated && Scene2D.currentScene != null && !Scene2D.currentScene._invalidationCalled)
             {
@@ -113,8 +118,25 @@ public class Stage2D extends Sprite2D {
          */
     }
 
+    public void renderSprite(Sprite2D sprite) {
+        renderSprite(sprite, true);
+    }
+    
+    public void renderSprite(Sprite2D sprite, boolean drawChildren) {
+        if((sprite.flags & VISIBLE) == 0) return;
+        float wa = sprite.worldAlpha;
+        if(wa <= 0) return;
+        Render2D.setGlobalAlpha(wa);
+        Render2D.setModelMatrix(sprite.getWorldMatrix());
+        sprite.draw();
+        if(drawChildren && sprite.firstChild != null) sprite.drawChildren();
+    }
+    
     public void render() {
-
+        GLOBAL_FRAME_VERSION++;
+        Render2D.begin();
+        renderSprite(this);
+        Render2D.end();
     }
 
 }

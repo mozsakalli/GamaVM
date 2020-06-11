@@ -227,10 +227,10 @@ extern "C" int jdwp_send_classload_event(VM *vm, Object *cls) {
                         p->writeInt(JDWP_CLASS_STATUS_INITIALIZED | JDWP_CLASS_STATUS_PREPARED | JDWP_CLASS_STATUS_VERIFIED);
                         p->completeEvent();
                         jdwp_client.queuePacket(p);
-                        if (set->suspendPolicy != JDWP_SUSPENDPOLICY_NONE) suspend_requested = 1;
+                        //if (set->suspendPolicy != JDWP_SUSPENDPOLICY_NONE) suspend_requested = 1;
                         jdwp_client.flush();
                         //while(jdwp_process_client()) jdwp_client.flush();
-                        JDWPLOG("!!! JdwpClassPrepare: %s\n", string_to_ascii(CLS(cls,name)));
+                        JDWPLOG("!!! JdwpClassPrepare: %s suspend=%d\n", string_to_ascii(CLS(cls,name)), suspend_requested);
                     }
                 }
             }
@@ -240,10 +240,10 @@ extern "C" int jdwp_send_classload_event(VM *vm, Object *cls) {
     
     if(suspend_requested) {
         jdwp_suspended = 1;
-        while (jdwp_suspended) {
+        /*while (jdwp_suspended) {
             while(jdwp_process_client())
                 jdwp_client.flush();
-        }
+        }*/
     }
     return 0;
 }
@@ -476,7 +476,7 @@ void jdwp_process_packet(JdwpPacket *req) {
     resp->reset();
     
     int cmd = (req->commandSet << 8) + req->command;
-    //JDWPLOG(">>> Packet: 0x%x\n", cmd);
+    JDWPLOG(">>> Packet: 0x%x\n", cmd);
     switch(cmd) {
         case JDWP_CMD_VirtualMachine_Version: //0x0101
             resp->writeCString((char*)"jdwp 1.2");
@@ -620,7 +620,7 @@ void jdwp_process_packet(JdwpPacket *req) {
             for(int i=0; i<count; i++) {
                 Object *field = req->readObject();
                 Field *ff = (Field*)field->instance;
-                void *base = ((Class*)cls->instance)->global;
+                void *base = ((Class*)ff->declaringClass->instance)->global;
                 resp->writeValue(ff->signature, (void*)((char*)base + ff->offset));
             }
             resp->complete(req->id, JDWP_ERROR_NONE);

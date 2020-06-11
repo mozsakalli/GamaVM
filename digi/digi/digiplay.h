@@ -63,7 +63,7 @@ inline static void mat2d_identity(Mat2D *m) {
      m->_cx = 1; // cos rotation + skewY;
      m->_sy = 1; // sin rotation + Math.PI/2 - skewX;
     m->hierarchyVersion++;
-    m->meshVersion++;
+    m->meshVersion = -1;
 }
 
 inline static void mat2d_compose(Mat2D *m, float x, float y, float scaleX, float scaleY, float pivotX, float pivotY, int rotSkew, float rotation, float skewX, float skewY) {
@@ -86,10 +86,34 @@ inline static void mat2d_compose(Mat2D *m, float x, float y, float scaleX, float
     m->m10 = b;
     m->m01 = c;
     m->m11 = d;
-    m->meshVersion++;
+    m->meshVersion = -1;
     m->hierarchyVersion++;
 }
+inline static void mat2d_multiply(Mat2D *lhs, Mat2D *rhs, Mat2D *result) {
+    float lhsm00 = lhs->m00;
+    float lhsm01 = lhs->m01;
+    float lhsm10 = lhs->m10;
+    float lhsm11 = lhs->m11;
 
+    float rhsm00 = rhs->m00;
+    float rhsm01 = rhs->m01;
+    float rhsm02 = rhs->m02;
+    float rhsm10 = rhs->m10;
+    float rhsm11 = rhs->m11;
+    float rhsm12 = rhs->m12;
+
+    // First row
+    result->m00 = lhsm00 * rhsm00 + lhsm01 * rhsm10;
+    result->m01 = lhsm00 * rhsm01 + lhsm01 * rhsm11;
+    result->m02 = lhsm00 * rhsm02 + lhsm01 * rhsm12 + lhs->m02;
+
+    // Second row
+    result->m10 = lhsm10 * rhsm00 + lhsm11 * rhsm10;
+    result->m11 = lhsm10 * rhsm01 + lhsm11 * rhsm11;
+    result->m12 = lhsm10 * rhsm02 + lhsm11 * rhsm12 + lhs->m12;
+    result->meshVersion = -1;
+    result->hierarchyVersion++;
+}
 
 extern void mat3d_identity(Mat3D *m);
 extern void mat3d_setup2d(Mat3D *m, float width, float height);

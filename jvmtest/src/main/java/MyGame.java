@@ -1,12 +1,10 @@
 
-import digiplay.GLQuadBatch;
-import digiplay.GLShader2D;
 import digiplay.Game;
 import digiplay.Digiplay;
-import digiplay.Mat2D;
-import digiplay.Net;
-import digiplay.Net.HttpListener;
-import digiplay.QuadMesh;
+import digiplay.Image;
+import digiplay.Point2D;
+import digiplay.Sprite2D;
+import digiplay.Stage2D;
 
 
 /*
@@ -38,9 +36,9 @@ public class MyGame implements Game {
     
     //Matrix3D projection = new Matrix3D();
     
-    GLQuadBatch batch;
-    GLShader2D shader;
-    QuadMesh q;
+    //GLQuadBatch batch;
+    //GLShader2D shader;
+    //QuadMesh q;
     
     /*
     QuadBatch batch;
@@ -73,6 +71,19 @@ public class MyGame implements Game {
     */
     @Override
     public void begin() {
+        Stage2D.I.setup(new Point2D(Digiplay.platform.screenWidth,Digiplay.platform.screenHeight));
+        for(int i=0; i<1000; i++) {
+            Image img = new Image();
+            Stage2D.I.addChild(img);
+            img.setX(480);
+            img.setY(320);
+            img.setAlpha((float)(Math.random()*.5)+.5f);
+            img.setRotation((float)Math.random()*360);
+            img.color = (((int)(Math.random()*255)) << 16) | (((int)(Math.random()*255)) << 8) | (((int)(Math.random()*255)));
+        }
+        
+        System.out.println("v:"+Sprite2D.VISIBLE+" d:"+Sprite2D.CONTENT_INVALID);
+        /*
         System.out.println("BEGIN");
         shader = new GLShader2D("gl_FragColor = vColor;");
         batch = new GLQuadBatch(4096);
@@ -177,14 +188,16 @@ public class MyGame implements Game {
 
     @Override
     public void update() {
-        //Stage2D.I.update();
+        Stage2D.I.update();
     }
 
-    Mat2D mat = new Mat2D();
-    float speed = 1f;
-    float x=0,y=0,dy=speed,r=0;
+    //Mat2D mat = new Mat2D();
+    //float speed = 1f;
+    //float x=0,y=0,dy=speed,r=0;
     @Override
     public void render() {
+        Stage2D.I.render();
+        /*
         batch.begin(Digiplay.platform.screenWidth, Digiplay.platform.screenHeight, true, 0xFF300000);
         //x+=0.02f;
         //y+=0.5f;

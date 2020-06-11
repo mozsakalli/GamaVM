@@ -16,7 +16,6 @@
 
 package digiplay;
 
-import digiplay.render.QuadGeometry;
 import digiplay.render.Texture2D;
 
 /**
@@ -25,16 +24,64 @@ import digiplay.render.Texture2D;
  */
 public class Image extends Sprite2D {
     
-    QuadGeometry quad;
+    QuadMesh quad;
     Texture2D texture;
+    float dx = (float)(-3 + Math.random() * 6);
+    float dy = (float)(-3 + Math.random() * 6);
+    float r = (float)(-5 + Math.random()*10);
+    public Image() {
+        markContentInvalid();
+    }
     
     @Override
     public void invalidateContent() {
-        if(quad == null) quad = new QuadGeometry(1);
+        if(quad == null) quad = new QuadMesh(1);
         float x2 = getNaturalWidth();
         float y2 = getNaturalHeight();
-        quad.set(0, 0, 0, x2, 0, x2, y2, 0, y2, x, x, y, x, x, x, x, x, x, x, x, x);
+        quad.set(0, 0, 0, x2, y2, 0, 0, 0, 0, 0, 0, 0, 0);
     }
+
+    @Override
+    public void draw() {
+        if(quad != null)
+            Render2D.drawQuadMesh(quad, this.color, this.blendMode);
+        
+        setRotation(getRotation()+r);
+        float x = this.getX();
+        x += dx;
+        if(x <= 0) {
+            x = 0;
+            dx = -dx;
+        } else if(x >= Digiplay.platform.screenWidth) {
+            x = Digiplay.platform.screenWidth;
+            dx = -dx;
+        }
+        setX(x);
+
+        float y = this.getY();
+        y += dy;
+        if(y <= 0) {
+            y = 0;
+            dy = -dy;
+        } else if(y >= Digiplay.platform.screenHeight) {
+            y = Digiplay.platform.screenHeight;
+            dy = -dy;
+        }
+        setY(y);
+        
+    }
+
+    
+    @Override
+    public float getNaturalWidth() {
+        return 50;
+    }
+
+    @Override
+    public float getNaturalHeight() {
+        return 50;
+    }
+    
     
     
 }

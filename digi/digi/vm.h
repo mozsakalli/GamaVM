@@ -139,6 +139,7 @@ typedef struct __attribute__ ((packed)) Field {
     Object *declaringClass;
     jint flags;
     jint offset;
+    VAR *constantValue;
 } Field;
 
 typedef struct LocalVarInfo {

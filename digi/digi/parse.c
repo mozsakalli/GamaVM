@@ -148,9 +148,16 @@ char *parse_field(VM *vm, char *data, Object *f, CPItem *cp) {
     //attributes
     int ac = READ_U2(data); data += 2;
     for(int k=0; k<ac; k++) {
-        READ_U2(data); data += 2; //name
+        int tmp = READ_U2(data); data += 2;
+        Object *attrName = cp[tmp].value.O;
         int len = READ_U4(data); data += 4;
-        data += len;
+        if(STRLEN(attrName) == 13 && compare_chars(STRCHARS(attrName), L"ConstantValue", 13)) {
+            int ci = READ_U2(data); data += 2;
+            FLD(f,constantValue) = &cp[ci].value;
+        } else data += len;
+        //READ_U2(data); data += 2; //name
+        //int len = READ_U4(data); data += 4;
+        //data += len;
     }
     return data;
 }

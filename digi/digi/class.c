@@ -133,19 +133,37 @@ void link_class(VM *vm, Object *clsObject) {
         }
     }
     
+    /*
     if(clsObject == vm->jlClass) {
         printf("!!!!cls: %d == %d\n", cls->instanceSize, sizeof(Class));
     } else if(clsObject == vm->jlMethod) {
         printf("!!!!mth: %d == %d\n", cls->instanceSize, sizeof(Method));
     } else if(clsObject == vm->jlField) {
         printf("!!!!fld: %d == %d\n", cls->instanceSize, sizeof(Field));
-    }
+    }*/
+    
     if(cls->instanceOffsetCount > 0) {
         cls->instanceOffsets = malloc(sizeof(int) * cls->instanceOffsetCount);
         memcpy(cls->instanceOffsets, ico, sizeof(int) * cls->instanceOffsetCount);
     }
     
-    if(globalSize > 0) cls->global = vm_alloc(globalSize);
+    if(globalSize > 0) {
+        cls->global = vm_alloc(globalSize);
+        for(int i=0; i<cls->fields->length; i++) {
+            Field *f = ((Object**)cls->fields->instance)[i]->instance;
+            if(IS_STATIC(f->flags) && f->constantValue) {
+                //printf("Const: %s:", string_to_ascii(cls->name));
+                //printf("%s = ", string_to_ascii(f->name));
+                switch(STRCHARS(f->signature)[0]) {
+                    case 'I': *((jint*)(cls->global + f->offset)) = f->constantValue->I; break;
+                    case 'F': *((jfloat*)(cls->global + f->offset)) = f->constantValue->F; break;
+                    case 'J': *((jlong*)(cls->global + f->offset)) = f->constantValue->J; break;
+                    case 'D': *((jdouble*)(cls->global + f->offset)) = f->constantValue->D; break;
+                    default: printf("!!!!!! Unimplemented field constant type: %c\n", STRCHARS(f->signature)[0]);
+                }
+            }
+        }
+    }
     
     if(cls->superClass) cls->maxMethodIndex = CLS(cls->superClass,maxMethodIndex);
     

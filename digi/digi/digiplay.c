@@ -293,20 +293,6 @@ void mat3d_setup2d(Mat3D *m, float width, float height) {
     mat3d_lookAt(&localMatrix, x, y, z,  x, y, 0,  0, YUp, 0);
     mat3d_perspective(&projectionMatrix, 0, far, fov, width/height);
     mat3d_multiply(&projectionMatrix, &localMatrix, m);
-    /*
-    Mat3D localMatrix, projectionMatrix;
-    float x=0, y=0,z=0;
-    float w=width, h=height;
-    x = -x + w / 2;
-    y = -y + h / 2;
-    z = -z;
-
-    mat3d_compose(&localMatrix, x, y, z,
-    0, 0, 0,
-    1, 1, 1);
-    mat3d_orthographic(&projectionMatrix, 0, w, h, 0, -999999, 999999);
-    mat3d_multiply(&projectionMatrix, &localMatrix, m);
-    */
 }
 
 
@@ -342,6 +328,13 @@ void Java_digiplay_Mat2D_identity(VM *vm, Object *method, VAR *args) {
     Mat2D *m = (Mat2D*)*FIELD_PTR_O(args[0].O, 0);
     mat2d_identity(m);
 }
+void Java_digiplay_Mat2D_multiply(VM *vm, Object *method, VAR *args) {
+    if(!args[0].O || !args[1].O || !args[2].O) {
+        throw_null(vm);
+        return;
+    }
+    mat2d_multiply((Mat2D*)*FIELD_PTR_O(args[0].O, 0), (Mat2D*)*FIELD_PTR_O(args[1].O, 0), (Mat2D*)*FIELD_PTR_O(args[2].O, 0));
+}
 
 extern void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args);
 extern void Java_digiplay_Net_http(VM *vm, Object *method, VAR *args);
@@ -352,6 +345,7 @@ NativeMethodInfo digiplay_native_methods[] = {
     {"digiplay/Mat2D:create:()J", &Java_digiplay_Mat2D_create},
     {"digiplay/Mat2D:compose:(FFFFFFZFFF)V", &Java_digiplay_Mat2D_compose},
     {"digiplay/Mat2D:identity:()V", &Java_digiplay_Mat2D_identity},
+    {"digiplay/Mat2D:multiply:(Ldigiplay/Mat2D;Ldigiplay/Mat2D;Ldigiplay/Mat2D;)V", &Java_digiplay_Mat2D_multiply},
 
     {"digiplay/Net:http:(Ljava/lang/String;Ljava/lang/String;Ldigiplay/Net$HttpListener;)V", &Java_digiplay_Net_http},
     

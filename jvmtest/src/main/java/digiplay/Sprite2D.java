@@ -21,19 +21,22 @@ package digiplay;
  */
 public class Sprite2D {
 
-    Matrix2D localMatrix = new Matrix2D();
-    Matrix2D worldMatrix = new Matrix2D();
-    float x, y, scaleX, scaleY, rotation, skewX, skewY, alpha, worldAlpha;
+    Mat2D localMatrix = new Mat2D();
+    Mat2D worldMatrix = new Mat2D();
+    float x, y, scaleX=1, scaleY=1, rotation, skewX, skewY, alpha = 1, worldAlpha = 1;
     float animX, animY, animScaleX, animScaleY, animRotation, animSkewX, animSkewY, animAlpha;
     float pivotX = .5f, pivotY = .5f;
     int matrixUpdateCount, parentMatrixUpdateCount;
     int depth, numChildren;
+    public int color = 0xFFFFFF;
+    public int blendMode = 1;
 
     Sprite2D parent, firstChild, lastChild, next, prev;
     int frameVersion;
     static int GLOBAL_FRAME_VERSION;
 
-    int flags;
+    int flags = VISIBLE | LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
+    
     // Various flags used by Sprite and subclasses
     public final static int VISIBLE = 1 << 0;
     public final static int INTERACTIVE = 1 << 1;
@@ -245,38 +248,44 @@ public class Sprite2D {
     }
 
     public void setFlags(int flags) {
-        this.flags = flags;
+        this.flags |= flags;
+    }
+    public void cleatFlags(int mask) {
+        this.flags &= ~mask;
     }
 
-    public Matrix2D getLocalMatrix() {
+    public Mat2D getLocalMatrix() {
         if ((flags & LOCAL_MATRIX_DIRTY) != 0) {
+            /*
             flags &= ~LOCAL_MATRIX_DIRTY;
 
             if ((flags & ROT_SKEW_DIRTY) != 0) {
                 localMatrix.updateRotAndSkew(rotation + animRotation, skewX + animSkewX, skewY + animSkewY);
                 flags &= ~ROT_SKEW_DIRTY;
-            }
-            localMatrix.compose(x + animX, y + animY, scaleX + animScaleX, scaleY + animScaleY, pivotX * getNaturalWidth(), pivotY * getNaturalHeight());
-            localMatrix.modifyCounter++;
+            }*/
+            localMatrix.compose(x + animX, y + animY, scaleX + animScaleX, scaleY + animScaleY, pivotX * getNaturalWidth(), pivotY * getNaturalHeight(), (flags & ROT_SKEW_DIRTY) != 0, rotation + animRotation, skewX + animSkewX, skewY + animSkewY);
+            flags &= ~(ROT_SKEW_DIRTY | LOCAL_MATRIX_DIRTY);
+            //localMatrix.modifyCounter++;
             matrixUpdateCount++;
         }
         return localMatrix;
     }
 
-    public Matrix2D getWorldMatrix() {
+    public Mat2D getWorldMatrix() {
         if (frameVersion != GLOBAL_FRAME_VERSION) {
             frameVersion = GLOBAL_FRAME_VERSION;
-            Matrix2D localMatrix = getLocalMatrix();
+            int updateCount = matrixUpdateCount;
+            Mat2D localMat = getLocalMatrix();
             Sprite2D traParent = parent; //TransformParent != null ? TransformParent : Parent;
             if (traParent == null) {
                 return localMatrix;
             }
-            Matrix2D parentMatrix = traParent.getWorldMatrix();
-            if (traParent.matrixUpdateCount != parentMatrixUpdateCount || localMatrix.modifyCounter != worldMatrix.modifyCounter) {
-                Matrix2D.multiply(parentMatrix, localMatrix, worldMatrix);
+            Mat2D parentMat = traParent.getWorldMatrix();
+            if (traParent.matrixUpdateCount != parentMatrixUpdateCount || updateCount != matrixUpdateCount) {
+                Mat2D.multiply(parentMat, localMat, worldMatrix);
                 parentMatrixUpdateCount = traParent.matrixUpdateCount;
-                worldMatrix.modifyCounter = localMatrix.modifyCounter;
-                worldMatrix.cacheVersion++;
+                //worldMatrix.modifyCounter = localMatrix.modifyCounter;
+                //worldMatrix.cacheVersion++;
                 matrixUpdateCount++;
             }
         }
@@ -416,4 +425,15 @@ public class Sprite2D {
         //OnInit?.Invoke(this);
     }
     
+    public void draw() {
+    }
+    
+    public void drawChildren() {
+        Sprite2D ptr = firstChild;
+        while(ptr != null) {
+            if((ptr.flags & VISIBLE) != 0 && ptr.worldAlpha > 0)
+                Stage2D.I.renderSprite(ptr);
+            ptr = ptr.next;
+        }
+    }
 }

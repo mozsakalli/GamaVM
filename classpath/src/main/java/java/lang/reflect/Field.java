@@ -7,6 +7,7 @@ public class Field {
     Class declaringClass;
     int flags;
     int offset;
+    Object constantValue;
     
     public String getName() {
         return name;

@@ -253,6 +253,9 @@ void Java_digiplay_GLQuadBatch_drawQuadMesh(VM* vm, Method *method, VAR *args) {
         throw_null(vm);
         return;
     }
+    float alpha = args[5].F;
+    if(alpha <= 0) return;
+    
     GLQuadBatch *b = (GLQuadBatch*)*FIELD_PTR_J(args[0].O, 0);
     QuadMesh *m = (QuadMesh*)*FIELD_PTR_J(args[1].O, 0);
     Mat2D *mat = (Mat2D*)*FIELD_PTR_J(args[2].O, 0);
@@ -260,11 +263,7 @@ void Java_digiplay_GLQuadBatch_drawQuadMesh(VM* vm, Method *method, VAR *args) {
     if(m->size <= 0) return;
     
     int color = args[4].I;
-    float alpha = args[5].F;
     int blendMode = args[6].I;
-    float a = ((color >> 24) & 0xff)/255.0;
-    alpha *= a;
-    if(alpha <= 0) return;
     if(alpha > 1) alpha = 1;
     COLOR col;
     col.r = ((color >> 16) & 0xff)*alpha;
@@ -337,7 +336,7 @@ void Java_digiplay_GLQuadBatch_drawQuadMesh(VM* vm, Method *method, VAR *args) {
             q++;
         }
         q = &m->items[0];
-        m->version = mat->meshVersion;
+        mat->meshVersion = m->version;
     }
     
     VERT2D *v = &b->vertices[b->vertPtr];
