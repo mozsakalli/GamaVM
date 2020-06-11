@@ -33,4 +33,15 @@ public class QuadMesh {
     @Override
     protected native void finalize() throws Throwable;
     
+    public void set(int index, float x, float y, GLTexture tex) {
+        float w = tex.hwWidth;
+        float h = tex.hwHeight;
+        float right = tex.width / w;
+        float bot = tex.height / h;
+        
+        float x2 = x + tex.width;
+        float y2 = y + tex.height;
+        
+        set(index, x,y,x2,y2,0,0, right,0, right,bot, 0,bot);
+    }
 }

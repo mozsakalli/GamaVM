@@ -16,8 +16,6 @@
 
 package digiplay;
 
-import digiplay.render.Texture2D;
-
 /**
  *
  * @author mustafa
@@ -25,7 +23,8 @@ import digiplay.render.Texture2D;
 public class Image extends Sprite2D {
     
     QuadMesh quad;
-    Texture2D texture;
+    GLTexture texture;
+    
     float dx = (float)(-3 + Math.random() * 6);
     float dy = (float)(-3 + Math.random() * 6);
     float r = (float)(-5 + Math.random()*10);
@@ -36,15 +35,16 @@ public class Image extends Sprite2D {
     @Override
     public void invalidateContent() {
         if(quad == null) quad = new QuadMesh(1);
-        float x2 = getNaturalWidth();
-        float y2 = getNaturalHeight();
-        quad.set(0, 0, 0, x2, y2, 0, 0, 0, 0, 0, 0, 0, 0);
+        GLTexture gl = new GLTexture();
+        gl.load("special-offer.png");
+        quad.set(0, 0,0,gl);
+        texture = gl;
     }
 
     @Override
     public void draw() {
         if(quad != null)
-            Render2D.drawQuadMesh(quad, this.color, this.blendMode);
+            Render2D.drawQuadMesh(quad, this.color, this.blendMode, texture, 0);
         
         rotation(rotation()+r);
         float x = this.x();
@@ -74,12 +74,12 @@ public class Image extends Sprite2D {
     
     @Override
     public float getNaturalWidth() {
-        return 50;
+        return texture != null ? texture.width : 0;
     }
 
     @Override
     public float getNaturalHeight() {
-        return 50;
+        return texture != null ? texture.height : 0;
     }
     
     

@@ -20,8 +20,12 @@ package digiplay;
  *
  * @author mustafa
  */
-public interface Action1<T> {
+public class GLTexture {
+    long handle;
+    int width, height, hwWidth, hwHeight;
     
-    public void invoke(T arg);
+    public native void load(String path);
+    public native void load(byte[] bytes);
+    public native void dispose();
     
 }

@@ -2,6 +2,8 @@
 import digiplay.Game;
 import digiplay.Digiplay;
 import digiplay.Image;
+import digiplay.Net;
+import digiplay.Net.HttpListener;
 import digiplay.Point2D;
 import digiplay.Sprite2D;
 import digiplay.Stage2D;
@@ -69,6 +71,8 @@ public class MyGame implements Game {
         }
     }
     */
+    long httpTimer;
+    
     @Override
     public void begin() {
         Stage2D.I.setup(new Point2D(Digiplay.platform.screenWidth,Digiplay.platform.screenHeight));
@@ -189,6 +193,22 @@ public class MyGame implements Game {
     @Override
     public void update() {
         Stage2D.I.update();
+        long now = System.currentTimeMillis();
+        if(now - httpTimer >= 5000) {
+            Net.http("https://www.google.com", null, new HttpListener(){
+                @Override
+                public void onHttpSuccess(byte[] bytes) {
+                    System.out.println("Http Success: "+new String(bytes));
+                }
+
+                @Override
+                public void onHttpFail() {
+                    System.out.println("Http Fail");
+                }
+
+            });        
+            httpTimer = now;
+        }
     }
 
     //Mat2D mat = new Mat2D();

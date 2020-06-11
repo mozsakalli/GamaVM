@@ -106,8 +106,7 @@ typedef struct __attribute__ ((packed)) Object {
     struct {
         char free       : 1;
         char atomic     : 1;
-        char protect    : 1;
-        char version    : 5;
+        char version    : 6;
     } gc;
 } Object;
 
@@ -292,7 +291,8 @@ typedef struct VM {
         int C;
         Object** Q;
     } markQueue;
-
+    Object **gcRoots;
+    int gcRootCount, gcRootCapacity;
 } VM;
 
 #ifdef __cplusplus
@@ -315,12 +315,8 @@ extern Object *alloc_string_utf8(VM *vm, char *chars, int datalen, int atomic);
 extern void gc_step(VM *vm);
 extern void gc_pause();
 extern void gc_resume();
-inline static void gc_protect(Object *o) {
-    if(o) o->gc.protect = 1;
-}
-inline static void gc_unprotect(Object *o) {
-    if(o) o->gc.protect = 0;
-}
+extern void gc_protect(VM *vm, Object *o);
+extern void gc_unprotect(VM *vm,Object *o);
 
 /// CLASS
 extern Object *get_arrayclass_of(VM *vm, Object *cls);

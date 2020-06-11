@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package digiplay.render;
+package digiplay;
 
 /**
  *
@@ -23,5 +23,6 @@ package digiplay.render;
 public class Texture2D {    
     public int width,height,drawWidth,drawHeight,drawX,drawY;
     public float u1,v1,u2,v2,u3,v3,u4,v4;
-    public Texture texture;
+    public GLTexture texture;
+    
 }

@@ -136,7 +136,7 @@ void gc_sweep(VM *vm) {
     while(blk && count < COUNT_PER_TICK * 3) {
         while(blk_ndx < HEAP_OBJECTS_PER_BLOCK && count++ < COUNT_PER_TICK * 3) {
             Object *o = &blk->objects[blk_ndx];
-            if(!o->gc.free && !o->gc.protect && o->gc.version != version) {
+            if(!o->gc.free && o->gc.version != version) {
                 Class *cls = o->cls->instance;
                 if(cls && cls->finalizer) {
                     VAR args[1] = { {.O = o} };
@@ -177,6 +177,8 @@ void gc_step(VM *vm) {
             vm->markQueue.R = vm->markQueue.W = vm->markQueue.S = 0;
             gc_queue_object(vm, vm->exception);
             gc_queue_object(vm, vm->mainMethod);
+            for(int i=0; i<vm->gcRootCount; i++)
+                gc_queue_object(vm, vm->gcRoots[i]);
             break;
 
         case GCSTEP_MARKCLASSES:
@@ -204,4 +206,33 @@ void gc_pause() {
 }
 void gc_resume() {
     gc_paused = 0;
+}
+void gc_protect(VM *vm, Object *o) {
+    if(!o) return;
+    if(vm->gcRootCount > 0) {
+        for(int i=0; i<vm->gcRootCount; i++) {
+            if(vm->gcRoots[i] == o) {
+                return;
+            }
+        }
+    }
+    
+    if(vm->gcRootCapacity == vm->gcRootCount) {
+        int size = (vm->gcRootCapacity == 0 ? 8 : vm->gcRootCapacity) * 2;
+        vm->gcRoots = (Object**)realloc(vm->gcRoots, size * sizeof(Object*));
+        vm->gcRootCapacity = size;
+    }
+    vm->gcRoots[vm->gcRootCount++] = o;
+}
+
+void gc_unprotect(VM *vm, Object *o) {
+    if(!o) return;
+    for(int i=0; i<vm->gcRootCount; i++) {
+        if(vm->gcRoots[i] == o) {
+            vm->gcRoots[i] = vm->gcRoots[vm->gcRootCount - 1];
+            vm->gcRoots[vm->gcRootCount - 1] = NULL;
+            vm->gcRootCount--;
+            break;
+        }
+    }
 }

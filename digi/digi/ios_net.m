@@ -105,11 +105,11 @@
 extern VM *gamaVM;
 - (void)doCallback:(void*)data length:(int)length {
     if(callback) {
-        gc_unprotect(callback);
+        gc_unprotect(gamaVM, callback);
         if(data) {
             Object *method = find_method(gamaVM, callback->cls, L"onHttpSuccess", 13, L"([B)V", 5);
             if(method) {
-                Object *ba = alloc_byte_array(gamaVM, length, 0);
+                Object *ba = alloc_array_B(gamaVM, length, 0);
                 memcpy(ba->instance, data, length);
                 VAR args[2] = { {.O = callback }, {.O = ba }};
                 invoke_interface_v(gamaVM, method, &args[0]);
@@ -141,7 +141,7 @@ void Java_digiplay_Net_http(VM *vm, Object *method, VAR *args) {
         post = [[NSString alloc] initWithCharacters:STRCHARS(args[1].O) length:STRLEN(args[1].O)];
     }
     
-    gc_protect(args[2].O);
+    gc_protect(gamaVM, args[2].O);
     Http *http = [[Http alloc] initWithURLAndPostParams:url postParams:post thiz:args[2].O];
     [http retain];
 }
