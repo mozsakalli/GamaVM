@@ -74,7 +74,7 @@ public class MyGame implements Game {
     @Override
     public void begin() {
         System.out.println("BEGIN");
-        shader = new GLShader2D("gl_FragColor = vec4(1.0,1.0,1.0,1.0);");
+        shader = new GLShader2D("gl_FragColor = vColor;");
         batch = new GLQuadBatch(4096);
         q = new QuadMesh(100);
         for(int i=0; i<100; i++) {
@@ -88,7 +88,7 @@ public class MyGame implements Game {
         Net.http("https://www.google.com", null, new HttpListener(){
             @Override
             public void onHttpSuccess(byte[] bytes) {
-                System.out.println("Http Success: "+bytes.length);
+                System.out.println("Http Success: "+new String(bytes));
             }
 
             @Override
@@ -202,7 +202,6 @@ public class MyGame implements Game {
             y = 0;
             dy = speed;
         }
-        byte[] tmp = new byte[1024*500];
         
 
         /*

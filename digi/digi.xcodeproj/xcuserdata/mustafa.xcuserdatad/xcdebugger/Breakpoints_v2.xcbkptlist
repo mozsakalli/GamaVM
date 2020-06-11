@@ -782,8 +782,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "168"
-            endingLineNumber = "168"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
             landmarkName = "Java_digiplay_GLQuadBatch_begin(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -798,8 +798,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "194"
-            endingLineNumber = "194"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
             landmarkName = "Java_digiplay_GLQuadBatch_begin(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -814,8 +814,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "395"
-            endingLineNumber = "395"
+            startingLineNumber = "404"
+            endingLineNumber = "404"
             landmarkName = "Java_digiplay_QuadMesh_set(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -830,8 +830,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "242"
-            endingLineNumber = "242"
+            startingLineNumber = "252"
+            endingLineNumber = "252"
             landmarkName = "Java_digiplay_GLQuadBatch_drawQuadMesh(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -846,8 +846,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "210"
-            endingLineNumber = "210"
+            startingLineNumber = "220"
+            endingLineNumber = "220"
             landmarkName = "quad_batch_flush(b)"
             landmarkType = "9">
          </BreakpointContent>
@@ -862,8 +862,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "211"
-            endingLineNumber = "211"
+            startingLineNumber = "221"
+            endingLineNumber = "221"
             landmarkName = "quad_batch_flush(b)"
             landmarkType = "9">
          </BreakpointContent>
@@ -878,8 +878,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "212"
-            endingLineNumber = "212"
+            startingLineNumber = "222"
+            endingLineNumber = "222"
             landmarkName = "quad_batch_flush(b)"
             landmarkType = "9">
          </BreakpointContent>
@@ -910,24 +910,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145"
-            landmarkName = "Java_digiplay_GLQuadBatch_create(vm, method, args)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "0AF046F7-5677-4467-91F2-75C82925C85D"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "digi/digiplay_gl.c"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "158"
-            endingLineNumber = "158"
+            startingLineNumber = "144"
+            endingLineNumber = "144"
             landmarkName = "Java_digiplay_GLQuadBatch_create(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -942,8 +926,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "236"
-            endingLineNumber = "236"
+            startingLineNumber = "246"
+            endingLineNumber = "246"
             landmarkName = "quad_batch_flush(b)"
             landmarkType = "9">
          </BreakpointContent>
@@ -958,8 +942,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "294"
-            endingLineNumber = "294"
+            startingLineNumber = "304"
+            endingLineNumber = "304"
             landmarkName = "Java_digiplay_GLQuadBatch_drawQuadMesh(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -974,8 +958,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "222"
-            endingLineNumber = "222"
+            startingLineNumber = "232"
+            endingLineNumber = "232"
             landmarkName = "quad_batch_flush(b)"
             landmarkType = "9">
          </BreakpointContent>
@@ -990,8 +974,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "342"
-            endingLineNumber = "342"
+            startingLineNumber = "352"
+            endingLineNumber = "352"
             landmarkName = "Java_digiplay_GLQuadBatch_drawQuadMesh(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1006,8 +990,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "218"
-            endingLineNumber = "218"
+            startingLineNumber = "228"
+            endingLineNumber = "228"
             landmarkName = "quad_batch_flush(b)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1022,8 +1006,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "224"
-            endingLineNumber = "224"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
             landmarkName = "quad_batch_flush(b)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1054,8 +1038,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "333"
-            endingLineNumber = "333"
+            startingLineNumber = "343"
+            endingLineNumber = "343"
             landmarkName = "Java_digiplay_GLQuadBatch_drawQuadMesh(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1070,8 +1054,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "301"
-            endingLineNumber = "301"
+            startingLineNumber = "311"
+            endingLineNumber = "311"
             landmarkName = "Java_digiplay_GLQuadBatch_drawQuadMesh(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1102,8 +1086,8 @@
             filePath = "digi/digiplay_gl.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "327"
-            endingLineNumber = "327"
+            startingLineNumber = "337"
+            endingLineNumber = "337"
             landmarkName = "Java_digiplay_GLQuadBatch_drawQuadMesh(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1297,6 +1281,38 @@
             startingLineNumber = "145"
             endingLineNumber = "145"
             landmarkName = "Java_digiplay_Net_http(vm, method, args)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AAF63CE7-BF0D-4F05-A643-4B228D4FD71F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/digiplay_gl.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "426"
+            endingLineNumber = "426"
+            landmarkName = "Java_digiplay_QuadMesh_finalize(vm, method, args)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C00E5CCE-3756-4409-A5A8-67E16F4FB847"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/digiplay_gl.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "388"
+            endingLineNumber = "388"
+            landmarkName = "Java_digiplay_QuadMesh_create(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

@@ -30,4 +30,7 @@ public class QuadMesh {
     native static long create(int size);
     
     public native void set(int index, float x1, float y1, float x2, float y2, float u1, float v1, float u2, float v2, float u3, float v3, float u4, float v4);
+    @Override
+    protected native void finalize() throws Throwable;
+    
 }

@@ -21,5 +21,8 @@ public class GLQuadBatch {
     public native void begin(int width, int height, boolean clear, int clearColor);
     public native void end();
     public native void drawQuadMesh(QuadMesh mesh, Mat2D mat, GLShader2D shader, int color, float alpha, int blendMode);
+
+    @Override
+    protected native void finalize() throws Throwable;
     
 }

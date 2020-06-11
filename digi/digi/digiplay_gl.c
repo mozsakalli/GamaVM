@@ -117,14 +117,13 @@ void Java_digiplay_GLShader2D_compile(VM* vm, Method *method, VAR *args) {
     }
 }
 
-void digiplay_GL_useShader(VM* vm, Method *method, VAR *args) {
-    if(args[0].J == 0) {
-        throw_null(vm);
-        return;
+void Java_digiplay_GLShader2D_finalize(VM* vm, Method *method, VAR *args) {
+    if(!args[0].O) {
+        GLShader *b = (GLShader*)*FIELD_PTR_J(args[0].O, 0);
+        glDeleteProgram(b->handle);
+        free(b);
+        free(b);
     }
-    GLShader *shader = (GLShader*)args[0].J;
-    glUseProgram(shader->handle);
-    
 }
 
 typedef struct GLQuadBatch {
@@ -163,6 +162,15 @@ void Java_digiplay_GLQuadBatch_create(VM* vm, Method *method, VAR *args) {
     RETURN_J(b);
 }
 
+void Java_digiplay_GLQuadBatch_finalize(VM* vm, Method *method, VAR *args) {
+    if(!args[0].O) {
+        GLQuadBatch *b = (GLQuadBatch*)*FIELD_PTR_J(args[0].O, 0);
+        glDeleteBuffers(1, (GLuint*)&b->ibo);
+        free(b->vertices);
+        free(b);
+    }
+}
+
 
 void Java_digiplay_GLQuadBatch_begin(VM* vm, Method *method, VAR *args) {
     if(!args[0].O) {
@@ -189,7 +197,9 @@ void Java_digiplay_GLQuadBatch_begin(VM* vm, Method *method, VAR *args) {
     mat3d_setup2d(&b->projection, w, h);
     mat3d_identity(&b->camera);
     b->projectionDirty = 1;
-
+    glCurrentShader = NULL;
+    glCurrentIndexBuffer = glCurrentVertexBuffer = NULL;
+    
     if(args[3].I) {
         unsigned int c = args[4].I;
         glClearColor(((c>>16)&0xff)/255.0, ((c>>8)&0xff)/255.0, (c&0xff)/255.0, ((c>>24)&0xff)/255.0);
@@ -387,7 +397,6 @@ void Java_digiplay_QuadMesh_create(VM* vm, Method *method, VAR *args) {
         m->capacity = size;
     }
     m->size = size;
-    m->items = (QuadMeshItem*)malloc(m->capacity * sizeof(QuadMeshItem));
     RETURN_J(m);
 }
 
@@ -412,25 +421,30 @@ void Java_digiplay_QuadMesh_set(VM* vm, Method *method, VAR *args) {
     
     m->version++;
 }
-/*
-void digiplay_GL_quadMeshFree(VM* vm, Method *method, VAR *args) {
-    QuadMesh *m = (QuadMesh*)args[0].J;
-    m->next = QUADCACHE;
-    QUADCACHE = m;
+
+void Java_digiplay_QuadMesh_finalize(VM* vm, Method *method, VAR *args) {
+    if(args[0].O) {
+        QuadMesh *m = (QuadMesh*)*FIELD_PTR_J(args[0].O, 0);
+        m->next = QUADCACHE;
+        QUADCACHE = m;
+    }
 }
-*/
+
 
 
 NativeMethodInfo digiplay_gl_methods[] = {
     {"digiplay/GLShader2D:compile:(Ljava/lang/String;)J", &Java_digiplay_GLShader2D_compile},
-    
+    {"digiplay/GLShader2D:finalize:()V", &Java_digiplay_GLShader2D_finalize},
+
     {"digiplay/GLQuadBatch:create:(I)J", &Java_digiplay_GLQuadBatch_create},
     {"digiplay/GLQuadBatch:begin:(IIZI)V", &Java_digiplay_GLQuadBatch_begin},
     {"digiplay/GLQuadBatch:drawQuadMesh:(Ldigiplay/QuadMesh;Ldigiplay/Mat2D;Ldigiplay/GLShader2D;IFI)V", &Java_digiplay_GLQuadBatch_drawQuadMesh},
     {"digiplay/GLQuadBatch:end:()V", &Java_digiplay_GLQuadBatch_end},
-    
+    {"digiplay/GLQuadBatch:finalize:()V", &Java_digiplay_GLQuadBatch_finalize},
+
     {"digiplay/QuadMesh:create:(I)J", &Java_digiplay_QuadMesh_create},
     {"digiplay/QuadMesh:set:(IFFFFFFFFFFFF)V", &Java_digiplay_QuadMesh_set},
+    {"digiplay/QuadMesh:finalize:()V", &Java_digiplay_QuadMesh_finalize},
 
     NULL
 };

@@ -1,6 +1,8 @@
 digiplay/GLQuadBatch.class
+MyGame$1.class
 gamavm/apple/storekit/SKPaymentQueue.class
 digiplay/render/IndexBuffer.class
+digiplay/Net$HttpListener.class
 digiplay/Game.class
 digiplay/Matrix2D.class
 gamavm/apple/uikit/UIResponder.class
@@ -8,6 +10,7 @@ digiplay/render/VertexBuffer.class
 gamavm/apple/uikit/UIView.class
 digiplay/Stage2D.class
 digiplay/render/GPU.class
+digiplay/Net.class
 gamavm/apple/Bridge.class
 gamavm/apple/NSDictionary.class
 digiplay/render/RenderDevice.class
@@ -16,6 +19,7 @@ gamavm/apple/NSMutableObject.class
 digiplay/Files.class
 digiplay/Matrix3D.class
 digiplay/Graphics.class
+digiplay/Action1.class
 digiplay/render/Texture.class
 digiplay/Camera.class
 digiplay/Metal.class
@@ -37,6 +41,7 @@ gamavm/apple/NSProtocol.class
 digiplay/Point2D.class
 gamavm/apple/uikit/UIApplicationDelegate.class
 gamavm/apple/Selector.class
+digiplay/Action.class
 digiplay/Sprite2D.class
 digiplay/Digiplay.class
 digiplay/Mat3D.class

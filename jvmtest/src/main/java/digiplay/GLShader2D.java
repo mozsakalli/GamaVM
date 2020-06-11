@@ -19,4 +19,7 @@ public class GLShader2D {
     }
     
     native static long compile(String code);
+    @Override
+    protected native void finalize() throws Throwable;
+    
 }

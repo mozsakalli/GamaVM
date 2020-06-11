@@ -22,18 +22,18 @@ package gamavm;
  */
 public class VM {
     
-    public static native long getAddress(Object o);
     public static native Class getClass(Object o);
     public static native Object getObject(long address);
-    public static native Class getFirstClass();
     
+    public static native long getAddress(Object o);
     public static native Object allocObject(Class cls);
     public static native Object allocArray(Class cls, int length);
     public static native long allocMem(int size);
-    public static native void deallocMem(long ptr);
+    public static native void freeMem(long ptr);
     public static native void setShort(long ptr, int value);
     public static native void setFloat(long ptr, float value);
     
     public static native int getArrayLength(Object array);
     
+    public static native void restart(byte[] jarFile);
 }

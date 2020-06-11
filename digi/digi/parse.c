@@ -323,8 +323,8 @@ int parse_class(VM *vm, char *data, Object *clsObject) {
             setup_method_args((Method*)mth->instance);
             
             Object *mname = MTH(mth, name);
-            if(!IS_STATIC(MTH(mth,flags)) && STRLEN(mname)==7 &&
-               compare_chars(L"finalize", STRCHARS(mname), 7)) {
+            if(!IS_STATIC(MTH(mth,flags)) && STRLEN(mname)==8 &&
+               compare_chars(L"finalize", STRCHARS(mname), 8)) {
                 CLS(clsObject, finalizer) = mth;
             }
         }
