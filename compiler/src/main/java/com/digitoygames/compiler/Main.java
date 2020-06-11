@@ -16,8 +16,6 @@
 
 package com.digitoygames.compiler;
 
-import com.digitoygames.compiler.model.ClassCompiler;
-import com.digitoygames.compiler.model.Clazz;
 import de.inetsoftware.classparser.ClassFile;
 import java.io.FileInputStream;
 /**
@@ -27,6 +25,14 @@ import java.io.FileInputStream;
 public class Main {
   
     public static void main(String...args) throws Exception {
+        
+        com.digitoygames.compiler.model.Compiler cc = new com.digitoygames.compiler.model.Compiler();
+        cc.setClassPath(new String[]{
+            "/Users/mustafa/Work/GamaVM/classpath/target/classes"
+        });
+        cc.compileBoot();
+        if(true) return;
+        /*
         System.out.println(Test.main() );
         //String f = "/Users/mustafa/Work/experimental/jjj/compiler/target/classes/com/digitoygames/compiler/StbTTF.class";
         String f = "/Users/mustafa/Work/GamaVM/jvmtest/target/classes/digiplay/Camera.class";

@@ -16,12 +16,13 @@ public class GetField extends Op {
         String ref = "field"+index;
         StackValue tmp = method.allocTemp(type);
         code = "if(!"+ref+") {\n" +
-               "  "+ref+"=resolve_field_by_index(vm,method->declaringClass,"+index+");\n"
-               +"}\n";
+               "  Object *fld=resolve_field_by_index(vm,method->declaringClass,"+index+");\n"+
+               "  "+ref+"=fld->instance;\n"+ 
+               "}\n";
 
         code += tmp.value+"=";
         if(isStatic) {
-            code += "GLOBAL_PTR("+ref+","+ Util.getPlatformType(type)+")";
+            code +=  "*(("+ Util.getPlatformType(type)+"*)(CLS("+ref+"->declaringClass,global) + "+ref+"->offset))";
             //code += ref+"->declaringClass->globals["+ref+"->offset]."+type;
         } else {
             StackValue base = stack.pop();

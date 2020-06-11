@@ -75,10 +75,10 @@ public class MyGame implements Game {
         for(int i=0; i<1000; i++) {
             Image img = new Image();
             Stage2D.I.addChild(img);
-            img.setX(480);
-            img.setY(320);
+            img.x(480);
+            img.y(320);
             img.setAlpha((float)(Math.random()*.5)+.5f);
-            img.setRotation((float)Math.random()*360);
+            img.rotation((float)Math.random()*360);
             img.color = (((int)(Math.random()*255)) << 16) | (((int)(Math.random()*255)) << 8) | (((int)(Math.random()*255)));
         }
         

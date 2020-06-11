@@ -32,7 +32,7 @@ public class LoadArray extends Op {
         StackValue index = stack.pop();
         StackValue array = stack.pop();
         StackValue val = method.allocTemp(type);
-        code = String.format("%s=((%s*)((Array*)%s)->data)[%s]", val.value,Util.getPlatformType(type),array.value,index.value);
+        code = String.format("%s=ARRAY_DATA_%s(%s)[%s]", val.value,type,array.value,index.value);
         //val.type = type;
         //val.value = array.value+"["+index.value+"]";
         stack.push(val);

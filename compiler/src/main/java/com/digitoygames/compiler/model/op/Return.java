@@ -27,10 +27,10 @@ public class Return extends Op {
 
     @Override
     public void execute(Method method, Stack stack) {
-        code = "frame=&vm->frames[--vm->fp]; ";
+        code = "vm->FP--;";
         if(!type.equals("V"))
-            code += "frame->retVal."+type+"="+stack.pop().value+";";
-        code += "return";
+            code += "vm->frames[vm->FP].ret."+type+"="+stack.pop().value+";";
+        code += "return;";
     }
 
     

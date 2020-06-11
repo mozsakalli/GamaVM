@@ -38,11 +38,19 @@ public class Util {
         int p = desc.lastIndexOf(')');
         String r = desc.substring(p+1);
         if(r.startsWith("[") || r.startsWith("L")) return "O";
+        switch(r) {
+            case "B":
+            case "Z":
+            case "S":
+            case "C":
+            case "I":
+                return "I";
+        }
         return r;
     }
 
     public static String getPlatformType(String type) {
-        if(type.startsWith("[") || type.startsWith("L")) return "ObjectPtr";
+        if(type.startsWith("[") || type.startsWith("L")) return "Object*";
         switch(type) {
             case "Z": return "jbool";
             case "B": return "jbyte";
@@ -52,7 +60,7 @@ public class Util {
             case "F": return "jfloat";
             case "D": return "jdouble";
             case "J": return "jlong";
-            case "O": return "ObjectPtr";
+            case "O": return "Object*";
         }
         return type;
     }

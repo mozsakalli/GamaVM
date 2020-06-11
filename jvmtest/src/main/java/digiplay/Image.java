@@ -46,8 +46,8 @@ public class Image extends Sprite2D {
         if(quad != null)
             Render2D.drawQuadMesh(quad, this.color, this.blendMode);
         
-        setRotation(getRotation()+r);
-        float x = this.getX();
+        rotation(rotation()+r);
+        float x = this.x();
         x += dx;
         if(x <= 0) {
             x = 0;
@@ -56,9 +56,9 @@ public class Image extends Sprite2D {
             x = Digiplay.platform.screenWidth;
             dx = -dx;
         }
-        setX(x);
+        x(x);
 
-        float y = this.getY();
+        float y = this.y();
         y += dy;
         if(y <= 0) {
             y = 0;
@@ -67,7 +67,7 @@ public class Image extends Sprite2D {
             y = Digiplay.platform.screenHeight;
             dy = -dy;
         }
-        setY(y);
+        y(y);
         
     }
 

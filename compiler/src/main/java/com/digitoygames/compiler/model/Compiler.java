@@ -58,7 +58,7 @@ public class Compiler {
         }
         
         SourceWriter out = new SourceWriter();
-        out.println("#include \"jvm.h\"").ln();
+        out.println("#include \"vm.h\"").ln();
         for(Clazz cls : classes) {
             compileClassMethods(cls, out);
         }

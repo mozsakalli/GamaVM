@@ -30,7 +30,7 @@ public class ArrayLength extends Op {
     public void execute(Method method, Stack stack) {
         StackValue array = stack.pop();
         StackValue tmp = method.allocTemp(type);
-        code = tmp.value+"=((Array*)"+array.value+")->length";
+        code = "if(!"+array.value+") {throw_null(vm);} "+tmp.value+"="+array.value+"->length";
         stack.push(tmp);
     }
 }

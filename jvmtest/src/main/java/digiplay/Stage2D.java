@@ -53,12 +53,12 @@ public class Stage2D extends Sprite2D {
         w = scaleFactor * designSize.x;
         h = scaleFactor * designSize.y;
 
-        setScaleX(w / ww);
+        scaleX(w / ww);
         setScaleY(h / hh);
         System.out.println("Stage2D::scaleFactor is " + scaleFactor + " resolution: " + sw + "x" + sh);
 
-        setX((sw - w) / 2);
-        setY((sh - h) / 2);
+        x((sw - w) / 2);
+        y((sh - h) / 2);
 
         setPivotX(0);
         setPivotY(0);

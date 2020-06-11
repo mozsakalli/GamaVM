@@ -52,33 +52,33 @@ public class Sprite2D {
     public final static int STAY_ON_TOP = 1 << 11;
     public final static int STRETCH_ZERO = 1 << 12;
 
-    public float getX() {
+    public float x() {
         return x + animX;
     }
 
-    public void setX(float x) {
+    public void x(float x) {
         if (x != this.x) {
             this.x = x;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
 
-    public float getY() {
+    public float y() {
         return y + animY;
     }
 
-    public void setY(float y) {
+    public void y(float y) {
         if (y != this.y) {
             this.y = y;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
 
-    public float getScaleX() {
+    public float scaleX() {
         return scaleX + animScaleX;
     }
 
-    public void setScaleX(float scaleX) {
+    public void scaleX(float scaleX) {
         if (scaleX != this.scaleX) {
             this.scaleX = scaleX;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
@@ -96,11 +96,11 @@ public class Sprite2D {
         }
     }
 
-    public float getRotation() {
+    public float rotation() {
         return rotation + animRotation;
     }
 
-    public void setRotation(float rotation) {
+    public void rotation(float rotation) {
         if (rotation != this.rotation) {
             this.rotation = rotation;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY | ROT_SKEW_DIRTY;

@@ -48,11 +48,44 @@ public class Invoke extends Op {
         for(int i=0; i<argCount; i++)
             args[argCount - 1 - i] = stack.pop();
         String ret = Util.getReturnType(signature);
-        String iname = "call"+index;
+        
+        code = "// "+cp.getRefClassName(index)+":"+cp.getRefName(index)+":"+cp.getRefSignature(index)+"\n";
+        code +="{\n";
+        code += "VAR cargs[]={";// call_java_"+ret+"("; 
+        for(int i=0; i<argCount; i++) {
+            if(i > 0) code += ",";
+            code += "{."+args[i].type+"="+args[i].value+"}";
+        }
+        code += "}\n"+
+             "frame->pc="+pc+"\n";                
+        
+        if(callType == SPECIAL || callType == STATIC) {
+            code += String.format(
+                    "if(!call%d){\n"+
+                    "   call%d=resolve_method_by_index(vm,method->declaringClass,%d);\n"+
+                    "}\n"        
+                    ,index,index,index);
+            code += String.format("((VM_CALL)(MTH(call%d,entry)))(vm,call%d,&cargs[0])\n",index,index);
+        } else {
+            code += String.format(
+                    "if(call%d == -1){\n"+
+                    "   Object *m = resolve_method_by_index(vm,method->declaringClass,%d);\n"+
+                    "   call%d = MTH(m,%s);\n"+        
+                    "}\n"        
+                    ,index,index, index, callType == INTERFACE ? "iTableIndex" : "vTableIndex");
+            code += String.format(
+                    "if(!cargs[0].O) { throw_null(vm); }\n"+
+                    "Class *cls = cargs[0].O->cls->instance;\n"+
+                    "Object *mth = cls->%s[call%d];\n"+
+                    "((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);\n"        
+                    ,callType == INTERFACE ? "itable" : "vtable", index
+            );
+        }
+        /*
         code = "// "+cp.getRefClassName(index)+":"+cp.getRefName(index)+":"+cp.getRefSignature(index)+"\n"+
                "if(!"+iname+") {\n"+
                "  "+iname+"=resolve_method_by_index(vm,method->declaringClass,"+index+")\n"+ 
-               "  if(!"+iname+") ;//todo: throw\n"+
+               //"  if(!"+iname+") ;//todo: throw\n"+
                "}\n"+
                "VAR args"+pc+"[]={";// call_java_"+ret+"("; 
         //code = clsName+":"+name+":"+signature+"(";
@@ -62,13 +95,22 @@ public class Invoke extends Op {
             //code += args[i].value;
         }
         code += "}\n"+
-                "frame->pc="+pc+"\n"+
-             String.format("((JVM_CALL)(%s->entry))(vm,%s,&args%d[0])\n",iname,iname,pc);
+                "frame->pc="+pc+"\n";
+        
+        if(callType == SPECIAL || callType == STATIC)
+            code += String.format("((VM_CALL)(MTH(%s,entry)))(vm,%s,&args%d[0])\n",iname,iname,pc);
+        else if(callType == INTERFACE) {
+            
+        } else {
+            
+        }
+        */
         if(!ret.equals("V")) {
             StackValue tmp = method.allocTemp(ret);
-            code += String.format("%s=frame->retVal.%s;",tmp.value,ret);
+            code += String.format("%s=frame->ret.%s;\n",tmp.value,ret);
             stack.push(tmp);
         }
+        code += "}\n";
     }
     
     

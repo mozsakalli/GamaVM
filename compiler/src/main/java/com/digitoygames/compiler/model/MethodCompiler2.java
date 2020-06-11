@@ -41,14 +41,16 @@ public class MethodCompiler2 {
     void addLocal(Map<String,String> map, StackValue v) {
         String str = map.computeIfAbsent(v.type, (k) -> "");
         if(!str.isEmpty()) str += ",";
+        if(v.type.equals("O")) str += "*";
         str += v.value;
         map.put(v.type, str);
     }
     public void compile(SourceWriter out) throws Exception {
         String key = method.declaringClass.getName()+":"+method.getName()+":"+method.getSignature();
-        out.println("void %s(VM *vm, Method *method, VAR *args) {",method.getAOTName()).indent()
-           .println("Frame *frame = &vm->frames[++vm->fp];")
-           .println("frame->method = method;");
+        out.println("void %s(VM *vm, Object *omethod, VAR *args) {",method.getAOTName()).indent()
+           .println("Frame *frame = &vm->frames[++vm->FP];")
+           .println("frame->method = omethod;")
+           .println("Method *method = omethod->instance;");
            //.println("VAR local[method->maxLocals];");
 
         Code code = method.getCode();
@@ -75,15 +77,19 @@ public class MethodCompiler2 {
         for(StackValue v : method.allLocals) addLocal(locals, v);
         for(StackValue v : method.allTemps) addLocal(locals, v);
         for(StackValue v : method.allSpills) addLocal(locals, v);
-        for(Map.Entry<String,String> e : locals.entrySet())
-            out.println("%s %s;", Util.getPlatformType(e.getKey()), e.getValue());
+        for(Map.Entry<String,String> e : locals.entrySet()) 
+            out.println("%s %s;", e.getKey().equals("O") ? "Object" : Util.getPlatformType(e.getKey()), e.getValue());
         Set<Integer> calls = new HashSet();
+        Set<Integer> ivcalls = new HashSet();
         Set<Integer> fields = new HashSet();
         Set<Integer> refs = new HashSet();
         for(Op o : ops) {
             if(o instanceof Invoke) {
+                Invoke inv = (Invoke)o;
                 int index = ((Invoke)o).index;
-                calls.add(index);
+                if(inv.callType == Invoke.SPECIAL || inv.callType == Invoke.STATIC)
+                    calls.add(index);
+                else ivcalls.add(index);
             } else if(o instanceof GetField) {
                 fields.add(((GetField)o).index);
             } else if(o instanceof SetField) {
@@ -93,11 +99,20 @@ public class MethodCompiler2 {
             }
         }
         if(!calls.isEmpty()) {
-            out.print("static Method ");
+            out.print("static Object ");
             int count = 0;
             for(int index : calls) {
                 if(count++ > 0) out.print(",");
                 out.print("*call%d=NULL",index);
+            }
+            out.println(";");
+        }
+        if(!ivcalls.isEmpty()) {
+            out.print("static int ");
+            int count = 0;
+            for(int index : ivcalls) {
+                if(count++ > 0) out.print(",");
+                out.print("call%d=-1",index);
             }
             out.println(";");
         }
@@ -173,7 +188,7 @@ public class MethodCompiler2 {
         if(bb.isTryCatchHandler) {
             StackValue ex = new StackValue();
             ex.type = "O";
-            ex.value = "__caught__";
+            ex.value = "vm->exception";
             bb.stack.push(ex);
         }
 
