@@ -8,29 +8,29 @@
 
 #include "vm.h"
 
-jint get_prim_size(int chr) {
+JINT get_prim_size(int chr) {
     switch(chr) {
-        case 'B': return sizeof(jbyte);
-        case 'Z': return sizeof(jbool);
-        case 'C': return sizeof(jchar);
-        case 'S': return sizeof(jshort);
-        case 'I': return sizeof(jint);
-        case 'F': return sizeof(jfloat);
-        case 'J': return sizeof(jlong);
-        case 'D': return sizeof(jdouble);
+        case 'B': return sizeof(JBYTE);
+        case 'Z': return sizeof(JBOOL);
+        case 'C': return sizeof(JCHAR);
+        case 'S': return sizeof(JSHORT);
+        case 'I': return sizeof(JINT);
+        case 'F': return sizeof(JFLOAT);
+        case 'J': return sizeof(JLONG);
+        case 'D': return sizeof(JDOUBLE);
         default : return sizeof(Object*);
     }
 }
-jint get_signature_size(Object *signature) {
+JINT get_signature_size(Object *signature) {
     return get_prim_size(STRCHARS(signature)[0]);
 }
-jint is_signature_ref(Object *signature) {
-    jint chr = STRCHARS(signature)[0];
+JINT is_signature_ref(Object *signature) {
+    JINT chr = STRCHARS(signature)[0];
     return chr == 'L' || chr == '[';
 }
 
-int copy_jchar(jchar* target, jchar* src, int len) {
-    memcpy(target, src, len * sizeof(jchar));
+int copy_jchar(JCHAR* target, JCHAR* src, int len) {
+    memcpy(target, src, len * sizeof(JCHAR));
    return len;
 }
 
@@ -40,7 +40,7 @@ Object *get_arrayclass_of(VM *vm, Object *cls) {
         arrCls = alloc_class(vm);
         CLS(arrCls, elementClass) = cls;
         CLS(cls, arrayClass) = arrCls;
-        jchar tmp[256];
+        JCHAR tmp[256];
         int len = 0;
         tmp[len++] = '[';
         Object *name = CLS(cls, name);
@@ -50,7 +50,7 @@ Object *get_arrayclass_of(VM *vm, Object *cls) {
             else if(cls == vm->jlMethod) len += copy_jchar(&tmp[1], L"Ljava/lang/reflect/Method;", 26);
             else if(cls == vm->primClasses[PRIM_C]) len += copy_jchar(&tmp[1], L"C", 1);
         } else {
-            jchar *src = (jchar*)STR(name,chars)->instance;
+            JCHAR *src = (JCHAR*)STR(name,chars)->instance;
             if(CLS_PRIM(cls)) {
                 tmp[len++] = src[0];
             } else {
@@ -73,7 +73,7 @@ Object *get_arrayclass_of(VM *vm, Object *cls) {
     return arrCls;
 }
 
-Object *find_class(VM *vm, jchar *name, jint len) {
+Object *find_class(VM *vm, JCHAR *name, JINT len) {
     //printf("------------------------ find: %s\n", jchar_to_ascii(name, len));
     Object *ptr = vm->classes;
     while(ptr) {
@@ -155,10 +155,10 @@ void link_class(VM *vm, Object *clsObject) {
                 //printf("Const: %s:", string_to_ascii(cls->name));
                 //printf("%s = ", string_to_ascii(f->name));
                 switch(STRCHARS(f->signature)[0]) {
-                    case 'I': *((jint*)(cls->global + f->offset)) = f->constantValue->I; break;
-                    case 'F': *((jfloat*)(cls->global + f->offset)) = f->constantValue->F; break;
-                    case 'J': *((jlong*)(cls->global + f->offset)) = f->constantValue->J; break;
-                    case 'D': *((jdouble*)(cls->global + f->offset)) = f->constantValue->D; break;
+                    case 'I': *((JINT*)(cls->global + f->offset)) = f->constantValue->I; break;
+                    case 'F': *((JFLOAT*)(cls->global + f->offset)) = f->constantValue->F; break;
+                    case 'J': *((JLONG*)(cls->global + f->offset)) = f->constantValue->J; break;
+                    case 'D': *((JDOUBLE*)(cls->global + f->offset)) = f->constantValue->D; break;
                     default: printf("!!!!!! Unimplemented field constant type: %c\n", STRCHARS(f->signature)[0]);
                 }
             }
@@ -261,7 +261,7 @@ void link_class(VM *vm, Object *clsObject) {
     
 }
 
-Object *resolve_class(VM *vm, jchar *name, jint len, int link, Object *target) {
+Object *resolve_class(VM *vm, JCHAR *name, JINT len, int link, Object *target) {
     //printf("resolve: %s\n", jchar_to_ascii(name, len));
     Object *cls = find_class(vm, name, len);
     if(cls) {
@@ -315,7 +315,7 @@ Object *resolve_class_by_index(VM *vm, Object *cls, int index) {
 }
 
 
-Object *find_class_method(VM *vm, Object *cls, jchar *name, jint nlen, jchar *sign, int slen) {
+Object *find_class_method(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, int slen) {
     Object *methods = CLS(cls, methods);
     if(!methods || methods->length == 0) return NULL;
     for(int i=0; i<methods->length; i++) {
@@ -331,7 +331,7 @@ Object *find_class_method(VM *vm, Object *cls, jchar *name, jint nlen, jchar *si
     return NULL;
 }
 
-Object *find_method(VM *vm, Object *cls, jchar *name, jint nlen, jchar *sign, int slen) {
+Object *find_method(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, int slen) {
     while(cls) {
         Object *method = find_class_method(vm, cls, name, nlen, sign, slen);
         if(method) return method;
@@ -340,7 +340,7 @@ Object *find_method(VM *vm, Object *cls, jchar *name, jint nlen, jchar *sign, in
     return NULL;
 }
 
-Object *resolve_method(VM *vm, jchar *clsName, int clslen, jchar *name, int nlen, jchar *signature, int slen) {
+Object *resolve_method(VM *vm, JCHAR *clsName, int clslen, JCHAR *name, int nlen, JCHAR *signature, int slen) {
     Object *cls = resolve_class(vm, clsName, clslen, 1, NULL);
     if(vm->exception) return NULL;
     Object *mth = find_method(vm, cls, name, nlen, signature, slen);
@@ -363,7 +363,7 @@ Object *resolve_method_by_index(VM *vm,Object *cls, int index) {
                           STRCHARS(signature),STRLEN(signature));
 }
 
-Object *find_class_field(VM *vm, Object *cls, jchar *name, jint nlen, jchar *sign, int slen) {
+Object *find_class_field(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, int slen) {
     Object *fields = CLS(cls, fields);
     if(!fields || fields->length == 0) return NULL;
     for(int i=0; i<fields->length; i++) {
@@ -379,7 +379,7 @@ Object *find_class_field(VM *vm, Object *cls, jchar *name, jint nlen, jchar *sig
     return NULL;
 }
 
-Object *find_field(VM *vm, Object *cls, jchar *name, jint nlen, jchar *sign, int slen) {
+Object *find_field(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, int slen) {
     while(cls) {
         Object *field = find_class_field(vm, cls, name, nlen, sign, slen);
         if(field) return field;
@@ -388,7 +388,7 @@ Object *find_field(VM *vm, Object *cls, jchar *name, jint nlen, jchar *sign, int
     return NULL;
 }
 
-Object *resolve_field(VM *vm, jchar *clsName, int clslen, jchar *name, int namelen, jchar *sign, int slen) {
+Object *resolve_field(VM *vm, JCHAR *clsName, int clslen, JCHAR *name, int namelen, JCHAR *sign, int slen) {
     Object *cls = resolve_class(vm, clsName, clslen, 1, NULL);
     if(vm->exception) return NULL;
     Object *field = find_field(vm, cls, name, namelen, sign, slen);
@@ -444,7 +444,7 @@ void build_all_parents(VM *vm, Object *cls) {
     clsf->allParentCount = count;
 }
 
-jint is_class_child_of(VM *vm, Object *json, Object *jof) {
+JINT is_class_child_of(VM *vm, Object *json, Object *jof) {
     if(!json || !jof) return 0;
     if(json == jof || jof == vm->jlObject) return 1;
     //printf("check-cast: %s -> ",string_to_ascii(CLS(json,name)));

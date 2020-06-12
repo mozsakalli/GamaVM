@@ -293,7 +293,7 @@ typedef struct JdwpLocation {
     int type;
     Object *clazz;
     Object *method;
-    jlong index;
+    JLONG index;
 } JdwpLocation;
 
 class JdwpString {
@@ -315,7 +315,7 @@ public:
     }
     Object *toClassName() {
         String *sf = (String*)str->instance;
-        jchar *chars = (jchar*)sf->chars->instance;
+        JCHAR *chars = (JCHAR*)sf->chars->instance;
         if(chars[sf->offset] == 'L') {
             sf->offset++;
             sf->length -= 2;
@@ -324,7 +324,7 @@ public:
     }
     
     void replace(int search, int with) {
-        jchar *chars = STRCHARS(str);
+        JCHAR *chars = STRCHARS(str);
         int len = STRLEN(str);
         for(int i=0; i<len; i++)
             if(chars[i] == search) chars[i] = with;
@@ -388,25 +388,25 @@ public:
         return readN(4);
     }
     
-    jlong readLong() {
+    JLONG readLong() {
         int h = readInt();
         int l = readInt();
-        return (((jlong) h) << 32L) | ((jlong) l) & 0xffffffffL;
+        return (((JLONG) h) << 32L) | ((JLONG) l) & 0xffffffffL;
     }
     
     Object *readObject() {
         return (Object*)readLong();
     }
     
-    jfloat readFloat() {
+    JFLOAT readFloat() {
         int v = readInt();
-        jfloat *f = (jfloat*)&v;
+        JFLOAT *f = (JFLOAT*)&v;
         return *f;
     }
     
-    jdouble readDouble() {
-        jlong l = readLong();
-        double *d = (jdouble*)&l;
+    JDOUBLE readDouble() {
+        JLONG l = readLong();
+        double *d = (JDOUBLE*)&l;
         return *d;
     }
     
@@ -495,7 +495,7 @@ public:
     }
     
     void writeObject(Object *o) {
-        writeLong((jlong)o);
+        writeLong((JLONG)o);
     }
     
     void writeInt(int v) {
@@ -522,7 +522,7 @@ public:
         writeInt(*f);
     }
     void writeDouble(double v) {
-        jlong *l = (jlong*)&v;
+        JLONG *l = (JLONG*)&v;
         writeLong(*l);
     }
     void writeBoolean(int v) {
@@ -544,30 +544,30 @@ public:
 
     void writeValue(Object *signature, void *ptr) {
         String *str = (String*)signature->instance;
-        jchar *chars = (jchar*)str->chars->instance;
+        JCHAR *chars = (JCHAR*)str->chars->instance;
         switch(chars[0]) {
             case 'B':
             case 'Z':
                 writeByte(chars[0]);
-                writeByte(*(jbyte*)ptr);
+                writeByte(*(JBYTE*)ptr);
                 break;
                 
             case 'S':
             case 'C':
                 writeByte(chars[0]);
-                writeShort(*(jshort*)ptr);
+                writeShort(*(JSHORT*)ptr);
                 break;
 
             case 'I':
             case 'F':
                 writeByte(chars[0]);
-                writeInt(*(jint*)ptr);
+                writeInt(*(JINT*)ptr);
                 break;
 
             case 'J':
             case 'D':
                 writeByte(chars[0]);
-                writeLong(*(jlong*)ptr);
+                writeLong(*(JLONG*)ptr);
                 break;
 
             case '[':
@@ -576,11 +576,11 @@ public:
                 break;
                 
             default:
-                if(STRLEN(signature) == 18 && compare_chars(STRCHARS(signature), (jchar*)L"Ljava/lang/String;", 18))
+                if(STRLEN(signature) == 18 && compare_chars(STRCHARS(signature), (JCHAR*)L"Ljava/lang/String;", 18))
                     writeByte(JDWP_TAG_STRING);
-                else if(STRLEN(signature) == 17 && compare_chars(STRCHARS(signature), (jchar*)L"Ljava/lang/Class;", 17))
+                else if(STRLEN(signature) == 17 && compare_chars(STRCHARS(signature), (JCHAR*)L"Ljava/lang/Class;", 17))
                     writeByte(JDWP_TYPETAG_CLASS);
-                else if(STRLEN(signature) == 18 && compare_chars(STRCHARS(signature), (jchar*)"Ljava/lang/Thread;", 18))
+                else if(STRLEN(signature) == 18 && compare_chars(STRCHARS(signature), (JCHAR*)"Ljava/lang/Thread;", 18))
                     writeByte(JDWP_TAG_THREAD);
                 else writeByte('L');
                 writeObject(*(Object**)ptr);
@@ -589,28 +589,28 @@ public:
     }
     
     void writeArray(Object *arr, int index, int len) {
-        jchar *chars = (jchar*)((String*)CLS(arr->cls, name)->instance)->chars->instance;
+        JCHAR *chars = (JCHAR*)((String*)CLS(arr->cls, name)->instance)->chars->instance;
         writeByte(chars[1]);
         writeInt(len);
         switch(chars[1]) {
             case 'B':
             case 'Z': {
-                jbyte *data = (jbyte*)arr->instance;
+                JBYTE *data = (JBYTE*)arr->instance;
                 for(int i=index; i<index+len; i++) writeByte(data[i]);
             } break;
             case 'C':
             case 'S': {
-                jshort *data = (jshort*)arr->instance;
+                JSHORT *data = (JSHORT*)arr->instance;
                 for(int i=index; i<index+len; i++) writeShort(data[i]);
             } break;
             case 'I':
             case 'F': {
-                jint *data = (jint*)arr->instance;
+                JINT *data = (JINT*)arr->instance;
                 for(int i=index; i<index+len; i++) writeInt(data[i]);
             } break;
             case 'J':
             case 'D': {
-                jlong *data = (jlong*)arr->instance;
+                JLONG *data = (JLONG*)arr->instance;
                 for(int i=index; i<index+len; i++) writeLong(data[i]);
             } break;
             default: {
@@ -630,7 +630,7 @@ public:
     
     void writeString(Object *strobject) {
         String *str = (String*)strobject->instance;
-        jchar *chars = (jchar*)str->chars->instance;
+        JCHAR *chars = (JCHAR*)str->chars->instance;
         int len = 0;
         for (int i = str->offset; i < str->offset+str->length; i++) {
             int c = chars[i] & 0xff;
@@ -700,7 +700,7 @@ public:
 class JdwpEventSetMod {
 public:
     int type, count,exprId, caught, uncaught, size, depth;
-    jlong threadId;
+    JLONG threadId;
     Object *clazz=nullptr, *exceptionOrNull = nullptr, *field = nullptr, *instance = nullptr;
     JdwpString *classPattern = nullptr, *sourceNamePattern = nullptr;
     JdwpLocation location;

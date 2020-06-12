@@ -354,8 +354,8 @@ void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args) {
     Object *resize_method = resolve_method(vm, L"digiplay/Platform",17, L"resize",6, L"(II)V", 5);
     VAR vargs[7] = {
         { .O = digiplayPlatform },
-        { .I = (jint)(bounds.size.width * scale) },
-        { .I = (jint)(bounds.size.height * scale) },
+        { .I = (JINT)(bounds.size.width * scale) },
+        { .I = (JINT)(bounds.size.height * scale) },
     };
     CALLVM_V(vm, resize_method, &vargs[0]);
 }

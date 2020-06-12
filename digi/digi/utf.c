@@ -24,7 +24,7 @@ int get_utf8_length(char *data, int length) {
     return jlen;
 }
 
-void decode_utf8(char *data, int length, jchar* buf) {
+void decode_utf8(char *data, int length, JCHAR* buf) {
     char *end = data + length;
     char *ptr = data;
     int jlen = 0;
@@ -45,7 +45,7 @@ void decode_utf8(char *data, int length, jchar* buf) {
     }
 }
 
-char *jchar_to_ascii(jchar *chars, int len) {
+char *jchar_to_ascii(JCHAR *chars, int len) {
     static char tmp[1024];
     for(int i=0; i<len; i++) tmp[i] = chars[i];
     tmp[len] = 0;
@@ -56,9 +56,9 @@ char *string_to_ascii(Object *str) {
     return jchar_to_ascii(STRCHARS(str), STRLEN(str));
 }
 
-jchar *char_to_jchar(char *ch, int *len) {
+JCHAR *char_to_jchar(char *ch, int *len) {
     int l = (int)strlen(ch);
-    jchar *r = malloc(l * sizeof(jchar));
+    JCHAR *r = malloc(l * sizeof(JCHAR));
     for(int i=0; i<l; i++) r[i] = ch[i];
     *len = l;
     return r;

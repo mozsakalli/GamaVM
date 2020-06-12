@@ -121,7 +121,7 @@ int jdwp_get_pc_index(Object *method, int pc) {
 int jdwp_method_count_args(Object *method) {
     Object *signature = ((Method*)method->instance)->signature;
     Object *chars = ((String*)signature->instance)->chars;
-    jchar *ch = (jchar*)chars->instance;
+    JCHAR *ch = (JCHAR*)chars->instance;
     ch++; //(
     int count = 0;
     int jcount = 0;
@@ -417,7 +417,7 @@ void jdwp_invoke_method(JdwpPacket *req, JdwpPacket *resp, int isStatic) {
     ((VM_CALL)((Method*)method->instance)->entry)(jdwpVM, method, &args[0]);
     jdwp_invoking = 0;
     String *str = (String*)MTH(method, signature)->instance;
-    jchar *ch = (jchar*)str->chars->instance;
+    JCHAR *ch = (JCHAR*)str->chars->instance;
     while(*ch != ')') ch++;
     ch++;
     int kind = *ch=='L' || *ch=='[' ? 'O' : *ch;
@@ -720,7 +720,7 @@ void jdwp_process_packet(JdwpPacket *req) {
             
         case JDWP_CMD_ObjectReference_ReferenceType: { //0x0901
             Object *o = req->readObject();
-            if((jlong)o == JDWP_THREAD_ID) {
+            if((JLONG)o == JDWP_THREAD_ID) {
                 resp->writeByte(JDWP_TYPETAG_CLASS);
                 resp->writeObject(jdwpVM->jlClass);
             } else {
@@ -767,7 +767,7 @@ void jdwp_process_packet(JdwpPacket *req) {
         } break;
             
         case JDWP_CMD_ThreadReference_Name: { //0x0b01
-            jlong threadId = req->readLong();
+            JLONG threadId = req->readLong();
             if(threadId == JDWP_THREAD_ID) {
                 resp->writeCString((char*)"GamaVM");
                 resp->complete(req->id, JDWP_ERROR_NONE);
@@ -780,7 +780,7 @@ void jdwp_process_packet(JdwpPacket *req) {
             break;
             
         case JDWP_CMD_ThreadReference_Status: { //0x0b04
-            jlong threadId = req->readLong();
+            JLONG threadId = req->readLong();
             if(threadId == JDWP_THREAD_ID) {
                 resp->writeInt(JDWP_THREAD_RUNNING);
                 resp->writeInt(jdwp_suspended ? JDWP_SUSPEND_STATUS_SUSPENDED : 0);
@@ -790,7 +790,7 @@ void jdwp_process_packet(JdwpPacket *req) {
             
         case JDWP_CMD_ThreadReference_Frames: { //0x0b06
             if(jdwp_suspended) {
-                jlong thread = req->readLong();
+                JLONG thread = req->readLong();
                 int startFrame = req->readInt()+1;
                 int length = req->readInt();
                 startFrame = jdwpVM->FP;
@@ -800,7 +800,7 @@ void jdwp_process_packet(JdwpPacket *req) {
                 for (int i = startFrame; i >= endFrame; i--) {
                     //if (i >= startFrame && i < startFrame + length) {
                         Frame *frame = &jdwpVM->frames[i];
-                        resp->writeLong((jlong)frame);
+                        resp->writeLong((JLONG)frame);
                         JdwpLocation loc;
                         Object *method = frame->method;
                         Object *cls = ((Method*)method->instance)->declaringClass;
@@ -823,7 +823,7 @@ void jdwp_process_packet(JdwpPacket *req) {
             break;
             
         case JDWP_CMD_ThreadReference_SuspendCount: { //0x0b0c
-             jlong threadId = req->readLong();
+             JLONG threadId = req->readLong();
              if(threadId == JDWP_THREAD_ID) {
                  resp->writeInt(jdwp_suspended);
                  resp->complete(req->id, JDWP_ERROR_NONE);

@@ -86,7 +86,7 @@ void free_class(Object *cls) {
 Object *alloc_string_ascii(VM *vm, char *chars, int atomic) {
     int len = (int)strlen(chars);
     Object *charArray = alloc_array(vm, get_arrayclass_of(vm, vm->primClasses[PRIM_C]), len, atomic);
-    for(int i=0; i<len; i++) ((jchar*)charArray->instance)[i] = chars[i];
+    for(int i=0; i<len; i++) ((JCHAR*)charArray->instance)[i] = chars[i];
     
     Object *str = alloc_object(vm, vm->jlString, atomic);
     STR(str, chars) = charArray;
@@ -96,9 +96,9 @@ Object *alloc_string_ascii(VM *vm, char *chars, int atomic) {
     return str;
 }
 
-Object *alloc_string_java(VM *vm, jchar *chars, int len, int atomic) {
+Object *alloc_string_java(VM *vm, JCHAR *chars, int len, int atomic) {
     Object *charArray = alloc_array(vm, get_arrayclass_of(vm, vm->primClasses[PRIM_C]), len, atomic);
-    memcpy(charArray->instance, chars, len * sizeof(jchar));
+    memcpy(charArray->instance, chars, len * sizeof(JCHAR));
     
     Object *str = alloc_object(vm, vm->jlString, atomic);
     STR(str, chars) = charArray;
@@ -111,7 +111,7 @@ Object *alloc_string_java(VM *vm, jchar *chars, int len, int atomic) {
 Object *alloc_string_utf8(VM *vm, char *chars, int datalen, int atomic) {
     int charlen = get_utf8_length(chars, datalen);
     Object *charArray = alloc_array(vm, get_arrayclass_of(vm, vm->primClasses[PRIM_C]), charlen, atomic);
-    decode_utf8(chars, datalen, (jchar*)charArray->instance);
+    decode_utf8(chars, datalen, (JCHAR*)charArray->instance);
     
     Object *str = alloc_object(vm, vm->jlString, atomic);
     STR(str, chars) = charArray;

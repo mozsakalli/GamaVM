@@ -18,7 +18,7 @@ void gamavm_VM_getClass(VM *vm, Object *method, VAR *args) {
     vm->frames[vm->FP].ret.O = args[0].O ? (Object*)args[0].O->cls : NULL;
 }
 void gamavm_VM_getAddress(VM *vm, Object *method, VAR *args) {
-    vm->frames[vm->FP].ret.J = (jlong)args[0].O;
+    vm->frames[vm->FP].ret.J = (JLONG)args[0].O;
 }
 
 void java_lang_Object_clone(VM *vm, Object *method, VAR *args) {
@@ -45,10 +45,10 @@ void java_lang_Object_clone(VM *vm, Object *method, VAR *args) {
 /// java/lang/System
 void java_lang_System_arraycopy(VM *vm, Object *method, VAR *args) {
     Object *src = args[0].O;
-    jint srcOffset = args[1].I;
+    JINT srcOffset = args[1].I;
     Object *dst = args[2].O;
-    jint dstOffset = args[3].I;
-    jint length = args[4].I;
+    JINT dstOffset = args[3].I;
+    JINT length = args[4].I;
     
     if(src == NULL || dst == NULL) {
  // || src->cls->elementClass == NULL || dst->cls->elementClass == NULL
@@ -102,9 +102,9 @@ void java_lang_System_nanoTime(VM *vm, Object *method, VAR *args) {
         uint64_t t = mach_absolute_time();
         t *= info.numer;
         t /= info.denom;
-        vm->frames[vm->FP].ret.J = (jlong)t;
+        vm->frames[vm->FP].ret.J = (JLONG)t;
     #else
-        struct timespec now;\n
+        struct timespec now;
         clock_gettime(CLOCK_MONOTONIC, &now);
         vm->frames[vm->FP].ret.J = now.tv_sec * 1000000000LL + now.tv_nsec;
     #endif
@@ -115,12 +115,12 @@ void java_lang_System_gc(VM *vm, Object *method, VAR *args) {
 }
 
 void java_lang_Math_abs_D(VM *vm, Object *method, VAR *args) {
-    jdouble v = args[0].D;
+    JDOUBLE v = args[0].D;
     if(v < 0) v = -v;
     vm->frames[vm->FP].ret.D = v;
 }
 void java_lang_Math_abs_F(VM *vm, Object *method, VAR *args) {
-    jfloat v = args[0].F;
+    JFLOAT v = args[0].F;
     if(v < 0) v = -v;
     vm->frames[vm->FP].ret.F = v;
 }
@@ -138,8 +138,8 @@ void java_lang_Math_sqrt_D(VM *vm, Object *method, VAR *args) {
 }
 
 void java_lang_Double_toStringImpl(VM *vm, Object *method, VAR *args) {
-    jdouble d = args[0].D;
-    jint b = args[1].I;
+    JDOUBLE d = args[0].D;
+    JINT b = args[1].I;
     char s[32];
     if ( !b ){
         sprintf(s, "%lf", d);
@@ -154,7 +154,7 @@ void java_lang_Double_toStringImpl(VM *vm, Object *method, VAR *args) {
     int j=0;
     int i=32;
     char s2[32];
-    jint inside=0;
+    JINT inside=0;
     while (i-->0){
         if (inside){
             if (s[i]=='.'){
@@ -193,8 +193,8 @@ void java_lang_Double_toStringImpl(VM *vm, Object *method, VAR *args) {
 
 void java_lang_Float_toStringImpl(VM *vm, Object *method, VAR *args) {
     char s[32];
-    jfloat d = args[0].F;
-    jint b = args[1].I;
+    JFLOAT d = args[0].F;
+    JINT b = args[1].I;
     if ( !b ){
         sprintf(s, "%f", d);
     } else {
@@ -207,7 +207,7 @@ void java_lang_Float_toStringImpl(VM *vm, Object *method, VAR *args) {
     int j=0;
     int i=32;
     char s2[32];
-    jint inside=0;
+    JINT inside=0;
     while (i-->0){
         if (inside){
             if (s[i]=='.'){

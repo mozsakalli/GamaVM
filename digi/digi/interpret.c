@@ -182,7 +182,7 @@ typedef struct OP {
     int code;
     int index;
     VAR var;
-    jint line;
+    JINT line;
     void *handler;
 } OP;
 
@@ -206,21 +206,21 @@ typedef struct COMPILERCTX {
     
 } COMPILERCTX;
 
-unsigned char* vm_compiler_readu2(unsigned char *bc, jint *target) {
+unsigned char* vm_compiler_readu2(unsigned char *bc, JINT *target) {
     Short2Char sc;
     sc.c1 = (unsigned)*bc++;
     sc.c0 = (unsigned)*bc++;
     *target = sc.us;
     return bc;
 }
-unsigned char* vm_compiler_reads2(unsigned char *bc, jint *target) {
+unsigned char* vm_compiler_reads2(unsigned char *bc, JINT *target) {
     Short2Char sc;
     sc.c1 = (unsigned)*bc++;
     sc.c0 = (unsigned)*bc++;
     *target = sc.s;
     return bc;
 }
-unsigned char* vm_compiler_reads4(unsigned char *bc, jint *target) {
+unsigned char* vm_compiler_reads4(unsigned char *bc, JINT *target) {
     Int2Float i2f;
     i2f.c3 = (unsigned char)*bc++;
     i2f.c2 = (unsigned char)*bc++;
@@ -280,7 +280,7 @@ CatchInfo *find_catch_block(VM *vm, Object *omethod, Object *exception, int pc) 
 
 int vm_compiler_method_type(CPItem *cp, int index) {
     Object *str = cp[cp[cp[index].index2].index2].value.O;
-    jchar *ch = STRCHARS(str);
+    JCHAR *ch = STRCHARS(str);
     while(*ch != ')') ch++;
     ch++;
     return *ch=='L' || *ch=='[' ? 'O' : *ch;
@@ -810,7 +810,7 @@ void vm_compiler_build_ops(COMPILERCTX *ctx) {
 int vm_compile_count_args_by_index(Object *cls, int index, int isStatic) {
     CPItem *cp = CLS(cls,cp);
     Object *signature = cp[cp[cp[index].index2].index2].value.O;
-    jchar *ch = STRCHARS(signature);
+    JCHAR *ch = STRCHARS(signature);
     ch++; //(
     int count = 0;
     if(!isStatic) {
@@ -1433,7 +1433,7 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
     VAR* local = &vm->stack[vm->SP];
     VAR* stack = local + method->maxLocals;
     vm->SP += method->maxStack + method->maxLocals;
-    jint sp = 0;
+    JINT sp = 0;
     
     //if(!strcmp(string2c(method->name),"main"))
     //    printf("...");
@@ -1448,7 +1448,7 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
 
     int argCount = method->argCount;
     if(argCount > 0) {
-        jint *map = method->argMap;
+        JINT *map = method->argMap;
         for(int i=0; i<argCount; i++) {
             //printf("arg%d = %d %p %d\n", map[i], args->I, args->O);
             local[map[i]] = *args;
@@ -1457,7 +1457,7 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
     }
 
     Object *field;
-    jint fp = ++vm->FP;
+    JINT fp = ++vm->FP;
     vm->frames[fp].method = omethod;
     vm->frames[fp].SP = local;
     //Frame *frame = &vm->frames[++vm->fp];
@@ -1754,56 +1754,56 @@ OP_DUPX1:
     }
     
 OP_GETSTATIC_B:
-    stack[sp++].I = *((jbyte*)op->var.O);
+    stack[sp++].I = *((JBYTE*)op->var.O);
     NEXT(1);
 OP_GETSTATIC_Z:
-    stack[sp++].I = *((jbool*)op->var.O);
+    stack[sp++].I = *((JBOOL*)op->var.O);
     NEXT(1);
 OP_GETSTATIC_C:
-    stack[sp++].I = *((jchar*)op->var.O);
+    stack[sp++].I = *((JCHAR*)op->var.O);
     NEXT(1);
 OP_GETSTATIC_S:
-    stack[sp++].I = *((jshort*)op->var.O);
+    stack[sp++].I = *((JSHORT*)op->var.O);
     NEXT(1);
 OP_GETSTATIC_I:
-    stack[sp++].I = *((jint*)op->var.O);
+    stack[sp++].I = *((JINT*)op->var.O);
     NEXT(1);
 OP_GETSTATIC_F:
-    stack[sp++].F = *((jfloat*)op->var.O);
+    stack[sp++].F = *((JFLOAT*)op->var.O);
     NEXT(1);
 OP_GETSTATIC_J:
-    stack[sp++].J = *((jlong*)op->var.O);
+    stack[sp++].J = *((JLONG*)op->var.O);
     NEXT(1);
 OP_GETSTATIC_D:
-    stack[sp++].D = *((jdouble*)op->var.O);
+    stack[sp++].D = *((JDOUBLE*)op->var.O);
     NEXT(1);
 OP_GETSTATIC_O:
     stack[sp++].O = *((Object**)op->var.O);
     NEXT(1);
     
 OP_PUTSTATIC_B:
-    *((jbyte*)op->var.O) = stack[--sp].I;
+    *((JBYTE*)op->var.O) = stack[--sp].I;
     NEXT(1);
 OP_PUTSTATIC_Z:
-    *((jbool*)op->var.O) = stack[--sp].I;
+    *((JBOOL*)op->var.O) = stack[--sp].I;
     NEXT(1);
 OP_PUTSTATIC_C:
-    *((jchar*)op->var.O) = stack[--sp].I;
+    *((JCHAR*)op->var.O) = stack[--sp].I;
     NEXT(1);
 OP_PUTSTATIC_S:
-    *((jshort*)op->var.O) = stack[--sp].I;
+    *((JSHORT*)op->var.O) = stack[--sp].I;
     NEXT(1);
 OP_PUTSTATIC_I:
-    *((jint*)op->var.O) = stack[--sp].I;
+    *((JINT*)op->var.O) = stack[--sp].I;
     NEXT(1);
 OP_PUTSTATIC_F:
-    *((jfloat*)op->var.O) = stack[--sp].F;
+    *((JFLOAT*)op->var.O) = stack[--sp].F;
     NEXT(1);
 OP_PUTSTATIC_J:
-    *((jlong*)op->var.O) = stack[--sp].J;
+    *((JLONG*)op->var.O) = stack[--sp].J;
     NEXT(1);
 OP_PUTSTATIC_D:
-    *((jdouble*)op->var.O) = stack[--sp].D;
+    *((JDOUBLE*)op->var.O) = stack[--sp].D;
     NEXT(1);
 OP_PUTSTATIC_O:
     *((Object**)op->var.O) = stack[--sp].O;
@@ -1876,7 +1876,7 @@ OP_PUTFIELD_B:
     {
         Object *object = stack[sp-2].O;
         NULL_CHECK(object);
-        *FIELD_PTR_B(object, op->index) = (jbyte)stack[sp-1].I;
+        *FIELD_PTR_B(object, op->index) = (JBYTE)stack[sp-1].I;
         sp -= 2;
         NEXT(1);
     }
@@ -1884,7 +1884,7 @@ OP_PUTFIELD_Z:
     {
         Object *object = stack[sp-2].O;
         NULL_CHECK(object);
-        *FIELD_PTR_Z(object, op->index) = (jbool)stack[sp-1].I;
+        *FIELD_PTR_Z(object, op->index) = (JBOOL)stack[sp-1].I;
         sp -= 2;
         NEXT(1);
     }
@@ -1892,7 +1892,7 @@ OP_PUTFIELD_C:
     {
         Object *object = stack[sp-2].O;
         NULL_CHECK(object);
-        *FIELD_PTR_C(object, op->index) = (jshort)stack[sp-1].I;
+        *FIELD_PTR_C(object, op->index) = (JSHORT)stack[sp-1].I;
         sp -= 2;
         NEXT(1);
     }
@@ -2019,44 +2019,44 @@ OP_I2D:  //38
     stack[sp-1].D = stack[sp-1].I;
     NEXT(1)
 OP_L2I:  //39
-    stack[sp-1].I = (jint)stack[sp-1].J;
+    stack[sp-1].I = (JINT)stack[sp-1].J;
     NEXT(1)
 OP_L2F:  //40
-    stack[sp-1].F = (jfloat)stack[sp-1].J;
+    stack[sp-1].F = (JFLOAT)stack[sp-1].J;
     NEXT(1)
 OP_L2D:  //41
-    stack[sp-1].D = (jdouble)stack[sp-1].J;
+    stack[sp-1].D = (JDOUBLE)stack[sp-1].J;
     NEXT(1)
 OP_F2I:  //42
-    stack[sp-1].I = (jint)stack[sp-1].F;
+    stack[sp-1].I = (JINT)stack[sp-1].F;
     NEXT(1)
 OP_F2L:  //43
-    stack[sp-1].J = (jlong)stack[sp-1].F;
+    stack[sp-1].J = (JLONG)stack[sp-1].F;
     NEXT(1)
 OP_F2D:  //44
     stack[sp-1].D = stack[sp-1].F;
     NEXT(1)
 OP_D2I:  //45
-    stack[sp-1].I = (jint)stack[sp-1].D;
+    stack[sp-1].I = (JINT)stack[sp-1].D;
     NEXT(1)
 OP_D2L:  //46
-    stack[sp-1].J = (jlong)stack[sp-1].D;
+    stack[sp-1].J = (JLONG)stack[sp-1].D;
     NEXT(1)
 OP_D2F:  //47
-    stack[sp-1].F = (jfloat)stack[sp-1].D;
+    stack[sp-1].F = (JFLOAT)stack[sp-1].D;
     NEXT(1)
 OP_I2B:  //48
-    stack[sp-1].I = (jbyte)stack[sp-1].I;
+    stack[sp-1].I = (JBYTE)stack[sp-1].I;
     NEXT(1)
 OP_I2C:  //49
-    stack[sp-1].I = (jchar)stack[sp-1].I;
+    stack[sp-1].I = (JCHAR)stack[sp-1].I;
     NEXT(1)
 OP_I2S:  //50
-    stack[sp-1].I = (jshort)stack[sp-1].I;
+    stack[sp-1].I = (JSHORT)stack[sp-1].I;
     NEXT(1)
 OP_LCMP: {
-    jlong v2 = stack[sp-1].J;
-    jlong v1 = stack[sp-2].J;
+    JLONG v2 = stack[sp-1].J;
+    JLONG v1 = stack[sp-2].J;
     stack[sp-2].I = v1 == v2 ? 0 : (v1 < v2 ? -1 : 1);
     sp--;
     NEXT(1)
@@ -2077,19 +2077,19 @@ OP_LCMP: {
     sp--;
     
 OP_FCMPL: {
-    FCMP(jfloat, F, -1);
+    FCMP(JFLOAT, F, -1);
     NEXT(1)
 }
 OP_FCMPG: {
-    FCMP(jfloat, F, 1);
+    FCMP(JFLOAT, F, 1);
     NEXT(1)
 }
 OP_DCMPL: {
-    FCMP(jdouble, D, -1);
+    FCMP(JDOUBLE, D, -1);
     NEXT(1)
 }
 OP_DCMPG: {
-    FCMP(jdouble, D, 1);
+    FCMP(JDOUBLE, D, 1);
     NEXT(1)
 }
 
@@ -2143,28 +2143,28 @@ OP_DMUL: //62
     NEXT(1);
 OP_IDIV: //63
     {
-        jint divisor = stack[sp-1].I;
+        JINT divisor = stack[sp-1].I;
         stack[sp-2].I /= divisor;
         sp--;
         NEXT(1);
     }
 OP_LDIV: //64
     {
-        jlong divisor = stack[sp-1].J;
+        JLONG divisor = stack[sp-1].J;
         stack[sp-2].J /= divisor;
         sp--;
         NEXT(1);
     }
 OP_FDIV: //65
     {
-        jfloat divisor = stack[sp-1].F;
+        JFLOAT divisor = stack[sp-1].F;
         stack[sp-2].F /= divisor;
         sp--;
         NEXT(1);
     }
 OP_DDIV: //66
     {
-        jdouble divisor = stack[sp-1].D;
+        JDOUBLE divisor = stack[sp-1].D;
         stack[sp-2].D /= divisor;
         sp--;
         NEXT(1);
@@ -2338,7 +2338,7 @@ OP_LOADARRAY_S:
 }
 OP_STOREARRAY_I:
 {
-    jint val = stack[--sp].I;
+    JINT val = stack[--sp].I;
     int index = stack[--sp].I;
     Object *object = stack[--sp].O;
     ARRAY_CHECK;
@@ -2347,7 +2347,7 @@ OP_STOREARRAY_I:
 }
 OP_STOREARRAY_J:
 {
-    jlong val = stack[--sp].J;
+    JLONG val = stack[--sp].J;
     int index = stack[--sp].I;
     Object *object = stack[--sp].O;
     ARRAY_CHECK;
@@ -2356,7 +2356,7 @@ OP_STOREARRAY_J:
 }
 OP_STOREARRAY_F:
 {
-    jfloat val = stack[--sp].F;
+    JFLOAT val = stack[--sp].F;
     int index = stack[--sp].I;
     Object *object = stack[--sp].O;
     ARRAY_CHECK;
@@ -2365,7 +2365,7 @@ OP_STOREARRAY_F:
 }
 OP_STOREARRAY_D:
 {
-    jdouble val = stack[--sp].D;
+    JDOUBLE val = stack[--sp].D;
     int index = stack[--sp].I;
     Object *object = stack[--sp].O;
     ARRAY_CHECK;
@@ -2387,7 +2387,7 @@ OP_STOREARRAY_B:
     int index = stack[--sp].I;
     Object *object = stack[--sp].O;
     ARRAY_CHECK;
-    ARRAY_DATA_B(object)[index] = (jbyte)val;
+    ARRAY_DATA_B(object)[index] = (JBYTE)val;
     NEXT(1);
 }
 OP_STOREARRAY_C:
@@ -2396,7 +2396,7 @@ OP_STOREARRAY_C:
     int index = stack[--sp].I;
     Object *object = stack[--sp].O;
     ARRAY_CHECK;
-    ARRAY_DATA_C(object)[index] = (jchar)val;
+    ARRAY_DATA_C(object)[index] = (JCHAR)val;
     NEXT(1);
 }
 OP_STOREARRAY_S:
@@ -2405,7 +2405,7 @@ OP_STOREARRAY_S:
     int index = stack[--sp].I;
     Object *object = stack[--sp].O;
     ARRAY_CHECK;
-    ARRAY_DATA_S(object)[index] = (jchar)val;
+    ARRAY_DATA_S(object)[index] = (JCHAR)val;
     NEXT(1);
 }
 OP_ARRAYLENGTH:

@@ -13,15 +13,15 @@
 #include <string.h>
 #include <stdlib.h>
 
-typedef signed char jbyte;
-typedef unsigned char jbool;
-typedef unsigned short jchar;
-typedef short jshort;
-typedef unsigned short jushort;
-typedef int jint;
-typedef float jfloat;
-typedef long long jlong;
-typedef double jdouble;
+typedef signed char JBYTE;
+typedef unsigned char JBOOL;
+typedef unsigned short JCHAR;
+typedef short JSHORT;
+typedef unsigned short JUSHORT;
+typedef int JINT;
+typedef float JFLOAT;
+typedef long long JLONG;
+typedef double JDOUBLE;
 
 enum {
     ACC_PUBLIC = 0x0001,
@@ -49,7 +49,7 @@ inline static void *vm_alloc(size_t size) {
     return mem;
 }
 
-inline static int compare_chars(jchar *c1, jchar *c2, int len) {
+inline static int compare_chars(JCHAR *c1, JCHAR *c2, int len) {
     for(int i=0; i<len; i++)
         if(c1[i] != c2[i]) return 0;
     return 1;
@@ -58,44 +58,44 @@ inline static int compare_chars(jchar *c1, jchar *c2, int len) {
 
 typedef union _Short2Char {
     union {
-        jshort s;
-        jushort us;
+        JSHORT s;
+        JUSHORT us;
     };
     struct {
-        jbyte c0;
-        jbyte c1;
+        JBYTE c0;
+        JBYTE c1;
     };
 } Short2Char;
 
 typedef union _Int2Float {
-    jint i;
-    jfloat f;
+    JINT i;
+    JFLOAT f;
     struct {
-        jbyte c0;
-        jbyte c1;
-        jbyte c2;
-        jbyte c3;
+        JBYTE c0;
+        JBYTE c1;
+        JBYTE c2;
+        JBYTE c3;
     };
 } Int2Float;
 
 typedef union _Long2Double {
-    jdouble d;
+    JDOUBLE d;
     union {
-        jlong l;
+        JLONG l;
         struct {
-            jint i0;
-            jint i1;
+            JINT i0;
+            JINT i1;
         } i2l;
     };
     struct {
-        jbyte c0;
-        jbyte c1;
-        jbyte c2;
-        jbyte c3;
-        jbyte c4;
-        jbyte c5;
-        jbyte c6;
-        jbyte c7;
+        JBYTE c0;
+        JBYTE c1;
+        JBYTE c2;
+        JBYTE c3;
+        JBYTE c4;
+        JBYTE c5;
+        JBYTE c6;
+        JBYTE c7;
     };
 } Long2Double;
 
@@ -111,10 +111,10 @@ typedef struct __attribute__ ((packed)) Object {
 } Object;
 
 typedef union VAR {
-    jint I;
-    jfloat F;
-    jlong J;
-    jdouble D;
+    JINT I;
+    JFLOAT F;
+    JLONG J;
+    JDOUBLE D;
     Object *O;
 } VAR;
 
@@ -122,7 +122,7 @@ typedef struct __attribute__ ((packed)) StackTraceElement {
     Object *declaringClass;
     Object *methodName;
     Object *fileName;
-    jint lineNumber;
+    JINT lineNumber;
 } StackTraceElement;
 
 typedef struct __attribute__ ((packed)) Throwable {
@@ -136,30 +136,30 @@ typedef struct __attribute__ ((packed)) Field {
     Object *name;
     Object *signature;
     Object *declaringClass;
-    jint flags;
-    jint offset;
+    JINT flags;
+    JINT offset;
     VAR *constantValue;
 } Field;
 
 typedef struct LocalVarInfo {
-    jint start;
-    jint length;
+    JINT start;
+    JINT length;
     Object *name;
     Object *signature;
-    jint index;
+    JINT index;
 } LocalVarInfo;
 
 typedef struct LineNumberInfo {
-    jint pc;
-    jint line;
-    jint breakpoint;
+    JINT pc;
+    JINT line;
+    JINT breakpoint;
 } LineNumberInfo;
 
 typedef struct CatchInfo {
-    jint start;
-    jint end;
-    jint pc;
-    jint type;
+    JINT start;
+    JINT end;
+    JINT pc;
+    JINT type;
     void *label;
 } CatchInfo;
 
@@ -168,31 +168,31 @@ typedef struct __attribute__ ((packed)) Method {
     Object *name;
     Object *signature;
     Object *declaringClass;
-    jint flags;
-    jint *argMap;
-    jint argCount;
-    jint maxStack;
-    jint maxLocals;
-    jint codeSize;
+    JINT flags;
+    JINT *argMap;
+    JINT argCount;
+    JINT maxStack;
+    JINT maxLocals;
+    JINT codeSize;
     void *code;
-    jint lineNumberTableSize;
+    JINT lineNumberTableSize;
     LineNumberInfo *lineNumberTable;
-    jint catchTableSize;
+    JINT catchTableSize;
     CatchInfo *catchTable;
-    jint localVarTableSize;
+    JINT localVarTableSize;
     LocalVarInfo *localVarTable;
-    jint iTableIndex;
-    jint vTableIndex;
+    JINT iTableIndex;
+    JINT vTableIndex;
     void *entry;
     void *compiled;
-    jint breakpoint;
+    JINT breakpoint;
 } Method;
 
 typedef struct CPItem {
     VAR value;
-    jint index1;
-    jint index2;
-    jint type;
+    JINT index1;
+    JINT index2;
+    JINT type;
 } CPItem;
 
 #define CLS(o,f) ((Class*)o->instance)->f
@@ -202,28 +202,28 @@ typedef struct __attribute__ ((packed)) Class {
     Object *superClass;
     Object *interfaces;
     Object *elementClass;
-    jint flags;
+    JINT flags;
     Object *next;
     Object *fields;
     Object *methods;
     Object *sourceFile;
     void *global;
-    jint instanceSize;
-    jint primitiveSize;
+    JINT instanceSize;
+    JINT primitiveSize;
     Object *arrayClass;
     CPItem *cp;
-    jint linked;
+    JINT linked;
     Object *finalizer;
-    jint instanceOffsetCount;
-    jint *instanceOffsets;  //for fast marking
-    jint maxMethodIndex;
-    jint vTableSize;
+    JINT instanceOffsetCount;
+    JINT *instanceOffsets;  //for fast marking
+    JINT maxMethodIndex;
+    JINT vTableSize;
     Object **vtable;
     
-    jint iTableSize;
+    JINT iTableSize;
     Object **itable;
     
-    jint allParentCount;
+    JINT allParentCount;
     Object **allParents;
     struct VM *vm;
 } Class;
@@ -232,11 +232,11 @@ typedef Class VMClass;
 
 #define STR(o,f) ((String*)o->instance)->f
 #define STRLEN(o) (STR(o,length))
-#define STRCHARS(o) ((jchar*)((jchar*)(STR(o,chars)->instance) + STR(o,offset)))
+#define STRCHARS(o) ((JCHAR*)((JCHAR*)(STR(o,chars)->instance) + STR(o,offset)))
 typedef struct __attribute__ ((packed)) String {
     Object *chars;
-    jint offset;
-    jint length;
+    JINT offset;
+    JINT length;
     Object *next;
 } String;
 
@@ -250,8 +250,8 @@ typedef struct HeapBlock {
 
 typedef struct Frame {
     Object *method;
-    jint line;
-    jint pc;
+    JINT line;
+    JINT pc;
     VAR ret;
     VAR *SP;
 } Frame;
@@ -310,7 +310,7 @@ extern Object *alloc_object(VM *vm, Object *cls, int atomic);
 extern Object *alloc_class(VM *vm);
 extern Object *alloc_array(VM *vm, Object *cls, int length, int atomic);
 extern Object *alloc_string_ascii(VM *vm, char *chars, int atomic);
-extern Object *alloc_string_java(VM *vm, jchar *chars, int len, int atomic);
+extern Object *alloc_string_java(VM *vm, JCHAR *chars, int len, int atomic);
 extern Object *alloc_string_utf8(VM *vm, char *chars, int datalen, int atomic);
 extern void gc_step(VM *vm);
 extern void gc_pause();
@@ -320,19 +320,19 @@ extern void gc_unprotect(VM *vm,Object *o);
 
 /// CLASS
 extern Object *get_arrayclass_of(VM *vm, Object *cls);
-extern Object *resolve_class(VM *vm, jchar *name, jint len, int link, Object *target);
+extern Object *resolve_class(VM *vm, JCHAR *name, JINT len, int link, Object *target);
 extern Object *resolve_class_by_index(VM *vm, Object *cls, int index);
-extern Object *find_class(VM *vm, jchar *name, jint len);
-extern Object *find_class_method(VM *vm, Object *cls, jchar *name, jint nlen, jchar *sign, int slen);
-extern Object *find_method(VM *vm, Object *cls, jchar *name, jint nlen, jchar *sign, int slen);
-extern Object *resolve_method(VM *vm, jchar *clsName, int clslen, jchar *name, int nlen, jchar *signature, int slen);
+extern Object *find_class(VM *vm, JCHAR *name, JINT len);
+extern Object *find_class_method(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, int slen);
+extern Object *find_method(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, int slen);
+extern Object *resolve_method(VM *vm, JCHAR *clsName, int clslen, JCHAR *name, int nlen, JCHAR *signature, int slen);
 extern Object *resolve_method_by_index(VM *vm,Object *cls, int index);
-extern Object *find_class_field(VM *vm, Object *cls, jchar *name, jint nlen, jchar *sign, int slen);
-extern Object *find_field(VM *vm, Object *cls, jchar *name, jint nlen, jchar *sign, int slen);
-extern Object *resolve_field(VM *vm, jchar *clsName, int clslen, jchar *name, int namelen, jchar *sign, int slen);
+extern Object *find_class_field(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, int slen);
+extern Object *find_field(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, int slen);
+extern Object *resolve_field(VM *vm, JCHAR *clsName, int clslen, JCHAR *name, int namelen, JCHAR *sign, int slen);
 extern Object *resolve_field_by_index(VM *vm,Object *cls, int index);
-extern jint is_class_child_of(VM *vm, Object *json, Object *jof);
-inline static jint check_cast(VM *vm, Object *object, Object *cls) {
+extern JINT is_class_child_of(VM *vm, Object *json, Object *jof);
+inline static JINT check_cast(VM *vm, Object *object, Object *cls) {
     if(!object) return 1;
     return is_class_child_of(vm, object->cls, cls);
 }
@@ -342,14 +342,14 @@ extern int parse_class(VM *vm, char *data, Object *clsObject);
 extern int get_line_number(Method *method, int pc);
 /// UTF
 extern int get_utf8_length(char *data, int length);
-extern void decode_utf8(char *data, int length, jchar* buf);
-extern char *jchar_to_ascii(jchar *chars, int len);
+extern void decode_utf8(char *data, int length, JCHAR* buf);
+extern char *jchar_to_ascii(JCHAR *chars, int len);
 extern char *string_to_ascii(Object *str);
-extern jchar *char_to_jchar(char *ch, int *len);
+extern JCHAR *char_to_jchar(char *ch, int *len);
 
 /// EXCEPTION
 extern void throw_exception(VM *vm, Object *exception);
-extern void throw_classnotfound(VM *vm, jchar *name, int len);
+extern void throw_classnotfound(VM *vm, JCHAR *name, int len);
 extern void throw_null(VM *vm);
 extern void throw_arraybounds(VM *vm, int index, int length);
 extern void throw_cast(VM *vm, Object *son, Object *of);
@@ -400,7 +400,7 @@ inline static Object *alloc_array_O(VM *vm, Object *cls, int length, int atomic)
 }
 
 
-extern void *read_class_file(jchar *name, int len);
+extern void *read_class_file(JCHAR *name, int len);
 
 #ifdef JDWP_ENABLED
     extern void jdwp_tick(VM *vm, Object *method, int pc, int line, int lineChanged);
@@ -418,28 +418,28 @@ extern void *read_class_file(jchar *name, int len);
 
 #define FIELD_PTR(object,offset) ((object)->instance+offset)
 #define FIELD_PTR_TYPE(object,offset,type) ((type*)FIELD_PTR(object,offset))
-#define FIELD_PTR_B(object,offset) FIELD_PTR_TYPE(object,offset,jbyte)
-#define FIELD_PTR_Z(object,offset) FIELD_PTR_TYPE(object,offset,jbool)
-#define FIELD_PTR_C(object,offset) FIELD_PTR_TYPE(object,offset,jchar)
-#define FIELD_PTR_S(object,offset) FIELD_PTR_TYPE(object,offset,jshort)
-#define FIELD_PTR_I(object,offset) FIELD_PTR_TYPE(object,offset,jint)
-#define FIELD_PTR_F(object,offset) FIELD_PTR_TYPE(object,offset,jfloat)
-#define FIELD_PTR_J(object,offset) FIELD_PTR_TYPE(object,offset,jlong)
-#define FIELD_PTR_D(object,offset) FIELD_PTR_TYPE(object,offset,jdouble)
+#define FIELD_PTR_B(object,offset) FIELD_PTR_TYPE(object,offset,JBYTE)
+#define FIELD_PTR_Z(object,offset) FIELD_PTR_TYPE(object,offset,JBOOL)
+#define FIELD_PTR_C(object,offset) FIELD_PTR_TYPE(object,offset,JCHAR)
+#define FIELD_PTR_S(object,offset) FIELD_PTR_TYPE(object,offset,JSHORT)
+#define FIELD_PTR_I(object,offset) FIELD_PTR_TYPE(object,offset,JINT)
+#define FIELD_PTR_F(object,offset) FIELD_PTR_TYPE(object,offset,JFLOAT)
+#define FIELD_PTR_J(object,offset) FIELD_PTR_TYPE(object,offset,JLONG)
+#define FIELD_PTR_D(object,offset) FIELD_PTR_TYPE(object,offset,JDOUBLE)
 #define FIELD_PTR_O(object,offset) FIELD_PTR_TYPE(object,offset,Object*)
 
 #define ARRAY_DATA(object) (((Object*)object)->instance)
 #define ARRAY_DATA_TYPE(object,type) ((type*)ARRAY_DATA(object))
-#define ARRAY_DATA_B(object) ARRAY_DATA_TYPE(object,jbyte)
-#define ARRAY_DATA_Z(object) ARRAY_DATA_TYPE(object,jbool)
-#define ARRAY_DATA_C(object) ARRAY_DATA_TYPE(object,jchar)
-#define ARRAY_DATA_S(object) ARRAY_DATA_TYPE(object,jshort)
-#define ARRAY_DATA_I(object) ARRAY_DATA_TYPE(object,jint)
-#define ARRAY_DATA_F(object) ARRAY_DATA_TYPE(object,jfloat)
-#define ARRAY_DATA_J(object) ARRAY_DATA_TYPE(object,jlong)
-#define ARRAY_DATA_D(object) ARRAY_DATA_TYPE(object,jdouble)
+#define ARRAY_DATA_B(object) ARRAY_DATA_TYPE(object,JBYTE)
+#define ARRAY_DATA_Z(object) ARRAY_DATA_TYPE(object,JBOOL)
+#define ARRAY_DATA_C(object) ARRAY_DATA_TYPE(object,JCHAR)
+#define ARRAY_DATA_S(object) ARRAY_DATA_TYPE(object,JSHORT)
+#define ARRAY_DATA_I(object) ARRAY_DATA_TYPE(object,JINT)
+#define ARRAY_DATA_F(object) ARRAY_DATA_TYPE(object,JFLOAT)
+#define ARRAY_DATA_J(object) ARRAY_DATA_TYPE(object,JLONG)
+#define ARRAY_DATA_D(object) ARRAY_DATA_TYPE(object,JDOUBLE)
 #define ARRAY_DATA_O(object) ARRAY_DATA_TYPE(object,Object*)
 
-#define RETURN_J(v) vm->frames[vm->FP].ret.J = (jlong)(v);
+#define RETURN_J(v) vm->frames[vm->FP].ret.J = (JLONG)(v);
 
 #endif /* gamavm_h */

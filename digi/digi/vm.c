@@ -34,8 +34,8 @@ VM* vm_init() {
     
     //Setup primitive classes
     char *primitiveNames[9] = {"C","B","Z","S","I","F","J","D","V"};
-    int primitiveSizes[9] = {sizeof(jchar),sizeof(jbyte),sizeof(jbool),sizeof(jshort),
-        sizeof(jint),sizeof(jfloat),sizeof(jlong),sizeof(jdouble),0
+    int primitiveSizes[9] = {sizeof(JCHAR),sizeof(JBYTE),sizeof(JBOOL),sizeof(JSHORT),
+        sizeof(JINT),sizeof(JFLOAT),sizeof(JLONG),sizeof(JDOUBLE),0
     };
     for(int i=0; i<9; i++) {
         gamaVM->primClasses[i] = alloc_class(gamaVM);
@@ -58,11 +58,11 @@ VM* vm_init() {
 
 void vm_main(VM *vm, char *className, char *methodName, char *signature) {
     int clsLen;
-    jchar *clName = char_to_jchar(className, &clsLen);
+    JCHAR *clName = char_to_jchar(className, &clsLen);
     int nameLen;
-    jchar *name = char_to_jchar(methodName, &nameLen);
+    JCHAR *name = char_to_jchar(methodName, &nameLen);
     int signLen;
-    jchar *sign = char_to_jchar(signature, &signLen);
+    JCHAR *sign = char_to_jchar(signature, &signLen);
     
     vm->mainMethod = resolve_method(vm, clName, clsLen, name, nameLen, sign, signLen);
     if(!vm->mainMethod) {

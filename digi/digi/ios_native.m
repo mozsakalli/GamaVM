@@ -18,7 +18,7 @@ void *read_file(const char* path, int *size) {
     return (char*)[data bytes];
 }
 
-void *read_class_file(jchar *name, int len) {
+void *read_class_file(JCHAR *name, int len) {
     int jarSize;
     void *jar = read_file("jvm_test.jar", &jarSize);
     if(!jar) return NULL;

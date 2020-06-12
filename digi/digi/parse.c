@@ -14,7 +14,7 @@
 
 Object *parse_cp_utf8(VM *vm, char *data, int len) {
     int charlen = get_utf8_length(data, len);
-    jchar search[charlen];
+    JCHAR search[charlen];
     decode_utf8(data, len, search);
     
     Object *ptr = vm->strings;
@@ -163,11 +163,11 @@ char *parse_field(VM *vm, char *data, Object *f, CPItem *cp) {
 }
 
 void setup_method_args(Method *method) {
-    jchar *ch = STRCHARS(method->signature);
+    JCHAR *ch = STRCHARS(method->signature);
     ch++; //(
     int count = 0;
     int jcount = 0;
-    jint tmp[256]; //enough for paramters? :)
+    JINT tmp[256]; //enough for paramters? :)
     if(!IS_STATIC(method->flags)) {
         count++;
         tmp[0] = 0;
@@ -185,8 +185,8 @@ void setup_method_args(Method *method) {
         ch++;
     }
     
-    method->argMap = (jint*)malloc(sizeof(jint) * count);
-    memcpy(method->argMap, tmp, sizeof(jint) * count);
+    method->argMap = (JINT*)malloc(sizeof(JINT) * count);
+    memcpy(method->argMap, tmp, sizeof(JINT) * count);
     method->argCount = count;
 }
 
@@ -284,8 +284,8 @@ int parse_class(VM *vm, char *data, Object *clsObject) {
     data = parse_constant_pool(vm, data, &cp);
     cls->cp = cp;
     cls->flags = READ_U2(data); data += 2;
-    jint nameIndex = READ_U2(data); data += 2;
-    jint superIndex = READ_U2(data); data += 2;
+    JINT nameIndex = READ_U2(data); data += 2;
+    JINT superIndex = READ_U2(data); data += 2;
     cls->name = cp[cp[nameIndex].index1].value.O;
     Object *superName = cp[cp[superIndex].index1].value.O;
     if(superName)
