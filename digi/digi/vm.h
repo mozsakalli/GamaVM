@@ -237,6 +237,7 @@ typedef struct __attribute__ ((packed)) String {
     Object *chars;
     JINT offset;
     JINT length;
+    JINT hashCode;
     Object *next;
 } String;
 

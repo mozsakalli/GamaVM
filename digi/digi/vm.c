@@ -69,7 +69,7 @@ void vm_main(VM *vm, char *className, char *methodName, char *signature) {
         printf("Can't find main method: %s:%s:%s\n", className, methodName, signature);
         return;
     }
-    jdwp_start(vm, "127.0.0.1", 10000);
+    jdwp_start(vm, "192.168.0.136", 10000);
     
     CALLVM_V(vm, vm->mainMethod, NULL);
 }

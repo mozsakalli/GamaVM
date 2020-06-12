@@ -138,6 +138,7 @@ void java_lang_Math_sqrt_D(VM *vm, Object *method, VAR *args) {
 }
 
 void java_lang_Double_toStringImpl(VM *vm, Object *method, VAR *args) {
+    /*
     JDOUBLE d = args[0].D;
     JINT b = args[1].I;
     char s[32];
@@ -188,25 +189,30 @@ void java_lang_Double_toStringImpl(VM *vm, Object *method, VAR *args) {
             break;
         }
     }
-    vm->frames[vm->FP].ret.O = alloc_string_ascii(vm, s, 0);
+     */
+    char buf[21];
+    int length = snprintf(buf,20,"%g",args[0].D);
+    vm->frames[vm->FP].ret.O = alloc_string_ascii(vm, buf, 0);
 }
 
 void java_lang_Float_toStringImpl(VM *vm, Object *method, VAR *args) {
-    char s[32];
+    /*
+    char s[33];
     JFLOAT d = args[0].F;
     JINT b = args[1].I;
+    int len ;
     if ( !b ){
-        sprintf(s, "%f", d);
+        len = snprintf(s, 32, "%f", d);
     } else {
-        sprintf(s, "%1.20E", d);
+        len = snprintf(s, 32, "%1.20E", d);
     }
     // We need to match the format of Java spec.  That includes:
     // No "+" for positive exponent.
     // No leading zeroes in positive exponents.
     // No trailing zeroes in decimal portion.
     int j=0;
-    int i=32;
-    char s2[32];
+    int i=len;
+    char s2[33];
     JINT inside=0;
     while (i-->0){
         if (inside){
@@ -241,8 +247,10 @@ void java_lang_Float_toStringImpl(VM *vm, Object *method, VAR *args) {
             break;
         }
     }
-    
-    vm->frames[vm->FP].ret.O = alloc_string_ascii(vm, s, 0);
+    */
+    char buf[21];
+    int length = snprintf(buf,20,"%g",args[0].F);
+    vm->frames[vm->FP].ret.O = alloc_string_ascii(vm, buf, 0);
 }
 
 void java_lang_Float_intBitsToFloat(VM *vm, Object *method, VAR *args) {

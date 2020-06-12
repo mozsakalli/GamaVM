@@ -24,8 +24,34 @@ import digiplay.Platform;
  */
 public class Main {
     
+    static class T {
+        byte b = 1;
+        char c = 2;
+        short s = 3;
+        boolean z = true;
+        int i = 5;
+        float f = 6;
+        long l = 7;
+        double d = 8;
+    }
+    
     public static void main() {
-        Platform.run(new MyGame());
+        int v = 10;
+        System.out.println("hello "+v);
+        /*
+        while(true) {
+            long v = System.currentTimeMillis();
+            int i = 10;//(int)v;
+            T t = new T();
+            System.out.println("hello "+i);
+        }
+        /*while(true) {
+            T t = new T();
+            System.out.println(t.b+","+t.c+","+t.s+","+t.z+","+t.i+","+t.f+","+t.l+","+t.d);
+            System.gc();
+        }
+        //System.out.println("Hello"+12f);*/
+        //Platform.run(new MyGame());
     }
     
     public static void main(String...args) {

@@ -22,9 +22,14 @@ JdwpClient jdwp_client;
 int jdwp_server_fd;
 int jdwp_step_fp = -1;
 int jdwp_invoking = 0;
-int jdwp_suspend_on_start = 0;
+int jdwp_suspend_on_start = 1;
 
-#define JDWPLOG(...) printf(__VA_ARGS__)
+#ifdef __ANDROID__
+#include <android/log.h>
+#define JDWPLOG(...) __android_log_print(ANDROID_LOG_ERROR, "GamaVM", __VA_ARGS__)
+#else
+#define JDWPLOG(...) printf( __VA_ARGS__)
+#endif
 
 int jdwp_listen(int port) {
     struct sockaddr_in serv_addr;
@@ -35,7 +40,7 @@ int jdwp_listen(int port) {
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     serv_addr.sin_port = htons(port);
-    serv_addr.sin_len = sizeof(serv_addr);
+    //serv_addr.sin_len = sizeof(serv_addr);
 
     bool fail = bind(fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0;
     if(fail) {
@@ -937,7 +942,7 @@ void jdwp_process_packet(JdwpPacket *req) {
         } break;
             
         default:
-            printf("!!!!!!!!!!!!!!!!!!!! Unknown JDWP command = 0x%x\n",cmd);
+            JDWPLOG("!!!!!!!!!!!!!!!!!!!! Unknown JDWP command = 0x%x\n",cmd);
             delete resp;
             return;
     }
@@ -971,7 +976,7 @@ void jdwp_start(VM *vm, char *host, int port) {
 #ifdef JDWP_SERVER_MODE
     jdwp_server_fd = jdwp_listen(10000);
     if(!jdwp_server_fd) {
-        printf("Can't start JDWP server on port : %d\n",port);
+        JDWPLOG("Can't start JDWP server on port : %d\n",port);
         return;
     }
     if(jdwp_suspend_on_start) {
@@ -986,7 +991,7 @@ void jdwp_start(VM *vm, char *host, int port) {
     }
 #else
     if(jdwp_suspend_on_start) {
-        printf("Connecting to JDWP server %s:%d\n", host, port);
+        JDWPLOG("Connecting to JDWP server %s:%d\n", host, port);
         while(1) {
             int fd = jdwp_connect(host, port);
             if(fd <= 0) {

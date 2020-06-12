@@ -42,7 +42,6 @@ public class GameView extends GLSurfaceView implements GLSurfaceView.Renderer {
 
     public GameView(Context context) {
         super(context);
-        // gameApp = (GameApplication)((android.app.Activity)context).getApplication();
         init(false, 0, 0);
         setFocusable(true);
         setFocusableInTouchMode(true);
@@ -54,8 +53,6 @@ public class GameView extends GLSurfaceView implements GLSurfaceView.Renderer {
                 View.MeasureSpec.getSize(widthMeasureSpec),
                 View.MeasureSpec.getSize(heightMeasureSpec)
         );
-        //ResolutionStrategy.MeasuredDimension measures = resolutionStrategy.calcMeasures(widthMeasureSpec, heightMeasureSpec);
-        //setMeasuredDimension(measures.width, measures.height);
     }
 
     private void init(boolean translucent, int depth, int stencil) {

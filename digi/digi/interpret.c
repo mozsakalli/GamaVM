@@ -10,6 +10,13 @@
 #include "vm.h"
 #include "opcodes.h"
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#define GLOG(...) __android_log_print(ANDROID_LOG_ERROR, "GamaVM", __VA_ARGS__)
+#else
+#define GLOG(...) printf( __VA_ARGS__)
+#endif
+
 enum {
     OP_UNIMPLEMENTED,   //0
     OP_NOP,   //1
@@ -1051,9 +1058,13 @@ void vm_process_bb(Method *method, BB *bb, void **handlers) {
 
 void pm(char *m, Object *omethod) {
     Method *method = omethod->instance;
-    printf("%s : %s", m, string_to_ascii(CLS(method->declaringClass,name)));
-    printf(":%s", string_to_ascii(method->name));
-    printf(":%s\n", string_to_ascii(method->signature));
+    char tmp[1024];
+    char *ptr = tmp;
+
+    ptr += sprintf(tmp, "%s : %s", m, string_to_ascii(CLS(method->declaringClass,name)));
+    ptr += sprintf(ptr, ":%s", string_to_ascii(method->name));
+    ptr += sprintf(ptr, ":%s\n", string_to_ascii(method->signature));
+    GLOG("%s", tmp);
 }
 
 int vm_compile_find_op(COMPILERCTX *ctx, int pc, int *target) {
@@ -1437,7 +1448,7 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
     
     //if(!strcmp(string2c(method->name),"main"))
     //    printf("...");
-    //pm("Executing", omethod);
+    pm("Executing", omethod);
     //printf("SP=%d\n", vm->SP);
     if(!method->compiled) {
         //pm("Compiling", omethod);
@@ -1450,7 +1461,7 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
     if(argCount > 0) {
         JINT *map = method->argMap;
         for(int i=0; i<argCount; i++) {
-            //printf("arg%d = %d %p %d\n", map[i], args->I, args->O);
+            GLOG("arg%d = I:%d O:%p\n", map[i], args->I, args->O);
             local[map[i]] = *args;
             args++;
         }
@@ -1513,6 +1524,7 @@ OP_CONST_CLS:
     {
         Object *cls = resolve_class_by_index(vm, method->declaringClass, op->index);
         if(vm->exception) goto __EXCEPTION;
+        GLOG("ClassConst: %s\n", string_to_ascii(CLS(cls,name)));
         op->var.O = cls;
         op->handler = handlers[OP_CONST];
         REDISPATCH();

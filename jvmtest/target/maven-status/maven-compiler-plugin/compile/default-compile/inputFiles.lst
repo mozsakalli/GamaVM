@@ -4,7 +4,6 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Files.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/NSDictionary.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/NSProtocol.java
-/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Action.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Metal.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Graphics.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIView.java
@@ -23,14 +22,13 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Digiplay.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIWindow.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Net.java
-/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Action1.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/GLQuadBatch.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/GLTexture.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/VertexBuffer.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/QuadMesh.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Matrix2D.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Stage2D.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/ObjCClass.java
-/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/Texture2D.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/RenderDevice.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIApplicationDelegate.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/Selector.java
@@ -46,5 +44,6 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIApplication.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Camera.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Platform.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Texture2D.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/GLShader2D.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/Shader.java

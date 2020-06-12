@@ -28,6 +28,7 @@ public final class String implements java.lang.CharSequence, Comparable<String> 
     public final int offset;
     public final int count;
     private int hashCode = 0;
+    private String next; //used for pooling by vm
 
     
     private static final char[] ZERO_CHAR = new char[0];

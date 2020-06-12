@@ -5,8 +5,9 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 #, --no-warn-shared-textrel
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wall -v -Wl")
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fshort-wchar")
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wall -v -Wl,--no-fatal-warnings")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fshort-wchar -fpascal-strings -fasm-blocks -fstrict-aliasing -fvisibility=hidden")
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fshort-wchar -fpascal-strings -fasm-blocks -fstrict-aliasing -fvisibility=hidden")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast")
 
 # Creates and names a library, sets it as either STATIC
@@ -37,6 +38,7 @@ add_library( # Sets the name of the library.
         /Users/mustafa/Work/GamaVM/digi/digi/digiplay_gl.c
         /Users/mustafa/Work/GamaVM/digi/digi/android_native.cpp
         /Users/mustafa/Work/GamaVM/digi/digi/android_net.cpp
+        /Users/mustafa/Work/GamaVM/digi/digi/jdwp.cpp
         #native-lib.cpp
         #jvm.c
         #miniz.c

@@ -6,6 +6,7 @@
 #include <string.h>
 #include "vm.h"
 #include "miniz.h"
+#include <android/log.h>
 
 VM *gamaVM;
 JavaVM *androidJavaVM;
@@ -52,7 +53,7 @@ extern "C" void *__platform_read_file(const char* path, int *size) {
     return NULL;
 }
 
-extern "C" void *read_class_file(jchar *name, int len) {
+extern "C" void *read_class_file(JCHAR *name, int len) {
     int jarSize;
     void *jar = __platform_read_file("jvm_test.jar", &jarSize);
     if(!jar) return NULL;
@@ -94,16 +95,26 @@ extern "C" void *read_class_file(jchar *name, int len) {
 Object *digiplayPlatform, *digiplayPlatformStepMethod;
 
 extern "C" void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args) {
+    JCHAR *ch = (JCHAR*)L"AB";
+    if(ch[0] == 'A' && ch[1]=='B') {
+        printf("OK");
+    }
     digiplayPlatform = args[0].O;
     digiplayPlatformStepMethod = resolve_method(vm, (JCHAR*)L"digiplay/Platform",17, (JCHAR*)L"step",4, (JCHAR*)L"()V", 3);
     JNIEnv *ENV = getJNIEnv();
     jclass cls = ENV->FindClass("com/example/myapplication/MainActivity");
     jmethodID mth = ENV->GetStaticMethodID(cls, "platformRun", "()V");
-    ENV->CallStaticObjectMethod(cls, mth);
+    ENV->CallStaticVoidMethod(cls, mth);
 }
 
 extern "C" void java_lang_System_SystemOutStream_printImpl(VM *vm, Object *method, VAR *args) {
-
+    if(!args[0].O) return;
+    /*
+    int len = STRLEN(args[0].O);
+    JCHAR buf[len+1];
+    memcpy(buf, STRCHARS(args[0].O), len* sizeof(JCHAR));
+    buf[len+1] = 0;*/
+    __android_log_print(ANDROID_LOG_INFO, "GamaVM", "%s", string_to_ascii(args[0].O));
 }
 
 extern "C" JNIEXPORT void JNICALL

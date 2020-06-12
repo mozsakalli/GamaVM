@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     signingConfigs {
         release {
-            storeFile file("/Users/mustafa/Work/digitoygames/okeyextra/okeyextra-client/okeyextra.keystore")
+            storeFile file("/Users/mustafa/Work/GamaVM/MyApplication2/okeyextra.keystore")
             storePassword "NaCanMst3791"
             keyAlias "tekelokey"
             keyPassword "NaCanMst3791"
@@ -38,7 +38,7 @@ android {
     externalNativeBuild {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
-            version "3.10.2"
+            //version "3.10.2"
         }
     }
 }

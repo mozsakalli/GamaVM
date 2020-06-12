@@ -7,6 +7,11 @@
 //
 
 #include "vm.h"
+#ifdef __ANDROID__
+
+#include <android/log.h>
+
+#endif
 
 void throw_exception(VM *vm, Object *exception) {
     int fp = vm->FP;
@@ -14,6 +19,9 @@ void throw_exception(VM *vm, Object *exception) {
     if(exception) {
         Throwable *thr = exception->instance;
         if(!thr->cause) thr->cause = exception;
+        char tmp[4096];
+        char *ptr = tmp;
+        ptr += sprintf(tmp,"%s\n",string_to_ascii(CLS(exception->cls, name)));
         if(fp > 0) {
             Object *arr = alloc_array(vm, get_arrayclass_of(vm, vm->jlSTE), fp, 0);
             for(int i=1; i<=fp; i++) {
@@ -21,6 +29,8 @@ void throw_exception(VM *vm, Object *exception) {
                 Object *seo = alloc_object(vm, vm->jlSTE, 0);
                 StackTraceElement *se = (StackTraceElement*)seo->instance;
                 Method *mth = f->method->instance;
+                ptr += sprintf(ptr, "%s", string_to_ascii(CLS(mth->declaringClass,name)));
+                ptr += sprintf(ptr, ":%s at %d\n", string_to_ascii(mth->name), f->line);
                 se->declaringClass = CLS(mth->declaringClass,name);
                 se->fileName = CLS(mth->declaringClass,sourceFile);
                 se->methodName = mth->name;
@@ -29,6 +39,9 @@ void throw_exception(VM *vm, Object *exception) {
             }
             thr->stackTrace = arr;
         }
+#ifdef __ANDROID__
+        __android_log_print(ANDROID_LOG_ERROR, "GamaVM", "%s", tmp);
+#endif
     }
 }
 
@@ -69,6 +82,10 @@ void throw_classnotfound(VM *vm, JCHAR *name, int len) {
 }
 
 void throw_arraybounds(VM *vm, int index, int length) {
+#ifdef __ANDROID__
+    __android_log_print(ANDROID_LOG_ERROR, "GamaVM", "array exception %d of %d", index, length);
+#endif
+
     static Object *npe = NULL;
     static Object *mth = NULL;
     if(!npe || CLS(npe,vm) != vm) {

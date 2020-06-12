@@ -31,6 +31,17 @@ import digiplay.Stage2D;
  */
 public class MyGame implements Game {
 
+    static class T {
+        byte b = 1;
+        char c = 2;
+        short s = 3;
+        boolean z = true;
+        int i = 5;
+        float f = 6;
+        long l = 7;
+        double d = 8;
+    }
+    
     //long program;
     //long attrPos, uniProj;
     //long vbo, ibo;
@@ -75,6 +86,7 @@ public class MyGame implements Game {
     
     @Override
     public void begin() {
+        /*
         Stage2D.I.setup(new Point2D(Digiplay.platform.screenWidth,Digiplay.platform.screenHeight));
         for(int i=0; i<1000; i++) {
             Image img = new Image();
@@ -190,10 +202,19 @@ public class MyGame implements Game {
         */
     }
 
+    long fpsTimer;
+    int fps;
+    
     @Override
     public void update() {
-        Stage2D.I.update();
+        //Stage2D.I.update();
         long now = System.currentTimeMillis();
+        if(System.currentTimeMillis() - fpsTimer <= 1000) fps++; else {
+            System.out.println("FPS: "+fps);
+            fps = 0;
+            fpsTimer = System.currentTimeMillis();
+        }
+        /*
         if(now - httpTimer >= 5000) {
             Net.http("https://www.google.com", null, new HttpListener(){
                 @Override
@@ -208,7 +229,7 @@ public class MyGame implements Game {
 
             });        
             httpTimer = now;
-        }
+        }*/
     }
 
     //Mat2D mat = new Mat2D();
@@ -216,7 +237,7 @@ public class MyGame implements Game {
     //float x=0,y=0,dy=speed,r=0;
     @Override
     public void render() {
-        Stage2D.I.render();
+        //Stage2D.I.render();
         /*
         batch.begin(Digiplay.platform.screenWidth, Digiplay.platform.screenHeight, true, 0xFF300000);
         //x+=0.02f;

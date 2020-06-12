@@ -30,10 +30,22 @@ public class MainActivity extends AppCompatActivity {
     }
     public static byte[] readFile(String path) {
         try {
+            long time = System.currentTimeMillis();
+            System.out.println("reading: "+path);
             InputStream in = AM.open(path);
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+            byte[] buffer = new byte[1024*128];
+            while(true) {
+                int readed = in.read(buffer);
+                if(readed > 0) bytes.write(buffer, 0, readed); else break;
+            }
+            time = System.currentTimeMillis() - time;
+            System.out.println("readed in "+time);
+            /*
             int ch;
             while((ch = in.read()) != -1) bytes.write(ch);
+             */
             return bytes.toByteArray();
         } catch(Exception e) {
             e.printStackTrace();

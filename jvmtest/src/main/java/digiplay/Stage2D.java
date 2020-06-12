@@ -55,7 +55,7 @@ public class Stage2D extends Sprite2D {
 
         scaleX(w / ww);
         setScaleY(h / hh);
-        System.out.println("Stage2D::scaleFactor is " + scaleFactor + " resolution: " + sw + "x" + sh);
+        //System.out.println("Stage2D::scaleFactor is " + scaleFactor + " resolution: " + sw + "x" + sh);
 
         x((sw - w) / 2);
         y((sh - h) / 2);

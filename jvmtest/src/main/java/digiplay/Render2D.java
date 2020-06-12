@@ -28,7 +28,7 @@ public class Render2D {
         globalAlpha = alpha;
     }
     
-    public static void drawQuadMesh(QuadMesh quad, int color, int blendMode, GLTexture texture, int textureMode) {
-        quadBatch.drawQuadMesh(quad, modelMatrix, defaultShader, color, globalAlpha, blendMode, texture, textureMode);
+    public static void drawQuadMesh(QuadMesh quad, int color, int blendMode) {
+        quadBatch.drawQuadMesh(quad, modelMatrix, defaultShader, color, globalAlpha, blendMode);
     }
 }

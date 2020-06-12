@@ -17,7 +17,6 @@ gamavm/apple/NSMutableObject.class
 digiplay/Files.class
 digiplay/Matrix3D.class
 digiplay/Graphics.class
-digiplay/Action1.class
 digiplay/render/Texture.class
 digiplay/Render2D.class
 digiplay/Camera.class
@@ -25,7 +24,6 @@ digiplay/Metal.class
 digiplay/Mat2D.class
 digiplay/render/Shader.class
 gamavm/apple/uikit/UIWindow.class
-digiplay/render/Texture2D.class
 digiplay/render/QuadGeometry.class
 digiplay/QuadMesh.class
 Main.class
@@ -36,7 +34,6 @@ gamavm/apple/NSProtocol.class
 digiplay/Point2D.class
 gamavm/apple/uikit/UIApplicationDelegate.class
 gamavm/apple/Selector.class
-digiplay/Action.class
 digiplay/Digiplay.class
 digiplay/Mat3D.class
 Tmp.class

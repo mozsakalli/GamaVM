@@ -8,6 +8,12 @@
 
 #include "vm.h"
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#define GLOG(...) __android_log_print(ANDROID_LOG_ERROR, "GamaVM", __VA_ARGS__)
+#else
+#define GLOG(...) printf( __VA_ARGS__)
+#endif
 JINT get_prim_size(int chr) {
     switch(chr) {
         case 'B': return sizeof(JBYTE);
@@ -90,8 +96,8 @@ Object *find_class(VM *vm, JCHAR *name, JINT len) {
 void link_class(VM *vm, Object *clsObject) {
     Class *cls = clsObject->instance;
     if(cls->linked) return;
-    printf("linking: %p -> ", clsObject);
-    printf("%s\n", string_to_ascii(cls->name));
+
+    GLOG("linking: %p -> %s\n", clsObject, string_to_ascii(cls->name));
 
     cls->linked = 1;
     cls->instanceSize = 0;
@@ -133,14 +139,16 @@ void link_class(VM *vm, Object *clsObject) {
         }
     }
     
-    /*
+
     if(clsObject == vm->jlClass) {
-        printf("!!!!cls: %d == %d\n", cls->instanceSize, sizeof(Class));
+        GLOG("!!!!cls: %d == %d\n", cls->instanceSize, sizeof(Class));
     } else if(clsObject == vm->jlMethod) {
-        printf("!!!!mth: %d == %d\n", cls->instanceSize, sizeof(Method));
+        GLOG("!!!!mth: %d == %d\n", cls->instanceSize, sizeof(Method));
     } else if(clsObject == vm->jlField) {
-        printf("!!!!fld: %d == %d\n", cls->instanceSize, sizeof(Field));
-    }*/
+        GLOG("!!!!fld: %d == %d\n", cls->instanceSize, sizeof(Field));
+    } else if(clsObject == vm->jlString) {
+        GLOG("!!!!str: %d == %d\n", cls->instanceSize, sizeof(String));
+    }
     
     if(cls->instanceOffsetCount > 0) {
         cls->instanceOffsets = malloc(sizeof(int) * cls->instanceOffsetCount);
@@ -251,9 +259,11 @@ void link_class(VM *vm, Object *clsObject) {
     
     jdwp_send_classload_event(vm, clsObject);
     
-    Object *clInit = find_class_method(vm, clsObject, L"<clinit>", 8, L"()V", 3);
+    Object *clInit = find_class_method(vm, clsObject, (JCHAR*)L"<clinit>", 8, (JCHAR*)L"()V", 3);
     if(clInit) {
-        printf("clInit: %s\n", string_to_ascii(cls->name));
+        GLOG("clInit: %s\n", string_to_ascii(cls->name));
+        if(!strcmp("java/lang/Integer", string_to_ascii(cls->name)))
+            printf("....");
         CALLVM_V(vm, clInit, NULL);
     }
     
@@ -284,7 +294,7 @@ Object *resolve_class(VM *vm, JCHAR *name, JINT len, int link, Object *target) {
         return get_arrayclass_of(vm, element);
     }
     
-    printf("load: %s\n", jchar_to_ascii(name, len));
+    GLOG("load: %s\n", jchar_to_ascii(name, len));
     void *class_raw = read_class_file(name, len);
     if(!class_raw) {
         throw_classnotfound(vm, name, len);
