@@ -17,11 +17,13 @@ public class NewArray extends Op {
         StackValue tmp = method.allocTemp("O");
 
         if(index < 0) {
-            code = String.format("alloc_array_%s(vm,%s,0)",prims[-index - 4],length.value);
+            code = String.format("%s = alloc_array_%s(vm,%s,0)",tmp.value,prims[-index - 4],length.value);
         } else {
-            code = "=alloc_array_O(vm,"+cp.getClassName(index)+","+length.value+",0)";
+            String ref = "c"+method.declaringClass.aotHash+"_"+index;
+            code = String.format("if(!%s) %s=resolve_class_by_index(vm,method->declaringClass,%d);\n",ref,ref,index);
+            code += tmp.value+" = alloc_array_O(vm,"+ref+","+length.value+",0);\n";
         }
-        code = tmp.value+"="+code;
+        //code = tmp.value+"="+code;
         stack.push(tmp);
     }
 }

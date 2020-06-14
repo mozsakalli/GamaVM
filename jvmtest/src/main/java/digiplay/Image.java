@@ -30,6 +30,7 @@ public class Image extends Sprite2D {
     float r = (float)(-5 + Math.random()*10);
     public Image() {
         markContentInvalid();
+        width(50); height(50);
     }
     
     @Override
@@ -47,7 +48,8 @@ public class Image extends Sprite2D {
     @Override
     public void draw() {
         if(quad != null)
-            Render2D.drawQuadMesh(quad, this.color, this.blendMode);
+            Stage2D.QuadBatch.drawQuadMesh(quad, getWorldMatrix(GLOBAL_FRAME_VERSION), Stage2D.DefaultShader, color, this.worldAlpha, blendMode);
+            //Render2D.drawQuadMesh(quad, this.color, this.blendMode);
         
         rotation(rotation()+r);
         float x = this.x();
@@ -73,18 +75,6 @@ public class Image extends Sprite2D {
         y(y);
         
     }
-
-    
-    @Override
-    public float getNaturalWidth() {
-        return 50;//texture != null ? texture.width : 0;
-    }
-
-    @Override
-    public float getNaturalHeight() {
-        return 50;//texture != null ? texture.height : 0;
-    }
-    
     
     
 }

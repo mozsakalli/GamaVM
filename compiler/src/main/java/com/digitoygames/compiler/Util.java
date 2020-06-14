@@ -52,14 +52,14 @@ public class Util {
     public static String getPlatformType(String type) {
         if(type.startsWith("[") || type.startsWith("L")) return "Object*";
         switch(type) {
-            case "Z": return "jbool";
-            case "B": return "jbyte";
-            case "C": return "jchar";
-            case "S": return "jshort";
-            case "I": return "jint";
-            case "F": return "jfloat";
-            case "D": return "jdouble";
-            case "J": return "jlong";
+            case "Z": return "JBOOL";
+            case "B": return "JBYTE";
+            case "C": return "JCHAR";
+            case "S": return "JSHORT";
+            case "I": return "JINT";
+            case "F": return "JFLOAT";
+            case "D": return "JDOUBLE";
+            case "J": return "JLONG";
             case "O": return "Object*";
         }
         return type;
@@ -104,6 +104,6 @@ public class Util {
     public static String esc(String n) {
         return n.replace('/', '_').replace('(', '_')
                 .replace(')', '_').replace('<', '_').replace('>', '_')
-                .replace(';','_');
+                .replace(';','_').replace('[', '_');
     }
 }

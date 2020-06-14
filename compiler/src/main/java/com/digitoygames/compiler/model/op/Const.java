@@ -16,9 +16,11 @@
 
 package com.digitoygames.compiler.model.op;
 
+import com.digitoygames.compiler.model.CP;
 import com.digitoygames.compiler.model.Method;
 import com.digitoygames.compiler.model.Stack;
 import com.digitoygames.compiler.model.StackValue;
+import com.digitoygames.compiler.model.Compiler;
 
 /**
  *
@@ -27,12 +29,34 @@ import com.digitoygames.compiler.model.StackValue;
 public class Const extends Op {
     
     public Object value;
-
+    public boolean classConst;
+    public boolean stringConst;
+    public Compiler compiler;
+    
     @Override
     public void execute(Method method, Stack stack) {
         StackValue v = new StackValue();
         v.type = type;
-        v.value = value == null ? "NULL" : String.valueOf(value);
+        if(stringConst) {
+            v.value = //String.format("CLS(method->declaringClass,cp)[%d].value.O", value);
+                    "aot_strings["+compiler.getStringIndex(value.toString())+"]";
+        } else if(classConst) {
+            CP cp = method.declaringClass.cp;
+            String clsName = cp.items[cp.items[(Integer)value].index1].value.toString();
+            int index = compiler.getStringIndex(clsName);
+            String ref = "c" + method.declaringClass.aotHash + "_" + value;
+            code = String.format("AOTCLASS(%s,%d);", ref, value);
+            v.value = ref;
+                    //String.format("resolve_class(vm,STRCHARS(aot_strings[%d]),STRLEN(aot_strings[%d]),1,NULL)", index,index);
+        }
+        else v.value = value == null ? "NULL" : String.valueOf(value);
+        if(!type.equals("O")) {
+            switch(v.value) {
+                case "Infinity": v.value = "INFINITY";break;
+                case "-Infinity": v.value = "-INFINITY";break;
+                case "NaN": v.value = "NAN";break;
+            }
+        }
         stack.push(v);
     }
     

@@ -336,6 +336,109 @@ void Java_digiplay_Mat2D_multiply(VM *vm, Object *method, VAR *args) {
     mat2d_multiply((Mat2D*)*FIELD_PTR_O(args[0].O, 0), (Mat2D*)*FIELD_PTR_O(args[1].O, 0), (Mat2D*)*FIELD_PTR_O(args[2].O, 0));
 }
 
+
+
+void Java_digiplay_Sprite2D_getLocalMatrix(VM *vm, Object *method, VAR *args) {
+    if(!args[0].O) {
+        throw_null(vm);
+        return;
+    }
+    Sprite2D *sprite = args[0].O->instance;
+    /*
+    int flags = sprite->flags;
+    if(flags & 4) {
+        Mat2D *mat = (Mat2D*)*FIELD_PTR_O(sprite->localMatrix, 0);
+        mat2d_compose(mat,
+                      sprite->x+sprite->animX,
+                      sprite->y+sprite->animY,
+                      sprite->scaleX+sprite->animScaleX,
+                      sprite->scaleY+sprite->animScaleY,
+                      sprite->midX, sprite->midY,
+                      flags&32, sprite->rotation+sprite->animRotation, sprite->skewX+sprite->animSkewX, sprite->skewY+sprite->animSkewY);
+        sprite->flags &= ~36;
+        sprite->matrixUpdateCount++;
+    }*/
+    sprite2d_update_localmatrix(sprite);
+    vm->frames[vm->FP].ret.O = sprite->localMatrix;
+}
+/*
+        if (frameVersion != GLOBAL_FRAME_VERSION) {
+            frameVersion = GLOBAL_FRAME_VERSION;
+            int updateCount = matrixUpdateCount;
+            Mat2D localMat = getLocalMatrix();
+            Sprite2D traParent = parent; //TransformParent != null ? TransformParent : Parent;
+            if (traParent == null) {
+                return localMatrix;
+            }
+            Mat2D parentMat = traParent.getWorldMatrix();
+            if (traParent.matrixUpdateCount != parentMatrixUpdateCount || updateCount != matrixUpdateCount) {
+                Mat2D.multiply(parentMat, localMat, worldMatrix);
+                parentMatrixUpdateCount = traParent.matrixUpdateCount;
+                //worldMatrix.modifyCounter = localMatrix.modifyCounter;
+                //worldMatrix.cacheVersion++;
+                matrixUpdateCount++;
+            }
+        }
+        return worldMatrix;
+
+ */
+void Java_digiplay_Sprite2D_getWorldMatrix(VM *vm, Object *method, VAR *args) {
+    if(!args[0].O) {
+        throw_null(vm);
+        return;
+    }
+    Sprite2D *sprite = args[0].O->instance;
+    int gloalFrameVersion = args[1].I;
+    if(gloalFrameVersion != sprite->frameVersion) {
+        int lastUpdateCount = sprite->matrixUpdateCount;
+        sprite2d_update_localmatrix(sprite);
+        Sprite2D *parent = sprite->parent ? sprite->parent->instance : NULL;
+        if(parent) {
+            VAR tmp[1] = {{.O = sprite->parent}};
+            Java_digiplay_Sprite2D_getWorldMatrix(vm, method, &tmp[0]);
+            if(parent->matrixUpdateCount != sprite->parentMatrixUpdateCount || lastUpdateCount != sprite->matrixUpdateCount) {
+                mat2d_multiply((Mat2D *)*FIELD_PTR_O(parent->worldMatrix, 0), (Mat2D *)*FIELD_PTR_O(sprite->localMatrix, 0), (Mat2D *)*FIELD_PTR_O(sprite->worldMatrix, 0));
+                sprite->parentMatrixUpdateCount = parent->matrixUpdateCount;
+                sprite->matrixUpdateCount++;
+            }
+        } else {
+            memcpy((Mat2D *)*FIELD_PTR_O(sprite->worldMatrix, 0), (Mat2D *)*FIELD_PTR_O(sprite->localMatrix, 0),sizeof(Mat2D));
+        }
+        sprite->frameVersion = gloalFrameVersion;
+    }
+    vm->frames[vm->FP].ret.O = sprite->worldMatrix;
+}
+
+void Java_digiplay_Sprite2D_drawChildren(VM *vm, Object *method, VAR *args) {
+    if(!args[0].O) {
+        throw_null(vm);
+        return;
+    }
+    static int drawMethodIndex = -1;
+    if(drawMethodIndex == -1) {
+        Object *mth =
+        resolve_method(vm, (JCHAR*)L"digiplay/Sprite2D",17,
+                       (JCHAR*)L"draw",4,
+                       (JCHAR*)L"()V",3);
+        if(!mth) return;
+        drawMethodIndex = MTH(mth, vTableIndex);
+    }
+    Sprite2D *sprite = args[0].O->instance;
+    Object *ptr = sprite->firstChild;
+    VAR callArgs[1];
+    while(ptr) {
+        Sprite2D *child = ptr->instance;
+        if((child->flags & 1) && child->worldAlpha > 0) {
+            Class *cls = ptr->cls->instance;
+            callArgs[0].O = ptr;
+            CALLVM_V(vm, cls->vtable[drawMethodIndex], &callArgs[0]);
+            if(child->firstChild)
+                Java_digiplay_Sprite2D_drawChildren(vm, method, &callArgs[0]);
+        }
+        ptr = child->next;
+    }
+}
+
 extern void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args);
 extern void Java_digiplay_Net_http(VM *vm, Object *method, VAR *args);
 
@@ -348,6 +451,10 @@ NativeMethodInfo digiplay_native_methods[] = {
     {"digiplay/Mat2D:multiply:(Ldigiplay/Mat2D;Ldigiplay/Mat2D;Ldigiplay/Mat2D;)V", &Java_digiplay_Mat2D_multiply},
 
     {"digiplay/Net:http:(Ljava/lang/String;Ljava/lang/String;Ldigiplay/Net$HttpListener;)V", &Java_digiplay_Net_http},
-    
+
+    {"digiplay/Sprite2D:getLocalMatrix:()Ldigiplay/Mat2D;", &Java_digiplay_Sprite2D_getLocalMatrix},
+    {"digiplay/Sprite2D:getWorldMatrix:(I)Ldigiplay/Mat2D;", &Java_digiplay_Sprite2D_getWorldMatrix},
+    {"digiplay/Sprite2D:drawChildren:()V", &Java_digiplay_Sprite2D_drawChildren},
+
     NULL
 };

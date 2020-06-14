@@ -28,20 +28,31 @@ public class Main {
         
         com.digitoygames.compiler.model.Compiler cc = new com.digitoygames.compiler.model.Compiler();
         cc.setClassPath(new String[]{
-            "/Users/mustafa/Work/GamaVM/classpath/target/classes"
+            //"/Users/mustafa/Work/GamaVM/classpath/target/classes",
+            //"/Users/mustafa/Work/GamaVM/jvmtest/target/classes"
+            "/Users/mustafa/Work/GamaVM/jvmtest/target/classes/Main.class"
         });
         cc.compileBoot();
         if(true) return;
         /*
-        System.out.println(Test.main() );
-        //String f = "/Users/mustafa/Work/experimental/jjj/compiler/target/classes/com/digitoygames/compiler/StbTTF.class";
-        String f = "/Users/mustafa/Work/GamaVM/jvmtest/target/classes/digiplay/Camera.class";
-        //String f = "/Users/mustafa/Work/experimental/jjj/jvmtest/target/classes/Main.class";
-        Clazz src = new Clazz(new FileInputStream(f));
-        ClassCompiler cc = new ClassCompiler(src);
-        SourceWriter out = new SourceWriter();
-        cc.compile(out);
-        System.out.println(out.toString());
+        String[] list = {
+            "Sprite2D.class",
+            "Stage2D.class",
+            "Image.class",
+            "Platform.class"
+        };
+        for(int i=0; i<list.length; i++) {
+            //String f = "/Users/mustafa/Work/experimental/jjj/compiler/target/classes/com/digitoygames/compiler/StbTTF.class";
+            String f = "/Users/mustafa/Work/GamaVM/jvmtest/target/classes/digiplay/"+list[i];
+            //String f = "/Users/mustafa/Work/experimental/jjj/jvmtest/target/classes/Main.class";
+            Clazz src = new Clazz(new FileInputStream(f));
+            ClassCompiler cc = new ClassCompiler(src,i);
+            SourceWriter out = new SourceWriter();
+            cc.compile(out);
+            FileOutputStream fo = new FileOutputStream("/Users/mustafa/Work/GamaVM/digi/digi/aot"+i+".c");
+            fo.write(out.toString().getBytes());
+        }
+        //System.out.println(out.toString());
         if(true) return;
         /*
         System.out.println(Test.test());

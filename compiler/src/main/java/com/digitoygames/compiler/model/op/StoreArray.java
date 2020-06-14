@@ -33,6 +33,6 @@ public class StoreArray extends Op {
         StackValue index = stack.pop();
         StackValue array = stack.pop();
 
-        code = String.format("((%s*)((Array*)%s)->data)[%s]=%s", Util.getPlatformType(type),array.value,index.value,val.value);
+        code = String.format("ARRAY_DATA_%s(%s)[%s] = %s", type,array.value,index.value,val.value);
     }
 }

@@ -67,9 +67,75 @@ void vm_main(VM *vm, char *className, char *methodName, char *signature) {
     vm->mainMethod = resolve_method(vm, clName, clsLen, name, nameLen, sign, signLen);
     if(!vm->mainMethod) {
         printf("Can't find main method: %s:%s:%s\n", className, methodName, signature);
+        free(clName);
+        free(name);
+        free(sign);
         return;
     }
-    jdwp_start(vm, "192.168.0.136", 10000);
+    jdwp_start(vm, "192.168.1.40", 8080);
     
     CALLVM_V(vm, vm->mainMethod, NULL);
+    free(clName);
+    free(name);
+    free(sign);
+}
+
+void vm_destroy(VM *vm) {
+#define F(m) if(m) free(m)
+    while(vm->classes) {
+        Object *clso = vm->classes;
+        Class *cls = (Class*)clso->instance;
+        F(cls->allParents);
+        F(cls->cp);
+        F(cls->global);
+        F(cls->instanceOffsets);
+        F(cls->itable);
+        F(cls->vtable);
+        if(cls->fields) {
+            for(int i=0; i<cls->fields->length; i++) {
+                Object *f = ARRAY_DATA_O(cls->fields)[i];
+                F(f->instance);
+                F(f);
+            }
+            F(cls->fields);
+        }
+        if(cls->methods) {
+            for(int i=0; i<cls->methods->length; i++) {
+                Object *mo = ARRAY_DATA_O(cls->methods)[i];
+                Method *m = mo->instance;
+                F(m->argMap);
+                F(m->catchTable);
+                F(m->code);
+                F(m->compiled);
+                F(m->lineNumberTable);
+                F(m->localVarTable);
+                F(mo->instance);
+                F(mo);
+            }
+            F(cls->methods);
+        }
+        F(clso->instance);
+        F(clso);
+        vm->classes = CLS(vm->classes, next);
+    }
+    
+    while(vm->strings) {
+        Object *str = vm->strings;
+        vm->strings = STR(vm->strings, next);
+        F(STR(str,chars)->instance);
+        F(STR(str,chars));
+        F(str->instance);
+        F(str);
+    }
+    
+    while(vm->heap) {
+        HeapBlock *h = vm->heap;
+        vm->heap = vm->heap->next;
+        for(int i=0; i<HEAP_OBJECTS_PER_BLOCK; i++) {
+            if(!h->objects[i].gc.free)
+                F(h->objects[i].instance);
+        }
+        F(h);
+    }
+    F(vm);
 }

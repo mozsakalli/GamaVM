@@ -37,6 +37,7 @@ public class Clazz {
     public List<Method> methods = new ArrayList();
     public List<Attr> attrs = new ArrayList();
     int[] interfaces;
+    public String aotHash;
     
     public Clazz(InputStream stream) throws Exception {
         DataInputStream in = new DataInputStream(stream);
@@ -79,6 +80,7 @@ public class Clazz {
         }
         
         readAttrs(attrs, in);
+        aotHash = String.valueOf(getName().hashCode()).replace('-', '_');
     }
     
     void readAttrs(List<Attr> target, DataInputStream in) throws Exception {
@@ -93,6 +95,8 @@ public class Clazz {
             target.add(a);
         }
     }
+    
+    public boolean isInterface() { return (accessFlags & 0x0200) != 0; }
     
     public String getName() {
         return cp.getClassName(thisIndex);
@@ -158,7 +162,10 @@ public class Clazz {
         
         dout.writeShort(methods.size());
         for(Method m : methods) {
-            dout.writeShort(m.accessFlags);
+            int af = m.accessFlags;
+            if(!m.isAbstract() && !isInterface())
+                af |= 0x0100;
+            dout.writeShort(af);
             dout.writeShort(m.nameIndex);
             dout.writeShort(m.signatureIndex);
             dout.writeShort(m.attrs.size());

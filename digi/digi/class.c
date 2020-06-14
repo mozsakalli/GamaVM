@@ -159,6 +159,14 @@ void link_class(VM *vm, Object *clsObject) {
         cls->global = vm_alloc(globalSize);
         for(int i=0; i<cls->fields->length; i++) {
             Field *f = ((Object**)cls->fields->instance)[i]->instance;
+            /*
+            if(IS_STATIC(f->flags)) {
+                char tmp[1024];
+                char *ptr = tmp;
+                ptr += sprintf(ptr, "%s:", string_to_ascii(cls->name));
+                ptr += sprintf(ptr, "%s at %p\n", string_to_ascii(f->name), (cls->global + f->offset));
+                GLOG("%s\n", tmp);
+            }*/
             if(IS_STATIC(f->flags) && f->constantValue) {
                 //printf("Const: %s:", string_to_ascii(cls->name));
                 //printf("%s = ", string_to_ascii(f->name));
@@ -261,9 +269,6 @@ void link_class(VM *vm, Object *clsObject) {
     
     Object *clInit = find_class_method(vm, clsObject, (JCHAR*)L"<clinit>", 8, (JCHAR*)L"()V", 3);
     if(clInit) {
-        GLOG("clInit: %s\n", string_to_ascii(cls->name));
-        if(!strcmp("java/lang/Integer", string_to_ascii(cls->name)))
-            printf("....");
         CALLVM_V(vm, clInit, NULL);
     }
     
@@ -271,6 +276,10 @@ void link_class(VM *vm, Object *clsObject) {
     
 }
 
+extern char sprite_data0[];
+extern char sprite_data1[];
+extern char sprite_data2[];
+extern char sprite_data3[];
 Object *resolve_class(VM *vm, JCHAR *name, JINT len, int link, Object *target) {
     //printf("resolve: %s\n", jchar_to_ascii(name, len));
     Object *cls = find_class(vm, name, len);
@@ -295,14 +304,33 @@ Object *resolve_class(VM *vm, JCHAR *name, JINT len, int link, Object *target) {
     }
     
     GLOG("load: %s\n", jchar_to_ascii(name, len));
-    void *class_raw = read_class_file(name, len);
+    void *class_raw = NULL;
+    int nofree = 0;
+    /*if(!strcmp("digiplay/Sprite2D", jchar_to_ascii(name, len))) {
+        class_raw = &sprite_data0[0];
+        nofree=1;
+    }
+    else if(!strcmp("digiplay/Stage2D", jchar_to_ascii(name, len))) {
+        class_raw = &sprite_data1[0];
+        nofree=1;
+    }
+    else if(!strcmp("digiplay/Image", jchar_to_ascii(name, len))) {
+        class_raw = &sprite_data2[0];
+        nofree=1;
+    }
+    else if(!strcmp("digiplay/Platform", jchar_to_ascii(name, len))) {
+        class_raw = &sprite_data3[0];
+        nofree=1;
+    }
+
+    else */class_raw = read_class_file(name, len);
     if(!class_raw) {
         throw_classnotfound(vm, name, len);
         return NULL;
     }
     cls = !target ? alloc_class(vm) : target;
     int success = parse_class(vm, class_raw, cls);
-    free(class_raw);
+    if(!nofree) free(class_raw);
     if(!success) {
         throw_classnotfound(vm, name, len);
         return NULL;
@@ -413,9 +441,9 @@ Object *resolve_field_by_index(VM *vm,Object *cls, int index) {
     Object *clsName = cp[cp[cp[index].index1].index1].value.O;
     Object *name = cp[cp[cp[index].index2].index1].value.O;
     Object *signature = cp[cp[cp[index].index2].index2].value.O;
-    /*printf("-- resolve field: %s", string2c(cls->name));
-    printf(":%s", string2c(name));
-    printf(":%s\n",string2c(signature));*/
+    /*printf("-- resolve field: %s", string_to_ascii(CLS(cls,name)));
+    printf(":%s", string_to_ascii(name));
+    printf(":%s\n",string_to_ascii(signature));*/
     return resolve_field(vm, STRCHARS(clsName), STRLEN(clsName),
                          STRCHARS(name), STRLEN(name),
                          STRCHARS(signature), STRLEN(signature));
@@ -457,14 +485,17 @@ void build_all_parents(VM *vm, Object *cls) {
 JINT is_class_child_of(VM *vm, Object *json, Object *jof) {
     if(!json || !jof) return 0;
     if(json == jof || jof == vm->jlObject) return 1;
-    //printf("check-cast: %s -> ",string_to_ascii(CLS(json,name)));
-    //printf("%s\n", string_to_ascii(CLS(jof,name)));
     Class *son = json->instance;
     if(!son->allParents) build_all_parents(vm, json);
     for(int i=0; i<son->allParentCount; i++) {
-        //printf("    %s\n", string_to_ascii(CLS(son->allParents[i],name)));
-        if(son->allParents[i] == jof) return 1;
+        if(son->allParents[i] == jof) {
+            //GLOG("check-cast: %s -> ",string_to_ascii(CLS(json,name)));
+            //GLOG("check-cast: %s : SUCCESS\n", string_to_ascii(CLS(jof,name)));
+            return 1;
+        }
     }
+    //GLOG("check-cast: %s -> ",string_to_ascii(CLS(json,name)));
+    //GLOG("check-cast: %s : FAIL\n", string_to_ascii(CLS(jof,name)));
     return 0;
 }
 

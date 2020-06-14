@@ -1,32 +1,33 @@
 package com.digitoygames.compiler.model.op;
 
 import com.digitoygames.compiler.Util;
-import com.digitoygames.compiler.model.CP;
 import com.digitoygames.compiler.model.Method;
 import com.digitoygames.compiler.model.Stack;
 import com.digitoygames.compiler.model.StackValue;
 
-public class GetField extends Op {
-    public int index;
-    public CP cp;
-    public boolean isStatic;
+public class GetField extends Field {
 
     @Override
     public void execute(Method method, Stack stack) {
-        String ref = "field"+index;
+        String ref = ref(method); //"f"+method.declaringClass.aotHash+"_"+index;
         StackValue tmp = method.allocTemp(type);
-        code = "if(!"+ref+") {\n" +
+        /*
+        code = "if(!"+ref+") { //" + cp.getRefClassName(index)+":"+ cp.getRefName(index) + "\n" +
                "  Object *fld=resolve_field_by_index(vm,method->declaringClass,"+index+");\n"+
                "  "+ref+"=fld->instance;\n"+ 
                "}\n";
-
-        code += tmp.value+"=";
+        */
+        generate(method);
         if(isStatic) {
+        code += tmp.value+" = ";
             code +=  "*(("+ Util.getPlatformType(type)+"*)(CLS("+ref+"->declaringClass,global) + "+ref+"->offset))";
             //code += ref+"->declaringClass->globals["+ref+"->offset]."+type;
         } else {
             StackValue base = stack.pop();
-            code += "((char*)"+base.value+" + "+ref+"->offset.I) = "+base.value;
+            code += String.format("if(!%s) { frame->pc = %d; throw_null(vm); goto __EXCEPTION; }\n", base.value, this.pc);
+            code += tmp.value+" = ";
+            code += "*FIELD_PTR_"+type+"("+base.value+","+ref+"->offset)";
+            //code += "((char*)"+base.value+" + "+ref+"->offset.I) = "+base.value;
         }
         stack.push(tmp);
     }

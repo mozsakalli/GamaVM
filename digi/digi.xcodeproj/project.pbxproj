@@ -13,6 +13,7 @@
 		45073010248CF1DD001379B2 /* utf.c in Sources */ = {isa = PBXBuildFile; fileRef = 4507300F248CF1DD001379B2 /* utf.c */; };
 		45073012248D4BD7001379B2 /* ios_native.m in Sources */ = {isa = PBXBuildFile; fileRef = 45073011248D4BD7001379B2 /* ios_native.m */; };
 		45073014248D4D0B001379B2 /* exception.c in Sources */ = {isa = PBXBuildFile; fileRef = 45073013248D4D0B001379B2 /* exception.c */; };
+		451BE9E724958DA9000862D9 /* gamaot.c in Sources */ = {isa = PBXBuildFile; fileRef = 451BE9E624958DA9000862D9 /* gamaot.c */; };
 		4540187C248E565C004AF6EF /* gc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4540187B248E565C004AF6EF /* gc.c */; };
 		4540187F248E6D2C004AF6EF /* jdwp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4540187E248E6D2C004AF6EF /* jdwp.cpp */; };
 		45407D68248E0EA6008462C5 /* vm_native.c in Sources */ = {isa = PBXBuildFile; fileRef = 45407D67248E0EA5008462C5 /* vm_native.c */; };
@@ -38,6 +39,7 @@
 		4507300F248CF1DD001379B2 /* utf.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = utf.c; sourceTree = "<group>"; };
 		45073011248D4BD7001379B2 /* ios_native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ios_native.m; sourceTree = "<group>"; };
 		45073013248D4D0B001379B2 /* exception.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = exception.c; sourceTree = "<group>"; };
+		451BE9E624958DA9000862D9 /* gamaot.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gamaot.c; sourceTree = "<group>"; };
 		4540187B248E565C004AF6EF /* gc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gc.c; sourceTree = "<group>"; };
 		4540187D248E6D2C004AF6EF /* jdwp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jdwp.h; sourceTree = "<group>"; };
 		4540187E248E6D2C004AF6EF /* jdwp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = jdwp.cpp; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 		45E7399A248C4F26004E55EB /* digi */ = {
 			isa = PBXGroup;
 			children = (
+				451BE9E624958DA9000862D9 /* gamaot.c */,
 				45E739A7248C4F2A004E55EB /* Assets.xcassets */,
 				4507300B248CE66B001379B2 /* class.c */,
 				4540FAAF248F666E00FBB78F /* digiplay_gl.c */,
@@ -217,6 +220,7 @@
 				45073010248CF1DD001379B2 /* utf.c in Sources */,
 				45407D68248E0EA6008462C5 /* vm_native.c in Sources */,
 				4507300A248CDC09001379B2 /* mem.c in Sources */,
+				451BE9E724958DA9000862D9 /* gamaot.c in Sources */,
 				4595C893248D79F4008E4CAA /* interpret.c in Sources */,
 				45073012248D4BD7001379B2 /* ios_native.m in Sources */,
 				456D45B0248EF53A00E7C7BD /* digiplay.c in Sources */,
@@ -345,7 +349,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GY3YVBHBT9;
-				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = JDWP_ENABLED;
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = "";
 				INFOPLIST_FILE = digi/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (

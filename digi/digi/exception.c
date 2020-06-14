@@ -39,9 +39,7 @@ void throw_exception(VM *vm, Object *exception) {
             }
             thr->stackTrace = arr;
         }
-#ifdef __ANDROID__
         __android_log_print(ANDROID_LOG_ERROR, "GamaVM", "%s", tmp);
-#endif
     }
 }
 
@@ -82,10 +80,6 @@ void throw_classnotfound(VM *vm, JCHAR *name, int len) {
 }
 
 void throw_arraybounds(VM *vm, int index, int length) {
-#ifdef __ANDROID__
-    __android_log_print(ANDROID_LOG_ERROR, "GamaVM", "array exception %d of %d", index, length);
-#endif
-
     static Object *npe = NULL;
     static Object *mth = NULL;
     if(!npe || CLS(npe,vm) != vm) {
@@ -145,7 +139,6 @@ void throw_unsatisfiedlink(VM *vm, Object *method) {
         ptr += sprintf(ptr,":%s",string_to_ascii(MTH(method,name)));
         ptr += sprintf(ptr,":%s",string_to_ascii(MTH(method,signature)));
 
-        printf("UnsatisfiedLinkError: %s\n", tmp);
         VAR args[2] = {{ .O = exp }, { .O = alloc_string_ascii(vm, tmp, 0) }};
         CALLVM_V(vm, mth, &args[0]);
     }

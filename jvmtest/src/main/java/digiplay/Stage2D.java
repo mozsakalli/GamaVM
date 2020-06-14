@@ -24,7 +24,8 @@ public class Stage2D extends Sprite2D {
     public final static Stage2D I = new Stage2D();
     Point2D designSize;
     float scaleFactor;
-    GLQuadBatch quadBatch = new GLQuadBatch(4096);
+    public final static GLQuadBatch QuadBatch = new GLQuadBatch(4096);
+    public final static GLShader2D DefaultShader = new GLShader2D("gl_FragColor = vColor;");
     
     public void setup(Point2D size) {
         designSize = size;
@@ -55,7 +56,7 @@ public class Stage2D extends Sprite2D {
 
         scaleX(w / ww);
         setScaleY(h / hh);
-        //System.out.println("Stage2D::scaleFactor is " + scaleFactor + " resolution: " + sw + "x" + sh);
+        System.out.println("Stage2D::scaleFactor is " + scaleFactor + " resolution: " + sw + "x" + sh);
 
         x((sw - w) / 2);
         y((sh - h) / 2);
@@ -107,8 +108,6 @@ public class Stage2D extends Sprite2D {
             }
             invalidated = true;
         }
-        if(invalidated)
-            System.out.println("-- invalidated --");
         /*
             if(invalidated && Scene2D.currentScene != null && !Scene2D.currentScene._invalidationCalled)
             {
@@ -118,25 +117,25 @@ public class Stage2D extends Sprite2D {
          */
     }
 
-    public void renderSprite(Sprite2D sprite) {
+    /*public void renderSprite(Sprite2D sprite) {
         renderSprite(sprite, true);
-    }
-    
+    }*/
+    /*
     public void renderSprite(Sprite2D sprite, boolean drawChildren) {
         if((sprite.flags & VISIBLE) == 0) return;
         float wa = sprite.worldAlpha;
         if(wa <= 0) return;
-        Render2D.setGlobalAlpha(wa);
-        Render2D.setModelMatrix(sprite.getWorldMatrix());
+        //Render2D.setGlobalAlpha(wa);
+        //Render2D.setModelMatrix(sprite.getWorldMatrix());
         sprite.draw();
         if(drawChildren && sprite.firstChild != null) sprite.drawChildren();
     }
-    
+    */
     public void render() {
         GLOBAL_FRAME_VERSION++;
-        Render2D.begin();
-        renderSprite(this);
-        Render2D.end();
+        QuadBatch.begin(Digiplay.platform.screenWidth, Digiplay.platform.screenHeight, true, 0xff000000);
+        drawChildren();
+        QuadBatch.end();
     }
 
 }

@@ -689,7 +689,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      * @since 1.5
      */
     public static Integer valueOf(int i) {
-        return  i >= 128 || i < -128 ? new Integer(i) : SMALL_VALUES[i + 128];
+        return i >= 128 || i < -128 ? new Integer(i) : SMALL_VALUES[i + 128];
     }
 
     /**

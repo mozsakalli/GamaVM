@@ -29,7 +29,7 @@ import java.util.List;
 public class Op {
     
     public int pc;
-    public int line;
+    //public int line;
     public String type;
     public String code;
     public BasicBlock bb;

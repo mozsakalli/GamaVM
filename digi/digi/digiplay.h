@@ -119,4 +119,37 @@ extern void mat3d_identity(Mat3D *m);
 extern void mat3d_setup2d(Mat3D *m, float width, float height);
 extern void mat3d_multiply(Mat3D *lhs, Mat3D *rhs, Mat3D *result);
 
+typedef struct __attribute__ ((packed)) Sprite2D {
+    JINT flags;
+    JFLOAT x, y, scaleX, scaleY, width,height,rotation, skewX, skewY, alpha, worldAlpha;
+    JFLOAT animX, animY, animScaleX, animScaleY, animRotation, animSkewX, animSkewY, animAlpha;
+    JFLOAT midX, midY;
+    JFLOAT pivotX, pivotY;
+    JINT matrixUpdateCount, parentMatrixUpdateCount;
+    JINT depth, numChildren;
+    JINT color;
+    JINT blendMode;
+    JINT frameVersion;
+    Object *parent, *firstChild, *lastChild, *next, *prev;
+    Object *localMatrix;
+    Object *worldMatrix;
+} Sprite2D;
+
+
+inline static void sprite2d_update_localmatrix(Sprite2D *sprite) {
+    int flags = sprite->flags;
+    if(flags & 4) {
+        Mat2D *mat = (Mat2D *)*FIELD_PTR_O(sprite->localMatrix, 0);
+        mat2d_compose(mat,
+                      sprite->x + sprite->animX,
+                      sprite->y + sprite->animY,
+                      sprite->scaleX + sprite->animScaleX,
+                      sprite->scaleY + sprite->animScaleY,
+                      sprite->midX, sprite->midY,
+                      flags & 32, sprite->rotation + sprite->animRotation,
+                      sprite->skewX + sprite->animSkewX, sprite->skewY + sprite->animSkewY);
+        sprite->flags &= ~36;
+        sprite->matrixUpdateCount++;
+    }
+}
 #endif /* digiplay_h */

@@ -168,6 +168,8 @@ void setup_method_args(Method *method) {
     int count = 0;
     int jcount = 0;
     JINT tmp[256]; //enough for paramters? :)
+    memset(tmp, 0, sizeof(tmp));
+    
     if(!IS_STATIC(method->flags)) {
         count++;
         tmp[0] = 0;
@@ -262,10 +264,12 @@ char *parse_method(VM *vm, char *data, Object *m, CPItem *cp) {
         int tmp = READ_U2(data); data += 2; //name
         Object *attrName = cp[tmp].value.O;
         int attrlen = READ_U4(data); data += 4;
-        if(STRLEN(attrName)==4 && compare_chars(L"Code", STRCHARS(attrName), 4)) {
-            data = parse_code(vm, data, m, cp);
-        } else {
-            data += attrlen;
+        if(attrlen > 0) {
+            if (attrName && STRLEN(attrName) == 4 && compare_chars(L"Code", STRCHARS(attrName), 4)) {
+                data = parse_code(vm, data, m, cp);
+            } else {
+                data += attrlen;
+            }
         }
 
     }

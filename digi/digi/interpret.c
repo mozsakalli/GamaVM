@@ -375,7 +375,7 @@ void vm_compiler_build_ops(COMPILERCTX *ctx) {
             case op_bipush:
                 op->code = OP_CONST;
                 op->type = 'I';
-                op->var.I = (char)*bc++;
+                op->var.I = (JBYTE)*bc++;
                 break;
 
             case op_sipush:
@@ -616,12 +616,14 @@ void vm_compiler_build_ops(COMPILERCTX *ctx) {
                 break;
                 
             case op_iinc:
-                if(wide) printf("!!!!!!!!!!!!!!!!!!! Wide iinc not supported\n");
+                if(wide) {
+                    printf("!!!!!!!!!!!!!!!!!!! Wide iinc not supported\n");
+                }
                 else {
                     op->code = OP_IINC;
                     op->type = 'I';
                     op->index = (unsigned char)*bc++;
-                    op->var.I = (char)*bc++;
+                    op->var.I = (JBYTE)*bc++;
                 }
                 break;
                 
@@ -836,6 +838,11 @@ int vm_compile_count_args_by_index(Object *cls, int index, int isStatic) {
     //printf(" --arg-count %s = %d\n", string2c(signature), count);
     return count;
 }
+
+void vm_optimize_bb(BB *bb) {
+
+}
+
 
 void vm_process_bb(Method *method, BB *bb, void **handlers) {
     if(bb->processed) return;
@@ -1056,15 +1063,18 @@ void vm_process_bb(Method *method, BB *bb, void **handlers) {
     }
 }
 
-void pm(char *m, Object *omethod) {
+void pm(VM *vm, char *m, Object *omethod) {
     Method *method = omethod->instance;
     char tmp[1024];
     char *ptr = tmp;
 
     ptr += sprintf(tmp, "%s : %s", m, string_to_ascii(CLS(method->declaringClass,name)));
     ptr += sprintf(ptr, ":%s", string_to_ascii(method->name));
-    ptr += sprintf(ptr, ":%s\n", string_to_ascii(method->signature));
-    GLOG("%s", tmp);
+    ptr += sprintf(ptr, ":%s = %d args:%d", string_to_ascii(method->signature), method->maxStack + method->maxLocals, method->argCount);
+    for(int i=0; i<method->argCount; i++)
+        ptr += sprintf(ptr, " %d=%d", i, method->argMap[i]);
+    ptr += sprintf(ptr, " SP=%d FP=%d", vm->SP, vm->FP);
+    GLOG("%s\n", tmp);
 }
 
 int vm_compile_find_op(COMPILERCTX *ctx, int pc, int *target) {
@@ -1272,6 +1282,22 @@ void vm_compile_method(VM *vm, Method *method, void **handlers) {
     method->compiled = ctx.ops;
 }
 
+void dpc(VAR *stack, int sp, VAR *local, Method *m, OP *op) {
+    char tmp[4096];
+    char *ptr = tmp;
+    ptr += sprintf(ptr, "%s", string_to_ascii(CLS(m->declaringClass,name)));
+    ptr += sprintf(ptr, ":%s:%d:%d:0x%x", string_to_ascii(m->name),op->line,op->pc,op->bc);
+    ptr += sprintf(ptr, " stack=");
+    //for(int i=0; i<sp; i++) {
+    //    ptr += sprintf(ptr, "[%d %ld %p]", stack[i].I, stack[i].J, stack[i].O);
+    //}
+    ptr += sprintf(ptr, " local=");
+    if(m->maxLocals > 6)
+    //for(int i=0; i<m->maxLocals; i++)
+        ptr += sprintf(ptr, "[%d %ld %p]", local[6].I, local[6].J, local[6].O);
+    GLOG("%s\n", tmp);
+    
+}
 void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
     static void* handlers[] = {
         &&OP_UNIMPLEMENTED,
@@ -1448,12 +1474,13 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
     
     //if(!strcmp(string2c(method->name),"main"))
     //    printf("...");
-    pm("Executing", omethod);
+    //pm(vm, "Executing", omethod);
     //printf("SP=%d\n", vm->SP);
     if(!method->compiled) {
         //pm("Compiling", omethod);
         vm_compile_method(vm, method, &handlers[0]);
         free(method->code);
+        method->code = NULL;
     }
     //printf("Started...\n");
 
@@ -1461,7 +1488,7 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
     if(argCount > 0) {
         JINT *map = method->argMap;
         for(int i=0; i<argCount; i++) {
-            GLOG("arg%d = I:%d O:%p\n", map[i], args->I, args->O);
+            //GLOG("arg%d = I:%d O:%p J:%ld\n", map[i], args->I, args->O, args->J);
             local[map[i]] = *args;
             args++;
         }
@@ -1524,7 +1551,6 @@ OP_CONST_CLS:
     {
         Object *cls = resolve_class_by_index(vm, method->declaringClass, op->index);
         if(vm->exception) goto __EXCEPTION;
-        GLOG("ClassConst: %s\n", string_to_ascii(CLS(cls,name)));
         op->var.O = cls;
         op->handler = handlers[OP_CONST];
         REDISPATCH();
@@ -1620,7 +1646,7 @@ OP_GETFIELD:        //13
     }
     //op->handler = handlers[op->bc == op_getstatic ? OP_GETSTATICRESOLVED : OP_GETFIELDRESOLVED];
     REDISPATCH();
-OP_PUTFIELD:        //14
+OP_PUTFIELD: {        //14
     field = resolve_field_by_index(vm, method->declaringClass, op->index);
     if(vm->exception) goto __EXCEPTION;
     op->index = FLD(field, offset);
@@ -1641,7 +1667,7 @@ OP_PUTFIELD:        //14
     }
     //op->handler = handlers[op->bc == op_putstatic ? OP_PUTSTATICRESOLVED : OP_PUTFIELDRESOLVED];
     REDISPATCH();
-
+}
 OP_IFEQ:            //15
     sp--;
     if(stack[sp].I == 0) { NEXT(op->index); } else NEXT(1);

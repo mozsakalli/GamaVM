@@ -17,10 +17,11 @@
 package com.digitoygames.compiler.model;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -35,7 +36,8 @@ public class Code extends Field {
     byte[] bc;
     public TryCatchInfo[] tryCatchInfos;
     Set<Integer> tryCatchPC = new HashSet();
-
+    public Map<Integer, Integer> lineTable;
+    
     public Code(Clazz cls, DataInputStream in) throws Exception {
         declaringClass = cls;
         maxStack = in.readUnsignedShort();
@@ -93,5 +95,18 @@ public class Code extends Field {
 
     public boolean isTryCatchHandler(int pc) {
         return tryCatchPC.contains(pc);
+    }
+    
+    public int getLine(int pc) throws Exception {
+        if(lineTable == null) {
+            lineTable = new HashMap();
+            Attr a = getAttr("LineNumberTable");
+            DataInputStream in = a.getStream();
+            int count = in.readUnsignedShort();
+            for(int i=0; i<count; i++) {
+                lineTable.put(in.readUnsignedShort(), in.readUnsignedShort());
+            }
+        }
+        return lineTable.containsKey(pc) ? lineTable.get(pc) : -1;
     }
 }

@@ -38,7 +38,8 @@
                             <goal>shade</goal> 
                         </goals> 
                         <configuration>
-                            <outputFile>/Users/mustafa/Work/GamaVM/digi/digi/assets/jvm_test.jar</outputFile>
+                            <outputFile>/Users/mustafa/Work/GamaVM/MyApplication2/app/src/main/assets/jvm_test.jar</outputFile>
+                            <!-- outputFile>/Users/mustafa/Work/GamaVM/digi/digi/assets/jvm_test.jar</outputFile -->
                         </configuration>
                     </execution> 
                     
@@ -47,7 +48,8 @@
                     <tasks> 
                         <!--  copy to binary lib dir -->  
                         <!-- mkdir dir="../../assets/resfiles"/ -->  
-                        <copy todir="/Users/mustafa/Work/GamaVM/Digiplay/Digiplay/Digiplay/assets/" overwrite="true"> 
+                        <!-- todir="/Users/mustafa/Work/GamaVM/Digiplay/Digiplay/Digiplay/assets/" -->
+                        <copy todir="/Users/mustafa/Work/GamaVM/MyApplication2/app/src/main/assets/" overwrite="true"> 
                             <fileset dir="${project.build.directory}" erroronmissingdir="true"> 
                                 <include name="jvm_test.jar"/> 
                             </fileset> 

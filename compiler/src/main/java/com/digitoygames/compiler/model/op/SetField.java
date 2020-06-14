@@ -13,18 +13,21 @@ public class SetField extends Op {
 
     @Override
     public void execute(Method method, Stack stack) {
-        String ref = "field"+index;
+        String ref = "f"+method.declaringClass.aotHash+"_"+index;
         StackValue val = stack.pop();
-        code = "if(!"+ref+") {\n" +
-                "  "+ref+"=resolve_field_by_index(vm,method->declaringClass,"+index+");\n"
-                +"}\n";
+        code = "if(!"+ref+") { //" + cp.getRefName(index) + "\n" +
+               "  Object *fld=resolve_field_by_index(vm,method->declaringClass,"+index+");\n"+
+               "  "+ref+"=fld->instance;\n"+ 
+               "}\n";
 
         if(isStatic) {
-            code += "GLOBAL_PTR("+ref+","+ Util.getPlatformType(type)+")=";
+            code += "*(("+Util.getPlatformType(type)+"*)((CLS("+ref+"->declaringClass,global))+"+ref+"->offset)) = ";
+            //code += "GLOBAL_PTR("+ref+","+ Util.getPlatformType(type)+")=";
             //code += ref+"->declaringClass->globals["+ref+"->offset]."+type+"=";
         } else {
             StackValue base = stack.pop();
-            code += "((char*)"+base.value+" + "+ref+"->offset.I) = ";
+            code += "*FIELD_PTR_"+type+"("+base.value+","+ref+"->offset) = ";
+                    //"((char*)"+base.value+" + "+ref+"->offset.I) = ";
         }
         code +=val.value;
     }

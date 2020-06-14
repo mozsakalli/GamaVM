@@ -32,10 +32,12 @@ import java.util.Set;
  */
 public class MethodCompiler2 {
     
-    Method method;
+    public Method method;
+    public ClassCompiler cc;
     
-    public MethodCompiler2(Method method) {
+    public MethodCompiler2(ClassCompiler cc, Method method) {
         this.method = method;
+        this.cc = cc;
     }
     
     void addLocal(Map<String,String> map, StackValue v) {
@@ -56,11 +58,12 @@ public class MethodCompiler2 {
         Code code = method.getCode();
         //System.out.println(code.tryCatchPC);
 
-        OpBuilder builder = new OpBuilder(method, code);
+        OpBuilder builder = new OpBuilder(cc.compiler, method, code);
         List<Op> ops = builder.build();
         //for(Op o : ops)
         //    System.out.println("    "+o.pc+":"+o);
         List<BasicBlock> blocks = BasicBlock.build(method, code, ops);
+        for(BasicBlock bb:blocks) Optimizer.optimize(method, bb);
         /*for(BasicBlock bb : blocks) {
             out.println("BB"+bb.id);
             if(!bb.sources.isEmpty()) {
@@ -79,10 +82,13 @@ public class MethodCompiler2 {
         for(StackValue v : method.allSpills) addLocal(locals, v);
         for(Map.Entry<String,String> e : locals.entrySet()) 
             out.println("%s %s;", e.getKey().equals("O") ? "Object" : Util.getPlatformType(e.getKey()), e.getValue());
-        Set<Integer> calls = new HashSet();
-        Set<Integer> ivcalls = new HashSet();
-        Set<Integer> fields = new HashSet();
-        Set<Integer> refs = new HashSet();
+        if(code.tryCatchInfos.length > 0)
+            out.println("Object *caughtException;");
+        //Set<Integer> calls = new HashSet();
+        //Set<Integer> ivcalls = new HashSet();
+        //Set<Integer> fields = new HashSet();
+        //Set<Integer> refs = new HashSet();
+        /*
         for(Op o : ops) {
             if(o instanceof Invoke) {
                 Invoke inv = (Invoke)o;
@@ -98,6 +104,7 @@ public class MethodCompiler2 {
                 refs.add(((New)o).index);
             }
         }
+        /*
         if(!calls.isEmpty()) {
             out.print("static Object ");
             int count = 0;
@@ -116,6 +123,7 @@ public class MethodCompiler2 {
             }
             out.println(";");
         }
+        /*
         if(!fields.isEmpty()) {
             out.print("static Field ");
             int count = 0;
@@ -133,7 +141,7 @@ public class MethodCompiler2 {
                 out.print("*cls%d=NULL",index);
             }
             out.println(";");
-        }
+        }*/
         List<String> args = Util.parseMethodSignature(method.getSignature());
         if(!method.isStatic()) args.add(0, "O");
         
@@ -146,20 +154,47 @@ public class MethodCompiler2 {
                 String at = argType;
                 if(at.equals("C") || at.equals("Z") || at.equals("B") || at.equals("S"))
                     at = "I";
-                out.println("%s=args[%d].%s;", local.value,cindex++,at);
+                out.println("%s=args[%d].%s;", local.value,cindex,at);
             }
             index++;
+            cindex++;
             if(argType.equals("D") || argType.equals("J")) index++;
         }
         for(BasicBlock bb : blocks) {
+            if(bb.ops.isEmpty()) continue;
             out.undent().println("BB"+bb.id+":").indent();
             //BasicBlock parent = bb.sources.isEmpty() ? null : bb.sources.iterator().next();
             //if(parent != null)
             //    out.println("spill-count="+parent.spills.size());
-            for(String l : bb.code.split("\n"))
-                out.println(l+";");
+            for(String l : bb.code.split("\n")) {
+                out.print(l);
+                if(!l.endsWith(";") && !l.endsWith("{") && !l.endsWith("}") && !l.trim().isEmpty())
+                    out.println(";");
+                else out.ln();
+            }
         }
-        //out.undent().println("__EXCEPTION:");
+        out.undent().println("__EXCEPTION: {").indent();
+        if(code.tryCatchInfos.length > 0) {
+            out.println("caughtException = vm->exception;")
+               .println("vm->exception = NULL;");
+            for(TryCatchInfo tc : code.tryCatchInfos) {
+                out.println("if(frame->pc >= %d && frame->pc < %d) {", tc.start, tc.end).indent();
+                if(tc.type != 0) {
+                    CP cp = method.declaringClass.cp;
+                    String clsName = cp.items[cp.items[tc.type].index1].value.toString();
+                    int clsIndex = cc.compiler.getStringIndex(clsName);
+                    String ref = String.format("c%s_%d", method.declaringClass.aotHash,tc.type);
+                    out.println("AOTCLASS(%s,%d);", ref,clsIndex);
+                    out.println("if(check_cast(vm,caughtException->cls,%s))", ref).indent();
+                }
+                out.println("goto BB%d;", tc.handler);
+                if(tc.type != 0) out.undent();
+                out.undent().println("}");
+            }
+            out.println("vm->exception = caughtException;");
+        }
+        
+        out.println("vm->FP--; return;").undent().println("}");
         out.undent().println("}");
         /*
         for(BasicBlock b : blocks) {
@@ -193,7 +228,7 @@ public class MethodCompiler2 {
         if(bb.isTryCatchHandler) {
             StackValue ex = new StackValue();
             ex.type = "O";
-            ex.value = "vm->exception";
+            ex.value = "caughtException";
             bb.stack.push(ex);
         }
 

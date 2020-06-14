@@ -30,6 +30,7 @@ public class Field {
     public int accessFlags;
     public int nameIndex;
     public int signatureIndex;
+    public int offset;
     
     public List<Attr> attrs = new ArrayList();
     

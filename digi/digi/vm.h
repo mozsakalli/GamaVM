@@ -16,12 +16,14 @@
 typedef signed char JBYTE;
 typedef unsigned char JBOOL;
 typedef unsigned short JCHAR;
-typedef short JSHORT;
+typedef signed short JSHORT;
 typedef unsigned short JUSHORT;
-typedef int JINT;
+typedef signed int JINT;
 typedef float JFLOAT;
 typedef long long JLONG;
 typedef double JDOUBLE;
+typedef unsigned int JUINT;
+typedef unsigned long long JULONG;
 
 enum {
     ACC_PUBLIC = 0x0001,
@@ -442,5 +444,36 @@ extern void *read_class_file(JCHAR *name, int len);
 #define ARRAY_DATA_O(object) ARRAY_DATA_TYPE(object,Object*)
 
 #define RETURN_J(v) vm->frames[vm->FP].ret.J = (JLONG)(v);
+
+#define AOTCLASS(var,name) \
+if(!var) { \
+	var = resolve_class(vm,STRCHARS(aot_strings[name]), STRLEN(aot_strings[name]), 1, NULL); \
+}
+
+#define AOTFIELD(var,cls,name,sign) \
+if(!var) { \
+	Object *field = resolve_field(vm, STRCHARS(aot_strings[cls]), STRLEN(aot_strings[cls]), \
+	STRCHARS(aot_strings[name]), STRLEN(aot_strings[name]), \
+	STRCHARS(aot_strings[sign]), STRLEN(aot_strings[sign])); \
+	var = field->instance; \
+	if(!var) goto __EXCEPTION; \
+}
+
+#define AOTVMETHOD(var,cls,name,sign,table) \
+if(!var) { \
+	Object *mth = resolve_method(vm, STRCHARS(aot_strings[cls]), STRLEN(aot_strings[cls]), \
+	STRCHARS(aot_strings[name]), STRLEN(aot_strings[name]), \
+	STRCHARS(aot_strings[sign]), STRLEN(aot_strings[sign])); \
+	var = MTH(mth, table); \
+	if(!var) goto __EXCEPTION; \
+}
+
+#define AOTMETHOD(var,cls,name,sign) \
+if(!var) { \
+	var = resolve_method(vm, STRCHARS(aot_strings[cls]), STRLEN(aot_strings[cls]), \
+	STRCHARS(aot_strings[name]), STRLEN(aot_strings[name]), \
+	STRCHARS(aot_strings[sign]), STRLEN(aot_strings[sign])); \
+	if(!var) goto __EXCEPTION; \
+}
 
 #endif /* gamavm_h */

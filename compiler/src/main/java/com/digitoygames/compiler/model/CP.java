@@ -25,6 +25,11 @@ import java.io.DataOutputStream;
  */
 public class CP {
     
+    public final static int CLASSREF = 7;
+    public final static int FIELDREF = 9;
+    public final static int METHODREF = 10;
+    public final static int IMETHODREF = 11;
+    
     public static class Item {
         public int type;
         public Object value;

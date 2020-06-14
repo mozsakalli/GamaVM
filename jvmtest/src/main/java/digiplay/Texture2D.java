@@ -25,4 +25,7 @@ public class Texture2D {
     public float u1,v1,u2,v2,u3,v3,u4,v4;
     public GLTexture texture;
     
+    public static Texture2D create(GLTexture gt) {
+        return null;
+    }
 }

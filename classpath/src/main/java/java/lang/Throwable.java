@@ -47,7 +47,7 @@ public class Throwable implements Serializable {
     }
 
     public String getLocalizedMessage() {
-        return getMessage();
+        return detailMessage;
     }
 
     public Throwable getCause() {
@@ -65,6 +65,7 @@ public class Throwable implements Serializable {
         return this;
     }
 
+    @Override
     public String toString() {
         String msg = getLocalizedMessage();
         return getClass().getName() + (msg == null ? "" : ": " + msg);

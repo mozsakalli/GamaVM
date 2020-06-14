@@ -21,6 +21,7 @@ import com.digitoygames.compiler.model.CP;
 import com.digitoygames.compiler.model.Code;
 import com.digitoygames.compiler.model.CodeStream;
 import com.digitoygames.compiler.model.Method;
+import com.digitoygames.compiler.model.Compiler;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,10 +34,12 @@ public class OpBuilder {
     public Method method;
     List<Op> ops = new ArrayList();
     Code code;
+    Compiler compiler;
     
-    public OpBuilder(Method method, Code code) {
+    public OpBuilder(Compiler compiler, Method method, Code code) {
         this.method = method;
         this.code = code;
+        this.compiler = compiler;
     }
     
     
@@ -90,7 +93,14 @@ public class OpBuilder {
                     break;
                     
                 case 18: // ldc
-                    pushConst( cp.get( in.readUnsignedByte() ), pc);
+                    int ciIndex = in.readUnsignedByte();
+                    CP.Item ci = cp.items[ciIndex];
+                    switch(ci.type) {
+                        case 7: pushClassConst(ciIndex, pc);break;
+                        case 8: pushStringConst(cp.get(ci.index1), pc);break;
+                        default: pushConst(ci.value, pc);
+                    }
+                    //pushConst( cp.get( in.readUnsignedByte() ), pc);
                     break;
                     
                 case 19: // ldc_w
@@ -557,6 +567,7 @@ public class OpBuilder {
         c.value = value;
         c.type = type;
         c.pc = pc;
+        c.compiler = compiler;
         ops.add(c);
     }
 
@@ -569,6 +580,26 @@ public class OpBuilder {
         else if(value instanceof Float) type="F";
         else throw new RuntimeException("Unknown constant type: "+value.getClass());
         pushConst(value, type, pc);
+    }
+
+    void pushClassConst(Object value, int pc) {
+        Const c = new Const();
+        c.value = value;
+        c.type = "O";
+        c.classConst = true;
+        c.pc = pc;
+        c.compiler = compiler;
+        ops.add(c);
+    }
+
+    void pushStringConst(Object value, int pc) {
+        Const c = new Const();
+        c.value = value;
+        c.type = "O";
+        c.stringConst = true;
+        c.pc = pc;
+        c.compiler = compiler;
+        ops.add(c);
     }
     
     void storeLocal(int index, String type, int pc) throws Exception {
@@ -644,6 +675,7 @@ public class OpBuilder {
         i.index = index;
         i.callType = callType;
         i.type = Util.getReturnType(cp.getRefSignature(index));
+        i.compiler = compiler;
         ops.add(i);
     }    
 
@@ -666,6 +698,7 @@ public class OpBuilder {
         f.isStatic = isStatic;
         f.pc = pc;
         f.type = Util.typeToStack(f.cp.getRefSignature(index));
+        f.compiler = compiler;
         ops.add(f);
     }
 
@@ -706,6 +739,7 @@ public class OpBuilder {
         n.pc = pc;
         n.cp = method.declaringClass.cp;
         n.type = "O";
+        n.compiler = compiler;
         ops.add(n);
     }
 

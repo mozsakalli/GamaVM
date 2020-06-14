@@ -11,7 +11,7 @@ public class Cmp extends Op {
         StackValue v1 = stack.pop();
         StackValue v2 = stack.pop();
         StackValue tmp = method.allocTemp(type);
-        code = String.format("%s = %s == %s ? 0 : (%s > %s ? 1 : -1)",tmp.value,v1.value,v2.value,v1.value,v2.value);
+        code = String.format("%s = %s == %s ? 0 : (%s > %s ? 1 : -1)",tmp.value,v2.value,v1.value,v2.value,v1.value);
         stack.push(tmp);
     }
 }

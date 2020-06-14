@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -30,6 +31,7 @@ import java.util.List;
 public class Compiler {
     
     String[] classPath;
+    public HashMap<String, Integer> strings = new HashMap();
     
     public Compiler() {
         
@@ -52,28 +54,72 @@ public class Compiler {
                 for(File d : f.listFiles())
                     queue.add(d);
             } else if(f.getName().endsWith(".class")) {
+                System.out.println(f);
                 Clazz cls = new Clazz(new FileInputStream(f));
                 classes.add(cls);
             }
         }
         
         SourceWriter out = new SourceWriter();
-        out.println("#include \"vm.h\"").ln();
+        out.println("#include \"vm.h\"")
+                .println("#include <math.h>")
+                .println("Object **aot_strings;")
+                .ln();
         for(Clazz cls : classes) {
-            compileClassMethods(cls, out);
+            ClassCompiler cc = new ClassCompiler(this, cls);
+            cc.compile(out);
+            //compileClassMethods(cls, out);
         }
 
-        compileMeta(classes, out);
+        //alloc_string_java(NULL, ((JCHAR[]){10,20}), 2, 0);
+        out.println("void aot_init(VM *vm) {").indent();
+        out.println("static  int i=0; if(i) return; i=1;");
+        if(!strings.isEmpty()) {
+            out.println("aot_strings = (Object**)malloc(sizeof(Object*)*%d);", strings.size());
+            for(String k : strings.keySet()) {
+                out.print("aot_strings[%d] = alloc_string_java(vm,(JCHAR[]){", strings.get(k));
+                for(int i=0; i<k.length(); i++) {
+                    if(i>0) out.print(",");
+                    out.print((int)k.charAt(i));
+                }
+                out.println("},%d,1);", k.length());
+            }
+        }
+        out.undent().println("}");
+        
+        out.println("NativeMethodInfo aot_native_methods[] = {").indent();
+        int cnt = 0;
+        for(Clazz cls : classes) {
+            for(int i=0; i<cls.methods.size(); i++) {
+                Method m = cls.methods.get(i);
+                if(!m.isAbstract() && !m.isNative()) {
+                    if(cnt > 0) out.print(",");
+                    out.println("{\"%s:%s:%s\",&%s}",cls.getName(),m.getName(),m.getSignature(), cls.methods.get(i).getAOTName());
+                    cnt++;
+                }
+            }
+        }
+        out.println(",NULL") .undent().println("};");
+        
+        for(Clazz cls : classes) {
+            String name = cls.getName();
+            byte[] bc = cls.dump();
+            File file = new File("/Users/mustafa/Desktop/aot/",name+".class");
+            file.getParentFile().mkdirs();
+            new FileOutputStream(file).write(bc);
+        }
+        //compileMeta(classes, out);
 
-        new FileOutputStream("/Users/mustafa/Desktop/aot.c").write(out.toString().getBytes());
+        new FileOutputStream("/Users/mustafa/Work/GamaVM/digi/digi/gamaot.c").write(out.toString().getBytes());
         //System.out.println(out.toString());
     }
     
     public void compileClassMethods(Clazz cls, SourceWriter out) throws Exception {
+        /*
         for(Method method : cls.methods) {
             if(!method.isAbstract() && !method.isNative()) {
                 MethodCompiler2 mc = new MethodCompiler2(method);
-                mc.compile(out);
+                //mc.compile(out);
             }
         }
         //System.out.println(o.toString());
@@ -123,5 +169,9 @@ public class Compiler {
         }
         out.println("{.name=NULL}");
         out.undent().println("};");
+    }
+    
+    public int getStringIndex(String value) {
+        return strings.computeIfAbsent(value, (v) -> strings.size());
     }
 }

@@ -27,7 +27,14 @@ public class Bin extends Op {
     @Override
     public void execute(Method meth, Stack stack) {
         Stack.StackElement e = stack.getTemp(meth, type);
+        if(operand.equals(">>>")) {
+            code = e.value+" = ((unsigned ";
+            if(type.equals("J")) code += "JLONG"; else code += "JINT";
+            code += ")"+stack.get(stack.size() - 2).value+") >> "+operand+stack.get(stack.size()-1).value;
+        }
+        else
         code = e.value + " = "+stack.get(stack.size() - 2).value+operand+stack.get(stack.size()-1).value;
+        
         stack.pop();
         stack.pop();
         stack.push(e);

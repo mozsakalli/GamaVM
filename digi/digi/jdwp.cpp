@@ -527,11 +527,13 @@ void jdwp_process_packet(JdwpPacket *req) {
             
         case JDWP_CMD_VirtualMachine_Resume: //0x0109
             jdwp_suspended = 0;
+            JDWPLOG("Resume VM_Resume\n");
             resp->complete(req->id, JDWP_ERROR_NONE);
             break;
             
         case JDWP_CMD_VirtualMachine_Exit: //0x010a
             jdwp_suspended = 0;
+            JDWPLOG("Resume VM_Exit\n");
             jdwp_client.reset();
             JdwpEventSet::reset();
             delete resp;
@@ -781,6 +783,7 @@ void jdwp_process_packet(JdwpPacket *req) {
             
         case JDWP_CMD_ThreadReference_Resume: //0x0b03
             jdwp_suspended = 0;
+            JDWPLOG("Resume Thread_Resume\n");
             resp->complete(req->id, JDWP_ERROR_NONE);
             break;
             
@@ -818,6 +821,7 @@ void jdwp_process_packet(JdwpPacket *req) {
                 }
                 resp->complete(req->id, JDWP_ERROR_NONE);
             } else {
+                JDWPLOG("ThreadReference_Frames Not Resumed\n");
                 resp->complete(req->id, JDWP_ERROR_THREAD_NOT_SUSPENDED);
             }
         } break;

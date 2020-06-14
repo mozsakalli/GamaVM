@@ -18,7 +18,6 @@ package com.digitoygames.compiler.model.op;
 
 import com.digitoygames.compiler.model.Method;
 import com.digitoygames.compiler.model.Stack;
-import com.digitoygames.compiler.model.StackValue;
 
 /**
  *

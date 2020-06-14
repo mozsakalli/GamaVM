@@ -20,22 +20,22 @@ package digiplay;
  * @author mustafa
  */
 public class Sprite2D {
-
-    Mat2D localMatrix = new Mat2D();
-    Mat2D worldMatrix = new Mat2D();
-    float x, y, scaleX=1, scaleY=1, rotation, skewX, skewY, alpha = 1, worldAlpha = 1;
+    int flags = VISIBLE | LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
+    float x, y, scaleX=1, scaleY=1, width,height,rotation, skewX, skewY, alpha = 1, worldAlpha = 1;
     float animX, animY, animScaleX, animScaleY, animRotation, animSkewX, animSkewY, animAlpha;
+    float midX, midY;
     float pivotX = .5f, pivotY = .5f;
     int matrixUpdateCount, parentMatrixUpdateCount;
     int depth, numChildren;
     public int color = 0xFFFFFF;
     public int blendMode = 1;
-
-    Sprite2D parent, firstChild, lastChild, next, prev;
     int frameVersion;
+    Sprite2D parent, firstChild, lastChild, next, prev;
+    Mat2D localMatrix = new Mat2D();
+    Mat2D worldMatrix = new Mat2D();
+
     static int GLOBAL_FRAME_VERSION;
 
-    int flags = VISIBLE | LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
     
     // Various flags used by Sprite and subclasses
     public final static int VISIBLE = 1 << 0;
@@ -107,6 +107,23 @@ public class Sprite2D {
         }
     }
 
+    public float width() { return width; }
+    public void width(float w) {
+        if(w != width) {
+            width = w;
+            midX = w * pivotX;
+            flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
+        }
+    }
+    public float height() { return height; }
+    public void height(float w) {
+        if(w != height) {
+            height = w;
+            midY = w * pivotY;
+            flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
+        }
+    }
+    
     public float getSkewX() {
         return skewX + animSkewX;
     }
@@ -217,6 +234,7 @@ public class Sprite2D {
     public void setPivotX(float value) {
         if (value != this.pivotX) {
             this.pivotX = value;
+            midX = value * width;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
@@ -227,6 +245,7 @@ public class Sprite2D {
     public void setPivotY(float value) {
         if (value != this.pivotY) {
             this.pivotY = value;
+            midY = value * height;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
@@ -254,24 +273,17 @@ public class Sprite2D {
         this.flags &= ~mask;
     }
 
-    public Mat2D getLocalMatrix() {
+    public native Mat2D getLocalMatrix();/* {
         if ((flags & LOCAL_MATRIX_DIRTY) != 0) {
-            /*
-            flags &= ~LOCAL_MATRIX_DIRTY;
-
-            if ((flags & ROT_SKEW_DIRTY) != 0) {
-                localMatrix.updateRotAndSkew(rotation + animRotation, skewX + animSkewX, skewY + animSkewY);
-                flags &= ~ROT_SKEW_DIRTY;
-            }*/
-            localMatrix.compose(x + animX, y + animY, scaleX + animScaleX, scaleY + animScaleY, pivotX * getNaturalWidth(), pivotY * getNaturalHeight(), (flags & ROT_SKEW_DIRTY) != 0, rotation + animRotation, skewX + animSkewX, skewY + animSkewY);
+            localMatrix.compose(x + animX, y + animY, scaleX + animScaleX, scaleY + animScaleY, midX, midY, (flags & ROT_SKEW_DIRTY) != 0, rotation + animRotation, skewX + animSkewX, skewY + animSkewY);
             flags &= ~(ROT_SKEW_DIRTY | LOCAL_MATRIX_DIRTY);
             //localMatrix.modifyCounter++;
             matrixUpdateCount++;
         }
         return localMatrix;
-    }
+    }*/
 
-    public Mat2D getWorldMatrix() {
+    public native Mat2D getWorldMatrix(int globalFrameVersion);/* {
         if (frameVersion != GLOBAL_FRAME_VERSION) {
             frameVersion = GLOBAL_FRAME_VERSION;
             int updateCount = matrixUpdateCount;
@@ -290,17 +302,9 @@ public class Sprite2D {
             }
         }
         return worldMatrix;
-    }
+    }*/
 
     public void dispose() {
-    }
-
-    public float getNaturalWidth() {
-        return 0;
-    }
-
-    public float getNaturalHeight() {
-        return 0;
     }
 
     void unlinkChild(Sprite2D child) {
@@ -428,12 +432,14 @@ public class Sprite2D {
     public void draw() {
     }
     
-    public void drawChildren() {
+    public native void drawChildren();/* {
         Sprite2D ptr = firstChild;
         while(ptr != null) {
-            if((ptr.flags & VISIBLE) != 0 && ptr.worldAlpha > 0)
-                Stage2D.I.renderSprite(ptr);
+            if((ptr.flags & VISIBLE) != 0 && ptr.worldAlpha > 0) {
+                ptr.draw();
+                ptr.drawChildren();
+            }
             ptr = ptr.next;
         }
-    }
+    }*/
 }

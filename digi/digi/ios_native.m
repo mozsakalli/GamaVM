@@ -44,8 +44,8 @@ void *read_class_file(JCHAR *name, int len) {
     }
     size_t uncompressed_size = (size_t) file_stat.m_uncomp_size;
     void *p = mz_zip_reader_extract_file_to_heap(&zip, file_stat.m_filename, &uncompressed_size, 0);
+    free(jar);
     if (!p) {
-        free(jar);
         return NULL;
     } else {
         void *ret = malloc(uncompressed_size);

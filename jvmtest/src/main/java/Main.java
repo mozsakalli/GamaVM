@@ -1,6 +1,4 @@
 
-import digiplay.Camera;
-import digiplay.Matrix3D;
 import digiplay.Platform;
 
 /*
@@ -24,43 +22,19 @@ import digiplay.Platform;
  */
 public class Main {
     
-    static class T {
-        byte b = 1;
-        char c = 2;
-        short s = 3;
-        boolean z = true;
-        int i = 5;
-        float f = 6;
-        long l = 7;
-        double d = 8;
-    }
+    Object obj;
     
-    public static void main() {
-        int v = 10;
-        System.out.println("hello "+v);
-        /*
-        while(true) {
-            long v = System.currentTimeMillis();
-            int i = 10;//(int)v;
-            T t = new T();
-            System.out.println("hello "+i);
+    public native static void main();/* {
+        try {
+            Main m = null;
+            System.out.println("Hello AOT!! -> "+m.obj);
+        } catch(Exception e){
+            e.printStackTrace();
         }
-        /*while(true) {
-            T t = new T();
-            System.out.println(t.b+","+t.c+","+t.s+","+t.z+","+t.i+","+t.f+","+t.l+","+t.d);
-            System.gc();
-        }
-        //System.out.println("Hello"+12f);*/
         //Platform.run(new MyGame());
-    }
+    }*/
     
     public static void main(String...args) {
-        //main();
-        Matrix3D id = new Matrix3D();
-        Matrix3D cm = new Camera().setupFor2D(960, 640);
-        Matrix3D r = new Matrix3D();
-        Matrix3D.multiply(cm, id, r);
-        r.t(0, 50, 0);
     }
 
 

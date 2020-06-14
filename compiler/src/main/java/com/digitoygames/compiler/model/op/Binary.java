@@ -33,7 +33,13 @@ public class Binary extends Op {
         StackValue tmp = method.allocTemp(type);
         StackValue v2 = stack.pop();
         StackValue v1 = stack.pop();
-        code = tmp.value+"="+v1.value+operand+v2.value;
+        if(operand.equals(">>>")) {
+            code = tmp.value+" = ((";
+            if(type.equals("J")) code += "JULONG"; else code += "JUINT";
+            code += ")"+v1.value+") >> "+v2.value;
+        }
+        else
+        code = tmp.value+" = "+v1.value+" "+operand+" "+v2.value;
         stack.push(tmp);
     }
     
