@@ -24,15 +24,9 @@ public class Main {
     
     Object obj;
     
-    public native static void main();/* {
-        try {
-            Main m = null;
-            System.out.println("Hello AOT!! -> "+m.obj);
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-        //Platform.run(new MyGame());
-    }*/
+    public static void main() {
+        Platform.run(new MyGame());
+    }
     
     public static void main(String...args) {
     }
