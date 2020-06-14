@@ -1,17 +1,14 @@
-package com.example.myapplication;
+package digiplay;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.graphics.Rect;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
+
 import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.util.Queue;
+
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;

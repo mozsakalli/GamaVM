@@ -1,11 +1,10 @@
 
 import digiplay.Game;
-import digiplay.Digiplay;
 import digiplay.Image;
 import digiplay.Net;
 import digiplay.Net.HttpListener;
+import digiplay.Platform;
 import digiplay.Point2D;
-import digiplay.Sprite2D;
 import digiplay.Stage2D;
 
 
@@ -36,7 +35,7 @@ public class MyGame implements Game {
     
     @Override
     public void begin() {
-        Stage2D.I.setup(new Point2D(Digiplay.platform.screenWidth,Digiplay.platform.screenHeight));
+        Stage2D.I.setup(new Point2D(Platform.screenWidth,Platform.screenHeight));
         for(int i=0; i<5000; i++) {
             Image img = new Image();
             Stage2D.I.addChild(img);
@@ -61,7 +60,7 @@ public class MyGame implements Game {
             fps = 0;
             fpsTimer = System.currentTimeMillis();
         }
-        /*
+        
         if(now - httpTimer >= 5000) {
             Net.http("https://www.google.com", null, new HttpListener(){
                 @Override
@@ -76,7 +75,7 @@ public class MyGame implements Game {
 
             });        
             httpTimer = now;
-        }*/
+        }
     }
 
     //Mat2D mat = new Mat2D();

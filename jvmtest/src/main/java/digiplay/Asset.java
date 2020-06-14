@@ -16,10 +16,25 @@
 
 package digiplay;
 
+import gamavm.VM;
+
 /**
  *
  * @author mustafa
  */
-public interface Files {
-
+public class Asset {
+    public byte[] data;
+    
+    public void load(String path) {
+        loadBytes(path);
+    }
+    
+    public void completed() {}
+    private final void loaded(long mem, int length) {
+        if(length > 0) {
+            data = VM.wrapBytes(mem, length);
+        }
+        completed();
+    }
+    private native long loadBytes(String path);
 }

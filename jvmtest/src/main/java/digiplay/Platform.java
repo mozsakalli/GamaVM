@@ -22,38 +22,24 @@ package digiplay;
  */
 public class Platform {
     
-    protected Game game;
-    /*
-    public abstract Graphics getGraphics();
-    public abstract Files getFiles();
-    */
     
-    long lastTime = System.currentTimeMillis();
-    boolean initialized;
-    public int screenWidth, screenHeight;
-            
-    private Platform(Game game) {
-        this.game = game;
-        //Digiplay.graphics = this.graphics = new IosGraphics();
-    }
+    protected static Game game;
+    
+    static long lastTime = System.currentTimeMillis();
+    static boolean initialized;
+    static public int screenWidth, screenHeight;
+    public static int gameTime;   
     
     public static void run(Game game) {
-        Platform p = new Platform(game);
-        Digiplay.platform = p;
-        p.run();
+        Platform.game = game;
+        run();
     }
-    private native void run();
+    private native static void run();
     
-    private void resize(int width, int height) {
+    private static void resize(int width, int height) {
         try {
             screenWidth = width;
             screenHeight = height;
-            /*
-            Graphics g = Digiplay.graphics;
-            if(g != null) {
-                g.resize(width, height, safeLeft, safeTop, safeRight, safeBottom);
-            }
-            */
             if(!initialized) {
                 initialized = true;
                 game.begin();
@@ -63,26 +49,38 @@ public class Platform {
         }
     }
     
-    private void step() {
+    private static void step() {
         long now = System.currentTimeMillis();
         int delta = (int)(now - lastTime);
         lastTime = now;
         try {
+            for(int i=0; i<runnableCount; i++) {
+                runnables[i].run();
+                runnables[i] = null;
+            }
+            runnableCount = 0;
+            
             game.update();
             game.render();
         }catch(Throwable e){
             e.printStackTrace();
         }
-        //System.out.println("Step - "+delta);
         System.gc();
     }
-    
-    private void pause() {
-        
+ 
+    public static native void runOnBackgroundThread(Runnable action);
+    static Runnable[] runnables;
+    static int runnableCount;
+    public static void runOnGameThread(Runnable action) {
+        if(action != null) {
+            if(runnables == null) {
+                runnables = new Runnable[32];
+            } else {
+                Runnable[] tmp = new Runnable[runnables.length * 2];
+                System.arraycopy(runnables, 0, tmp, 0, runnableCount);
+                runnables = tmp;
+            }
+            runnables[runnableCount++] = action;
+        }
     }
-    
-    private void resume() {
-        
-    }
-    
 }

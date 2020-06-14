@@ -29,8 +29,10 @@ public class Image extends Sprite2D {
     float dy = (float)(-3 + Math.random() * 6);
     float r = (float)(-5 + Math.random()*10);
     public Image() {
-        markContentInvalid();
-        width(50); height(50);
+        //markContentInvalid();
+        //width(50); height(50);
+        texture = new GLTexture();
+        texture.upload("special-texture.png");
     }
     
     @Override
@@ -57,8 +59,8 @@ public class Image extends Sprite2D {
         if(x <= 0) {
             x = 0;
             dx = -dx;
-        } else if(x >= Digiplay.platform.screenWidth) {
-            x = Digiplay.platform.screenWidth;
+        } else if(x >= Platform.screenWidth) {
+            x = Platform.screenWidth;
             dx = -dx;
         }
         x(x);
@@ -68,8 +70,8 @@ public class Image extends Sprite2D {
         if(y <= 0) {
             y = 0;
             dy = -dy;
-        } else if(y >= Digiplay.platform.screenHeight) {
-            y = Digiplay.platform.screenHeight;
+        } else if(y >= Platform.screenHeight) {
+            y = Platform.screenHeight;
             dy = -dy;
         }
         y(y);

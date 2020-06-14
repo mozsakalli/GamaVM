@@ -24,8 +24,9 @@ public class GLTexture {
     long handle;
     int width, height, hwWidth, hwHeight;
     
-    public native void load(String path);
-    public native void load(byte[] bytes);
+    public native void upload(byte[] bytes);
     public native void dispose();
+
+    public native void upload(String path);
     
 }

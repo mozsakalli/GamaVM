@@ -28,6 +28,8 @@ public class VM {
     public static native long getAddress(Object o);
     public static native Object allocObject(Class cls);
     public static native Object allocArray(Class cls, int length);
+    public static native byte[] wrapBytes(long addr, int length);
+    
     public static native long allocMem(int size);
     public static native void freeMem(long ptr);
     public static native void setShort(long ptr, int value);
@@ -36,4 +38,8 @@ public class VM {
     public static native int getArrayLength(Object array);
     
     public static native void restart(byte[] jarFile);
+    
+    public static native void gcProtect(Object o);
+    public static native void gcUnProtect(Object o);
+    
 }

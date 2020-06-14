@@ -16,7 +16,6 @@ gamavm/apple/NSDictionary.class
 digiplay/render/RenderDevice.class
 digiplay/Platform.class
 gamavm/apple/NSMutableObject.class
-digiplay/Files.class
 digiplay/Matrix3D.class
 digiplay/Graphics.class
 digiplay/render/Texture.class
@@ -39,7 +38,6 @@ digiplay/Point2D.class
 gamavm/apple/uikit/UIApplicationDelegate.class
 gamavm/apple/Selector.class
 digiplay/Sprite2D.class
-digiplay/Digiplay.class
 digiplay/Mat3D.class
 Tmp.class
 digiplay/GLShader2D.class

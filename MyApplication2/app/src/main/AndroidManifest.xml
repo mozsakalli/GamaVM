@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.myapplication">
+    package="digiplay">
     <supports-screens android:largeScreens="true" android:xlargeScreens="true" />
     <uses-feature android:glEsVersion="0x00020000" android:required="true" />
     <!-- uses-sdk android:minSdkVersion="16" android:targetSdkVersion="28" / -->
@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme"
         >
         <activity
-            android:name=".MainActivity"
+            android:name="digiplay.MainActivity"
             android:screenOrientation="sensorLandscape"
             >
             <intent-filter>

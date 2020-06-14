@@ -39,8 +39,8 @@ public class Stage2D extends Sprite2D {
 
         float ratio = hh / ww;
 
-        float sw = Digiplay.platform.screenWidth;
-        float sh = Digiplay.platform.screenHeight;
+        float sw = Platform.screenWidth;
+        float sh = Platform.screenHeight;
         
         float w = sw;
         float h = (int) (w * ratio);
@@ -133,7 +133,7 @@ public class Stage2D extends Sprite2D {
     */
     public void render() {
         GLOBAL_FRAME_VERSION++;
-        QuadBatch.begin(Digiplay.platform.screenWidth, Digiplay.platform.screenHeight, true, 0xff000000);
+        QuadBatch.begin(Platform.screenWidth, Platform.screenHeight, true, 0xff000000);
         drawChildren();
         QuadBatch.end();
     }

@@ -29,7 +29,7 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 
 extern "C" void *__platform_read_file(const char* path, int *size) {
     JNIEnv *ENV = getJNIEnv();
-    jclass cls = ENV->FindClass("com/example/myapplication/MainActivity");
+    jclass cls = ENV->FindClass("digiplay/MainActivity");
     jmethodID mth = ENV->GetStaticMethodID(cls, "readFile", "(Ljava/lang/String;)[B");
     jstring str = ENV->NewStringUTF( path );
     jbyteArray array = (jbyteArray)ENV->CallStaticObjectMethod(cls, mth, str);
@@ -46,7 +46,6 @@ extern "C" void *__platform_read_file(const char* path, int *size) {
         memcpy((void*)buffer, (void*)data, len);
         ENV->ReleaseByteArrayElements(array, data, JNI_ABORT);
         *size = len;
-        //__android_log_print(ANDROID_LOG_INFO, \"digiplay\", \"bytearray-len is: %d\",len);
         return buffer;
     }
 
@@ -93,33 +92,23 @@ extern "C" void *read_class_file(JCHAR *name, int len) {
     return NULL;
 }
 
-Object *digiplayPlatform, *digiplayPlatformStepMethod;
+Object *digiplayPlatformStepMethod;
 
 extern "C" void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args) {
-    JCHAR *ch = (JCHAR*)L"AB";
-    if(ch[0] == 'A' && ch[1]=='B') {
-        printf("OK");
-    }
-    digiplayPlatform = args[0].O;
     digiplayPlatformStepMethod = resolve_method(vm, (JCHAR*)L"digiplay/Platform",17, (JCHAR*)L"step",4, (JCHAR*)L"()V", 3);
     JNIEnv *ENV = getJNIEnv();
-    jclass cls = ENV->FindClass("com/example/myapplication/MainActivity");
+    jclass cls = ENV->FindClass("digiplay/MainActivity");
     jmethodID mth = ENV->GetStaticMethodID(cls, "platformRun", "()V");
     ENV->CallStaticVoidMethod(cls, mth);
 }
 
 extern "C" void java_lang_System_SystemOutStream_printImpl(VM *vm, Object *method, VAR *args) {
     if(!args[0].O) return;
-    /*
-    int len = STRLEN(args[0].O);
-    JCHAR buf[len+1];
-    memcpy(buf, STRCHARS(args[0].O), len* sizeof(JCHAR));
-    buf[len+1] = 0;*/
     __android_log_print(ANDROID_LOG_INFO, "GamaVM", "%s", string_to_ascii(args[0].O));
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_example_myapplication_MainActivity_gamaVMMain(
+Java_digiplay_MainActivity_gamaVMMain(
         JNIEnv *env,
         jclass /* this */) {
 
@@ -128,12 +117,11 @@ Java_com_example_myapplication_MainActivity_gamaVMMain(
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_example_myapplication_MainActivity_platformResize(
+Java_digiplay_MainActivity_platformResize(
         JNIEnv *env,
         jclass /* this */, jint width, jint height) {
     Object *resize_method = resolve_method(gamaVM, (JCHAR*)L"digiplay/Platform",17, (JCHAR*)L"resize",6, (JCHAR*)L"(II)V", 5);
-    VAR vargs[3] = {
-            { .O = digiplayPlatform },
+    VAR vargs[2] = {
             { .I = width },
             { .I = height },
     };
@@ -142,9 +130,8 @@ Java_com_example_myapplication_MainActivity_platformResize(
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_example_myapplication_MainActivity_platformStep(
+Java_digiplay_MainActivity_platformStep(
         JNIEnv *env,
         jclass /* this */) {
-    VAR args[1] = { {.O = digiplayPlatform} };
-    CALLVM_V(gamaVM, digiplayPlatformStepMethod, &args[0]);
+    CALLVM_V(gamaVM, digiplayPlatformStepMethod, NULL);
 }

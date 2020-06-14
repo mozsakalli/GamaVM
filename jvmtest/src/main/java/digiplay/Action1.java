@@ -20,10 +20,8 @@ package digiplay;
  *
  * @author mustafa
  */
-public class Digiplay {
+public interface Action1<T> {
     
-    public static Platform platform;
-    public static Graphics graphics;
-    public static Files files;
+    public void invoke(T value);
     
 }
