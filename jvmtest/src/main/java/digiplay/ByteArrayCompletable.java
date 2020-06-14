@@ -22,19 +22,19 @@ import gamavm.VM;
  *
  * @author mustafa
  */
-public class Asset implements Completable {
-    public byte[] data;
+public class ByteArrayCompletable implements Completable {
+    int length;
+    long data;
+    public byte[] bytes;
     
-    public void load(String path) {
-        loadBytes(path);
-    }
-    
-    @Override public void complete() {}
-    
-    private final void loaded(long mem, int length) {
+    @Override
+    public void complete() {
         if(length > 0) {
-            data = VM.wrapBytes(mem, length);
+            bytes = VM.wrapBytes(data, length);
         }
+        onComplete();
     }
-    private native long loadBytes(String path);
+
+    public void onComplete(){}
+    
 }

@@ -16,25 +16,12 @@
 
 package digiplay;
 
-import gamavm.VM;
-
 /**
  *
  * @author mustafa
  */
-public class Asset implements Completable {
-    public byte[] data;
+public interface Completable {
     
-    public void load(String path) {
-        loadBytes(path);
-    }
+    public void complete();
     
-    @Override public void complete() {}
-    
-    private final void loaded(long mem, int length) {
-        if(length > 0) {
-            data = VM.wrapBytes(mem, length);
-        }
-    }
-    private native long loadBytes(String path);
 }

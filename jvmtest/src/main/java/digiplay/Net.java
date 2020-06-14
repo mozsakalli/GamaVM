@@ -16,6 +16,8 @@
 
 package digiplay;
 
+import gamavm.VM;
+
 /**
  *
  * @author mustafa
@@ -27,4 +29,18 @@ public class Net {
         public void onHttpFail();
     }
     public native static void http(String url, String params, HttpListener callback);
+    
+    public static class Http extends ByteArrayCompletable {
+        public String url;
+        public String postData;
+        public byte[] response;
+
+        public Http(String url, String postData) {
+            this.url = url;
+            this.postData = postData;
+        }
+        
+        public native void start();
+        
+    }
 }

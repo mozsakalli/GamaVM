@@ -46,6 +46,14 @@ public class MyGame implements Game {
             img.rotation((float)Math.random()*360);
             img.color = (((int)(Math.random()*255)) << 16) | (((int)(Math.random()*255)) << 8) | (((int)(Math.random()*255)));
         }
+        
+        new Net.Http("https://www.google.com", null) {
+            public void onComplete() {
+                if(bytes != null)
+                    System.out.println(new String(bytes));
+            }
+        }.start();
+        
     }
 
     long fpsTimer;

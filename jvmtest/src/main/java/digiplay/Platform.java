@@ -54,11 +54,11 @@ public class Platform {
         int delta = (int)(now - lastTime);
         lastTime = now;
         try {
-            for(int i=0; i<runnableCount; i++) {
-                runnables[i].run();
-                runnables[i] = null;
+            for(int i=0; i<completableCount; i++) {
+                completables[i].complete();
+                completables[i] = null;
             }
-            runnableCount = 0;
+            completableCount = 0;
             
             game.update();
             game.render();
@@ -68,19 +68,18 @@ public class Platform {
         System.gc();
     }
  
-    public static native void runOnBackgroundThread(Runnable action);
-    static Runnable[] runnables;
-    static int runnableCount;
-    public static void runOnGameThread(Runnable action) {
+    static Completable[] completables;
+    static int completableCount;
+    public static void completeOnGameThread(Completable action) {
         if(action != null) {
-            if(runnables == null) {
-                runnables = new Runnable[32];
+            if(completables == null) {
+                completables = new Completable[32];
             } else {
-                Runnable[] tmp = new Runnable[runnables.length * 2];
-                System.arraycopy(runnables, 0, tmp, 0, runnableCount);
-                runnables = tmp;
+                Completable[] tmp = new Completable[completables.length * 2];
+                System.arraycopy(completables, 0, tmp, 0, completableCount);
+                completables = tmp;
             }
-            runnables[runnableCount++] = action;
+            completables[completableCount++] = action;
         }
     }
 }
