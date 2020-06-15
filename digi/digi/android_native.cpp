@@ -170,3 +170,6 @@ Java_digiplay_MainActivity_completeCompletable(
     VAR args[3] = {{.O = target}, {.J = (JLONG)buffer}, {.I = length}};
     CALLVM_V(gamaVM, method, &args[0]);
 }
+
+
+

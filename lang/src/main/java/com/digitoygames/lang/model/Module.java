@@ -25,7 +25,7 @@ public class Module {
 
     public void generateCPP(SourceWriter out) {
         for(Using u : usings)
-            out.println("#include \"%s\"", u.name);
+            out.println("#include \"%s\"", u.qualified);
 
         for (Namespace n : namespaces)
             n.generateCPP(out);

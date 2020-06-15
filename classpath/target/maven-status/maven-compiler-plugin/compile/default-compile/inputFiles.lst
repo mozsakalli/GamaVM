@@ -70,6 +70,7 @@
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/IncompatibleClassChangeError.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/annotation/AnnotationFormatError.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/util/Vector.java
+/Users/mustafa/Work/GamaVM/classpath/src/main/java/gamavm/JNIString.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/StringIndexOutOfBoundsException.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/net/URISyntaxException.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/Runnable.java
@@ -109,6 +110,7 @@
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/io/FileFilter.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/util/BitSet.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/ref/Reference.java
+/Users/mustafa/Work/GamaVM/classpath/src/main/java/gamavm/JNIObject.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/annotation/Documented.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/Comparable.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/ref/WeakReference.java

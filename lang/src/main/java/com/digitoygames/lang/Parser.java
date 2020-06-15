@@ -11,14 +11,16 @@ public class Parser {
     int ptr;
     Tokenizer tokenizer;
     List<Token> tokens;
-    Module module = new Module();
+    com.digitoygames.lang.model.Module module = new com.digitoygames.lang.model.Module();
 
     public Parser(File file) {
         this.file = file;
     }
-    public Module parse() throws Exception {
+    public com.digitoygames.lang.model.Module parse() throws Exception {
         tokenizer = new Tokenizer(file);
-        tokens = tokenizer.tokens;
+        //tokens = tokenizer.tokens;
+        PreProcessor pp = new PreProcessor(tokenizer.tokens);
+        tokens = pp.process();
         using();
         while(ptr < tokens.size()) {
             if(!namespace()) throw error("namespace expected");
@@ -70,7 +72,7 @@ public class Parser {
         Token t = tokens.get(ptr++);
         if(t.type == Token.IDENT) return t.value;
         ptr--;
-        throw error("Ident expected");
+        throw error("Ident expected found "+s);
     }
     String qualified() {
         String str = ident(true);

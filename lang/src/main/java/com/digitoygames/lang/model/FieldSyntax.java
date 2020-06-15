@@ -1,5 +1,6 @@
 package com.digitoygames.lang.model;
 
+import com.digitoygames.lang.SourceWriter;
 import java.util.Set;
 
 public class FieldSyntax extends Unit {
@@ -36,4 +37,16 @@ public class FieldSyntax extends Unit {
         if(value != null) str += " = "+value;
         return str;
     }
+
+    @Override
+    public void generateCPP(SourceWriter out) {
+        out.println("%s %s;",type.toString(), name);
+        if(getter != null) {
+            out.println("%s %s_getter() {", type.toString(), name).indent();
+            out.println(getter.toString());
+            out.undent().println("}");
+        }
+    }
+    
+    
 }

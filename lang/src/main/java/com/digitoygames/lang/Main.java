@@ -27,8 +27,8 @@ import java.io.File;
 public class Main {
     
     public static void main(String...args) throws Exception {
-        //Parser p = new Parser(new File("/Users/mustafa/Work/digitoygames/digiplay-net/Digiplay/Digiplay.Core/core/Sprite2D.cs"));
-        Parser p = new Parser(new File("/Users/mustafa/Desktop/test.cs"));
+        Parser p = new Parser(new File("/Users/mustafa/Work/digitoygames/digiplay-net/Digiplay/Digiplay.Core/core/Sprite2D.cs"));
+        //Parser p = new Parser(new File("/Users/mustafa/Desktop/test.cs"));
         Module m = p.parse();
 
         SourceWriter out = new SourceWriter();

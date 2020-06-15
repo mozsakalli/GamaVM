@@ -22,6 +22,7 @@ public class Method {
     Object entry;
     Object compiled;
     int breakpoint;
+    Object _native;
     
     public Class getDeclaringClass() {
         return declaringClass;

@@ -1,5 +1,6 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/storekit/SKPaymentQueue.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/ObjC.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/jni/JniMethod.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/Bridge.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/NSDictionary.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/NSProtocol.java
@@ -11,10 +12,13 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Sprite2D.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/Main.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/NSObject.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/External.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIViewController.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/MainActivity.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/Tmp.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Point2D.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/IndexBuffer.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/jni/JniBridge.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/GPU.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Image.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Matrix3D.java
@@ -28,12 +32,15 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/VertexBuffer.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/QuadMesh.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Matrix2D.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/jni/JniObject.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Stage2D.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/ObjCClass.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/RenderDevice.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIApplicationDelegate.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/jni/URL.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/Selector.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Mat2D.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/jni/JniClass.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/net/Socket.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/QuadGeometry.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/MyGame.java

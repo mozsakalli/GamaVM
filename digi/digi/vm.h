@@ -188,6 +188,7 @@ typedef struct __attribute__ ((packed)) Method {
     void *entry;
     void *compiled;
     JINT breakpoint;
+    void *native;
 } Method;
 
 typedef struct CPItem {
@@ -228,6 +229,7 @@ typedef struct __attribute__ ((packed)) Class {
     JINT allParentCount;
     Object **allParents;
     struct VM *vm;
+    void *native;
 } Class;
 
 typedef Class VMClass;
