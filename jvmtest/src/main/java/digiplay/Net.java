@@ -16,8 +16,6 @@
 
 package digiplay;
 
-import gamavm.VM;
-
 /**
  *
  * @author mustafa
@@ -33,7 +31,6 @@ public class Net {
     public static class Http extends ByteArrayCompletable {
         public String url;
         public String postData;
-        public byte[] response;
 
         public Http(String url, String postData) {
             this.url = url;

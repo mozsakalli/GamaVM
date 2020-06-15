@@ -63,3 +63,42 @@ JCHAR *char_to_jchar(char *ch, int *len) {
     *len = l;
     return r;
 }
+
+int get_utf8_encode_length(JCHAR *chars, int srcLen) {
+    int len = 0;
+    for (int i = 0; i < srcLen; i++) {
+        int c = chars[i] & 0xff;
+        if (c <= 0x7F) {
+            len += 1;
+        } else if (c <= 0x7FF) {
+            len += 2;
+        } else if (c <= 0xFFFF) {
+            len += 3;
+        } else {
+            len += 4;
+        }
+    }
+    return len;
+}
+
+void encode_utf8(JCHAR *chars, int srcLen, char *buf) {
+    for (int i = 0; i < srcLen; i++) {
+        int c = chars[i] & 0xff;
+        if (c <= 0x7F) {
+            *buf++ = c;
+        } else if (c <= 0x7FF) {
+            *buf++ = (0xC0 | (c >> 6));
+            *buf++ = (0x80 | (c & 63));
+        } else if (c <= 0xFFFF) {
+            *buf++ = (0xE0 | (c >> 12));
+            *buf++ = (0x80 | ((c >> 6) & 63));
+            *buf++ = (0x80 | (c & 63));
+        } else {
+            *buf++ = (0xF0 | (c >> 18));
+            *buf++ = (0x80 | ((c >> 12) & 63));
+            *buf++ = (0x80 | ((c >> 6) & 63));
+            *buf++ = (0x80 | (c & 63));
+        }
+    }
+
+}

@@ -129,9 +129,44 @@ Java_digiplay_MainActivity_platformResize(
 
 }
 
+
 extern "C" JNIEXPORT void JNICALL
 Java_digiplay_MainActivity_platformStep(
         JNIEnv *env,
         jclass /* this */) {
     CALLVM_V(gamaVM, digiplayPlatformStepMethod, NULL);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_digiplay_MainActivity_completeCompletable(
+        JNIEnv *env,
+        jclass /* this */,
+        jlong gamaHandle, jbyteArray response) {
+
+    static int methodIndex = -1;
+    if(methodIndex == -1) {
+        Object *m = resolve_method(gamaVM, (JCHAR*)L"digiplay/Completable",20, (JCHAR*)L"complete",8, (JCHAR*)L"(JI)V",5);
+        if(!m) return;
+        methodIndex = MTH(m, iTableIndex);
+    }
+
+    jbyte *data = NULL;
+    int length = 0;
+    void *buffer = NULL;
+
+    if(response != NULL) {
+        length = env->GetArrayLength(response);
+        data = env->GetByteArrayElements(response, NULL);
+        if(data) {
+            buffer = malloc(length);
+            memcpy(buffer, data, length);
+            env->ReleaseByteArrayElements(response, data, JNI_ABORT);
+        }
+    }
+
+    Object *target = (Object*)gamaHandle;
+    gc_unprotect(gamaVM, target);
+    Object *method = CLS(target->cls, itable)[methodIndex];
+    VAR args[3] = {{.O = target}, {.J = (JLONG)buffer}, {.I = length}};
+    CALLVM_V(gamaVM, method, &args[0]);
 }

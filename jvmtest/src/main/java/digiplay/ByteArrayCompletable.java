@@ -23,12 +23,10 @@ import gamavm.VM;
  * @author mustafa
  */
 public class ByteArrayCompletable implements Completable {
-    int length;
-    long data;
     public byte[] bytes;
     
     @Override
-    public void complete() {
+    public void complete(long data, int length) {
         if(length > 0) {
             bytes = VM.wrapBytes(data, length);
         }

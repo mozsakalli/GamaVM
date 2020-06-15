@@ -16,25 +16,42 @@
 
 package digiplay;
 
-import gamavm.VM;
-
 /**
  *
  * @author mustafa
  */
-public class Asset implements Completable {
-    public byte[] data;
-    
-    public void load(String path) {
-        loadBytes(path);
+public class Bag<T> {
+
+    private T[] items;
+    private int size;
+
+    public Bag() {
+        this(16);
     }
-    
-    @Override public void complete(long data, int length) {}
-    
-    private final void loaded(long mem, int length) {
-        if(length > 0) {
-            data = VM.wrapBytes(mem, length);
+
+    public Bag(int capacity) {
+        items = (T[])new Object[capacity];
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void add(T item) {
+        if(size == items.length) {
+            T[] tmp = (T[])new Object[items.length * 2];
+            System.arraycopy(items,0, tmp,0,size);
+            items = tmp;
         }
+        items[size++] = item;
     }
-    private native long loadBytes(String path);
+
+    public T get(int index) {
+        return items[index];
+    }
+
+    public void clear() {
+        for(int i=0; i<size; i++) items[i] = null;
+        size = 0;
+    }
 }

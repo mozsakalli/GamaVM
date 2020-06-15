@@ -8,6 +8,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -36,6 +38,8 @@ public class GameView extends GLSurfaceView implements GLSurfaceView.Renderer {
     //final List<AsyncEvent> executedAsyncEvents = new ArrayList();
 
     // GameApplication gameApp;
+
+    static Bag<Object[]> Completables = new Bag<>();
 
     public GameView(Context context) {
         super(context);
@@ -244,14 +248,6 @@ public class GameView extends GLSurfaceView implements GLSurfaceView.Renderer {
         return false;
     }
 
-    void processAsyncEvents() {
-        /*synchronized(asyncEvents) {
-            while(!asyncEvents.isEmpty()) {
-                asyncEvents.poll().handleAsync();
-            }
-        }*/
-    }
-
 
     @Override
     public void onResume() {
@@ -311,7 +307,16 @@ public class GameView extends GLSurfaceView implements GLSurfaceView.Renderer {
             mIsResume = false;
         }
 
-        processAsyncEvents();
+        if(Completables.getSize() > 0) {
+            synchronized (Completables) {
+                int len = Completables.getSize();
+                for(int i=0; i<len; i++) {
+                    Object[] o = Completables.get(i);
+                    MainActivity.completeCompletable((Long)o[0], (byte[])o[1]);
+                }
+                Completables.clear();
+            }
+        }
         MainActivity.platformStep();
 
         try{
@@ -329,12 +334,6 @@ public class GameView extends GLSurfaceView implements GLSurfaceView.Renderer {
 
     }
 
-    public boolean isContinuousRendering() {
-        return isContinuous;
-    }
-
-    public boolean isPreserveContext() { return hasPreserveContext; }
-
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -343,4 +342,9 @@ public class GameView extends GLSurfaceView implements GLSurfaceView.Renderer {
     }
 
 
+    public static void postCompletable(long handle, byte[] data) {
+        synchronized (Completables) {
+            Completables.add(new Object[] {handle, data});
+        }
+    }
 }

@@ -22,6 +22,6 @@ package digiplay;
  */
 public interface Completable {
     
-    public void complete();
+    public void complete(long data, int length);
     
 }

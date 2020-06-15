@@ -29,10 +29,10 @@ public class Image extends Sprite2D {
     float dy = (float)(-3 + Math.random() * 6);
     float r = (float)(-5 + Math.random()*10);
     public Image() {
-        //markContentInvalid();
-        //width(50); height(50);
-        texture = new GLTexture();
-        texture.upload("special-texture.png");
+        markContentInvalid();
+        width(50); height(50);
+        //texture = new GLTexture();
+        //texture.upload("special-texture.png");
     }
     
     @Override

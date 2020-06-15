@@ -9,6 +9,8 @@ import android.view.WindowManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -16,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     static AssetManager AM;
     static MainActivity I;
     GameView gameView;
+    public static final ExecutorService ThreadPool = Executors.newFixedThreadPool(4);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,11 +71,6 @@ public class MainActivity extends AppCompatActivity {
                 if(readed > 0) bytes.write(buffer, 0, readed); else break;
             }
             time = System.currentTimeMillis() - time;
-            System.out.println("readed in "+time);
-            /*
-            int ch;
-            while((ch = in.read()) != -1) bytes.write(ch);
-             */
             return bytes.toByteArray();
         } catch(Exception e) {
             e.printStackTrace();
@@ -84,13 +82,10 @@ public class MainActivity extends AppCompatActivity {
         MainActivity.I.start();
     }
 
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
     public static native void gamaVMMain();
     public static native void platformResize(int width, int height);
     public static native void platformStep();
+    public static native void completeCompletable(long handle, byte[] data);
 
     static {
         System.loadLibrary("native-lib");

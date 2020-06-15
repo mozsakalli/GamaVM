@@ -44,7 +44,7 @@ public class Platform {
                 initialized = true;
                 game.begin();
             }
-        }catch(Exception e){
+        }catch(Throwable e){
             e.printStackTrace();
         }
     }
@@ -54,11 +54,6 @@ public class Platform {
         int delta = (int)(now - lastTime);
         lastTime = now;
         try {
-            for(int i=0; i<completableCount; i++) {
-                completables[i].complete();
-                completables[i] = null;
-            }
-            completableCount = 0;
             
             game.update();
             game.render();
@@ -68,18 +63,4 @@ public class Platform {
         System.gc();
     }
  
-    static Completable[] completables;
-    static int completableCount;
-    public static void completeOnGameThread(Completable action) {
-        if(action != null) {
-            if(completables == null) {
-                completables = new Completable[32];
-            } else {
-                Completable[] tmp = new Completable[completables.length * 2];
-                System.arraycopy(completables, 0, tmp, 0, completableCount);
-                completables = tmp;
-            }
-            completables[completableCount++] = action;
-        }
-    }
 }

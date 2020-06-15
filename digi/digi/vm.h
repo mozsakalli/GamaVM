@@ -346,6 +346,8 @@ extern int get_line_number(Method *method, int pc);
 /// UTF
 extern int get_utf8_length(char *data, int length);
 extern void decode_utf8(char *data, int length, JCHAR* buf);
+extern int get_utf8_encode_length(JCHAR *chars, int srcLen);
+extern void encode_utf8(JCHAR *chars, int srcLen, char *buf);
 extern char *jchar_to_ascii(JCHAR *chars, int len);
 extern char *string_to_ascii(Object *str);
 extern JCHAR *char_to_jchar(char *ch, int *len);
