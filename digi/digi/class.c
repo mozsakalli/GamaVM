@@ -117,12 +117,10 @@ void link_class(VM *vm, Object *clsObject) {
     if(cls->elementClass)
         link_class(vm, cls->elementClass);
 
-    int isExternalClass = 0;
     if(cls->interfaces) {
         for(int i=0; i<cls->interfaces->length; i++) {
             Object *intf = ((Object **) cls->interfaces->instance)[i];
             link_class(vm, intf);
-            if(STRLEN(CLS(intf,name)) == 15 && compare_chars((JCHAR*)L"gamavm/External", STRCHARS(CLS(intf,name)),15)) isExternalClass = 1;
         }
     }
     
@@ -277,7 +275,7 @@ void link_class(VM *vm, Object *clsObject) {
         CALLVM_V(vm, clInit, NULL);
     }
 
-    if(isExternalClass) vm_link_external_class(vm, clsObject);
+    if(cls->externalFlags) vm_link_external_class(vm, clsObject);
 
     //jdwp_send_classload_event(clso);
     

@@ -32,9 +32,18 @@ public class Net {
         public String url;
         public String postData;
 
-        public Http(String url, String postData) {
+        public Http(String url) {
             this.url = url;
-            this.postData = postData;
+        }
+        
+        public Http param(String name, Object value) {
+            if(value != null) {
+                if(postData == null)
+                    postData = name;
+                else postData += "&" + name;
+                postData += "=" + value;
+            }
+            return this;
         }
         
         public native void start();

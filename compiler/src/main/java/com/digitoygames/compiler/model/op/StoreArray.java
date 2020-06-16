@@ -16,7 +16,6 @@
 
 package com.digitoygames.compiler.model.op;
 
-import com.digitoygames.compiler.Util;
 import com.digitoygames.compiler.model.Method;
 import com.digitoygames.compiler.model.Stack;
 import com.digitoygames.compiler.model.StackValue;
@@ -32,7 +31,8 @@ public class StoreArray extends Op {
         StackValue val = stack.pop();
         StackValue index = stack.pop();
         StackValue array = stack.pop();
-
-        code = String.format("ARRAY_DATA_%s(%s)[%s] = %s", type,array.value,index.value,val.value);
+        code = String.format("if(!%s) { throw_null(vm); goto __EXCEPTION;}\n", array.value);
+        code += String.format("if(%s < 0 || %s >= %s->length) { throw_arrayounds(vm,%s,%s->length); goto __EXCEPTION; }\n", index.value, index.value, array.value, index.value, array.value);
+        code += String.format("ARRAY_DATA_%s(%s)[%s] = %s", type,array.value,index.value,val.value);
     }
 }

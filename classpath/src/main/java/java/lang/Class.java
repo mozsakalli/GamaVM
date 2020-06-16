@@ -63,7 +63,9 @@ public final class Class<T> {
     int allParentCount;
     Class[] allParents;
     Object vm;
-    Object _native;
+    int externalFlags;
+    String externalName;
+    Object externalData;
     
     public native static java.lang.Class forName(java.lang.String className);
     

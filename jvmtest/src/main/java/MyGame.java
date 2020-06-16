@@ -1,4 +1,5 @@
 
+import digiplay.Asset;
 import digiplay.Game;
 import digiplay.Image;
 import digiplay.MainActivity;
@@ -7,6 +8,7 @@ import digiplay.Net.HttpListener;
 import digiplay.Platform;
 import digiplay.Point2D;
 import digiplay.Stage2D;
+import digiplay.Stb;
 
 
 /*
@@ -47,6 +49,17 @@ public class MyGame implements Game {
             img.rotation((float)Math.random()*360);
             img.color = (((int)(Math.random()*255)) << 16) | (((int)(Math.random()*255)) << 8) | (((int)(Math.random()*255)));
         }
+        
+        new Asset() {
+            @Override public void onComplete() {
+                System.out.println("Bytes loaded: "+bytes.length);
+                new Stb.Image() {
+                    @Override public void onComplete() {
+                        System.out.println("Image loaded: "+width+"x"+height+" len:"+this.pixels.length);
+                    }
+                }.decode(bytes);
+            }
+        }.load("special-offer.png");
         /*
         new Net.Http("https://www.google.com", null) {
             public void onComplete() {
@@ -67,7 +80,7 @@ public class MyGame implements Game {
         Stage2D.I.update();
         long now = System.currentTimeMillis();
         if(System.currentTimeMillis() - fpsTimer <= 1000) fps++; else {
-            System.out.println("FPS: "+fps);
+            //System.out.println("FPS: "+fps);
             fps = 0;
             fpsTimer = System.currentTimeMillis();
         }

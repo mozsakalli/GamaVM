@@ -31,7 +31,9 @@ public class LoadArray extends Op {
         StackValue index = stack.pop();
         StackValue array = stack.pop();
         StackValue val = method.allocTemp(type);
-        code = String.format("%s = ARRAY_DATA_%s(%s)[%s]", val.value,type,array.value,index.value);
+        code = String.format("if(!%s) { throw_null(vm); goto __EXCEPTION;}\n", array.value);
+        code += String.format("if(%s < 0 || %s >= %s->length) { throw_arrayounds(vm,%s,%s->length); goto __EXCEPTION; }\n", index.value, index.value, array.value, index.value, array.value);
+        code += String.format("%s = ARRAY_DATA_%s(%s)[%s]", val.value,type,array.value,index.value);
         //val.type = type;
         //val.value = array.value+"["+index.value+"]";
         stack.push(val);

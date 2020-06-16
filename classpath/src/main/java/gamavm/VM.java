@@ -29,6 +29,7 @@ public class VM {
     public static native Object allocObject(Class cls);
     public static native Object allocArray(Class cls, int length);
     public static native byte[] wrapBytes(long addr, int length);
+    public static native int[] wrapInts(long addr, int length);
     
     public static native long allocMem(int size);
     public static native void freeMem(long ptr);

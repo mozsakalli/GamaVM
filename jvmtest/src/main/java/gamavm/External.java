@@ -9,6 +9,9 @@ package gamavm;
  *
  * @author mustafa
  */
-public interface External {
+public @interface External {
+    
+    public String name() default "";
+    public boolean isField() default false;
     
 }

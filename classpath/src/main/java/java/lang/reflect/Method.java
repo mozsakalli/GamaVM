@@ -22,7 +22,9 @@ public class Method {
     Object entry;
     Object compiled;
     int breakpoint;
-    Object _native;
+    int externalFlags;
+    String externalName;
+    Object externalData;
     
     public Class getDeclaringClass() {
         return declaringClass;

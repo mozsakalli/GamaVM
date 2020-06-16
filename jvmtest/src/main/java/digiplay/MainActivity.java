@@ -11,8 +11,10 @@ import gamavm.External;
  *
  * @author mustafa
  */
-public class MainActivity implements External {
+@External
+public class MainActivity {
     
+    @External(isField=true) public native static Object deneme();
     public native static byte[] readFile(String path);
     
 }

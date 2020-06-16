@@ -5,7 +5,6 @@
 #include <jni.h>
 #include <android/log.h>
 #include "vm.h"
-#include "../../../../Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/android/log.h"
 
 extern JNIEnv *getJNIEnv();
 extern VM *gamaVM;
@@ -20,7 +19,7 @@ extern VM *gamaVM;
 #define JNIARRAY_D  7
 
 typedef struct JNIMethodInfo {
-    jmethodID jmethod;
+    void* fieldOrMethod;
     int argCount;
     char argTypes[32];
     Object *argClasses[32];
@@ -87,9 +86,17 @@ void jni_to_gama(VM *vm, JNIEnv *env, char type, Object *cls, VAR *a, jvalue *j)
     }
 }
 
+void jni_get_field(VM *vm, Object *method, VAR *args) {
+
+}
+
+void jni_set_field(VM *vm, Object *method, VAR *args) {
+
+}
+
 void jni_invoke(VM *vm, Object *method, VAR *args) {
     Method *m = (Method*)method->instance;
-    JNIMethodInfo *mi = (JNIMethodInfo*)m->native;
+    JNIMethodInfo *mi = (JNIMethodInfo*)m->externalData;
     JNIEnv *env = getJNIEnv();
     VAR *a = args;
 
@@ -104,31 +111,32 @@ void jni_invoke(VM *vm, Object *method, VAR *args) {
     VAR *ret = &vm->frames[vm->FP].ret;
     jvalue jret;
     if(isStatic) {
-        jclass jcls = (jclass)CLS(m->declaringClass,native);
+        jclass jcls = (jclass)CLS(m->declaringClass,externalData);
+        jmethodID jm = (jmethodID)mi->fieldOrMethod;
         switch(mi->returnType) {
             case 'B':
-                ret->I = env->CallStaticByteMethodA(jcls, mi->jmethod, jvals);
+                ret->I = env->CallStaticByteMethodA(jcls, jm, jvals);
                 break;
             case 'Z':
-                ret->I = env->CallStaticBooleanMethodA(jcls, mi->jmethod, jvals);
+                ret->I = env->CallStaticBooleanMethodA(jcls, jm, jvals);
                 break;
             case 'C':
-                ret->I = env->CallStaticCharMethodA(jcls, mi->jmethod, jvals);
+                ret->I = env->CallStaticCharMethodA(jcls, jm, jvals);
                 break;
             case 'S':
-                ret->I = env->CallStaticShortMethodA(jcls, mi->jmethod, jvals);
+                ret->I = env->CallStaticShortMethodA(jcls, jm, jvals);
                 break;
             case 'I':
-                ret->I = env->CallStaticIntMethodA(jcls, mi->jmethod, jvals);
+                ret->I = env->CallStaticIntMethodA(jcls, jm, jvals);
                 break;
             case 'F':
-                ret->F = env->CallStaticFloatMethodA(jcls, mi->jmethod, jvals);
+                ret->F = env->CallStaticFloatMethodA(jcls, jm, jvals);
                 break;
             case 'J':
-                ret->I = env->CallStaticLongMethodA(jcls, mi->jmethod, jvals);
+                ret->I = env->CallStaticLongMethodA(jcls, jm, jvals);
                 break;
             case 'D':
-                ret->I = env->CallStaticDoubleMethodA(jcls, mi->jmethod, jvals);
+                ret->I = env->CallStaticDoubleMethodA(jcls, jm, jvals);
                 break;
             case JNIARRAY_B:
             case JNIARRAY_Z:
@@ -138,7 +146,7 @@ void jni_invoke(VM *vm, Object *method, VAR *args) {
             case JNIARRAY_F:
             case JNIARRAY_J:
             case JNIARRAY_D:
-                jobject jresult = env->CallStaticObjectMethodA(jcls, mi->jmethod, jvals);
+                jobject jresult = env->CallStaticObjectMethodA(jcls, jm, jvals);
                 if(jresult) {
                     int len = env->GetArrayLength((jarray)jresult);
                     switch(mi->returnType) {
@@ -158,13 +166,13 @@ void jni_invoke(VM *vm, Object *method, VAR *args) {
 
 void jni_invoke_resolve(VM *vm, Object *method, VAR *args) {
     Method *m = (Method*)method->instance;
-    jclass jcls = (jclass)CLS(m->declaringClass, native);
+    jclass jcls = (jclass)CLS(m->declaringClass, externalData);
     JNIEnv *env = getJNIEnv();
 
     JNIMethodInfo *mi = new JNIMethodInfo;
     mi->argCount = 0;
 
-    mi->jmethod = (jmethodID)m->native;
+    mi->fieldOrMethod = (jmethodID)m->externalData;
 
     JCHAR *sign = STRCHARS(m->signature);
     int ptr = 1;
@@ -178,7 +186,7 @@ void jni_invoke_resolve(VM *vm, Object *method, VAR *args) {
     jni_parse_signature(vm, sign, ptr, &mi->returnType, &mi->returnClass);
 
     m->entry = (void*)&jni_invoke;
-    m->native = mi;
+    m->externalData = mi;
     jni_invoke(vm, method, args);
 }
 
@@ -191,20 +199,31 @@ extern "C" void vm_link_external_class(VM *vm, Object *clsObject) {
     jclass jcls = env->FindClass(namechars);
     if(!jcls) {
         //todo: throw
+        env->ExceptionClear();
         return;
     }
     jcls = (jclass)env->NewGlobalRef(jcls);
-    cls->native = jcls;
+    cls->externalData = jcls;
 
     if(cls->methods) {
         for(int i=0; i<cls->methods->length; i++) {
             Method *m = (Method*)ARRAY_DATA_O(cls->methods)[i]->instance;
-            snprintf(namechars,127, "%s", string_to_ascii(m->name));
+            snprintf(namechars,127, "%s", string_to_ascii(m->externalName ? m->externalName : m->name));
             snprintf(signchars, 127, "%s", string_to_ascii(m->signature));
-            jmethodID jm = IS_STATIC(m->flags) ? env->GetStaticMethodID(jcls, namechars, signchars) : env->GetMethodID(jcls, namechars, signchars);
-            if(jm) {
-                m->native = jm;
-                m->entry = (void*)&jni_invoke_resolve;
+            if(m->externalFlags & 2) {
+                jfieldID jf = IS_STATIC(m->flags) ? env->GetStaticFieldID(jcls, namechars, signchars) : env->GetFieldID(jcls, namechars, signchars);
+                env->ExceptionClear();
+                if (jf) {
+                    m->externalData = jf;
+                    m->entry = (void *) &jni_invoke_resolve;
+                }
+            } else {
+                jmethodID jm = IS_STATIC(m->flags) ? env->GetStaticMethodID(jcls, namechars,signchars) : env->GetMethodID(jcls, namechars, signchars);
+                env->ExceptionClear();
+                if (jm) {
+                    m->externalData = jm;
+                    m->entry = (void *) &jni_invoke_resolve;
+                }
             }
         }
     }

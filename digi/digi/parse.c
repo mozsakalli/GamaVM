@@ -252,24 +252,57 @@ char *parse_code(VM *vm, char *data, Object *m, CPItem *cp) {
     return data;
 }
 
+char *parse_annotations(VM *vm, char *data, CPItem *cp, int *externalFlags, Object **exName) {
+    int count = READ_U2(data); data += 2;
+    *externalFlags = 0;
+    for(int k=0; k<count; k++) {
+        int tmp = READ_U2(data); data += 2;
+        Object *anClassName = cp[tmp].value.O;
+        if(STRLEN(anClassName)==17 && compare_chars(STRCHARS(anClassName),L"Lgamavm/External;",17)) {
+            *externalFlags = 1;
+        }
+        int valueCount = READ_U2(data); data += 2;
+        for(int vc = 0; vc < valueCount; vc++) {
+            tmp = READ_U2(data); data += 2;
+            Object *valName = cp[tmp].value.O;
+            int valType = (unsigned char)*data++;
+            int valIndex = READ_U2(data); data += 2;
+            if(*externalFlags) {
+                if(STRLEN(valName) == 7 && compare_chars(STRCHARS(valName),L"isField",7)) {
+                    *externalFlags |= cp[valIndex].value.I ? 2 : 0;
+                } else
+                if(STRLEN(valName) == 4 && compare_chars(STRCHARS(valName),L"name",4)) {
+                    *exName = cp[valIndex].value.O;
+                    if(cp[valIndex].value.O && STRLEN(cp[valIndex].value.O) == 0) *exName = NULL;
+                }
+            }
+        }
+    }
+    return data;
+}
+
 char *parse_method(VM *vm, char *data, Object *m, CPItem *cp) {
     MTH(m,flags) = READ_U2(data); data += 2;
     int name = READ_U2(data); data += 2;
     int signature = READ_U2(data); data += 2;
     MTH(m,name) = cp[name].value.O;
     MTH(m,signature) = cp[signature].value.O;
+    Method *mth = m->instance;
 
     int ac = READ_U2(data); data += 2;
     for(int i=0; i<ac; i++) {
         int tmp = READ_U2(data); data += 2; //name
         Object *attrName = cp[tmp].value.O;
         int attrlen = READ_U4(data); data += 4;
-        if(attrlen > 0) {
-            if (attrName && STRLEN(attrName) == 4 && compare_chars(L"Code", STRCHARS(attrName), 4)) {
-                data = parse_code(vm, data, m, cp);
-            } else {
-                data += attrlen;
-            }
+        int attrNameLen = STRLEN(attrName);
+        if (attrNameLen == 4 && compare_chars(L"Code", STRCHARS(attrName), 4)) {
+            data = parse_code(vm, data, m, cp);
+        }
+        else if(attrNameLen == 27 && compare_chars(L"RuntimeInvisibleAnnotations", STRCHARS(attrName), 27)) {
+            data = parse_annotations(vm, data, cp, &mth->externalFlags, &mth->externalName);
+        }
+        else {
+            data += attrlen;
         }
 
     }
@@ -350,7 +383,12 @@ int parse_class(VM *vm, char *data, Object *clsObject) {
         if(STRLEN(attrName)==10 && compare_chars(L"SourceFile",STRCHARS(attrName),10)) {
             tmp = READ_U2(data); data += 2;
             cls->sourceFile = cls->cp[tmp].value.O;
-        } else data += len;
+        }
+        else if(STRLEN(attrName) == 27 && compare_chars(L"RuntimeInvisibleAnnotations", STRCHARS(attrName), 27)) {
+            data = parse_annotations(vm, data, cp, &cls->externalFlags, &cls->externalName);
+        }
+
+        else data += len;
     }
 
     return 1;

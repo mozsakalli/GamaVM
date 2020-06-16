@@ -29,8 +29,8 @@ public class Main {
         com.digitoygames.compiler.model.Compiler cc = new com.digitoygames.compiler.model.Compiler();
         cc.setClassPath(new String[]{
             //"/Users/mustafa/Work/GamaVM/classpath/target/classes",
-            //"/Users/mustafa/Work/GamaVM/jvmtest/target/classes"
-            "/Users/mustafa/Work/GamaVM/jvmtest/target/classes/Main.class"
+            "/Users/mustafa/Work/GamaVM/jvmtest/target/classes"
+            //"/Users/mustafa/Work/GamaVM/jvmtest/target/classes/Main.class"
         });
         cc.compileBoot();
         if(true) return;
