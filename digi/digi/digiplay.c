@@ -395,6 +395,49 @@ void Java_digiplay_Sprite2D_drawChildren(VM *vm, Object *method, VAR *args) {
     }
 }
 
+typedef struct SpriteAction {
+    Object *parent;
+    Object *next;
+    JINT startTime, duration;
+    JBOOL disposed;
+} SpriteAction;
+
+void Java_digiplay_Sprite2D_updateActions(VM *vm, Object *method, VAR *args) {
+    if(!args[0].O) {
+        throw_null(vm);
+        return;
+    }
+    static int methodIndex = -1;
+    if(methodIndex == -1) {
+        Object *um = resolve_method(vm, L"digiplay/SpriteAction",21, L"update",6,L"(I)V",4);
+        if(!um) return;
+        methodIndex = MTH(um, vTableIndex);
+    }
+    Sprite2D *sprite = args[0].O->instance;
+    int time = args[1].I;
+    Object *ptr = sprite->actions;
+    VAR cargs[2] = { {.O = NULL}, {.I = time}};
+    while(ptr) {
+        SpriteAction *action = ptr->instance;
+        if(!action->disposed) {
+            if(action->startTime < 0) action->startTime = time;
+            cargs[0].O = ptr;
+            CALLVM_V(vm, CLS(ptr->cls, vtable)[methodIndex], &cargs[0]);
+        }
+        ptr = action->next;
+    }
+
+    ptr = sprite->firstChild;
+    while (ptr) {
+        Sprite2D *child = ptr->instance;
+        if(child->actions || child->firstChild) {
+            cargs[0].O = ptr;
+            Java_digiplay_Sprite2D_updateActions(vm, method, &cargs[0]);
+        }
+        ptr = child->next;
+    }
+}
+
 extern void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args);
 extern void Java_digiplay_Net_http(VM *vm, Object *method, VAR *args);
 

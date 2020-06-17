@@ -5,6 +5,7 @@ import digiplay.Image;
 import digiplay.MainActivity;
 import digiplay.Platform;
 import digiplay.Point2D;
+import digiplay.SpriteAction;
 import digiplay.Stage2D;
 
 
@@ -44,6 +45,7 @@ public class MyGame implements Game {
             img.blendMode = 1;
             img.setAlpha((float)(Math.random()*.5)+.5f);
             img.rotation((float)Math.random()*360);
+            img.addAction(new SpriteAction.AnimRotation(0,0,360,360,10000));
             //img.color = (((int)(Math.random()*255)) << 16) | (((int)(Math.random()*255)) << 8) | (((int)(Math.random()*255)));
         }
         

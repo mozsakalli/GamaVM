@@ -32,9 +32,11 @@ public class Platform {
     static boolean initialized;
     static public int screenWidth, screenHeight;
     public static int gameTime;   
+    static long gameStartTime;
     
     public static void run(Game game) {
         Platform.game = game;
+        gameStartTime = System.currentTimeMillis();
         run();
     }
     private native static void run();
@@ -54,6 +56,7 @@ public class Platform {
     
     private static void step() {
         long now = System.currentTimeMillis();
+        gameTime = (int)(now - gameStartTime);
         int delta = (int)(now - lastTime);
         lastTime = now;
         try {

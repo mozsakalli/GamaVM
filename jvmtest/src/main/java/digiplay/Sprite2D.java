@@ -33,7 +33,9 @@ public class Sprite2D {
     Sprite2D parent, firstChild, lastChild, next, prev;
     Mat2D localMatrix = new Mat2D();
     Mat2D worldMatrix = new Mat2D();
-
+    String name;
+    SpriteAction actions;
+    
     static int GLOBAL_FRAME_VERSION;
 
     
@@ -442,4 +444,13 @@ public class Sprite2D {
             ptr = ptr.next;
         }
     }*/
+    
+    public void addAction(SpriteAction action) {
+        action.next = actions;
+        action.disposed = false;
+        action.parent = this;
+        action.startTime = -1;
+    }
+    
+    native void updateActions(int time);
 }

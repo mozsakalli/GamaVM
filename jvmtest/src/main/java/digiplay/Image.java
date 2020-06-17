@@ -55,7 +55,7 @@ public class Image extends Sprite2D {
         if(quad != null)
             Stage2D.QuadBatch.drawQuadMesh(quad, getWorldMatrix(GLOBAL_FRAME_VERSION), Stage2D.DefaultShader, texture, 0, color, this.worldAlpha, blendMode);
             //Render2D.drawQuadMesh(quad, this.color, this.blendMode);
-        
+        /*
         rotation(rotation()+r);
         float x = this.x();
         x += dx;
@@ -78,7 +78,7 @@ public class Image extends Sprite2D {
             dy = -dy;
         }
         y(y);
-        
+        */
     }
     
     

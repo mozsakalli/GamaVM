@@ -87,6 +87,8 @@ public class Stage2D extends Sprite2D {
             }
             invalidated = true;
         }
+        
+        updateActions(Platform.gameTime);
         /*
             if (_invokeLaterCount > 0)
             {
