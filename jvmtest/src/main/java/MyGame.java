@@ -36,6 +36,7 @@ public class MyGame implements Game {
     
     @Override
     public void begin() {
+        /*
         Stage2D.I.setup(new Point2D(Platform.screenWidth,Platform.screenHeight));
         for(int i=0; i<10; i++) {
             Image img = new Image();
@@ -69,8 +70,6 @@ public class MyGame implements Game {
             }
         }.start();
         */
-        byte[] bytes = MainActivity.readFile("special-offer.png");
-        System.out.println("png-bytes:"+bytes.length);
     }
 
     long fpsTimer;

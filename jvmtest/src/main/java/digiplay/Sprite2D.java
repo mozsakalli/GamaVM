@@ -34,7 +34,8 @@ public class Sprite2D {
     Mat2D localMatrix = new Mat2D();
     Mat2D worldMatrix = new Mat2D();
     String name;
-    SpriteAction actions;
+    Behaviour behaviours;
+    int visibleState = -1;
     
     static int GLOBAL_FRAME_VERSION;
 
@@ -54,22 +55,22 @@ public class Sprite2D {
     public final static int STAY_ON_TOP = 1 << 11;
     public final static int STRETCH_ZERO = 1 << 12;
 
-    public float x() {
+    public float getX() {
         return x + animX;
     }
 
-    public void x(float x) {
+    public void setX(float x) {
         if (x != this.x) {
             this.x = x;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
 
-    public float y() {
+    public float getY() {
         return y + animY;
     }
 
-    public void y(float y) {
+    public void setY(float y) {
         if (y != this.y) {
             this.y = y;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
@@ -98,27 +99,27 @@ public class Sprite2D {
         }
     }
 
-    public float rotation() {
+    public float getRotation() {
         return rotation + animRotation;
     }
 
-    public void rotation(float rotation) {
+    public void setRotation(float rotation) {
         if (rotation != this.rotation) {
             this.rotation = rotation;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY | ROT_SKEW_DIRTY;
         }
     }
 
-    public float width() { return width; }
-    public void width(float w) {
+    public float getWidth() { return width; }
+    public void setWidth(float w) {
         if(w != width) {
             width = w;
             midX = w * pivotX;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
-    public float height() { return height; }
-    public void height(float w) {
+    public float getHeight() { return height; }
+    public void setHeight(float w) {
         if(w != height) {
             height = w;
             midY = w * pivotY;
@@ -275,6 +276,14 @@ public class Sprite2D {
         this.flags &= ~mask;
     }
 
+    public boolean isVisible() { return (flags & VISIBLE) != 0; }
+    public void setVisible(boolean value) {
+        boolean current = (flags & VISIBLE) != 0;
+        if(value != current) {
+            if(value) flags |= VISIBLE; else flags &= ~VISIBLE;
+        }
+    }
+    
     public native Mat2D getLocalMatrix();/* {
         if ((flags & LOCAL_MATRIX_DIRTY) != 0) {
             localMatrix.compose(x + animX, y + animY, scaleX + animScaleX, scaleY + animScaleY, midX, midY, (flags & ROT_SKEW_DIRTY) != 0, rotation + animRotation, skewX + animSkewX, skewY + animSkewY);
@@ -445,12 +454,83 @@ public class Sprite2D {
         }
     }*/
     
-    public void addAction(SpriteAction action) {
-        action.next = actions;
-        action.disposed = false;
-        action.parent = this;
-        action.startTime = -1;
-    }
-    
-    native void updateActions(int time);
+        public void addBehaviour(Behaviour b)
+        {
+            if (b == null) return;
+            Behaviour ptr = behaviours;
+            while (ptr != null)
+            {
+                if (ptr == b)
+                {
+                    ptr.setParent(this);
+                    return;
+                }
+                ptr = ptr.next;
+            }
+            b.next = behaviours;
+            behaviours = b;
+            b.setParent(this);
+        }
+
+        public void removeBehaviour(Behaviour b)
+        {
+            if (b != null)
+            {
+                b.markedForRemoval = true;
+                b.isInterrupted = true;
+            }
+        }
+
+   
+
+        public void updateBehaviours(float time, boolean isParentVisible)
+        {
+            /*
+            int newState = isParentVisible && ((flags & VISIBLE)!=0) ? 1 : 0;
+            if(newState != visibleState)
+            {
+                visibleState = newState;
+                switch(newState)
+                {
+                    case 1:
+                        //OnShow?.Invoke(this);
+                        break;
+                }
+            }
+            Behaviour ptr = behaviours;
+            if (ptr != null)
+            {
+                Behaviour prev = null;
+                while (ptr != null)
+                {
+                    if (ptr.markedForRemoval)
+                    {
+                        if (prev != null) prev.next = ptr.next;
+                        if (ptr == FirstBehaviour) FirstBehaviour = FirstBehaviour.next;
+                        ptr.parent = null;
+                    }
+                    else
+                    {
+                        if (!ptr.markedForRemoval && ptr.parent != null && !ptr.update(time - ptr.startTime))
+                        {
+                            ptr.markedForRemoval = true;
+                        }
+                        prev = ptr;
+                    }
+                    ptr = ptr.next;
+                }
+            }
+
+            Sprite2D child = FirstChild;
+            if (child != null)
+            {
+                var v = isParentVisible && Visible;
+                while (child != null)
+                {
+                    child.UpdateBehaviours(time, v);
+                    child = child.Next;
+                }
+            }*/
+        }    
+
 }

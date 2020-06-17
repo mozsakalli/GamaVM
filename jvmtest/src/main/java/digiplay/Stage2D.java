@@ -58,8 +58,8 @@ public class Stage2D extends Sprite2D {
         setScaleY(h / hh);
         System.out.println("Stage2D::scaleFactor is " + scaleFactor + " resolution: " + sw + "x" + sh);
 
-        x((sw - w) / 2);
-        y((sh - h) / 2);
+        setX((sw - w) / 2);
+        setY((sh - h) / 2);
 
         setPivotX(0);
         setPivotY(0);
@@ -88,7 +88,6 @@ public class Stage2D extends Sprite2D {
             invalidated = true;
         }
         
-        updateActions(Platform.gameTime);
         /*
             if (_invokeLaterCount > 0)
             {
