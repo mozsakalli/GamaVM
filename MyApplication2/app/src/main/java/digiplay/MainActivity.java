@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
     public static byte[] readFile(String path) {
         try {
             long time = System.currentTimeMillis();
-            System.out.println("reading: "+path);
             InputStream in = AM.open(path);
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 
@@ -78,6 +77,17 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    public static void readFile(final String path, final long completable) {
+        protectGamaVMObject(completable); //protect completable from gc
+        ThreadPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                byte[] bytes = readFile(path);
+                GameView.postCompletable(completable, bytes);
+            }
+        });
+    }
+
     public static void platformRun() {
         MainActivity.I.start();
     }
@@ -86,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     public static native void platformResize(int width, int height);
     public static native void platformStep();
     public static native void completeCompletable(long handle, byte[] data);
-
+    public static native void protectGamaVMObject(long handle);
     static {
         System.loadLibrary("native-lib");
     }

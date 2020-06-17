@@ -16,10 +16,13 @@
 
 package digiplay;
 
+import gamavm.External;
+
 /**
  *
  * @author mustafa
  */
+@External
 public class Platform {
     
     
@@ -63,4 +66,6 @@ public class Platform {
         System.gc();
     }
  
+    public static native byte[] readAsset(String path);
+    
 }

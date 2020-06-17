@@ -59,10 +59,4 @@ public abstract class Graphics {
         return safeBottom;
     }
 
-    public abstract Texture createTexture(String path);
-
-    public abstract Texture createTexture(int width, int height);
-
-    public abstract Texture createTexture(byte[] data);
-
 }

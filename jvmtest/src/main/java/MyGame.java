@@ -1,14 +1,11 @@
 
-import digiplay.Asset;
+import digiplay.GLQuadBatch;
 import digiplay.Game;
 import digiplay.Image;
 import digiplay.MainActivity;
-import digiplay.Net;
-import digiplay.Net.HttpListener;
 import digiplay.Platform;
 import digiplay.Point2D;
 import digiplay.Stage2D;
-import digiplay.Stb;
 
 
 /*
@@ -39,17 +36,19 @@ public class MyGame implements Game {
     @Override
     public void begin() {
         Stage2D.I.setup(new Point2D(Platform.screenWidth,Platform.screenHeight));
-        for(int i=0; i<5000; i++) {
+        for(int i=0; i<10; i++) {
             Image img = new Image();
             Stage2D.I.addChild(img);
             img.x(480);
             img.y(320);
-            img.blendMode = 0;
+            img.blendMode = 1;
             img.setAlpha((float)(Math.random()*.5)+.5f);
             img.rotation((float)Math.random()*360);
-            img.color = (((int)(Math.random()*255)) << 16) | (((int)(Math.random()*255)) << 8) | (((int)(Math.random()*255)));
+            //img.color = (((int)(Math.random()*255)) << 16) | (((int)(Math.random()*255)) << 8) | (((int)(Math.random()*255)));
         }
         
+
+        /*
         new Asset() {
             @Override public void onComplete() {
                 System.out.println("Bytes loaded: "+bytes.length);
@@ -80,26 +79,12 @@ public class MyGame implements Game {
         Stage2D.I.update();
         long now = System.currentTimeMillis();
         if(System.currentTimeMillis() - fpsTimer <= 1000) fps++; else {
-            //System.out.println("FPS: "+fps);
+            System.out.println("FPS: "+fps);
             fps = 0;
             fpsTimer = System.currentTimeMillis();
         }
         
-        if(now - httpTimer >= 5000) {
-            Net.http("https://www.google.com", null, new HttpListener(){
-                @Override
-                public void onHttpSuccess(byte[] bytes) {
-                    System.out.println("Http Success: "+new String(bytes));
-                }
 
-                @Override
-                public void onHttpFail() {
-                    System.out.println("Http Fail");
-                }
-
-            });        
-            httpTimer = now;
-        }
     }
 
     //Mat2D mat = new Mat2D();
@@ -108,6 +93,7 @@ public class MyGame implements Game {
     @Override
     public void render() {
         Stage2D.I.render();
+        new GLQuadBatch(500);
         /*
         batch.begin(Digiplay.platform.screenWidth, Digiplay.platform.screenHeight, true, 0xFF300000);
         //x+=0.02f;

@@ -70,7 +70,6 @@ void gama_to_jni(VM *vm, JNIEnv *env, char type, Object *cls, VAR *a, jvalue *j)
         case 'D': j->d = a->D; break;
         case 'L': {
             if(cls == vm->jlString) {
-                __android_log_print(ANDROID_LOG_INFO, "GamaVM", "%s", string_to_ascii(a->O));
                 if(a->O)
                     j->l = env->NewString(STRCHARS(a->O), STRLEN(a->O));
             } else {
@@ -87,7 +86,47 @@ void jni_to_gama(VM *vm, JNIEnv *env, char type, Object *cls, VAR *a, jvalue *j)
 }
 
 void jni_get_field(VM *vm, Object *method, VAR *args) {
-
+    JNIEnv *env = getJNIEnv();
+    Method *m = (Method*)method->instance;
+    JNIMethodInfo *mi = (JNIMethodInfo*)m->externalData;
+    VAR *ret = &vm->frames[vm->FP].ret;
+    if(IS_STATIC(m->flags)) {
+        jclass jcls = (jclass)CLS(m->declaringClass, externalData);
+        if(!jcls) {
+            throw_null(vm);
+            return;
+        }
+        switch(mi->returnType) {
+            case 'B': ret->I = env->GetStaticByteField(jcls, (jfieldID)mi->fieldOrMethod);break;
+            case 'Z': ret->I = env->GetStaticBooleanField(jcls, (jfieldID)mi->fieldOrMethod);break;
+            case 'C': ret->I = env->GetStaticCharField(jcls, (jfieldID)mi->fieldOrMethod);break;
+            case 'S': ret->I = env->GetStaticShortField(jcls, (jfieldID)mi->fieldOrMethod);break;
+            case 'I': ret->I = env->GetStaticIntField(jcls, (jfieldID)mi->fieldOrMethod);break;
+            case 'F': ret->D = env->GetStaticFloatField(jcls, (jfieldID)mi->fieldOrMethod);break;
+            case 'D': ret->D = env->GetStaticDoubleField(jcls, (jfieldID)mi->fieldOrMethod);break;
+            case 'J': ret->J = env->GetStaticLongField(jcls, (jfieldID)mi->fieldOrMethod);break;
+        }
+    } else {
+        if(!args[0].O) {
+            throw_null(vm);
+            return;
+        }
+        jobject javaObject = (jobject)*((JLONG**)args[0].O->instance);
+        if(!javaObject) {
+            throw_null(vm);
+            return;
+        }
+        switch(mi->returnType) {
+            case 'B': ret->I = env->GetByteField(javaObject, (jfieldID)mi->fieldOrMethod);break;
+            case 'Z': ret->I = env->GetBooleanField(javaObject, (jfieldID)mi->fieldOrMethod);break;
+            case 'C': ret->I = env->GetCharField(javaObject, (jfieldID)mi->fieldOrMethod);break;
+            case 'S': ret->I = env->GetShortField(javaObject, (jfieldID)mi->fieldOrMethod);break;
+            case 'I': ret->I = env->GetIntField(javaObject, (jfieldID)mi->fieldOrMethod);break;
+            case 'F': ret->F = env->GetFloatField(javaObject, (jfieldID)mi->fieldOrMethod);break;
+            case 'D': ret->D = env->GetDoubleField(javaObject, (jfieldID)mi->fieldOrMethod);break;
+            case 'J': ret->J = env->GetLongField(javaObject, (jfieldID)mi->fieldOrMethod);break;
+        }
+    }
 }
 
 void jni_set_field(VM *vm, Object *method, VAR *args) {
@@ -114,6 +153,9 @@ void jni_invoke(VM *vm, Object *method, VAR *args) {
         jclass jcls = (jclass)CLS(m->declaringClass,externalData);
         jmethodID jm = (jmethodID)mi->fieldOrMethod;
         switch(mi->returnType) {
+            case 'V':
+                env->CallStaticVoidMethodA(jcls, jm, jvals);
+                break;
             case 'B':
                 ret->I = env->CallStaticByteMethodA(jcls, jm, jvals);
                 break;
@@ -149,11 +191,16 @@ void jni_invoke(VM *vm, Object *method, VAR *args) {
                 jobject jresult = env->CallStaticObjectMethodA(jcls, jm, jvals);
                 if(jresult) {
                     int len = env->GetArrayLength((jarray)jresult);
+                    #define COPYARRAY(G,J,M) case JNIARRAY_##G : ret->O = alloc_array_##G(vm,len,0); env->M((J##Array)jresult, 0, len, (J*)ret->O->instance); break
                     switch(mi->returnType) {
-                        case JNIARRAY_B:
-                            ret->O = alloc_array_B(vm, len, 0);
-                            env->GetByteArrayRegion((jbyteArray)jresult, 0, len, (jbyte*)ret->O->instance);
-                            break;
+                        COPYARRAY(B,jbyte,GetByteArrayRegion);
+                        COPYARRAY(Z,jboolean,GetBooleanArrayRegion);
+                        COPYARRAY(C,jchar,GetCharArrayRegion);
+                        COPYARRAY(S,jshort,GetShortArrayRegion);
+                        COPYARRAY(I,jint,GetIntArrayRegion);
+                        COPYARRAY(F,jfloat,GetFloatArrayRegion);
+                        COPYARRAY(D,jdouble,GetDoubleArrayRegion);
+                        COPYARRAY(J,jlong,GetLongArrayRegion);
                     }
                 } else ret->O = nullptr;
                 break;
@@ -185,9 +232,13 @@ void jni_invoke_resolve(VM *vm, Object *method, VAR *args) {
     ptr++;
     jni_parse_signature(vm, sign, ptr, &mi->returnType, &mi->returnClass);
 
-    m->entry = (void*)&jni_invoke;
     m->externalData = mi;
-    jni_invoke(vm, method, args);
+    if(m->externalFlags & 2) {
+        m->entry = (void*)(mi->returnType == 'V' ? &jni_set_field : &jni_get_field);
+    } else {
+        m->entry = (void*) &jni_invoke;
+    }
+    CALLVM_V(vm, method, args);
 }
 
 extern "C" void vm_link_external_class(VM *vm, Object *clsObject) {

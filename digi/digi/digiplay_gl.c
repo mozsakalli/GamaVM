@@ -17,20 +17,26 @@
 #include <GLES2/gl2ext.h>
 #endif
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+
 typedef struct GLShader {
     GLint handle;
-    int apos, acolor, auv, uprojection, uvec4;
+    int apos, acolor, auv, uprojection, utexture, uvec4;
 } GLShader;
 
 
-typedef struct GLTexture {
-    GLint handle;
+typedef struct __attribute__ ((packed)) GLTexture {
+    JLONG handle;
+    JINT width, height, hwWidth, hwHeight;
 } GLTextrue;
 
 GLShader *glCurrentShader = NULL;
 void *glCurrentIndexBuffer = NULL;
 void *glCurrentVertexBuffer = NULL;
-
+void *glCurrentTexture = NULL;
+int glCurrentTextureFlags = -1;
 
 void gl_use_shader(GLShader *shader) {
     glUseProgram(shader->handle);
@@ -113,6 +119,7 @@ void Java_digiplay_GLShader2D_compile(VM* vm, Method *method, VAR *args) {
             shader->apos = glGetAttribLocation(prg, "pos");
             shader->acolor = glGetAttribLocation(prg, "color");
             shader->auv = glGetAttribLocation(prg, "uv");
+            shader->utexture = glGetUniformLocation(prg, "texture");
             shader->uprojection = glGetUniformLocation(prg, "projection");
             shader->uvec4 = glGetUniformLocation(prg, "userVec4");
             RETURN_J(shader);
@@ -121,7 +128,7 @@ void Java_digiplay_GLShader2D_compile(VM* vm, Method *method, VAR *args) {
 }
 
 void Java_digiplay_GLShader2D_finalize(VM* vm, Method *method, VAR *args) {
-    if(!args[0].O) {
+    if(args[0].O) {
         GLShader *b = (GLShader*)*FIELD_PTR_J(args[0].O, 0);
         glDeleteProgram(b->handle);
         free(b);
@@ -136,6 +143,9 @@ typedef struct GLQuadBatch {
     int capacity,end;
     int ibo;
     GLTextrue *texture;
+    int textureFlags;
+    int textureDirty;
+    int textureFlagsDirty;
     int projectionDirty;
     Mat3D projection;
     Mat3D camera;
@@ -166,7 +176,7 @@ void Java_digiplay_GLQuadBatch_create(VM* vm, Method *method, VAR *args) {
 }
 
 void Java_digiplay_GLQuadBatch_finalize(VM* vm, Method *method, VAR *args) {
-    if(!args[0].O) {
+    if(args[0].O) {
         GLQuadBatch *b = (GLQuadBatch*)*FIELD_PTR_J(args[0].O, 0);
         glDeleteBuffers(1, (GLuint*)&b->ibo);
         free(b->vertices);
@@ -196,7 +206,9 @@ void Java_digiplay_GLQuadBatch_begin(VM* vm, Method *method, VAR *args) {
     glDisable(GL_STENCIL_TEST);
     
     b->texture = NULL;
-    
+    b->textureFlags = 0;
+    b->textureDirty = b->textureFlagsDirty = 0;
+
     mat3d_setup2d(&b->projection, w, h);
     mat3d_identity(&b->camera);
     b->projectionDirty = 1;
@@ -226,13 +238,36 @@ void quad_batch_flush(GLQuadBatch *b) {
             glUniformMatrix4fv(glCurrentShader->uprojection, 1, GL_FALSE, &b->combinedMatrix.vals[0]);
             b->projectionDirty = 0;
         }
-        
+
+        if(b->textureDirty) {
+            b->textureDirty = 0;
+            if(glCurrentTexture != b->texture) {
+                glActiveTexture(GL_TEXTURE0);
+                glUniform1i(glCurrentShader->utexture, 0);
+                glBindTexture(GL_TEXTURE_2D, b->texture ? b->texture->handle : 0);
+                glCurrentTexture = b->texture;
+                b->textureFlagsDirty = 1;
+                glCurrentTextureFlags = -1;
+            }
+        }
+
+        if(b->textureFlagsDirty) {
+            b->textureFlagsDirty = 0;
+            if(glCurrentTextureFlags != b->textureFlags) {
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+                glCurrentTextureFlags = b->textureFlags;
+            }
+        }
+
         if(b->ibo != (int)glCurrentIndexBuffer) {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, b->ibo);
             glCurrentIndexBuffer = (void*)b->ibo;
         }
         
-        if(glCurrentVertexBuffer != b->vertices || 1) {
+        if(glCurrentVertexBuffer != b->vertices) {
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             unsigned char *base = (unsigned char*)&b->vertices[0];
             glEnableVertexAttribArray(glCurrentShader->apos);
@@ -251,12 +286,20 @@ void quad_batch_flush(GLQuadBatch *b) {
     b->triangleCount = b->vertPtr = 0;
 }
 
+// 1QuadMesh mesh,
+// 2Mat2D mat,
+// 3GLShader2D shader,
+// 4GLTexture texture,
+// 5int textureFlags,
+// 6int color,
+// 7float alpha,
+// 8int blendMode
 void Java_digiplay_GLQuadBatch_drawQuadMesh(VM* vm, Method *method, VAR *args) {
     if(!args[0].O || !args[1].O || !args[2].O || !args[3].O) {
         throw_null(vm);
         return;
     }
-    float alpha = args[5].F;
+    float alpha = args[7].F;
     if(alpha <= 0) return;
     
     GLQuadBatch *b = (GLQuadBatch*)*FIELD_PTR_J(args[0].O, 0);
@@ -265,8 +308,8 @@ void Java_digiplay_GLQuadBatch_drawQuadMesh(VM* vm, Method *method, VAR *args) {
     GLShader *shader = (GLShader*)*FIELD_PTR_J(args[3].O, 0);
     if(m->size <= 0) return;
     
-    int color = args[4].I;
-    int blendMode = args[6].I;
+    int color = args[6].I;
+    int blendMode = args[8].I;
     if(alpha > 1) alpha = 1;
     COLOR col;
     col.r = ((color >> 16) & 0xff)*alpha;
@@ -299,7 +342,18 @@ void Java_digiplay_GLQuadBatch_drawQuadMesh(VM* vm, Method *method, VAR *args) {
         }
         b->blendMode = blendMode;
     }
-    
+
+    GLTextrue *tex = args[4].O ? args[4].O->instance : NULL;
+    int texFlags = args[5].I;
+
+    if(tex != b->texture || texFlags != b->textureFlags) {
+        quad_batch_flush(b);
+        b->textureDirty = tex != b->texture;
+        b->textureFlagsDirty = texFlags != b->textureFlags;
+        b->texture = tex;
+        b->textureFlags = texFlags;
+    }
+
     QuadMeshItem *q = &m->items[0];
 
     if(m->version != mat->meshVersion) {
@@ -433,6 +487,43 @@ void Java_digiplay_QuadMesh_finalize(VM* vm, Method *method, VAR *args) {
 }
 
 
+void Java_digiplay_GLTexture_upload(VM *vm, Object *method, VAR *args) {
+    if(!args[0].O || !args[1].O) {
+        throw_null(vm);
+        return;
+    }
+
+    GLTextrue *tex = (GLTextrue*)args[0].O->instance;
+    Object *array = args[1].O;
+
+    int comp = 0;
+    stbi_uc* pix = stbi_load_from_memory((stbi_uc *)array->instance, array->length, &tex->width, &tex->height, &comp, 4);
+    if(pix) {
+        //
+        struct RGBA { unsigned char r; unsigned char g; unsigned char b; unsigned char a; };
+        struct RGBA * ptr = (struct RGBA * ) pix;
+        int len = tex->width * tex->height;
+        for (int i = 0; i < len; i++) {
+            float a = ptr[i].a / 255.0f;
+            ptr[i].r *= a;
+            ptr[i].g *= a;
+            ptr[i].b *= a;
+        }
+
+        tex->hwWidth = tex->width; //glWidth = npot ? width : pow2_size(width);");
+        tex->hwHeight = tex->height; // npot ? height : pow2_size(height);");
+        GLuint texture;
+        glGenTextures(1, &texture);
+        glBindTexture( GL_TEXTURE_2D,texture );
+        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, tex->hwWidth, tex->hwHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0 );
+        glPixelStorei( GL_UNPACK_ALIGNMENT,1 );
+        glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, tex->width, tex->height, GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)pix );
+        free(pix);
+        tex->handle = texture;
+        vm->frames[vm->FP].ret.I = 1;
+    } else
+        vm->frames[vm->FP].ret.I = 1;
+}
 
 NativeMethodInfo digiplay_gl_methods[] = {
     {"digiplay/GLShader2D:compile:(Ljava/lang/String;)J", &Java_digiplay_GLShader2D_compile},
@@ -440,13 +531,15 @@ NativeMethodInfo digiplay_gl_methods[] = {
 
     {"digiplay/GLQuadBatch:create:(I)J", &Java_digiplay_GLQuadBatch_create},
     {"digiplay/GLQuadBatch:begin:(IIZI)V", &Java_digiplay_GLQuadBatch_begin},
-    {"digiplay/GLQuadBatch:drawQuadMesh:(Ldigiplay/QuadMesh;Ldigiplay/Mat2D;Ldigiplay/GLShader2D;IFI)V", &Java_digiplay_GLQuadBatch_drawQuadMesh},
+    {"digiplay/GLQuadBatch:drawQuadMesh:(Ldigiplay/QuadMesh;Ldigiplay/Mat2D;Ldigiplay/GLShader2D;Ldigiplay/GLTexture;IIFI)V", &Java_digiplay_GLQuadBatch_drawQuadMesh},
     {"digiplay/GLQuadBatch:end:()V", &Java_digiplay_GLQuadBatch_end},
     {"digiplay/GLQuadBatch:finalize:()V", &Java_digiplay_GLQuadBatch_finalize},
 
     {"digiplay/QuadMesh:create:(I)J", &Java_digiplay_QuadMesh_create},
     {"digiplay/QuadMesh:set:(IFFFFFFFFFFFF)V", &Java_digiplay_QuadMesh_set},
     {"digiplay/QuadMesh:finalize:()V", &Java_digiplay_QuadMesh_finalize},
+
+    {"digiplay/GLTexture:upload:([B)V", &Java_digiplay_GLTexture_upload},
 
     NULL
 };

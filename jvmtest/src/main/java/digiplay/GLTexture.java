@@ -27,6 +27,5 @@ public class GLTexture {
     public native void upload(byte[] bytes);
     public native void dispose();
 
-    public native void upload(String path);
     
 }

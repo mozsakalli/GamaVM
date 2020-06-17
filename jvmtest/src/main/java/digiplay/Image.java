@@ -23,7 +23,7 @@ package digiplay;
 public class Image extends Sprite2D {
     
     QuadMesh quad;
-    GLTexture texture;
+    static GLTexture texture;
     
     float dx = (float)(-3 + Math.random() * 6);
     float dy = (float)(-3 + Math.random() * 6);
@@ -31,8 +31,11 @@ public class Image extends Sprite2D {
     public Image() {
         markContentInvalid();
         width(50); height(50);
-        //texture = new GLTexture();
-        //texture.upload("special-texture.png");
+        if(texture == null) {
+            texture = new GLTexture();
+            byte[] b = Platform.readAsset("special-offer.png");
+            texture.upload(b);
+        }
     }
     
     @Override
@@ -44,13 +47,13 @@ public class Image extends Sprite2D {
         quad.set(0, 0,0,gl);
         texture = gl;
         */
-        quad.set(0, 0, 0, 50,50,0,0,0,0,0,0,0,0);
+        quad.set(0, 0, 0, 50,50,0,0, 1,0, 1,1, 0,1);
     }
 
     @Override
     public void draw() {
         if(quad != null)
-            Stage2D.QuadBatch.drawQuadMesh(quad, getWorldMatrix(GLOBAL_FRAME_VERSION), Stage2D.DefaultShader, color, this.worldAlpha, blendMode);
+            Stage2D.QuadBatch.drawQuadMesh(quad, getWorldMatrix(GLOBAL_FRAME_VERSION), Stage2D.DefaultShader, texture, 0, color, this.worldAlpha, blendMode);
             //Render2D.drawQuadMesh(quad, this.color, this.blendMode);
         
         rotation(rotation()+r);

@@ -35,6 +35,7 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/jni/JniObject.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Stage2D.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/ObjCClass.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/AndroidGraphics.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/RenderDevice.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIApplicationDelegate.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/jni/URL.java
@@ -50,7 +51,6 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Mat3D.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/Texture.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIApplication.java
-/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Stb.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Camera.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Platform.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Texture2D.java

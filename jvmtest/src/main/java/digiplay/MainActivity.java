@@ -6,6 +6,7 @@
 package digiplay;
 
 import gamavm.External;
+import gamavm.VM;
 
 /**
  *
@@ -14,7 +15,12 @@ import gamavm.External;
 @External
 public class MainActivity {
     
-    @External(isField=true) public native static Object deneme();
     public native static byte[] readFile(String path);
+ 
+    @External 
+    public native static void readFile(String path, long completable);
     
+    public static void readFile(String path, Completable completable) {
+        readFile(path, VM.getAddress(completable));
+    }
 }

@@ -5,11 +5,9 @@
 //  Created by mustafa on 9.06.2020.
 //  Copyright © 2020 mustafa. All rights reserved.
 //
-
 #include "vm.h"
 #include "digiplay.h"
 #include <math.h>
-
 
 #define M00 0
 #define M01 4
@@ -396,11 +394,7 @@ void Java_digiplay_Sprite2D_drawChildren(VM *vm, Object *method, VAR *args) {
         ptr = child->next;
     }
 }
-extern void *__platform_read_file(const char* path, int *size);
-void Java_digiplay_Asset_load(VM *vm, Object *method, VAR *args) {
-    int size;
-    void *buf = __platform_read_file(string_to_ascii(args[0].O), &size);
-}
+
 extern void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args);
 extern void Java_digiplay_Net_http(VM *vm, Object *method, VAR *args);
 

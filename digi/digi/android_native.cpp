@@ -143,6 +143,9 @@ Java_digiplay_MainActivity_completeCompletable(
         jclass /* this */,
         jlong gamaHandle, jbyteArray response) {
 
+    Object *target = (Object*)gamaHandle;
+    gc_unprotect(gamaVM, target);
+
     static int methodIndex = -1;
     if(methodIndex == -1) {
         Object *m = resolve_method(gamaVM, (JCHAR*)L"digiplay/Completable",20, (JCHAR*)L"complete",8, (JCHAR*)L"(JI)V",5);
@@ -156,20 +159,20 @@ Java_digiplay_MainActivity_completeCompletable(
 
     if(response != NULL) {
         length = env->GetArrayLength(response);
-        data = env->GetByteArrayElements(response, NULL);
-        if(data) {
-            buffer = malloc(length);
-            memcpy(buffer, data, length);
-            env->ReleaseByteArrayElements(response, data, JNI_ABORT);
-        }
+        buffer = malloc(length);
+        env->GetByteArrayRegion(response, 0, length, (jbyte*)buffer);
     }
 
-    Object *target = (Object*)gamaHandle;
-    gc_unprotect(gamaVM, target);
     Object *method = CLS(target->cls, itable)[methodIndex];
     VAR args[3] = {{.O = target}, {.J = (JLONG)buffer}, {.I = length}};
     CALLVM_V(gamaVM, method, &args[0]);
 }
 
 
+extern "C" JNIEXPORT void JNICALL
+Java_digiplay_MainActivity_protectGamaVMObject(
+        JNIEnv *env,
+        jclass /* this */, jlong handle) {
+    gc_protect(gamaVM, (Object*)handle);
+}
 
