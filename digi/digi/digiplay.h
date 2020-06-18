@@ -69,10 +69,12 @@ inline static void mat2d_identity(Mat2D *m) {
 inline static void mat2d_compose(Mat2D *m, float x, float y, float scaleX, float scaleY, float pivotX, float pivotY, int rotSkew, float rotation, float skewX, float skewY) {
     if(rotSkew) {
         //rotation = rotation / 180.0f * MathF.PI;
-        m->_cx = cos((rotation + skewY)/180.0f * M_PI);
-        m->_sx = sin((rotation + skewY)/180.0f * M_PI);
-        m->_cy = -sin((rotation - skewX)/180.0f * M_PI); // cos, added PI/2
-        m->_sy = cos((rotation - skewX)/180.0f * M_PI); // sin, added PI/2
+        float tmp = (rotation + skewY) / 180.0f * M_PI;
+        m->_cx = cos(tmp); //cos((rotation + skewY)/180.0f * M_PI);
+        m->_sx = sin(tmp); //sin((rotation + skewY)/180.0f * M_PI);
+        tmp = (rotation - skewX) / 180.0f * M_PI;
+        m->_cy = -sin(tmp); //-sin((rotation - skewX)/180.0f * M_PI); // cos, added PI/2
+        m->_sy = cos(tmp); //cos((rotation - skewX)/180.0f * M_PI); // sin, added PI/2
     }
     
     float a = m->_cx * scaleX;

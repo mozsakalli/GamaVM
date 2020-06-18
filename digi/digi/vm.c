@@ -8,7 +8,6 @@
 
 #include "vm.h"
 
-//VM *gamaVM = NULL;
 
 VM* vm_init() {
     VM *gamaVM = vm_alloc(sizeof(VM));
@@ -52,7 +51,7 @@ VM* vm_init() {
     resolve_class(gamaVM, L"java/lang/reflect/Method", 24, 0, gamaVM->jlMethod);
     resolve_class(gamaVM, L"java/lang/StackTraceElement", 27, 0, gamaVM->jlSTE);
     resolve_class(gamaVM, L"java/lang/String", 16, 0, gamaVM->jlString);
-    
+
     return gamaVM;
 }
 

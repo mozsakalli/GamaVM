@@ -51,7 +51,7 @@ public class Image extends Sprite2D {
     float dx = (float)Math.random()*10 - 5;
     float dy = (float)Math.random()*10 - 5;
     @Override
-    public native void draw();/* {
+    public void draw() {
         if(quad != null)
             Stage2D.QuadBatch.drawQuadMesh(quad, getWorldMatrix(GLOBAL_FRAME_VERSION), Stage2D.DefaultShader, texture, 0, color, this.worldAlpha, blendMode);
         
@@ -66,7 +66,9 @@ public class Image extends Sprite2D {
         if(y <= 0) { y = 0; dy = -dy; }
         else if(y >= Platform.screenHeight) { y = Platform.screenHeight; dy = -dy;}
         setY(y);
-    }*/
+        
+        setRotation(getRotation()+1);
+    }
     
     
 }
