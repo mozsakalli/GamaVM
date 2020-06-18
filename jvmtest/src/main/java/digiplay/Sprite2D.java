@@ -35,7 +35,6 @@ public class Sprite2D {
     Mat2D worldMatrix = new Mat2D();
     String name;
     Behaviour behaviours;
-    int visibleState = -1;
     
     static int GLOBAL_FRAME_VERSION;
 

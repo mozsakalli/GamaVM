@@ -29,6 +29,7 @@ public class Field extends Op {
     public CP cp;
     public boolean isStatic;
     public Compiler compiler;
+    public boolean resolved;
     
     public String ref(Method method) {
         return "f" + method.declaringClass.aotHash + "_" + index;
@@ -42,14 +43,22 @@ public class Field extends Op {
         clsName = compiler.getStringIndex(clsName.toString());
         name = compiler.getStringIndex(name.toString());
         signature = compiler.getStringIndex(signature.toString());
-        
-        String ref = ref(method);
-        code = String.format("AOTFIELD(%s,%d,%d,%d); //%s\n", ref, clsName, name, signature,comment);
-                /*String.format("if(!%s) {\n" +
-                "Object *fld = resolve_field(vm, STRCHARS(aot_strings[%d]),STRLEN(aot_strings[%d]), "+
-                "STRCHARS(aot_strings[%d]),STRLEN(aot_strings[%d]),"+
-                "STRCHARS(aot_strings[%d]),STRLEN(aot_strings[%d]));\n" +
-                "%s = fld->instance;\n}"
-                , ref, clsName, clsName, name, name, signature, signature,ref);*/
+        if(!resolved) {
+            String ref = ref(method);
+            code = String.format("AOTFIELD(%s,%d,%d,%d); //%s\n", ref, clsName, name, signature,comment);
+            resolved = true;
+        } else {
+            code = String.format("//%s\n", comment);
+        }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == null || !(o instanceof Field)) return false;
+        if(o == this) return true;
+        Field f = (Field)o;
+        return f.cp == cp && f.index == index;
+    }
+
+    
 }

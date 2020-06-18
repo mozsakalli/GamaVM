@@ -38,11 +38,12 @@ public class Invoke extends Op {
     public int callType;
     CP cp;
     Compiler compiler;
+    public boolean resolved;
     
     public String ref(Method method) {
         return "m" + method.declaringClass.aotHash + "_" + index;
     }
-    
+    /*
     void generate(Method method) {
         Object clsName = cp.items[cp.items[cp.items[index].index1].index1].value;
         Object name = cp.items[cp.items[cp.items[index].index2].index1].value;
@@ -60,7 +61,7 @@ public class Invoke extends Op {
                 "%s = fld->instance;\n}"
                 , ref, clsName, clsName, name, name, signature, signature,ref);
     }
-    
+    */
     int getClsIndex() {
         Object n = cp.items[cp.items[cp.items[index].index1].index1].value;
         return compiler.getStringIndex(n.toString());
@@ -98,41 +99,17 @@ public class Invoke extends Op {
         code += "};\n";
         }
         code += "  frame->pc="+pc+"\n";                
-        /*code += String.format("if(!%s){\n"
-             +"  Object *mth = resolve_method(vm, STRCHARS(aot_strings[%d]), STRLEN(aot_strings[%d]), "
-             +"STRCHARS(aot_strings[%d]), STRLEN(aot_strings[%d]),"   
-             +"STRCHARS(aot_strings[%d]), STRLEN(aot_strings[%d]));\n"   
-                , ref, getClsIndex(), getClsIndex(),getNameIndex(),getNameIndex(),getSignatureIndex(),getSignatureIndex());*/
         if(callType == SPECIAL || callType == STATIC) {
-            code += String.format("  AOTMETHOD(%s,%d,%d,%d); //%s:%s:%s\n",ref,getClsIndex(), getNameIndex(), getSignatureIndex(),
-                    clsName,name,signature);
-            /*code += String.format(
-                    "   %s = mth;\n"+        
-                    "}\n"        
-                    ,ref);*/
-            /*
-            code += String.format(
-                    "if(!%s){\n"+
-                    "   %s=resolve_method_by_index(vm,method->declaringClass,%d);\n"+
-                    "}\n"        
-                    ,ref,ref,index);
-            */
+            if(!resolved) {
+                code += String.format("  AOTMETHOD(%s,%d,%d,%d); //%s:%s:%s\n",ref,getClsIndex(), getNameIndex(), getSignatureIndex(),
+                        clsName,name,signature);
+            }
             code += String.format("  ((VM_CALL)(MTH(((Object*)%s),entry)))(vm,%s,%s)\n",ref,ref,argCount>0 ? "&cargs[0]" : "NULL");
         } else {
+            if(!resolved) {
             code += String.format("  AOTVMETHOD(%s,%d,%d,%d,%s); //%s:%s:%s\n",ref,getClsIndex(), getNameIndex(), getSignatureIndex(),
                     callType == INTERFACE ? "iTableIndex" : "vTableIndex",clsName,name,signature);
-            /*code += String.format(
-                    "   %s = MTH(mth,%s);\n"+        
-                    "}\n"        
-                    ,ref,callType == INTERFACE ? "iTableIndex" : "vTableIndex");
-            /*
-            code += String.format(
-                    "if(!%s){\n"+
-                    "   Object *m = resolve_method_by_index(vm,method->declaringClass,%d);\n"+
-                    "   %s = MTH(m,%s);\n"+        
-                    "}\n"        
-                    ,ref,index, ref, callType == INTERFACE ? "iTableIndex" : "vTableIndex");
-            */
+            }
             code += String.format(
                     "  if(!cargs[0].O) { throw_null(vm); goto __EXCEPTION; }\n"+
                     "  Class *cls = cargs[0].O->cls->instance;\n"+
@@ -141,30 +118,6 @@ public class Invoke extends Op {
                     ,callType == INTERFACE ? "itable" : "vtable", ref
             );
         }
-        /*
-        code = "// "+cp.getRefClassName(index)+":"+cp.getRefName(index)+":"+cp.getRefSignature(index)+"\n"+
-               "if(!"+iname+") {\n"+
-               "  "+iname+"=resolve_method_by_index(vm,method->declaringClass,"+index+")\n"+ 
-               //"  if(!"+iname+") ;//todo: throw\n"+
-               "}\n"+
-               "VAR args"+pc+"[]={";// call_java_"+ret+"("; 
-        //code = clsName+":"+name+":"+signature+"(";
-        for(int i=0; i<argCount; i++) {
-            if(i > 0) code += ",";
-            code += "{."+args[i].type+"="+args[i].value+"}";
-            //code += args[i].value;
-        }
-        code += "}\n"+
-                "frame->pc="+pc+"\n";
-        
-        if(callType == SPECIAL || callType == STATIC)
-            code += String.format("((VM_CALL)(MTH(%s,entry)))(vm,%s,&args%d[0])\n",iname,iname,pc);
-        else if(callType == INTERFACE) {
-            
-        } else {
-            
-        }
-        */
         code += String.format("  if(vm->exception) goto __EXCEPTION;\n");
         if(!ret.equals("V")) {
             StackValue tmp = method.allocTemp(ret);

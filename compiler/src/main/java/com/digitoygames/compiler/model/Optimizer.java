@@ -18,6 +18,10 @@ package com.digitoygames.compiler.model;
 
 import com.digitoygames.compiler.model.op.Cmp;
 import com.digitoygames.compiler.model.op.If;
+import com.digitoygames.compiler.model.op.Invoke;
+import com.digitoygames.compiler.model.op.Op;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -27,6 +31,35 @@ public class Optimizer {
     
     public static void optimize(Method method, BasicBlock bb) {
         while(optimizeCmp(bb)){}
+        optimizeFieldMethod(bb);
+    }
+    
+    static void optimizeFieldMethod(BasicBlock bb) {
+        Set<Integer> seen = new HashSet();
+        for(BasicBlock src : bb.sources) {
+            if(src.id > bb.id)  continue;
+            for(Op o : src.ops) {
+                int index = -1;
+                if(o instanceof com.digitoygames.compiler.model.op.Field)
+                    index = ((com.digitoygames.compiler.model.op.Field)o).index;
+                else if(o instanceof Invoke)
+                    index = ((Invoke)o).index;
+                
+                if(index != -1) seen.add(index);
+            }
+        }
+        
+        for(Op o : bb.ops) {
+            if(o instanceof com.digitoygames.compiler.model.op.Field) {
+                com.digitoygames.compiler.model.op.Field f = (com.digitoygames.compiler.model.op.Field)o;
+                if(seen.contains(f.index)) f.resolved = true; else {
+                    seen.add(f.index);
+                }
+            } else if(o instanceof Invoke) {
+                Invoke i = (Invoke)o;
+                if(seen.contains(i.index)) i.resolved = true; else seen.add(i.index);
+            }
+        }
     }
     
     static boolean optimizeCmp(BasicBlock bb) {
@@ -34,13 +67,30 @@ public class Optimizer {
             if((bb.ops.get(i) instanceof Cmp) && (bb.ops.get(i+1) instanceof If)) {
                 Cmp cmp = (Cmp)bb.ops.get(i);
                 If f = (If)bb.ops.get(i+1);
-                if(f.right != null) {
+                if(f.right != null && f.right.equals("0")) {
+                    switch(f.operand) {
+                        case "==":
+                            f.right = null;
+                            bb.ops.remove(i);
+                            return true;
+                            
+                        case ">":
+                            f.right = null;
+                            bb.ops.remove(i);
+                            return true;
+                            
+                        case "<":
+                            f.right = null;
+                            bb.ops.remove(i);
+                            return true;
+                    }
+                    /*
                     if(f.operand.equals("==") && f.right.equals("0")) {
                         //equality
                         f.right = null;
                         bb.ops.remove(i);
                         return true;
-                    }
+                    }*/
                 }
             }
         }

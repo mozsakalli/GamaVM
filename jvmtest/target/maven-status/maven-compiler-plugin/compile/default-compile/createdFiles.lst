@@ -15,6 +15,7 @@ gamavm/External.class
 digiplay/Net.class
 gamavm/apple/Bridge.class
 gamavm/apple/NSDictionary.class
+digiplay/AndroidGraphics.class
 digiplay/render/RenderDevice.class
 digiplay/Platform.class
 gamavm/apple/NSMutableObject.class
@@ -44,6 +45,7 @@ gamavm/apple/ObjC.class
 gamavm/apple/uikit/UIApplication.class
 gamavm/apple/NSProtocol.class
 digiplay/Point2D.class
+digiplay/Behaviour.class
 gamavm/apple/uikit/UIApplicationDelegate.class
 gamavm/apple/Selector.class
 digiplay/ByteArrayCompletable.class

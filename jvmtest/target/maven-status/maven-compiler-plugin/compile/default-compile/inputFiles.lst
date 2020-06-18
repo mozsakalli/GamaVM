@@ -17,6 +17,7 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/MainActivity.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/Tmp.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Point2D.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Behaviour.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/IndexBuffer.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/jni/JniBridge.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/GPU.java
@@ -56,4 +57,3 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Texture2D.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/GLShader2D.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/render/Shader.java
-/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/SpriteAction.java

@@ -133,7 +133,7 @@ typedef struct __attribute__ ((packed)) Sprite2D {
     Object *parent, *firstChild, *lastChild, *next, *prev;
     Object *localMatrix;
     Object *worldMatrix;
-    Object *name, *actions;
+    Object *name, *behaviours;
 } Sprite2D;
 
 

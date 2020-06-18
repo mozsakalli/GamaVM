@@ -709,6 +709,7 @@ public class OpBuilder {
         f.isStatic = isStatic;
         f.pc = pc;
         f.type = Util.typeToStack(f.cp.getRefSignature(index));
+        f.compiler = compiler;
         ops.add(f);
     }
 

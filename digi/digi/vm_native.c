@@ -136,6 +136,9 @@ void java_lang_Math_cos_D(VM *vm, Object *method, VAR *args) {
 void java_lang_Math_sqrt_D(VM *vm, Object *method, VAR *args) {
     vm->frames[vm->FP].ret.D = sqrt(args[0].D);
 }
+void java_lang_Math_random_D(VM *vm, Object *method, VAR *args) {
+    vm->frames[vm->FP].ret.D = rand() / (double)RAND_MAX;
+}
 
 void java_lang_Double_toStringImpl(VM *vm, Object *method, VAR *args) {
     /*
@@ -276,5 +279,8 @@ NativeMethodInfo vm_native_methods[] = {
     {"java/lang/Float:toStringImpl:(FZ)Ljava/lang/String;", &java_lang_Float_toStringImpl},
 
     {"java/lang/Double:toStringImpl:(DZ)Ljava/lang/String;", &java_lang_Double_toStringImpl},
+
+    {"java/lang/Math:random:()D", &java_lang_Math_random_D},
+
     NULL
 };

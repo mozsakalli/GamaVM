@@ -1,6 +1,9 @@
 
 import digiplay.GLQuadBatch;
 import digiplay.Game;
+import digiplay.Image;
+import digiplay.Platform;
+import digiplay.Point2D;
 import digiplay.Stage2D;
 
 
@@ -31,18 +34,16 @@ public class MyGame implements Game {
     
     @Override
     public void begin() {
-        /*
         Stage2D.I.setup(new Point2D(Platform.screenWidth,Platform.screenHeight));
-        for(int i=0; i<10; i++) {
+        for(int i=0; i<5000; i++) {
             Image img = new Image();
             Stage2D.I.addChild(img);
-            img.x(480);
-            img.y(320);
-            img.blendMode = 1;
+            img.setX(480);
+            img.setY(320);
+            img.blendMode = 0;
             img.setAlpha((float)(Math.random()*.5)+.5f);
-            img.rotation((float)Math.random()*360);
-            img.addAction(new SpriteAction.AnimRotation(0,0,360,360,10000));
-            //img.color = (((int)(Math.random()*255)) << 16) | (((int)(Math.random()*255)) << 8) | (((int)(Math.random()*255)));
+            img.setRotation((float)Math.random()*360);
+            img.color = (((int)(Math.random()*255)) << 16) | (((int)(Math.random()*255)) << 8) | (((int)(Math.random()*255)));
         }
         
 

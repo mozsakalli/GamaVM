@@ -893,12 +893,12 @@ public final class Math {
      *
      * @return a pseudo-random number.
      */
-    public static synchronized double random() {
+    public static native double random();/* {
         if (random == null) {
             random = new Random();
         }
         return random.nextDouble();
-    }
+    }*/
 
     /**
      * Returns the measure in radians of the supplied degree angle. The result

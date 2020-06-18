@@ -31,9 +31,14 @@ public class Convert extends Op {
 
     @Override
     public void execute(Method method, Stack stack) {
-        StackValue tmp = method.allocTemp(type);
-        code = tmp.value+"=("+Util.getPlatformType(type)+")"+stack.pop().value;
+        StackValue val = stack.pop();
+        StackValue tmp = new StackValue();
+        tmp.type = val.type;
+        tmp.value = "("+Util.getPlatformType(type)+")"+val.value;
         stack.push(tmp);
+        //StackValue tmp = method.allocTemp(type);
+        //code = tmp.value+"=("+Util.getPlatformType(type)+")"+stack.pop().value;
+        //stack.push(tmp);
     }
     
     
