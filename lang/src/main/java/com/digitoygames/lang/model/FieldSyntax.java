@@ -40,6 +40,7 @@ public class FieldSyntax extends Unit {
 
     @Override
     public void generateCPP(SourceWriter out) {
+        if(modifiers.contains("const")) out.print("const ");
         out.println("%s %s;",type.toString(), name);
         if(getter != null) {
             out.println("%s %s_getter() {", type.toString(), name).indent();

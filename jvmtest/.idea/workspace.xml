@@ -2,17 +2,97 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d6d7ded5-2a23-40e6-aa79-a7b450b92de6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/MyGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/MyGame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/digiplay/Image.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/digiplay/Image.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/digiplay/Sprite2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/digiplay/Sprite2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/digiplay/SpriteAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/digiplay/SpriteAction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/MyGame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MyGame.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Tmp.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Tmp.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/Action1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/Action1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/Asset.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/Asset.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/Bag.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/Bag.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/ByteArrayCompletable.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/ByteArrayCompletable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/Camera.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/Camera.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/Completable.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/Completable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/GLQuadBatch.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/GLQuadBatch.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/GLShader2D.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/GLShader2D.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/GLTexture.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/GLTexture.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/Image.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/Image.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/MainActivity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/MainActivity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/Mat2D.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/Mat2D.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/Matrix3D.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/Matrix3D.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/Metal.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/Metal.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/Net$HttpListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/Net$HttpListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/Net.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/Net.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/Platform.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/Platform.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/QuadMesh.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/QuadMesh.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/digiplay/Sprite2D.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/Sprite2D.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/SpriteAction$AnimPosition.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/SpriteAction$AnimPosition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/SpriteAction$AnimRotation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/SpriteAction$AnimRotation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/SpriteAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/SpriteAction.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/digiplay/Stage2D.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/Stage2D.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/net/Socket.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/net/Socket.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/render/GPU.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/render/GPU.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/render/IndexBuffer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/render/IndexBuffer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/render/QuadGeometry.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/render/QuadGeometry.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/render/RenderDevice.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/render/RenderDevice.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/render/Shader.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/render/Shader.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/render/Texture.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/render/Texture.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/digiplay/render/VertexBuffer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/digiplay/render/VertexBuffer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gamavm/apple/NSMutableObject.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gamavm/apple/NSMutableObject.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gamavm/apple/NSObject.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gamavm/apple/NSObject.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gamavm/apple/ObjC.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gamavm/apple/ObjC.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gamavm/apple/ObjCClass.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gamavm/apple/ObjCClass.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gamavm/apple/Selector.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gamavm/apple/Selector.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gamavm/apple/uikit/UIApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gamavm/apple/uikit/UIApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gamavm/jni/JniClass.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gamavm/jni/JniClass.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gamavm/jni/JniMethod.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gamavm/jni/JniMethod.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gamavm/jni/JniObject.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gamavm/jni/JniObject.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/src/main/java/com/digitoygames/lang/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/src/main/java/com/digitoygames/lang/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/src/main/java/com/digitoygames/lang/model/ClassSyntax.java" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/src/main/java/com/digitoygames/lang/model/ClassSyntax.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/src/main/java/com/digitoygames/lang/model/FieldSyntax.java" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/src/main/java/com/digitoygames/lang/model/FieldSyntax.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/FileUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/FileUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/Parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/Parser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/PreProcessor$IfToken.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/PreProcessor$IfToken.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/PreProcessor.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/PreProcessor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/SourceWriter.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/SourceWriter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/Token.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/Token.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/Tokenizer$Rule.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/Tokenizer$Rule.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/Tokenizer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/Tokenizer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/ArgSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/ArgSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/ArraySyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/ArraySyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/AsSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/AsSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/AssignSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/AssignSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/BinarySyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/BinarySyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/BlockSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/BlockSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/BreakSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/BreakSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/CallSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/CallSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/CheckCastSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/CheckCastSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/ClassSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/ClassSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/ClosureSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/ClosureSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/EmptySyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/EmptySyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Expression.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Expression.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/FieldSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/FieldSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/ForSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/ForSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Ident.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Ident.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/IfSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/IfSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/IsSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/IsSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Local.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Local.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/LocalSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/LocalSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/MethodSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/MethodSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Module.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Module.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/MultiSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/MultiSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Namespace.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Namespace.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/NewSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/NewSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/NullSafeSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/NullSafeSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/ParSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/ParSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/PostSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/PostSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/PreSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/PreSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/ReturnSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/ReturnSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/SwitchSyntax$Case.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/SwitchSyntax$Case.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/SwitchSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/SwitchSyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/TernarySyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/TernarySyntax.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Type.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Type.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Unit.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Unit.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Using.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/Using.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/WhileSyntax.class" beforeDir="false" afterPath="$PROJECT_DIR$/../lang/target/classes/com/digitoygames/lang/model/WhileSyntax.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -26,7 +106,7 @@
     <option name="isMigrated" value="true" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor" />
@@ -35,12 +115,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/digiplay/Behaviour.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
-              <folding>
-                <element signature="e#714#715#0" expanded="true" />
-                <element signature="e#772#773#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="135">
+              <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -48,8 +124,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/digiplay/Sprite2D.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3344">
-              <caret line="153" lean-forward="true" selection-start-line="153" selection-end-line="153" />
+            <state relative-caret-position="2100">
+              <caret line="154" selection-start-line="154" selection-end-line="154" />
             </state>
           </provider>
         </entry>
@@ -57,17 +133,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/MyGame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="949">
-              <caret line="72" selection-start-line="72" selection-end-line="72" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/MGame.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" selection-start-line="11" selection-end-line="11" />
+            <state relative-caret-position="975">
+              <caret line="67" selection-start-line="67" selection-end-line="67" />
             </state>
           </provider>
         </entry>
@@ -91,19 +158,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/digiplay/Img.kt">
+        <entry file="file://$PROJECT_DIR$/src/main/java/d/Sprite.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" selection-start-line="9" selection-end-line="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/digiplay/T.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="5" lean-forward="true" selection-start-line="6" selection-start-column="5" selection-end-line="6" selection-end-column="5" />
+            <state relative-caret-position="195">
+              <caret line="17" selection-start-line="17" selection-end-line="17" />
             </state>
           </provider>
         </entry>
@@ -133,6 +191,7 @@
         <option value="$PROJECT_DIR$/src/main/java/MGame.kt" />
         <option value="$PROJECT_DIR$/src/main/java/digiplay/Image.java" />
         <option value="$PROJECT_DIR$/src/main/java/digiplay/Img.kt" />
+        <option value="$PROJECT_DIR$/src/main/java/d/Sprite.kt" />
       </list>
     </option>
   </component>
@@ -169,8 +228,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -202,7 +261,26 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="d" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jvmtest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jvmtest" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="digiplay" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jvmtest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jvmtest" type="462c0819:PsiDirectoryNode" />
+              <item name="target" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jvmtest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jvmtest" type="462c0819:PsiDirectoryNode" />
+              <item name="target" type="462c0819:PsiDirectoryNode" />
+              <item name="classes" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -212,6 +290,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="show.migrate.to.gradle.popup" value="false" />
@@ -245,22 +324,13 @@
     <frame x="0" y="23" width="1680" height="967" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Designer" />
-      <window_info id="Image Layers" />
-      <window_info id="Favorites" side_tool="true" />
-      <window_info id="Capture Tool" />
-      <window_info id="UI Designer" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24969475" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25274727" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="RoboVM" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Tool Output" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
-      <window_info anchor="bottom" id="Multi-OS Engine" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Flutter Performance" side_tool="true" />
-      <window_info anchor="bottom" id="ANTLR Preview" />
-      <window_info anchor="bottom" id="Messages" />
+      <window_info id="Designer" order="2" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="Favorites" order="4" side_tool="true" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info id="UI Designer" order="6" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -268,58 +338,50 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="Maven" />
-      <window_info anchor="right" id="Palette" />
-      <window_info anchor="right" id="Flutter Inspector" />
-      <window_info anchor="right" id="Flutter Outline" />
-      <window_info anchor="right" id="Palette&#9;" />
-      <window_info anchor="right" id="Theme Preview" />
-      <window_info anchor="right" id="Capture Analysis" />
+      <window_info anchor="bottom" id="RoboVM" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Tool Output" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Multi-OS Engine" order="11" />
+      <window_info anchor="bottom" id="Version Control" order="12" />
+      <window_info anchor="bottom" id="Flutter Performance" order="13" side_tool="true" />
+      <window_info anchor="bottom" id="ANTLR Preview" order="14" />
+      <window_info anchor="bottom" id="Messages" order="15" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Maven" order="3" />
+      <window_info anchor="right" id="Palette" order="4" />
+      <window_info anchor="right" id="Flutter Inspector" order="5" />
+      <window_info anchor="right" id="Flutter Outline" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Theme Preview" order="8" />
+      <window_info anchor="right" id="Capture Analysis" order="9" />
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/digiplay/Behaviour.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="17" column="1" lean-forward="true" selection-start-line="17" selection-start-column="1" selection-end-line="17" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/digiplay/Behaviour.kt" />
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/digiplay/T.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="5" lean-forward="true" selection-start-line="6" selection-start-column="5" selection-end-line="6" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/digiplay/Behaviour.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
-          <folding>
-            <element signature="e#714#715#0" expanded="true" />
-            <element signature="e#772#773#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="135">
+          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/digiplay/Sprite2D.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3344">
-          <caret line="153" lean-forward="true" selection-start-line="153" selection-end-line="153" />
+        <state relative-caret-position="2100">
+          <caret line="154" selection-start-line="154" selection-end-line="154" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/MyGame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="949">
-          <caret line="72" selection-start-line="72" selection-end-line="72" />
+        <state relative-caret-position="975">
+          <caret line="67" selection-start-line="67" selection-end-line="67" />
         </state>
       </provider>
     </entry>
@@ -337,10 +399,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/digiplay/Image.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/digiplay/T.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="30" selection-start-line="30" selection-end-line="30" />
+        <state relative-caret-position="90">
+          <caret line="6" column="5" lean-forward="true" selection-start-line="6" selection-start-column="5" selection-end-line="6" selection-end-column="5" />
         </state>
       </provider>
     </entry>
@@ -348,6 +410,30 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="9" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/digiplay/Image.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="30" selection-start-line="30" selection-end-line="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/target/classes/d/Sprite$Companion.class">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/target/classes/d/Sprite.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="56" lean-forward="true" selection-start-line="14" selection-start-column="56" selection-end-line="14" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/d/Sprite.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
         </state>
       </provider>
     </entry>

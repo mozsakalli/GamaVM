@@ -32,7 +32,7 @@ public class ClassSyntax extends Unit {
 
     @Override
     public void generateCPP(SourceWriter out) {
-        out.println("class %s {",type).indent();
+        out.println("class %s {",type).indent().println("public:");
         for(Unit u : units)
             u.generateCPP(out);
         out.undent().println("};");

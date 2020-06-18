@@ -1,11 +1,6 @@
 
 import digiplay.GLQuadBatch;
 import digiplay.Game;
-import digiplay.Image;
-import digiplay.MainActivity;
-import digiplay.Platform;
-import digiplay.Point2D;
-import digiplay.SpriteAction;
 import digiplay.Stage2D;
 
 

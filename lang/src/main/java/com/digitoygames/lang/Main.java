@@ -19,6 +19,7 @@ package com.digitoygames.lang;
 import com.digitoygames.lang.model.Module;
 
 import java.io.File;
+import java.io.FileOutputStream;
 
 /**
  *
@@ -31,9 +32,15 @@ public class Main {
         //Parser p = new Parser(new File("/Users/mustafa/Desktop/test.cs"));
         Module m = p.parse();
 
+        /*
+        Java j = new Java(m);
+        j.generate();
+        System.out.println(j.out.toString());
+        */
+        
         SourceWriter out = new SourceWriter();
         m.generateCPP(out);
-        System.out.println(out.toString());
+        new FileOutputStream("/Users/mustafa/Desktop/test.cpp").write(out.toString().getBytes());
     }
     
 }
