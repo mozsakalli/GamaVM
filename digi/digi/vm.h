@@ -290,7 +290,7 @@ typedef struct VM {
     int vTableCounter;
     Object *mainMethod;
     
-    int gcVersion, gcStep;
+    int gcVersion, gcStep, gcTick;
     void *gcPtr;
     int gcBlockPtr;
     struct {

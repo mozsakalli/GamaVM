@@ -48,14 +48,16 @@ public class MethodCompiler2 {
         map.put(v.type, str);
     }
     public void compile(SourceWriter out) throws Exception {
+        Code code = method.getCode();
         String key = method.declaringClass.getName()+":"+method.getName()+":"+method.getSignature();
         out.println("void %s(VM *vm, Object *omethod, VAR *args) {",method.getAOTName()).indent()
            .println("Frame *frame = &vm->frames[++vm->FP];")
            .println("frame->method = omethod;")
-           .println("Method *method = omethod->instance;");
+           .println("Method *method = omethod->instance;")
+           .println("VAR* ARGBUF = &vm->stack[vm->SP];")
+           .println("vm->SP += %d;", code.maxLocals);
            //.println("VAR local[method->maxLocals];");
 
-        Code code = method.getCode();
         //System.out.println(code.tryCatchPC);
 
         OpBuilder builder = new OpBuilder(cc.compiler, method, code);

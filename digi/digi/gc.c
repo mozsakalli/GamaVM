@@ -168,7 +168,7 @@ void gc_sweep(VM *vm) {
     }
 }
 void gc_step(VM *vm) {
-    if(gc_paused) return;
+    if(gc_paused /*|| (vm->gcTick++) % 2 == 0*/) return;
     switch(vm->gcStep) {
         case GCSTEP_INIT: //initialize
             vm->gcVersion = (vm->gcVersion+1) & 15;

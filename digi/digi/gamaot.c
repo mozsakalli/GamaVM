@@ -10,6 +10,8 @@ void digiplay_Image__init____V(VM *vm, Object *omethod, VAR *args) {
 	Frame *frame = &vm->frames[++vm->FP];
 	frame->method = omethod;
 	Method *method = omethod->instance;
+	VAR* ARGBUF = &vm->stack[vm->SP];
+	vm->SP += 1;
 	JDOUBLE T0;
 	JFLOAT T1,T2;
 	Object *L0;
@@ -17,10 +19,9 @@ void digiplay_Image__init____V(VM *vm, Object *omethod, VAR *args) {
 	if(!L0) goto __EXCEPTION;
 BB0:
 	{
-	  VAR cargs[]={{.O=L0}};
-	  frame->pc=1;
+	ARGBUF[0].O=L0;  frame->pc=1;
 	  AOTMETHOD(m1463228935_1,0,1,2); //digiplay/Sprite2D:<init>:()V;
-	  ((VM_CALL)(MTH(((Object*)m1463228935_1),entry)))(vm,m1463228935_1,&cargs[0]);
+	  ((VM_CALL)(MTH(((Object*)m1463228935_1),entry)))(vm,m1463228935_1,ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
@@ -48,16 +49,15 @@ BB0:
 	AOTFIELD(f1463228935_6,6,9,8); //digiplay/Image:dy:F;
 	*FIELD_PTR_F(L0,f1463228935_6->offset) = T2;
 	{
-	  VAR cargs[]={{.O=L0}};
-	  frame->pc=33;
+	ARGBUF[0].O=L0;  frame->pc=33;
 	  AOTVMETHOD(m1463228935_7,6,10,2,vTableIndex); //digiplay/Image:markContentInvalid:()V;
-	  Class *cls = cargs[0].O->cls->instance;
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->vtable[m1463228935_7];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
-	vm->FP--;return;
+	vm->FP--;vm->SP -= 1;return;
 __EXCEPTION: {
 	vm->FP--; return;
 }
@@ -66,13 +66,15 @@ void digiplay_Image_getSrc___Ljava_lang_String_(VM *vm, Object *omethod, VAR *ar
 	Frame *frame = &vm->frames[++vm->FP];
 	frame->method = omethod;
 	Method *method = omethod->instance;
+	VAR* ARGBUF = &vm->stack[vm->SP];
+	vm->SP += 1;
 	Object *L0,*T0;
 	L0=args[0].O;
 	if(!L0) goto __EXCEPTION;
 BB0:
 	AOTFIELD(f1463228935_8,6,11,12); //digiplay/Image:src:Ljava/lang/String;
 	T0 = *FIELD_PTR_O(L0,f1463228935_8->offset);
-	vm->FP--;vm->frames[vm->FP].ret.O=T0;return;
+	vm->FP--;vm->frames[vm->FP].ret.O=T0;vm->SP -= 1;return;
 __EXCEPTION: {
 	vm->FP--; return;
 }
@@ -81,8 +83,10 @@ void digiplay_Image_setSrc__Ljava_lang_String__V(VM *vm, Object *omethod, VAR *a
 	Frame *frame = &vm->frames[++vm->FP];
 	frame->method = omethod;
 	Method *method = omethod->instance;
+	VAR* ARGBUF = &vm->stack[vm->SP];
+	vm->SP += 2;
 BB0:
-	vm->FP--;return;
+	vm->FP--;vm->SP -= 2;return;
 __EXCEPTION: {
 	vm->FP--; return;
 }
@@ -91,6 +95,8 @@ void digiplay_Image_invalidateContent___V(VM *vm, Object *omethod, VAR *args) {
 	Frame *frame = &vm->frames[++vm->FP];
 	frame->method = omethod;
 	Method *method = omethod->instance;
+	VAR* ARGBUF = &vm->stack[vm->SP];
+	vm->SP += 1;
 	Object *L0,*T0;
 	L0=args[0].O;
 	if(!L0) goto __EXCEPTION;
@@ -102,10 +108,9 @@ BB7:
 	AOTCLASS(c1463228935_10,15);
 	T0=alloc_object(vm,c1463228935_10,0);
 	{
-	  VAR cargs[]={{.O=T0},{.I=1}};
-	  frame->pc=13;
+	ARGBUF[0].O=T0;ARGBUF[1].I=1;  frame->pc=13;
 	  AOTMETHOD(m1463228935_11,15,1,16); //digiplay/QuadMesh:<init>:(I)V;
-	  ((VM_CALL)(MTH(((Object*)m1463228935_11),entry)))(vm,m1463228935_11,&cargs[0]);
+	  ((VM_CALL)(MTH(((Object*)m1463228935_11),entry)))(vm,m1463228935_11,ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
@@ -113,39 +118,36 @@ BB7:
 	*FIELD_PTR_O(L0,f1463228935_9->offset) = T0;
 BB19:
 	{
-	  VAR cargs[]={{.O=L0},{.F=50.0}};
-	  frame->pc=22;
+	ARGBUF[0].O=L0;ARGBUF[1].F=50.0;  frame->pc=22;
 	  AOTVMETHOD(m1463228935_13,6,17,18,vTableIndex); //digiplay/Image:setWidth:(F)V;
-	  Class *cls = cargs[0].O->cls->instance;
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->vtable[m1463228935_13];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
 	{
-	  VAR cargs[]={{.O=L0},{.F=50.0}};
-	  frame->pc=28;
+	ARGBUF[0].O=L0;ARGBUF[1].F=50.0;  frame->pc=28;
 	  AOTVMETHOD(m1463228935_14,6,19,18,vTableIndex); //digiplay/Image:setHeight:(F)V;
-	  Class *cls = cargs[0].O->cls->instance;
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->vtable[m1463228935_14];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
 	//digiplay/Image:quad:Ldigiplay/QuadMesh;
 	T0 = *FIELD_PTR_O(L0,f1463228935_9->offset);
 	{
-	  VAR cargs[]={{.O=T0},{.I=0},{.F=0},{.F=0},{.F=50.0},{.F=50.0},{.F=0},{.F=0},{.F=1},{.F=0},{.F=1},{.F=1},{.F=0},{.F=1}};
-	  frame->pc=50;
+	ARGBUF[0].O=T0;ARGBUF[1].I=0;ARGBUF[2].F=0;ARGBUF[3].F=0;ARGBUF[4].F=50.0;ARGBUF[5].F=50.0;ARGBUF[6].F=0;ARGBUF[7].F=0;ARGBUF[8].F=1;ARGBUF[9].F=0;ARGBUF[10].F=1;ARGBUF[11].F=1;ARGBUF[12].F=0;ARGBUF[13].F=1;  frame->pc=50;
 	  AOTVMETHOD(m1463228935_15,15,20,21,vTableIndex); //digiplay/QuadMesh:set:(IFFFFFFFFFFFF)V;
-	  if(!cargs[0].O) { throw_null(vm); goto __EXCEPTION; }
-	  Class *cls = cargs[0].O->cls->instance;
+	  if(!ARGBUF[0].O) { throw_null(vm); goto __EXCEPTION; }
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->vtable[m1463228935_15];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
-	vm->FP--;return;
+	vm->FP--;vm->SP -= 1;return;
 __EXCEPTION: {
 	vm->FP--; return;
 }
@@ -154,6 +156,8 @@ void digiplay_Image_draw___V(VM *vm, Object *omethod, VAR *args) {
 	Frame *frame = &vm->frames[++vm->FP];
 	frame->method = omethod;
 	Method *method = omethod->instance;
+	VAR* ARGBUF = &vm->stack[vm->SP];
+	vm->SP += 3;
 	JFLOAT L1,L2,T6,T8;
 	JINT T2,T7;
 	Object *L0,*T0,*T1,*T3,*T4,*T5;
@@ -171,12 +175,11 @@ BB7:
 	AOTFIELD(f1463228935_17,6,25,26); //digiplay/Image:GLOBAL_FRAME_VERSION:I;
 	T2 = *((JINT*)(f1463228935_17->offset));
 	{
-	  VAR cargs[]={{.O=L0},{.I=T2}};
-	  frame->pc=18;
+	ARGBUF[0].O=L0;ARGBUF[1].I=T2;  frame->pc=18;
 	  AOTVMETHOD(m1463228935_18,6,27,28,vTableIndex); //digiplay/Image:getWorldMatrix:(I)Ldigiplay/Mat2D;
-	  Class *cls = cargs[0].O->cls->instance;
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->vtable[m1463228935_18];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	  T3=frame->ret.O;
 	}
@@ -192,23 +195,21 @@ BB7:
 	AOTFIELD(f1463228935_23,6,35,26); //digiplay/Image:blendMode:I;
 	T7 = *FIELD_PTR_I(L0,f1463228935_23->offset);
 	{
-	  VAR cargs[]={{.O=T0},{.O=T1},{.O=T3},{.O=T4},{.O=T5},{.I=0},{.I=T2},{.F=T6},{.I=T7}};
-	  frame->pc=40;
+	ARGBUF[0].O=T0;ARGBUF[1].O=T1;ARGBUF[2].O=T3;ARGBUF[3].O=T4;ARGBUF[4].O=T5;ARGBUF[5].I=0;ARGBUF[6].I=T2;ARGBUF[7].F=T6;ARGBUF[8].I=T7;  frame->pc=40;
 	  AOTVMETHOD(m1463228935_24,36,37,38,vTableIndex); //digiplay/GLQuadBatch:drawQuadMesh:(Ldigiplay/QuadMesh;Ldigiplay/Mat2D;Ldigiplay/GLShader2D;Ldigiplay/GLTexture;IIFI)V;
-	  if(!cargs[0].O) { throw_null(vm); goto __EXCEPTION; }
-	  Class *cls = cargs[0].O->cls->instance;
+	  if(!ARGBUF[0].O) { throw_null(vm); goto __EXCEPTION; }
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->vtable[m1463228935_24];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 BB43:
 	{
-	  VAR cargs[]={{.O=L0}};
-	  frame->pc=44;
+	ARGBUF[0].O=L0;  frame->pc=44;
 	  AOTVMETHOD(m1463228935_25,6,39,40,vTableIndex); //digiplay/Image:getX:()F;
-	  Class *cls = cargs[0].O->cls->instance;
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->vtable[m1463228935_25];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	  T6=frame->ret.F;
 	}
@@ -241,22 +242,20 @@ BB84:
 	*FIELD_PTR_F(L0,f1463228935_5->offset) = T8;
 BB98:
 	{
-	  VAR cargs[]={{.O=L0},{.F=L1}};
-	  frame->pc=100;
+	ARGBUF[0].O=L0;ARGBUF[1].F=L1;  frame->pc=100;
 	  AOTVMETHOD(m1463228935_27,6,43,18,vTableIndex); //digiplay/Image:setX:(F)V;
-	  Class *cls = cargs[0].O->cls->instance;
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->vtable[m1463228935_27];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
 	{
-	  VAR cargs[]={{.O=L0}};
-	  frame->pc=104;
+	ARGBUF[0].O=L0;  frame->pc=104;
 	  AOTVMETHOD(m1463228935_28,6,44,40,vTableIndex); //digiplay/Image:getY:()F;
-	  Class *cls = cargs[0].O->cls->instance;
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->vtable[m1463228935_28];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	  T6=frame->ret.F;
 	}
@@ -289,38 +288,35 @@ BB144:
 	*FIELD_PTR_F(L0,f1463228935_6->offset) = T8;
 BB158:
 	{
-	  VAR cargs[]={{.O=L0},{.F=L2}};
-	  frame->pc=160;
+	ARGBUF[0].O=L0;ARGBUF[1].F=L2;  frame->pc=160;
 	  AOTVMETHOD(m1463228935_30,6,46,18,vTableIndex); //digiplay/Image:setY:(F)V;
-	  Class *cls = cargs[0].O->cls->instance;
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->vtable[m1463228935_30];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
 	{
-	  VAR cargs[]={{.O=L0}};
-	  frame->pc=165;
+	ARGBUF[0].O=L0;  frame->pc=165;
 	  AOTVMETHOD(m1463228935_31,6,47,40,vTableIndex); //digiplay/Image:getRotation:()F;
-	  Class *cls = cargs[0].O->cls->instance;
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->vtable[m1463228935_31];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	  T6=frame->ret.F;
 	}
 	
 	T8 = T6 + 1;
 	{
-	  VAR cargs[]={{.O=L0},{.F=T8}};
-	  frame->pc=170;
+	ARGBUF[0].O=L0;ARGBUF[1].F=T8;  frame->pc=170;
 	  AOTVMETHOD(m1463228935_32,6,48,18,vTableIndex); //digiplay/Image:setRotation:(F)V;
-	  Class *cls = cargs[0].O->cls->instance;
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->vtable[m1463228935_32];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
-	vm->FP--;return;
+	vm->FP--;vm->SP -= 3;return;
 __EXCEPTION: {
 	vm->FP--; return;
 }
@@ -333,19 +329,20 @@ void digiplay_Platform__init____V(VM *vm, Object *omethod, VAR *args) {
 	Frame *frame = &vm->frames[++vm->FP];
 	frame->method = omethod;
 	Method *method = omethod->instance;
+	VAR* ARGBUF = &vm->stack[vm->SP];
+	vm->SP += 1;
 	Object *L0;
 	L0=args[0].O;
 	if(!L0) goto __EXCEPTION;
 BB0:
 	{
-	  VAR cargs[]={{.O=L0}};
-	  frame->pc=1;
+	ARGBUF[0].O=L0;  frame->pc=1;
 	  AOTMETHOD(m_130471865_1,49,1,2); //java/lang/Object:<init>:()V;
-	  ((VM_CALL)(MTH(((Object*)m_130471865_1),entry)))(vm,m_130471865_1,&cargs[0]);
+	  ((VM_CALL)(MTH(((Object*)m_130471865_1),entry)))(vm,m_130471865_1,ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
-	vm->FP--;return;
+	vm->FP--;vm->SP -= 1;return;
 __EXCEPTION: {
 	vm->FP--; return;
 }
@@ -354,6 +351,8 @@ void digiplay_Platform_run__Ldigiplay_Game__V(VM *vm, Object *omethod, VAR *args
 	Frame *frame = &vm->frames[++vm->FP];
 	frame->method = omethod;
 	Method *method = omethod->instance;
+	VAR* ARGBUF = &vm->stack[vm->SP];
+	vm->SP += 1;
 	JLONG T0;
 	Object *L0;
 	L0=args[0].O;
@@ -377,7 +376,7 @@ BB0:
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
-	vm->FP--;return;
+	vm->FP--;vm->SP -= 1;return;
 __EXCEPTION: {
 	vm->FP--; return;
 }
@@ -386,6 +385,8 @@ void digiplay_Platform_resize__II_V(VM *vm, Object *omethod, VAR *args) {
 	Frame *frame = &vm->frames[++vm->FP];
 	frame->method = omethod;
 	Method *method = omethod->instance;
+	VAR* ARGBUF = &vm->stack[vm->SP];
+	vm->SP += 3;
 	JINT L0,L1,T0;
 	Object *L2,*T1;
 	Object *caughtException;
@@ -405,13 +406,12 @@ BB14:
 	AOTFIELD(f_130471865_2,41,50,51); //digiplay/Platform:game:Ldigiplay/Game;
 	T1 = *((Object**)(f_130471865_2->offset));
 	{
-	  VAR cargs[]={{.O=T1}};
-	  frame->pc=21;
+	ARGBUF[0].O=T1;  frame->pc=21;
 	  AOTVMETHOD(m_130471865_9,60,61,2,iTableIndex); //digiplay/Game:begin:()V;
-	  if(!cargs[0].O) { throw_null(vm); goto __EXCEPTION; }
-	  Class *cls = cargs[0].O->cls->instance;
+	  if(!ARGBUF[0].O) { throw_null(vm); goto __EXCEPTION; }
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->itable[m_130471865_9];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 BB26:
@@ -419,17 +419,16 @@ BB26:
 BB29:
 	L2=caughtException;
 	{
-	  VAR cargs[]={{.O=L2}};
-	  frame->pc=31;
+	ARGBUF[0].O=L2;  frame->pc=31;
 	  AOTVMETHOD(m_130471865_11,62,63,2,vTableIndex); //java/lang/Throwable:printStackTrace:()V;
-	  if(!cargs[0].O) { throw_null(vm); goto __EXCEPTION; }
-	  Class *cls = cargs[0].O->cls->instance;
+	  if(!ARGBUF[0].O) { throw_null(vm); goto __EXCEPTION; }
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->vtable[m_130471865_11];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 BB34:
-	vm->FP--;return;
+	vm->FP--;vm->SP -= 3;return;
 __EXCEPTION: {
 	caughtException = vm->exception;
 	vm->exception = NULL;
@@ -446,6 +445,8 @@ void digiplay_Platform_step___V(VM *vm, Object *omethod, VAR *args) {
 	Frame *frame = &vm->frames[++vm->FP];
 	frame->method = omethod;
 	Method *method = omethod->instance;
+	VAR* ARGBUF = &vm->stack[vm->SP];
+	vm->SP += 4;
 	JINT L1;
 	JLONG L0,T0,T1;
 	Object *L2,*T2;
@@ -474,26 +475,24 @@ BB0:
 	AOTFIELD(f_130471865_2,41,50,51); //digiplay/Platform:game:Ldigiplay/Game;
 	T2 = *((Object**)(f_130471865_2->offset));
 	{
-	  VAR cargs[]={{.O=T2}};
-	  frame->pc=27;
+	ARGBUF[0].O=T2;  frame->pc=27;
 	  AOTVMETHOD(m_130471865_14,60,66,2,iTableIndex); //digiplay/Game:update:()V;
-	  if(!cargs[0].O) { throw_null(vm); goto __EXCEPTION; }
-	  Class *cls = cargs[0].O->cls->instance;
+	  if(!ARGBUF[0].O) { throw_null(vm); goto __EXCEPTION; }
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->itable[m_130471865_14];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
 	//digiplay/Platform:game:Ldigiplay/Game;
 	T2 = *((Object**)(f_130471865_2->offset));
 	{
-	  VAR cargs[]={{.O=T2}};
-	  frame->pc=35;
+	ARGBUF[0].O=T2;  frame->pc=35;
 	  AOTVMETHOD(m_130471865_15,60,67,2,iTableIndex); //digiplay/Game:render:()V;
-	  if(!cargs[0].O) { throw_null(vm); goto __EXCEPTION; }
-	  Class *cls = cargs[0].O->cls->instance;
+	  if(!ARGBUF[0].O) { throw_null(vm); goto __EXCEPTION; }
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->itable[m_130471865_15];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
@@ -501,13 +500,12 @@ BB0:
 BB43:
 	L2=caughtException;
 	{
-	  VAR cargs[]={{.O=L2}};
-	  frame->pc=45;
+	ARGBUF[0].O=L2;  frame->pc=45;
 	  AOTVMETHOD(m_130471865_11,62,63,2,vTableIndex); //java/lang/Throwable:printStackTrace:()V;
-	  if(!cargs[0].O) { throw_null(vm); goto __EXCEPTION; }
-	  Class *cls = cargs[0].O->cls->instance;
+	  if(!ARGBUF[0].O) { throw_null(vm); goto __EXCEPTION; }
+	  Class *cls = ARGBUF[0].O->cls->instance;
 	  Object *mth = cls->vtable[m_130471865_11];
-	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);
+	  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 BB48:
@@ -518,7 +516,7 @@ BB48:
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
-	vm->FP--;return;
+	vm->FP--;vm->SP -= 4;return;
 __EXCEPTION: {
 	caughtException = vm->exception;
 	vm->exception = NULL;
@@ -535,6 +533,8 @@ void digiplay_Platform__clinit____V(VM *vm, Object *omethod, VAR *args) {
 	Frame *frame = &vm->frames[++vm->FP];
 	frame->method = omethod;
 	Method *method = omethod->instance;
+	VAR* ARGBUF = &vm->stack[vm->SP];
+	vm->SP += 0;
 	JLONG T0;
 BB0:
 	{
@@ -547,7 +547,7 @@ BB0:
 	
 	AOTFIELD(f_130471865_13,41,65,56); //digiplay/Platform:lastTime:J;
 	*((JLONG*)(f_130471865_13->offset)) = T0;
-	vm->FP--;return;
+	vm->FP--;vm->SP -= 0;return;
 __EXCEPTION: {
 	vm->FP--; return;
 }

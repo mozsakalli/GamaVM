@@ -27,10 +27,15 @@ public class Return extends Op {
 
     @Override
     public void execute(Method method, Stack stack) {
+        try {
         code = "vm->FP--;";
         if(!type.equals("V"))
             code += "vm->frames[vm->FP].ret."+type+"="+stack.pop().value+";";
+        code += "vm->SP -= "+method.getCode().maxLocals+";";
         code += "return;";
+        } catch(Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     
