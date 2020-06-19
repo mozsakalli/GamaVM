@@ -31,7 +31,7 @@ public class Return extends Op {
         code = "vm->FP--;";
         if(!type.equals("V"))
             code += "vm->frames[vm->FP].ret."+type+"="+stack.pop().value+";";
-        code += "vm->SP -= "+method.getCode().maxLocals+";";
+        code += "vm->SP -= "+method.getCode().maxStack+";";
         code += "return;";
         } catch(Exception e){
             throw new RuntimeException(e);

@@ -137,11 +137,13 @@ void Java_digiplay_GLShader2D_finalize(VM* vm, Method *method, VAR *args) {
 }
 
 typedef struct GLQuadBatch {
+    int batchingQuads;
     int blendMode;
     int vertPtr, triangleCount;
     VERT2D *vertices;
     int capacity,end;
     int ibo;
+    short *indices;
     GLTextrue *texture;
     int textureFlags;
     int textureDirty;
@@ -180,6 +182,7 @@ void Java_digiplay_GLQuadBatch_finalize(VM* vm, Method *method, VAR *args) {
         GLQuadBatch *b = (GLQuadBatch*)*FIELD_PTR_J(args[0].O, 0);
         glDeleteBuffers(1, (GLuint*)&b->ibo);
         free(b->vertices);
+        free(b->indices);
         free(b);
     }
 }
@@ -208,6 +211,7 @@ void Java_digiplay_GLQuadBatch_begin(VM* vm, Method *method, VAR *args) {
     b->texture = NULL;
     b->textureFlags = 0;
     b->textureDirty = b->textureFlagsDirty = 0;
+    b->batchingQuads = 1;
 
     mat3d_setup2d(&b->projection, w, h);
     mat3d_identity(&b->camera);
@@ -354,6 +358,11 @@ void Java_digiplay_GLQuadBatch_drawQuadMesh(VM* vm, Method *method, VAR *args) {
         b->textureFlags = texFlags;
     }
 
+    if(!b->batchingQuads) {
+        quad_batch_flush(b);
+        b->batchingQuads = 1;
+    }
+
     QuadMeshItem *q = &m->items[0];
 
     if(m->version != mat->meshVersion) {
@@ -439,7 +448,6 @@ void Java_digiplay_GLQuadBatch_end(VM* vm, Method *method, VAR *args) {
 }
 
 static QuadMesh *QUADCACHE = NULL;
-
 void Java_digiplay_QuadMesh_create(VM* vm, Method *method, VAR *args) {
     int size = args[0].I;
     QuadMesh *m = QUADCACHE;
@@ -524,6 +532,10 @@ void Java_digiplay_GLTexture_upload(VM *vm, Object *method, VAR *args) {
     } else
         vm->frames[vm->FP].ret.I = 1;
 }
+
+typedef struct GLTriangleBatch {
+
+} GLTriangleBatch;
 
 NativeMethodInfo digiplay_gl_methods[] = {
     {"digiplay/GLShader2D:compile:(Ljava/lang/String;)J", &Java_digiplay_GLShader2D_compile},

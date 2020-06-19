@@ -11,7 +11,7 @@ void digiplay_Image__init____V(VM *vm, Object *omethod, VAR *args) {
 	frame->method = omethod;
 	Method *method = omethod->instance;
 	VAR* ARGBUF = &vm->stack[vm->SP];
-	vm->SP += 1;
+	vm->SP += 3;
 	JDOUBLE T0;
 	JFLOAT T1,T2;
 	Object *L0;
@@ -57,9 +57,9 @@ BB0:
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
-	vm->FP--;vm->SP -= 1;return;
+	vm->FP--;vm->SP -= 3;return;
 __EXCEPTION: {
-	vm->FP--; return;
+	vm->FP--; vm->SP -= 3; return;
 }
 }
 void digiplay_Image_getSrc___Ljava_lang_String_(VM *vm, Object *omethod, VAR *args) {
@@ -76,7 +76,7 @@ BB0:
 	T0 = *FIELD_PTR_O(L0,f1463228935_8->offset);
 	vm->FP--;vm->frames[vm->FP].ret.O=T0;vm->SP -= 1;return;
 __EXCEPTION: {
-	vm->FP--; return;
+	vm->FP--; vm->SP -= 1; return;
 }
 }
 void digiplay_Image_setSrc__Ljava_lang_String__V(VM *vm, Object *omethod, VAR *args) {
@@ -84,11 +84,11 @@ void digiplay_Image_setSrc__Ljava_lang_String__V(VM *vm, Object *omethod, VAR *a
 	frame->method = omethod;
 	Method *method = omethod->instance;
 	VAR* ARGBUF = &vm->stack[vm->SP];
-	vm->SP += 2;
+	vm->SP += 0;
 BB0:
-	vm->FP--;vm->SP -= 2;return;
+	vm->FP--;vm->SP -= 0;return;
 __EXCEPTION: {
-	vm->FP--; return;
+	vm->FP--; vm->SP -= 0; return;
 }
 }
 void digiplay_Image_invalidateContent___V(VM *vm, Object *omethod, VAR *args) {
@@ -96,7 +96,7 @@ void digiplay_Image_invalidateContent___V(VM *vm, Object *omethod, VAR *args) {
 	frame->method = omethod;
 	Method *method = omethod->instance;
 	VAR* ARGBUF = &vm->stack[vm->SP];
-	vm->SP += 1;
+	vm->SP += 14;
 	Object *L0,*T0;
 	L0=args[0].O;
 	if(!L0) goto __EXCEPTION;
@@ -147,9 +147,9 @@ BB19:
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
-	vm->FP--;vm->SP -= 1;return;
+	vm->FP--;vm->SP -= 14;return;
 __EXCEPTION: {
-	vm->FP--; return;
+	vm->FP--; vm->SP -= 14; return;
 }
 }
 void digiplay_Image_draw___V(VM *vm, Object *omethod, VAR *args) {
@@ -157,7 +157,7 @@ void digiplay_Image_draw___V(VM *vm, Object *omethod, VAR *args) {
 	frame->method = omethod;
 	Method *method = omethod->instance;
 	VAR* ARGBUF = &vm->stack[vm->SP];
-	vm->SP += 3;
+	vm->SP += 9;
 	JFLOAT L1,L2,T6,T8;
 	JINT T2,T7;
 	Object *L0,*T0,*T1,*T3,*T4,*T5;
@@ -316,9 +316,9 @@ BB158:
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
-	vm->FP--;vm->SP -= 3;return;
+	vm->FP--;vm->SP -= 9;return;
 __EXCEPTION: {
-	vm->FP--; return;
+	vm->FP--; vm->SP -= 9; return;
 }
 }
 //digiplay/Platform
@@ -344,7 +344,7 @@ BB0:
 	
 	vm->FP--;vm->SP -= 1;return;
 __EXCEPTION: {
-	vm->FP--; return;
+	vm->FP--; vm->SP -= 1; return;
 }
 }
 void digiplay_Platform_run__Ldigiplay_Game__V(VM *vm, Object *omethod, VAR *args) {
@@ -352,7 +352,7 @@ void digiplay_Platform_run__Ldigiplay_Game__V(VM *vm, Object *omethod, VAR *args
 	frame->method = omethod;
 	Method *method = omethod->instance;
 	VAR* ARGBUF = &vm->stack[vm->SP];
-	vm->SP += 1;
+	vm->SP += 2;
 	JLONG T0;
 	Object *L0;
 	L0=args[0].O;
@@ -376,9 +376,9 @@ BB0:
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
-	vm->FP--;vm->SP -= 1;return;
+	vm->FP--;vm->SP -= 2;return;
 __EXCEPTION: {
-	vm->FP--; return;
+	vm->FP--; vm->SP -= 2; return;
 }
 }
 void digiplay_Platform_resize__II_V(VM *vm, Object *omethod, VAR *args) {
@@ -386,7 +386,7 @@ void digiplay_Platform_resize__II_V(VM *vm, Object *omethod, VAR *args) {
 	frame->method = omethod;
 	Method *method = omethod->instance;
 	VAR* ARGBUF = &vm->stack[vm->SP];
-	vm->SP += 3;
+	vm->SP += 1;
 	JINT L0,L1,T0;
 	Object *L2,*T1;
 	Object *caughtException;
@@ -428,7 +428,7 @@ BB29:
 	  if(vm->exception) goto __EXCEPTION;
 	}
 BB34:
-	vm->FP--;vm->SP -= 3;return;
+	vm->FP--;vm->SP -= 1;return;
 __EXCEPTION: {
 	caughtException = vm->exception;
 	vm->exception = NULL;
@@ -438,7 +438,7 @@ __EXCEPTION: {
 			goto BB29;
 	}
 	vm->exception = caughtException;
-	vm->FP--; return;
+	vm->FP--; vm->SP -= 1; return;
 }
 }
 void digiplay_Platform_step___V(VM *vm, Object *omethod, VAR *args) {
@@ -526,7 +526,7 @@ __EXCEPTION: {
 			goto BB43;
 	}
 	vm->exception = caughtException;
-	vm->FP--; return;
+	vm->FP--; vm->SP -= 4; return;
 }
 }
 void digiplay_Platform__clinit____V(VM *vm, Object *omethod, VAR *args) {
@@ -534,7 +534,7 @@ void digiplay_Platform__clinit____V(VM *vm, Object *omethod, VAR *args) {
 	frame->method = omethod;
 	Method *method = omethod->instance;
 	VAR* ARGBUF = &vm->stack[vm->SP];
-	vm->SP += 0;
+	vm->SP += 2;
 	JLONG T0;
 BB0:
 	{
@@ -547,9 +547,9 @@ BB0:
 	
 	AOTFIELD(f_130471865_13,41,65,56); //digiplay/Platform:lastTime:J;
 	*((JLONG*)(f_130471865_13->offset)) = T0;
-	vm->FP--;vm->SP -= 0;return;
+	vm->FP--;vm->SP -= 2;return;
 __EXCEPTION: {
-	vm->FP--; return;
+	vm->FP--; vm->SP -= 2; return;
 }
 }
 void aot_init(VM *vm) {

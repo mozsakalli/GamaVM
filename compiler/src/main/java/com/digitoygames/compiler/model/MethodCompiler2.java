@@ -55,7 +55,7 @@ public class MethodCompiler2 {
            .println("frame->method = omethod;")
            .println("Method *method = omethod->instance;")
            .println("VAR* ARGBUF = &vm->stack[vm->SP];")
-           .println("vm->SP += %d;", code.maxLocals);
+           .println("vm->SP += %d;", code.maxStack);
            //.println("VAR local[method->maxLocals];");
 
         //System.out.println(code.tryCatchPC);
@@ -202,7 +202,7 @@ public class MethodCompiler2 {
             out.println("vm->exception = caughtException;");
         }
         
-        out.println("vm->FP--; return;").undent().println("}");
+        out.println("vm->FP--; vm->SP -= %d; return;", code.maxStack).undent().println("}");
         out.undent().println("}");
         /*
         for(BasicBlock b : blocks) {
