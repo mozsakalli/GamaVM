@@ -89,12 +89,14 @@ public class Invoke extends Op {
         
         String ref = ref(method);
         
+        boolean baseIsThis = false;
         code ="{\n";
         if(argCount > 0) {
         code += "  VAR cargs[]={";// call_java_"+ret+"("; 
         for(int i=0; i<argCount; i++) {
             if(i > 0) code += ",";
             code += "{."+args[i].type+"="+args[i].value+"}";
+            if(callType != STATIC && i==0 && args[i].value.equals("L0")) baseIsThis = true;
         }
         code += "};\n";
         }
@@ -110,8 +112,10 @@ public class Invoke extends Op {
             code += String.format("  AOTVMETHOD(%s,%d,%d,%d,%s); //%s:%s:%s\n",ref,getClsIndex(), getNameIndex(), getSignatureIndex(),
                     callType == INTERFACE ? "iTableIndex" : "vTableIndex",clsName,name,signature);
             }
+            if(!baseIsThis)
+                    code += "  if(!cargs[0].O) { throw_null(vm); goto __EXCEPTION; }\n";
             code += String.format(
-                    "  if(!cargs[0].O) { throw_null(vm); goto __EXCEPTION; }\n"+
+                    //"  if(!cargs[0].O) { throw_null(vm); goto __EXCEPTION; }\n"+
                     "  Class *cls = cargs[0].O->cls->instance;\n"+
                     "  Object *mth = cls->%s[%s];\n"+
                     "  ((VM_CALL)((Method*)mth->instance)->entry)(vm, mth, &cargs[0]);\n"        

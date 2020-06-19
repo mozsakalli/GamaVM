@@ -27,10 +27,11 @@ import com.digitoygames.compiler.model.StackValue;
 public class Binary extends Op {
     
     public String operand;
-
+    public int targetLocal = -1;
+    
     @Override
     public void execute(Method method, Stack stack) {
-        StackValue tmp = method.allocTemp(type);
+        StackValue tmp = targetLocal == -1 ? method.allocTemp(type) : method.getLocal(targetLocal, type);
         StackValue v2 = stack.pop();
         StackValue v1 = stack.pop();
         if(operand.equals(">>>")) {
@@ -40,7 +41,7 @@ public class Binary extends Op {
         }
         else
         code = tmp.value+" = "+v1.value+" "+operand+" "+v2.value;
-        stack.push(tmp);
+        if(targetLocal == -1) stack.push(tmp);
     }
     
     

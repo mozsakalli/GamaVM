@@ -6,7 +6,7 @@ public class Field {
     String signature;
     Class declaringClass;
     int flags;
-    int offset;
+    Object offset;
     Object constantValue;
     
     public String getName() {

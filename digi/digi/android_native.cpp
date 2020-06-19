@@ -113,7 +113,7 @@ Java_digiplay_MainActivity_gamaVMMain(
         jclass /* this */) {
 
     gamaVM = vm_init();
-    vm_main(gamaVM, "Main", "main", "()V");
+    vm_main(gamaVM, (char*)"Main", (char*)"main", (char*)"()V");
 }
 
 extern "C" JNIEXPORT void JNICALL

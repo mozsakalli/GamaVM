@@ -147,6 +147,8 @@ public class MethodCompiler2 {
         
         int index = 0;
         int cindex = 0;
+        boolean hasThis = false;
+        
         //System.out.println("args = "+args);
         for(String argType : args) {
             StackValue local = method.findLocal(index, argType);
@@ -155,10 +157,14 @@ public class MethodCompiler2 {
                 if(at.equals("C") || at.equals("Z") || at.equals("B") || at.equals("S"))
                     at = "I";
                 out.println("%s=args[%d].%s;", local.value,cindex,at);
+                if(!method.isStatic() && local.localIndex == 0) hasThis = true;
             }
             index++;
             cindex++;
             if(argType.equals("D") || argType.equals("J")) index++;
+        }
+        if(hasThis) {
+            out.println("if(!L0) goto __EXCEPTION;");
         }
         for(BasicBlock bb : blocks) {
             if(bb.ops.isEmpty()) continue;

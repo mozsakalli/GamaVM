@@ -139,7 +139,7 @@ typedef struct __attribute__ ((packed)) Field {
     Object *signature;
     Object *declaringClass;
     JINT flags;
-    JINT offset;
+    void* offset;
     VAR *constantValue;
 } Field;
 
@@ -427,7 +427,7 @@ extern void *read_class_file(JCHAR *name, int len);
 }
 #endif
 
-#define FIELD_PTR(object,offset) ((object)->instance+offset)
+#define FIELD_PTR(object,offset) ((object)->instance+(int)(offset))
 #define FIELD_PTR_TYPE(object,offset,type) ((type*)FIELD_PTR(object,offset))
 #define FIELD_PTR_B(object,offset) FIELD_PTR_TYPE(object,offset,JBYTE)
 #define FIELD_PTR_Z(object,offset) FIELD_PTR_TYPE(object,offset,JBOOL)

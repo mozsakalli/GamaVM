@@ -22,6 +22,6 @@ package com.digitoygames.compiler.model.op;
  */
 public class Local extends Op {
     
-    int index;
+    public int index;
     
 }

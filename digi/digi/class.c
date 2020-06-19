@@ -130,7 +130,7 @@ void link_class(VM *vm, Object *clsObject) {
             int size = get_signature_size(f->signature);
             size = ((size + 3) / 4) * 4;
             if(IS_STATIC(f->flags)) {
-                f->offset = globalSize;
+                f->offset = (void*)globalSize;
                 globalSize += size;
             } else {
                 f->offset = cls->instanceSize;
@@ -162,6 +162,18 @@ void link_class(VM *vm, Object *clsObject) {
         cls->global = vm_alloc(globalSize);
         for(int i=0; i<cls->fields->length; i++) {
             Field *f = ((Object**)cls->fields->instance)[i]->instance;
+            if(IS_STATIC(f->flags)) {
+                f->offset = cls->global + (int)f->offset;
+                if(f->constantValue) {
+                    switch(STRCHARS(f->signature)[0]) {
+                        case 'I':  *((JINT*)f->offset) = f->constantValue->I; break;
+                        case 'F': *((JFLOAT*)f->offset) = f->constantValue->F; break;
+                        case 'J': *((JLONG*)f->offset) = f->constantValue->J; break;
+                        case 'D': *((JDOUBLE*)f->offset) = f->constantValue->D; break;
+                        default: printf("!!!!!! Unimplemented field constant type: %c\n", STRCHARS(f->signature)[0]);
+                    }
+                }
+            }
             /*
             if(IS_STATIC(f->flags)) {
                 char tmp[1024];
@@ -170,7 +182,7 @@ void link_class(VM *vm, Object *clsObject) {
                 ptr += sprintf(ptr, "%s at %p\n", string_to_ascii(f->name), (cls->global + f->offset));
                 GLOG("%s\n", tmp);
             }*/
-            if(IS_STATIC(f->flags) && f->constantValue) {
+            /*if(IS_STATIC(f->flags) && f->constantValue) {
                 //printf("Const: %s:", string_to_ascii(cls->name));
                 //printf("%s = ", string_to_ascii(f->name));
                 switch(STRCHARS(f->signature)[0]) {
@@ -180,7 +192,7 @@ void link_class(VM *vm, Object *clsObject) {
                     case 'D': *((JDOUBLE*)(cls->global + f->offset)) = f->constantValue->D; break;
                     default: printf("!!!!!! Unimplemented field constant type: %c\n", STRCHARS(f->signature)[0]);
                 }
-            }
+            }*/
         }
     }
     

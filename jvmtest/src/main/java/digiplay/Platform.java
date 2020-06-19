@@ -54,7 +54,7 @@ public class Platform {
         }
     }
     
-    private static void step() {
+    private native static void step();/* {
         long now = System.currentTimeMillis();
         gameTime = (int)(now - gameStartTime);
         int delta = (int)(now - lastTime);
@@ -67,7 +67,7 @@ public class Platform {
             e.printStackTrace();
         }
         System.gc();
-    }
+    }*/
  
     public static native byte[] readAsset(String path);
     

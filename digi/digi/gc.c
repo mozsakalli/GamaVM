@@ -59,7 +59,7 @@ void gc_mark_class(VM *vm, Class *cls) {
         if(IS_STATIC(f->flags)) {
             char type = STRCHARS(f->signature)[0];
             if(type == 'L' || type == '[') {
-                Object *field_value = *((Object**)(cls->global + f->offset));
+                Object *field_value = *((Object**)(f->offset));
                 if(field_value) {
                     gc_queue_object(vm, field_value);
                 }

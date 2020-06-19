@@ -1628,8 +1628,8 @@ OP_GETFIELD:        //13
     //printf("GetField: %s",string2c(field->declaringClass->name));
     //printf(":%s\n", string2c(field->name));
 
-    op->index = FLD(field,offset);
-    op->var.O = (Object*)(CLS(FLD(field,declaringClass),global) + op->index); //static access
+    op->index = (int)FLD(field,offset);
+    op->var.O = (Object*)FLD(field,offset); //(CLS(FLD(field,declaringClass),global) + op->index); //static access
     switch(op->type) {
         case 'B': op->handler = handlers[op->bc == op_getstatic ? OP_GETSTATIC_B : OP_GETFIELD_B]; break;
         case 'Z': op->handler = handlers[op->bc == op_getstatic ? OP_GETSTATIC_Z : OP_GETFIELD_Z]; break;
@@ -1649,8 +1649,8 @@ OP_GETFIELD:        //13
 OP_PUTFIELD: {        //14
     field = resolve_field_by_index(vm, method->declaringClass, op->index);
     if(vm->exception) goto __EXCEPTION;
-    op->index = FLD(field, offset);
-    op->var.O = (Object*)(CLS(FLD(field,declaringClass),global) + op->index); //static access
+    op->index = (int)FLD(field, offset);
+    op->var.O = (Object*)FLD(field,offset); //(Object*)(CLS(FLD(field,declaringClass),global) + op->index); //static access
     switch(op->type) {
         case 'B': op->handler = handlers[op->bc == op_putstatic ? OP_PUTSTATIC_B : OP_PUTFIELD_B]; break;
         case 'Z': op->handler = handlers[op->bc == op_putstatic ? OP_PUTSTATIC_Z : OP_PUTFIELD_Z]; break;

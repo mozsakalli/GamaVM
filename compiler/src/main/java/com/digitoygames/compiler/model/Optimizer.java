@@ -16,10 +16,12 @@
 
 package com.digitoygames.compiler.model;
 
+import com.digitoygames.compiler.model.op.Binary;
 import com.digitoygames.compiler.model.op.Cmp;
 import com.digitoygames.compiler.model.op.If;
 import com.digitoygames.compiler.model.op.Invoke;
 import com.digitoygames.compiler.model.op.Op;
+import com.digitoygames.compiler.model.op.StoreLocal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,6 +34,17 @@ public class Optimizer {
     public static void optimize(Method method, BasicBlock bb) {
         while(optimizeCmp(bb)){}
         optimizeFieldMethod(bb);
+        optimizeBinaryLocalStore(bb);
+    }
+    
+    static void optimizeBinaryLocalStore(BasicBlock bb) {
+        for(int i=0; i<bb.ops.size()-1; i++) {
+            if((bb.ops.get(i) instanceof Binary) && (bb.ops.get(i+1) instanceof StoreLocal)) {
+                ((Binary)bb.ops.get(i)).targetLocal = ((StoreLocal)bb.ops.get(i+1)).index;
+                bb.ops.remove(i+1);
+                i--;
+            }
+        }
     }
     
     static void optimizeFieldMethod(BasicBlock bb) {
@@ -84,13 +97,6 @@ public class Optimizer {
                             bb.ops.remove(i);
                             return true;
                     }
-                    /*
-                    if(f.operand.equals("==") && f.right.equals("0")) {
-                        //equality
-                        f.right = null;
-                        bb.ops.remove(i);
-                        return true;
-                    }*/
                 }
             }
         }

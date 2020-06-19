@@ -19,12 +19,13 @@ public class GetField extends Field {
         */
         generate(method);
         if(isStatic) {
-        code += tmp.value+" = ";
-            code +=  "*(("+ Util.getPlatformType(type)+"*)(CLS("+ref+"->declaringClass,global) + "+ref+"->offset))";
-            //code += ref+"->declaringClass->globals["+ref+"->offset]."+type;
+            code += tmp.value+" = ";
+            code +=  "*(("+ Util.getPlatformType(type)+"*)("+ref+"->offset))";
+            //code +=  "*(("+ Util.getPlatformType(type)+"*)(CLS("+ref+"->declaringClass,global) + "+ref+"->offset))";
         } else {
             StackValue base = stack.pop();
-            code += String.format("if(!%s) { frame->pc = %d; throw_null(vm); goto __EXCEPTION; }\n", base.value, this.pc);
+            if(!base.value.equals("L0")) //dont null check this
+                code += String.format("if(!%s) { frame->pc = %d; throw_null(vm); goto __EXCEPTION; }\n", base.value, this.pc);
             code += tmp.value+" = ";
             code += "*FIELD_PTR_"+type+"("+base.value+","+ref+"->offset)";
             //code += "((char*)"+base.value+" + "+ref+"->offset.I) = "+base.value;

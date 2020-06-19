@@ -223,12 +223,15 @@ void mat3d_perspective(Mat3D *m, float near, float far, float fovy, float aspect
 }
 
 void mat3d_compose(Mat3D *m, float _x, float _y, float _z, float _rx, float _ry, float _rz, float _sx, float _sy, float _sz) {
-    float cx = cos(_rx / 180.0f * M_PI);
-    float cy = cos(_ry / 180.0f * M_PI);
-    float cz = cos(_rz / 180.0f * M_PI);
-    float sx = sin(_rx / 180.0f * M_PI);
-    float sy = sin(_ry / 180.0f * M_PI);
-    float sz = sin(_rz / 180.0f * M_PI);
+    float rxd = _rx / 180.0f * M_PI;
+    float ryd = _ry / 180.0f * M_PI;
+    float rzd = _rz / 180.0f * M_PI;
+    float cx = fast_cos(rxd);
+    float cy = fast_cos(ryd);
+    float cz = fast_cos(rzd);
+    float sx = fast_sin(rxd);
+    float sy = fast_sin(ryd);
+    float sz = fast_sin(rzd);
     
     float *ptr = &m->vals[0];
     ptr[0] = cy * cz * _sx;

@@ -18,11 +18,8 @@ package com.digitoygames.compiler.model;
 
 import com.digitoygames.compiler.Util;
 
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  *

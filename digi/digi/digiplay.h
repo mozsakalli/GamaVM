@@ -66,15 +66,50 @@ inline static void mat2d_identity(Mat2D *m) {
     m->meshVersion = -1;
 }
 
+inline static double fast_sin(double x) {
+    int k;
+    double y;
+    double z;
+
+    z = x;
+    z *= 0.3183098861837907;
+    z += 6755399441055744.0;
+    k = *((int *) &z);
+    z = k;
+    z *= 3.1415926535897932;
+    x -= z;
+    y = x;
+    y *= x;
+    z = 0.0073524681968701;
+    z *= y;
+    z -= 0.1652891139701474;
+    z *= y;
+    z += 0.9996919862959676;
+    x *= z;
+    k &= 1;
+    k += k;
+    z = k;
+    z *= x;
+    x -= z;
+
+    return x;
+}
+#define fast_cos(r) fast_sin((r)+M_PI/2)
+
 inline static void mat2d_compose(Mat2D *m, float x, float y, float scaleX, float scaleY, float pivotX, float pivotY, int rotSkew, float rotation, float skewX, float skewY) {
     if(rotSkew) {
         //rotation = rotation / 180.0f * MathF.PI;
-        float tmp = (rotation + skewY) / 180.0f * M_PI;
-        m->_cx = cos(tmp); //cos((rotation + skewY)/180.0f * M_PI);
-        m->_sx = sin(tmp); //sin((rotation + skewY)/180.0f * M_PI);
-        tmp = (rotation - skewX) / 180.0f * M_PI;
-        m->_cy = -sin(tmp); //-sin((rotation - skewX)/180.0f * M_PI); // cos, added PI/2
-        m->_sy = cos(tmp); //cos((rotation - skewX)/180.0f * M_PI); // sin, added PI/2
+        double tmp = (rotation + skewY) / 180.0 * M_PI;
+        m->_cx = fast_cos(tmp); //cos(tmp); //cos((rotation + skewY)/180.0f * M_PI);
+        m->_sx = fast_sin(tmp); //sin((rotation + skewY)/180.0f * M_PI);
+        if(skewX != 0 || skewY != 0) {
+            tmp = (rotation - skewX) / 180.0 * M_PI;
+            m->_cy = -fast_sin(tmp); //-sin((rotation - skewX)/180.0f * M_PI); // cos, added PI/2
+            m->_sy = fast_cos(tmp); //cos(tmp); //cos((rotation - skewX)/180.0f * M_PI); // sin, added PI/2
+        } else {
+            m->_cy = -m->_sx;
+            m->_sy = m->_cx;
+        }
     }
     
     float a = m->_cx * scaleX;
