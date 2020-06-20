@@ -2030,7 +2030,7 @@ OP_INVOKEVIRTUAL:
         SAVE_PC;
         Object *object = stack[call_sp].O;
         NULL_CHECK(object);
-        Class *cls = object->cls->instance;
+        VMClass *cls = object->cls->instance;
         if(m->vTableIndex >= cls->vTableSize)
             printf("VTABLW!!!!!!!!!!!!\n");
         //printf(" ---- %s\n", string2c(CLS_FIELD(object->cls,name)));

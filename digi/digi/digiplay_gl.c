@@ -34,15 +34,15 @@ typedef struct __attribute__ ((packed)) GLTexture {
 } GLTextrue;
 
 GLShader *glCurrentShader = NULL;
-void *glCurrentIndexBuffer = NULL;
+//void *glCurrentIndexBuffer = NULL;
 void *glCurrentVertexBuffer = NULL;
-void *glCurrentTexture = NULL;
-int glCurrentTextureFlags = -1;
+//void *glCurrentTexture = NULL;
+//int glCurrentTextureFlags = -1;
 
 void gl_use_shader(GLShader *shader) {
     glUseProgram(shader->handle);
     glCurrentShader = shader;
-    glCurrentIndexBuffer = glCurrentVertexBuffer = NULL;
+    /*glCurrentIndexBuffer = */glCurrentVertexBuffer = NULL;
 }
 
 int gl_create_shader(const char *code, int isVertexShader) {
@@ -174,7 +174,7 @@ void Java_digiplay_GLQuadBatch_create(VM* vm, Method *method, VAR *args) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, b->ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, b->capacity * 6 * sizeof(short), &ibuf[0], GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    
+
     RETURN_J(b);
 }
 
@@ -218,7 +218,7 @@ void Java_digiplay_GLQuadBatch_begin(VM* vm, Method *method, VAR *args) {
     mat3d_identity(&b->camera);
     b->projectionDirty = 1;
     glCurrentShader = NULL;
-    glCurrentIndexBuffer = glCurrentVertexBuffer = NULL;
+    /*glCurrentIndexBuffer = */glCurrentVertexBuffer = NULL;
     
     if(args[3].I) {
         unsigned int c = args[4].I;
@@ -246,32 +246,36 @@ void quad_batch_flush(GLQuadBatch *b) {
 
         if(b->textureDirty) {
             b->textureDirty = 0;
-            if(glCurrentTexture != b->texture) {
+            //if(glCurrentTexture != b->texture) {
                 glActiveTexture(GL_TEXTURE0);
                 glUniform1i(glCurrentShader->utexture, 0);
-                glBindTexture(GL_TEXTURE_2D, b->texture ? b->texture->handle : 0);
-                glCurrentTexture = b->texture;
+                glBindTexture(GL_TEXTURE_2D, b->texture ? (GLint)b->texture->handle : 0);
+                //glCurrentTexture = b->texture;
                 b->textureFlagsDirty = 1;
-                glCurrentTextureFlags = -1;
-            }
+                //glCurrentTextureFlags = -1;
+            //}
+        }
+        int err = glGetError();
+        if(err) {
+            printf("GL2: %d\n", err);
         }
 
         if(b->textureFlagsDirty) {
             b->textureFlagsDirty = 0;
-            if(glCurrentTextureFlags != b->textureFlags) {
+            //if(glCurrentTextureFlags != b->textureFlags) {
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-                glCurrentTextureFlags = b->textureFlags;
-            }
+                //glCurrentTextureFlags = b->textureFlags;
+            //}
         }
 
-        if(b->ibo != (int)glCurrentIndexBuffer) {
+        //if(b->ibo != (int)glCurrentIndexBuffer) {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, b->ibo);
-            glCurrentIndexBuffer = (void*)b->ibo;
-        }
-        
+            //glCurrentIndexBuffer = (void*)b->ibo;
+        //}
+
         if(glCurrentVertexBuffer != b->vertices) {
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             unsigned char *base = (unsigned char*)&b->vertices[0];
@@ -286,6 +290,7 @@ void quad_batch_flush(GLQuadBatch *b) {
             
             glCurrentVertexBuffer = b->vertices;
         }
+
         glDrawElements(GL_TRIANGLES, b->triangleCount, GL_UNSIGNED_SHORT, NULL);
     }
     b->triangleCount = b->vertPtr = 0;

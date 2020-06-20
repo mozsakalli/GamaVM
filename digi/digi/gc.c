@@ -50,7 +50,7 @@ void gc_queue_object(VM *vm, Object *o) {
     vm->markQueue.S++;
 }
 
-void gc_mark_class(VM *vm, Class *cls) {
+void gc_mark_class(VM *vm, VMClass *cls) {
     if(!cls || !cls->fields || cls->primitiveSize || cls->elementClass || !cls->global) return;
     int len = cls->fields->length;
     for(int i=0; i<len; i++) {
@@ -72,7 +72,7 @@ void gc_mark_classes(VM *vm) {
     Object *current = vm->gcPtr;
     int count = 0;
     while(current && count++ < COUNT_PER_TICK) {
-        Class *cls = current->instance;
+        VMClass *cls = current->instance;
         if(current != vm->jlClass) {
             gc_mark_class(vm, cls);
         }
@@ -104,14 +104,14 @@ void gc_mark_queue(VM *vm) {
         vm->markQueue.R = (vm->markQueue.R + 1) % vm->markQueue.C;
         vm->markQueue.S--;
         
-        Class *cls = o->cls->instance;
+        VMClass *cls = o->cls->instance;
         if(cls->instanceOffsets) {
             for(int i=0; i<cls->instanceOffsetCount; i++) {
                 int off = cls->instanceOffsets[i];
                 Object *field_value = *FIELD_PTR_O(o, off);
                 if(field_value) gc_queue_object(vm, field_value);
             }
-        } else if(cls->elementClass && !((Class*)cls->elementClass->instance)->primitiveSize) {
+        } else if(cls->elementClass && !((VMClass*)cls->elementClass->instance)->primitiveSize) {
             int len = 0;
             for(int i=0; i<len; i++) {
                 Object *array_item = ARRAY_DATA_O(o)[i];
@@ -137,7 +137,7 @@ void gc_sweep(VM *vm) {
         while(blk_ndx < HEAP_OBJECTS_PER_BLOCK && count++ < COUNT_PER_TICK * 3) {
             Object *o = &blk->objects[blk_ndx];
             if(!o->gc.free && o->gc.version != version) {
-                Class *cls = o->cls->instance;
+                VMClass *cls = o->cls->instance;
                 if(cls && cls->finalizer) {
                     VAR args[1] = { {.O = o} };
                     ((VM_CALL)(MTH(cls->finalizer, entry)))(vm, cls->finalizer, &args[0]);

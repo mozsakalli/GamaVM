@@ -29,7 +29,6 @@ id<MTLTexture> MetalDepth = nil;
 id<MTLTexture> MetalStencil = nil;
 MTLRenderPassDescriptor *MetalFramebuffer;
 
-Object *digiplayPlatform;
 Object *digiplayPlatformStepMethod;
 VM *gamaVM;
 
@@ -130,8 +129,8 @@ VM *gamaVM;
     }
     
     if(gamaVM && digiplayPlatformStepMethod) {
-        VAR args[1] = { {.O = digiplayPlatform} };
-        CALLVM_V(gamaVM, digiplayPlatformStepMethod, &args[0]);
+        //VAR args[1] = { {.O = digiplayPlatform} };
+        CALLVM_V(gamaVM, digiplayPlatformStepMethod, NULL);//&args[0]);
     }
     if(!MetalDevice)
         [self present];
@@ -325,14 +324,14 @@ VM *gamaVM;
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     if(gamaVM) {
         //Object *mth = resolve_method(gamaVM, "digiplay/Platform", "pause", "()V", 0);
-        VAR args[1] = { {.O = digiplayPlatform}};
+        //VAR args[1] = { {.O = digiplayPlatform}};
         //if(mth) call_void_method(gamaVM, mth, &args[0]);
     }
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     if(gamaVM) {
         //Object *mth = resolve_method(gamaVM, "digiplay/Platform", "resume", "()V", 0);
-        VAR args[1] = { {.O = digiplayPlatform}};
+        //VAR args[1] = { {.O = digiplayPlatform}};
         //if(mth) call_void_method(gamaVM, mth, &args[0]);
     }
  }
@@ -344,6 +343,37 @@ int main(int argc, char * argv[]) {
     }
 }
 
+@interface digiplay_Platform : NSObject
+@end
+
+@implementation digiplay_Platform
+
++(NSData*) readAsset:(NSString*) path {
+    if(!path) return nil;
+    NSString* ret = [[NSBundle mainBundle] resourcePath];
+    ret = [[ret stringByAppendingString:@"/assets/"] stringByAppendingString: path];
+    NSData* data = [[NSData alloc] initWithContentsOfFile:ret];
+    //if(data) [data retain];
+    return data;
+}
+
++(void) run {
+    digiplayPlatformStepMethod = resolve_method(gamaVM, L"digiplay/Platform",17, L"step",4, L"()V", 3);
+    
+    CGRect bounds = [[UIScreen mainScreen] bounds];
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    
+    Object *resize_method = resolve_method(gamaVM, L"digiplay/Platform",17, L"resize",6, L"(II)V", 5);
+    VAR vargs[7] = {
+        //{ .O = digiplayPlatform },
+        { .I = (JINT)(bounds.size.width * scale) },
+        { .I = (JINT)(bounds.size.height * scale) },
+    };
+    CALLVM_V(gamaVM, resize_method, &vargs[0]);
+}
+@end
+
+/*
 void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args) {
     digiplayPlatform = args[0].O;
     digiplayPlatformStepMethod = resolve_method(vm, L"digiplay/Platform",17, L"step",4, L"()V", 3);
@@ -353,10 +383,10 @@ void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args) {
     
     Object *resize_method = resolve_method(vm, L"digiplay/Platform",17, L"resize",6, L"(II)V", 5);
     VAR vargs[7] = {
-        { .O = digiplayPlatform },
+        //{ .O = digiplayPlatform },
         { .I = (JINT)(bounds.size.width * scale) },
         { .I = (JINT)(bounds.size.height * scale) },
     };
     CALLVM_V(vm, resize_method, &vargs[0]);
 }
-
+*/

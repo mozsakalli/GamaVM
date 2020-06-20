@@ -14,8 +14,8 @@ VM* vm_init() {
     
     gamaVM->jlClass = vm_alloc(sizeof(Object));
     gamaVM->jlClass->gc.atomic = 1;
-    Class *cls = gamaVM->jlClass->instance = vm_alloc(sizeof(Class));
-    cls->instanceSize = sizeof(Class);
+    VMClass *cls = gamaVM->jlClass->instance = vm_alloc(sizeof(VMClass));
+    cls->instanceSize = sizeof(VMClass);
     
     gamaVM->jlObject = alloc_class(gamaVM);
     
@@ -84,7 +84,7 @@ void vm_destroy(VM *vm) {
 #define F(m) if(m) free(m)
     while(vm->classes) {
         Object *clso = vm->classes;
-        Class *cls = (Class*)clso->instance;
+        VMClass *cls = (VMClass*)clso->instance;
         F(cls->allParents);
         F(cls->cp);
         F(cls->global);

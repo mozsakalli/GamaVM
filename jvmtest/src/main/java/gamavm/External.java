@@ -11,7 +11,8 @@ package gamavm;
  */
 public @interface External {
     
-    public String name() default "";
+    public String jni() default "";
+    public String objc() default "";
     public boolean isField() default false;
     
 }

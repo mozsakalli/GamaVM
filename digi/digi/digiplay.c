@@ -389,7 +389,7 @@ void Java_digiplay_Sprite2D_drawChildren(VM *vm, Object *method, VAR *args) {
     while(ptr) {
         Sprite2D *child = ptr->instance;
         if((child->flags & 1) && child->worldAlpha > 0) {
-            Class *cls = ptr->cls->instance;
+            VMClass *cls = ptr->cls->instance;
             callArgs[0].O = ptr;
             CALLVM_V(vm, cls->vtable[drawMethodIndex], &callArgs[0]);
             if(child->firstChild)
@@ -400,11 +400,11 @@ void Java_digiplay_Sprite2D_drawChildren(VM *vm, Object *method, VAR *args) {
 }
 
 
-extern void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args);
+//extern void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args);
 extern void Java_digiplay_Net_http(VM *vm, Object *method, VAR *args);
 
 NativeMethodInfo digiplay_native_methods[] = {
-    {"digiplay/Platform:run:()V", &Java_digiplay_Platform_run},
+    //{"digiplay/Platform:run:()V", &Java_digiplay_Platform_run},
     
     {"digiplay/Mat2D:create:()J", &Java_digiplay_Mat2D_create},
     {"digiplay/Mat2D:compose:(FFFFFFZFFF)V", &Java_digiplay_Mat2D_compose},

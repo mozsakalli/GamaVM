@@ -271,7 +271,11 @@ char *parse_annotations(VM *vm, char *data, CPItem *cp, int *externalFlags, Obje
                 if(STRLEN(valName) == 7 && compare_chars(STRCHARS(valName),L"isField",7)) {
                     *externalFlags |= cp[valIndex].value.I ? 2 : 0;
                 } else
-                if(STRLEN(valName) == 4 && compare_chars(STRCHARS(valName),L"name",4)) {
+#ifdef __APPLE__
+                if(STRLEN(valName) == 4 && compare_chars(STRCHARS(valName),L"objc",4)) {
+#else
+                if(STRLEN(valName) == 3 && compare_chars(STRCHARS(valName),L"jni",3)) {
+#endif
                     *exName = cp[valIndex].value.O;
                     if(cp[valIndex].value.O && STRLEN(cp[valIndex].value.O) == 0) *exName = NULL;
                 }
@@ -316,7 +320,7 @@ int parse_class(VM *vm, char *data, Object *clsObject) {
     READ_U2(data); data += 2; //major
     READ_U2(data); data += 2; //minor
 
-    Class *cls = (Class*)clsObject->instance;
+    VMClass *cls = (VMClass*)clsObject->instance;
     CPItem *cp = NULL;
     data = parse_constant_pool(vm, data, &cp);
     cls->cp = cp;

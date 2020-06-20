@@ -26,7 +26,7 @@ void java_lang_Object_clone(VM *vm, Object *method, VAR *args) {
     Object *o = args[0].O;
     
     if(o) {
-        Class *cls = o->cls->instance;
+        VMClass *cls = o->cls->instance;
         if(cls->elementClass) {
             result = alloc_array(vm, o->cls, o->length, 0);
             int size = CLS(cls->elementClass,primitiveSize);
@@ -66,8 +66,8 @@ void java_lang_System_arraycopy(VM *vm, Object *method, VAR *args) {
         return;
     }
 
-    Class *srccls = src->cls->instance;
-    Class *dstcls = dst->cls->instance;
+    VMClass *srccls = src->cls->instance;
+    VMClass *dstcls = dst->cls->instance;
     if(!srccls->elementClass || !dstcls->elementClass) {
         //both must be array
         return;

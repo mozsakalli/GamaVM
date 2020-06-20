@@ -39,7 +39,7 @@ public class Platform {
         gameStartTime = System.currentTimeMillis();
         run();
     }
-    private native static void run();
+    @External private native static void run();
     
     private static void resize(int width, int height) {
         try {
@@ -67,7 +67,8 @@ public class Platform {
         }
         System.gc();
     }
- 
+
+    @External
     public static native byte[] readAsset(String path);
     
 }

@@ -89,7 +89,7 @@ Object *find_class(VM *vm, JCHAR *name, JINT len) {
 
 extern void vm_link_external_class(VM *vm, Object *cls);
 void link_class(VM *vm, Object *clsObject) {
-    Class *cls = clsObject->instance;
+    VMClass *cls = clsObject->instance;
     if(cls->linked) return;
 
     //GLOG("linking: %p -> %s\n", clsObject, string_to_ascii(cls->name));
@@ -138,7 +138,7 @@ void link_class(VM *vm, Object *clsObject) {
     
 
     if(clsObject == vm->jlClass) {
-        GLOG("!!!!cls: %d == %d\n", cls->instanceSize, sizeof(Class));
+        GLOG("!!!!cls: %d == %d\n", cls->instanceSize, sizeof(VMClass));
     } else if(clsObject == vm->jlMethod) {
         GLOG("!!!!mth: %d == %d\n", cls->instanceSize, sizeof(Method));
     } else if(clsObject == vm->jlField) {
@@ -481,7 +481,7 @@ void build_all_parents(VM *vm, Object *cls) {
         c = CLS(c,superClass);
     }
     
-    Class *clsf = cls->instance;
+    VMClass *clsf = cls->instance;
     clsf->allParents = (Object**)malloc(sizeof(Object*) * count);
     memcpy(clsf->allParents, table, sizeof(Object*) * count);
     clsf->allParentCount = count;
@@ -490,7 +490,7 @@ void build_all_parents(VM *vm, Object *cls) {
 JINT is_class_child_of(VM *vm, Object *json, Object *jof) {
     if(!json || !jof) return 0;
     if(json == jof || jof == vm->jlObject) return 1;
-    Class *son = json->instance;
+    VMClass *son = json->instance;
     if(!son->allParents) build_all_parents(vm, json);
     for(int i=0; i<son->allParentCount; i++) {
         if(son->allParents[i] == jof) {

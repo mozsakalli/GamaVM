@@ -200,7 +200,7 @@ typedef struct CPItem {
     JINT type;
 } CPItem;
 
-#define CLS(o,f) ((Class*)o->instance)->f
+#define CLS(o,f) ((VMClass*)o->instance)->f
 #define CLS_PRIM(o) CLS(o,primitiveSize)
 typedef struct __attribute__ ((packed)) Class {
     Object *name;
@@ -234,9 +234,7 @@ typedef struct __attribute__ ((packed)) Class {
     int externalFlags;
     Object *externalName;
     void *externalData;
-} Class;
-
-typedef Class VMClass;
+} VMClass;
 
 #define STR(o,f) ((String*)o->instance)->f
 #define STRLEN(o) (STR(o,length))
