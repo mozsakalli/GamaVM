@@ -136,7 +136,7 @@ void link_class(VM *vm, Object *clsObject) {
         }
     }
     
-
+    /*
     if(clsObject == vm->jlClass) {
         GLOG("!!!!cls: %d == %d\n", cls->instanceSize, sizeof(VMClass));
     } else if(clsObject == vm->jlMethod) {
@@ -146,6 +146,7 @@ void link_class(VM *vm, Object *clsObject) {
     } else if(clsObject == vm->jlString) {
         GLOG("!!!!str: %d == %d\n", cls->instanceSize, sizeof(String));
     }
+    */
     
     if(cls->instanceOffsetCount > 0) {
         cls->instanceOffsets = malloc(sizeof(int) * cls->instanceOffsetCount);
@@ -160,7 +161,11 @@ void link_class(VM *vm, Object *clsObject) {
                 f->offset = cls->global + (int)f->offset;
                 if(f->constantValue) {
                     switch(STRCHARS(f->signature)[0]) {
-                        case 'I':  *((JINT*)f->offset) = f->constantValue->I; break;
+                        case 'B': *((JBYTE*)f->offset) = f->constantValue->I; break;
+                        case 'Z': *((JBOOL*)f->offset) = f->constantValue->I; break;
+                        case 'C': *((JCHAR*)f->offset) = f->constantValue->I; break;
+                        case 'S': *((JSHORT*)f->offset) = f->constantValue->I; break;
+                        case 'I': *((JINT*)f->offset) = f->constantValue->I; break;
                         case 'F': *((JFLOAT*)f->offset) = f->constantValue->F; break;
                         case 'J': *((JLONG*)f->offset) = f->constantValue->J; break;
                         case 'D': *((JDOUBLE*)f->offset) = f->constantValue->D; break;
@@ -323,7 +328,7 @@ Object *resolve_class(VM *vm, JCHAR *name, JINT len, int link, Object *target) {
         return get_arrayclass_of(vm, element);
     }
     
-    GLOG("load: %s\n", jchar_to_ascii(name, len));
+    //GLOG("load: %s\n", jchar_to_ascii(name, len));
     void *class_raw = NULL;
     int nofree = 0;
     class_raw = read_class_file(name, len);

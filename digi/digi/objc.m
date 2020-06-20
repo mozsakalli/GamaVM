@@ -135,6 +135,7 @@ void vm_invoke_objc(VM *vm, Object *method, VAR *args) {
         [inv getReturnValue:buffer];
     }
     switch(mi->returnType) {
+        case 'V': break;
         case 'I': ret->I = *(int*)buffer; free(buffer); break;
         case JNIARRAY_B: {
             NSData *x = (__bridge id)*((void **)buffer);
@@ -144,6 +145,9 @@ void vm_invoke_objc(VM *vm, Object *method, VAR *args) {
                 [x release];
             } else ret->O = nil;
         } break;
+            
+        default:
+            printf("!!!!!!!!!!!!! Unimplemented Objc Type\n");
     }
     
     

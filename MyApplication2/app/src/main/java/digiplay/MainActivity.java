@@ -88,9 +88,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public static void platformRun() {
+    /*public static void platformRun() {
         MainActivity.I.start();
-    }
+    }*/
 
     public static native void gamaVMMain();
     public static native void platformResize(int width, int height);

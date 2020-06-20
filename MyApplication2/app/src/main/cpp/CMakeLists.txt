@@ -5,11 +5,11 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 #, --no-warn-shared-textrel
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wall -v -Wl,--no-fatal-warnings")
+set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wall -v -Wl,--no-fatal-warnings")
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fshort-wchar")
 set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fshort-wchar")
-set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -DJDWP_ENABLED")
-set (CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -fshort-wchar -DJDWP_ENABLED")
+set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast")
+set (CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Ofast")
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -41,7 +41,6 @@ add_library( # Sets the name of the library.
         /Users/mustafa/Work/GamaVM/digi/digi/android_net.cpp
         /Users/mustafa/Work/GamaVM/digi/digi/jdwp.cpp
         /Users/mustafa/Work/GamaVM/digi/digi/jni.cpp
-        /Users/mustafa/Work/GamaVM/digi/digi/gamaot.c
         )
 
 # Searches for a specified prebuilt library and stores the path as a

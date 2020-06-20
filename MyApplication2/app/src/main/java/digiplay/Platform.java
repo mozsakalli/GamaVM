@@ -23,4 +23,8 @@ public class Platform {
         return null;
     }
 
+    public static void run() {
+        MainActivity.I.start();
+    }
+
 }

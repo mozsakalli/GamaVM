@@ -92,8 +92,8 @@ extern "C" void *read_class_file(JCHAR *name, int len) {
     return NULL;
 }
 
-Object *digiplayPlatformStepMethod;
-
+Object *digiplayPlatformStepMethod = NULL;
+/*
 extern "C" void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args) {
     digiplayPlatformStepMethod = resolve_method(vm, (JCHAR*)L"digiplay/Platform",17, (JCHAR*)L"step",4, (JCHAR*)L"()V", 3);
     JNIEnv *ENV = getJNIEnv();
@@ -101,7 +101,7 @@ extern "C" void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args) {
     jmethodID mth = ENV->GetStaticMethodID(cls, "platformRun", "()V");
     ENV->CallStaticVoidMethod(cls, mth);
 }
-
+*/
 extern "C" void java_lang_System_SystemOutStream_printImpl(VM *vm, Object *method, VAR *args) {
     if(!args[0].O) return;
     __android_log_print(ANDROID_LOG_INFO, "GamaVM", "%s", string_to_ascii(args[0].O));
@@ -114,6 +114,7 @@ Java_digiplay_MainActivity_gamaVMMain(
 
     gamaVM = vm_init();
     vm_main(gamaVM, (char*)"Main", (char*)"main", (char*)"()V");
+    digiplayPlatformStepMethod = resolve_method(gamaVM, (JCHAR*)L"digiplay/Platform",17, (JCHAR*)L"step",4, (JCHAR*)L"()V", 3);
 }
 
 extern "C" JNIEXPORT void JNICALL
