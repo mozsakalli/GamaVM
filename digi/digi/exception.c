@@ -141,6 +141,8 @@ void throw_unsatisfiedlink(VM *vm, Object *method) {
 
         VAR args[2] = {{ .O = exp }, { .O = alloc_string_ascii(vm, tmp, 0) }};
         CALLVM_V(vm, mth, &args[0]);
+
+        GLOG("%s", tmp);
     }
     
     throw_exception(vm, exp);

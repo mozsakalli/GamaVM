@@ -69,9 +69,10 @@ void gama_to_jni(VM *vm, JNIEnv *env, char type, Object *cls, VAR *a, jvalue *j)
         case 'J': j->j = a->J; break;
         case 'D': j->d = a->D; break;
         case 'L': {
+            if(!a->O) j->l = 0;
+            else
             if(cls == vm->jlString) {
-                if(a->O)
-                    j->l = env->NewString(STRCHARS(a->O), STRLEN(a->O));
+                j->l = env->NewString(STRCHARS(a->O), STRLEN(a->O));
             } else {
 
             }
@@ -259,21 +260,24 @@ extern "C" void vm_link_external_class(VM *vm, Object *clsObject) {
     if(cls->methods) {
         for(int i=0; i<cls->methods->length; i++) {
             Method *m = (Method*)ARRAY_DATA_O(cls->methods)[i]->instance;
-            snprintf(namechars,127, "%s", string_to_ascii(m->externalName ? m->externalName : m->name));
-            snprintf(signchars, 127, "%s", string_to_ascii(m->signature));
-            if(m->externalFlags & 2) {
-                jfieldID jf = IS_STATIC(m->flags) ? env->GetStaticFieldID(jcls, namechars, signchars) : env->GetFieldID(jcls, namechars, signchars);
-                env->ExceptionClear();
-                if (jf) {
-                    m->externalData = jf;
-                    m->entry = (void *) &jni_invoke_resolve;
-                }
-            } else {
-                jmethodID jm = IS_STATIC(m->flags) ? env->GetStaticMethodID(jcls, namechars,signchars) : env->GetMethodID(jcls, namechars, signchars);
-                env->ExceptionClear();
-                if (jm) {
-                    m->externalData = jm;
-                    m->entry = (void *) &jni_invoke_resolve;
+            if(m->externalFlags) {
+                snprintf(namechars,127, "%s", string_to_ascii(m->externalName ? m->externalName : m->name));
+                snprintf(signchars, 127, "%s", string_to_ascii(m->signature));
+                if(m->externalFlags & 2) {
+                    jfieldID jf = IS_STATIC(m->flags) ? env->GetStaticFieldID(jcls, namechars, signchars) : env->GetFieldID(jcls, namechars, signchars);
+                    env->ExceptionClear();
+                    if (jf) {
+                        m->externalData = jf;
+                        m->entry = (void *) &jni_invoke_resolve;
+                    }
+                } else {
+                    jmethodID jm = IS_STATIC(m->flags) ? env->GetStaticMethodID(jcls, namechars,signchars) : env->GetMethodID(jcls, namechars, signchars);
+                    env->ExceptionClear();
+                    if (jm) {
+                        m->externalData = jm;
+                        m->entry = (void *) &jni_invoke_resolve;
+                        GLOG("jni: %s:%s", namechars, signchars);
+                    }
                 }
             }
         }

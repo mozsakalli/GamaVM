@@ -16,18 +16,23 @@
 
 package digiplay;
 
+import gamavm.External;
+import gamavm.VM;
+
 /**
  *
  * @author mustafa
  */
 public class Net {
-    
+    /*
     public interface HttpListener {
         public void onHttpSuccess(byte[] bytes);
         public void onHttpFail();
     }
     public native static void http(String url, String params, HttpListener callback);
+    */
     
+    @External
     public static class Http extends ByteArrayCompletable {
         public String url;
         public String postData;
@@ -46,7 +51,10 @@ public class Net {
             return this;
         }
         
-        public native void start();
+        public void start() {
+            start(VM.getAddress(this), url, postData);
+        }
         
+        @External private static native void start(long handle, String url, String postData);
     }
 }

@@ -20,6 +20,15 @@ void gamavm_VM_getClass(VM *vm, Object *method, VAR *args) {
 void gamavm_VM_getAddress(VM *vm, Object *method, VAR *args) {
     vm->frames[vm->FP].ret.J = (JLONG)args[0].O;
 }
+void gamavm_VM_wrapBytes(VM *vm, Object *method, VAR *args) {
+    Object *arr = NULL;
+    if(args[0].J && args[1].I >= 0) {
+        arr = alloc_object(vm, get_arrayclass_of(vm, vm->primClasses[PRIM_B]), 0);
+        arr->length = args[1].I;
+        arr->instance = (void*)args[0].J;
+    }
+    vm->frames[vm->FP].ret.O = arr;
+}
 
 void java_lang_Object_clone(VM *vm, Object *method, VAR *args) {
     Object *result = NULL;
@@ -267,6 +276,7 @@ extern void java_lang_System_SystemOutStream_printImpl(VM *vm, Object *method, V
 NativeMethodInfo vm_native_methods[] = {
     {"gamavm/VM:getClass:(Ljava/lang/Object;)Ljava/lang/Class;", &gamavm_VM_getClass},
     {"gamavm/VM:getAddress:(Ljava/lang/Object;)J", &gamavm_VM_getAddress},
+    {"gamavm/VM:wrapBytes:(JI)[B", &gamavm_VM_wrapBytes},
 
     {"java/lang/Object:clone:()Ljava/lang/Object;", &java_lang_Object_clone},
     

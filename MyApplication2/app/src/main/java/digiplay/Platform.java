@@ -27,4 +27,7 @@ public class Platform {
         MainActivity.I.start();
     }
 
+    public static void reload(byte[] bytes, int offset, int length) {
+        System.out.println(bytes);
+    }
 }

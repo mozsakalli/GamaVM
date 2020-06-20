@@ -1,12 +1,12 @@
 
-import digiplay.Action1;
-import digiplay.GLQuadBatch;
 import digiplay.Game;
 import digiplay.Image;
+import digiplay.Net;
 import digiplay.Platform;
 import digiplay.Point2D;
-import digiplay.Sprite2D;
 import digiplay.Stage2D;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 
 
 /*
@@ -82,80 +82,47 @@ public class MyGame implements Game {
 
     long fpsTimer;
     int fps;
+    long jarTimer;
+    long jarTime;
     
     @Override
     public void update() {
         Stage2D.I.update();
         long now = System.currentTimeMillis();
-        if(System.currentTimeMillis() - fpsTimer <= 1000) fps++; else {
+        if(now - fpsTimer <= 1000) fps++; else {
             System.out.println("FPS: "+fps);
             fps = 0;
-            fpsTimer = System.currentTimeMillis();
+            fpsTimer = now;
         }
         
-
+        if(now - jarTimer >= 3000) {
+            jarTimer = now;
+            Net.Http http = new Net.Http("http://192.168.1.39:7777/jar"+jarTime) {
+                @Override
+                public void onComplete() {
+                    if(this.bytes != null) {
+                        try {
+                            DataInputStream in = new DataInputStream(new ByteArrayInputStream(bytes));
+                            jarTime = in.readLong();
+                            if(in.available() > 0) {
+                                System.out.println("--- new jar "+jarTime+" / "+in.available());
+                                Platform.reload(bytes, 8, bytes.length - 8);
+                                return;
+                            }
+                        } catch(Throwable e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+            http.start();
+        }
     }
 
-    //Mat2D mat = new Mat2D();
-    //float speed = 1f;
-    //float x=0,y=0,dy=speed,r=0;
     @Override
     public void render() {
         Stage2D.I.render();
-        new GLQuadBatch(500);
-        /*
-        batch.begin(Digiplay.platform.screenWidth, Digiplay.platform.screenHeight, true, 0xFF300000);
-        //x+=0.02f;
-        //y+=0.5f;
-        mat.compose(480, 320, 1, 1, 25, 25, true, r, 0, 0);
-        r += speed;
-        //mat.identity();
-        batch.drawQuadMesh(q, mat, shader,0xFF0000FF, 1, 1);
-        batch.end();
-        
-        y += dy;
-        if(y >= 640) {
-            y = 640;
-            dy = -speed;
-        } else if(y <= 0) {
-            y = 0;
-            dy = speed;
-        }
-        
 
-        /*
-        batch.begin();
-        for(int i=0; i<items.size(); i++)
-            items.get(i).step(batch);
-        /*
-        int sw = Digiplay.graphics.getScreenWidth();
-        int sh = Digiplay.graphics.getScreenHeight();
-        for(int i=0; i<10; i++) {
-            float x = (float)(Math.random()*sw);
-            float y = (float)(Math.random()*sh);
-            float w = (float)(Math.random()*400);
-            float h = (float)(Math.random()*400);
-            //System.out.println(x+"x"+y+" - "+w+"x"+h);
-            batch.quad(x,y,w,h,
-                    0xffff0000);
-        }*/
-        //batch.flush();
-        /*
-        GL.clearColor(0, 1, 0, 1);
-        GL.viewport(0, 0, digiplay.Digiplay.graphics.getScreenWidth(), digiplay.Digiplay.graphics.getScreenHeight());
-        GL.clear(GL.COLOR_BUFFER_BIT);
-        GL.disable(GL.CULL_FACE);
-        GL.disable(GL.DEPTH_TEST);
-        shader.bind();
-        //GL.useProgram(program);
-        GL.enableVertexAttribArray(shader.attrPos);
-        GL.bindVertexBuffer(vbo);
-        GL.vertexAttribPointer(shader.attrPos, 3, GL.FLOAT, false, 12, 0);
-        GL.bindVertexBuffer(0);
-        shader.setProjection(projection);
-        //GL.uniformMatrix4f(uniProj, projection.raw, false);
-        GL.bindIndexBuffer(ibo);
-        GL.drawElements(GL.TRIANGLES, 3, 0);*/
     }
 
 }

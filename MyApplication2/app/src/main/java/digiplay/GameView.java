@@ -259,7 +259,7 @@ public class GameView extends GLSurfaceView implements GLSurfaceView.Renderer {
     public void onPause() {
         if(!mFirst) {
             //GameActivity.I.haxeOnPause();
-            System.out.println("onPause: "+Thread.currentThread().getId());
+            //System.out.println("onPause: "+Thread.currentThread().getId());
         }
         //Sound.onPause();
 
