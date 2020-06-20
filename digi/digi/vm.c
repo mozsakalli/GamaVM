@@ -81,7 +81,22 @@ void vm_main(VM *vm, char *className, char *methodName, char *signature) {
 }
 
 void vm_destroy(VM *vm) {
-#define F(m) if(m) free(m)
+#define F(m) if(m) free(m); m = NULL
+    //first finalize objects
+    HeapBlock *h = vm->heap;
+    while(h) {
+        for(int i=0; i<HEAP_OBJECTS_PER_BLOCK; i++) {
+            if(!h->objects[i].gc.free) {
+                VMClass *cls = h->objects[i].cls->instance;
+                if(cls && cls->finalizer) {
+                    VAR args[1] = {{.O = &h->objects[i]}};
+                    CALLVM_V(vm, cls->finalizer, &args[0]);
+                }
+                //F(h->objects[i].instance);
+            }
+        }
+        h = h->next;
+    }
     while(vm->classes) {
         Object *clso = vm->classes;
         VMClass *cls = (VMClass*)clso->instance;
@@ -113,6 +128,7 @@ void vm_destroy(VM *vm) {
                 F(mo);
             }
             F(cls->methods);
+            F(cls->externalData);
         }
         F(clso->instance);
         F(clso);
@@ -132,8 +148,9 @@ void vm_destroy(VM *vm) {
         HeapBlock *h = vm->heap;
         vm->heap = vm->heap->next;
         for(int i=0; i<HEAP_OBJECTS_PER_BLOCK; i++) {
-            if(!h->objects[i].gc.free)
+            if(!h->objects[i].gc.free) {
                 F(h->objects[i].instance);
+            }
         }
         F(h);
     }

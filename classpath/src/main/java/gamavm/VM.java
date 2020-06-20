@@ -38,8 +38,6 @@ public class VM {
     
     public static native int getArrayLength(Object array);
     
-    public static native void restart(byte[] jarFile);
-    
     public static native void gcProtect(Object o);
     public static native void gcUnProtect(Object o);
     
