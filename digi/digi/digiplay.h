@@ -171,6 +171,8 @@ typedef struct __attribute__ ((packed)) Sprite2D {
     Object *localMatrix;
     Object *worldMatrix;
     Object *name, *behaviours;
+    JINT visilbleState;
+    Object *onInit, *onShow;
 } Sprite2D;
 
 

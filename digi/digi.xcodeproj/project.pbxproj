@@ -22,6 +22,7 @@
 		45444644249165E400CCDAC1 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45444643249165E400CCDAC1 /* OpenGLES.framework */; };
 		454446462491707000CCDAC1 /* ios_net.m in Sources */ = {isa = PBXBuildFile; fileRef = 454446452491707000CCDAC1 /* ios_net.m */; };
 		4544464824917D4F00CCDAC1 /* invoke.c in Sources */ = {isa = PBXBuildFile; fileRef = 4544464724917D4E00CCDAC1 /* invoke.c */; };
+		4547016D249E06B300F788C1 /* objc.m in Sources */ = {isa = PBXBuildFile; fileRef = 4547016C249E06B300F788C1 /* objc.m */; };
 		456D45AE248EF1CC00E7C7BD /* ios_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 456D45AD248EF1CC00E7C7BD /* ios_main.m */; };
 		456D45B0248EF53A00E7C7BD /* digiplay.c in Sources */ = {isa = PBXBuildFile; fileRef = 456D45AF248EF53A00E7C7BD /* digiplay.c */; };
 		4595C88E248D6FD2008E4CAA /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 4595C88D248D6FD2008E4CAA /* assets */; };
@@ -50,6 +51,7 @@
 		45444643249165E400CCDAC1 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		454446452491707000CCDAC1 /* ios_net.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ios_net.m; sourceTree = "<group>"; };
 		4544464724917D4E00CCDAC1 /* invoke.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = invoke.c; sourceTree = "<group>"; };
+		4547016C249E06B300F788C1 /* objc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = objc.m; sourceTree = "<group>"; };
 		456D45AD248EF1CC00E7C7BD /* ios_main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ios_main.m; sourceTree = "<group>"; };
 		456D45AF248EF53A00E7C7BD /* digiplay.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = digiplay.c; sourceTree = "<group>"; };
 		4595C88D248D6FD2008E4CAA /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = digi/assets; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 				45407D67248E0EA5008462C5 /* vm_native.c */,
 				45E739B5248C4FB8004E55EB /* vm.c */,
 				45E739B4248C4FB8004E55EB /* vm.h */,
+				4547016C249E06B300F788C1 /* objc.m */,
 			);
 			path = digi;
 			sourceTree = "<group>";
@@ -214,6 +217,7 @@
 				45E739AE248C4F2A004E55EB /* main.m in Sources */,
 				4507300C248CE66B001379B2 /* class.c in Sources */,
 				4540FAB0248F666E00FBB78F /* digiplay_gl.c in Sources */,
+				4547016D249E06B300F788C1 /* objc.m in Sources */,
 				4595C891248D7314008E4CAA /* miniz.c in Sources */,
 				456D45AE248EF1CC00E7C7BD /* ios_main.m in Sources */,
 				45073014248D4D0B001379B2 /* exception.c in Sources */,
@@ -349,7 +353,6 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GY3YVBHBT9;
-				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = "";
 				INFOPLIST_FILE = digi/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (

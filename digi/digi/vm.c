@@ -41,8 +41,8 @@ VM* vm_init() {
         CLS(gamaVM->primClasses[i], name) = alloc_string_ascii(gamaVM, primitiveNames[i], 1);
         CLS(gamaVM->primClasses[i], primitiveSize) = primitiveSizes[i];
         CLS(gamaVM->primClasses[i], linked) = 1;
-        CLS(gamaVM->primClasses[i], next) = gamaVM->classes;
-        gamaVM->classes = gamaVM->primClasses[i];
+        //CLS(gamaVM->primClasses[i], next) = gamaVM->classes;
+        //gamaVM->classes = gamaVM->primClasses[i];
     }
     
     resolve_class(gamaVM, L"java/lang/Object", 16, 0, gamaVM->jlObject);
@@ -56,6 +56,8 @@ VM* vm_init() {
 }
 
 void vm_main(VM *vm, char *className, char *methodName, char *signature) {
+    jdwp_start(vm, "192.168.1.39", 10000);
+
     int clsLen;
     JCHAR *clName = char_to_jchar(className, &clsLen);
     int nameLen;
@@ -71,8 +73,7 @@ void vm_main(VM *vm, char *className, char *methodName, char *signature) {
         free(sign);
         return;
     }
-    jdwp_start(vm, "192.168.1.40", 8080);
-    
+
     CALLVM_V(vm, vm->mainMethod, NULL);
     free(clName);
     free(name);

@@ -8,12 +8,6 @@
 
 #include "vm.h"
 
-#ifdef __ANDROID__
-#include <android/log.h>
-#define GLOG(...) __android_log_print(ANDROID_LOG_ERROR, "GamaVM", __VA_ARGS__)
-#else
-#define GLOG(...) printf( __VA_ARGS__)
-#endif
 JINT get_prim_size(int chr) {
     switch(chr) {
         case 'B': return sizeof(JBYTE);
@@ -98,7 +92,7 @@ void link_class(VM *vm, Object *clsObject) {
     Class *cls = clsObject->instance;
     if(cls->linked) return;
 
-    GLOG("linking: %p -> %s\n", clsObject, string_to_ascii(cls->name));
+    //GLOG("linking: %p -> %s\n", clsObject, string_to_ascii(cls->name));
 
     cls->linked = 1;
     cls->instanceSize = 0;
@@ -293,10 +287,6 @@ void link_class(VM *vm, Object *clsObject) {
     
 }
 
-extern char sprite_data0[];
-extern char sprite_data1[];
-extern char sprite_data2[];
-extern char sprite_data3[];
 Object *resolve_class(VM *vm, JCHAR *name, JINT len, int link, Object *target) {
     //printf("resolve: %s\n", jchar_to_ascii(name, len));
     Object *cls = find_class(vm, name, len);
@@ -311,6 +301,19 @@ Object *resolve_class(VM *vm, JCHAR *name, JINT len, int link, Object *target) {
         if(name[1] == 'L') {
             element = resolve_class(vm, name+2, len-3, link, NULL);
         } else {
+            if(name[1] != '[') {
+                //primitive array
+                switch(name[1]) {
+                    case 'B': element = vm->primClasses[PRIM_B];break;
+                    case 'Z': element = vm->primClasses[PRIM_Z];break;
+                    case 'C': element = vm->primClasses[PRIM_C];break;
+                    case 'S': element = vm->primClasses[PRIM_S];break;
+                    case 'I': element = vm->primClasses[PRIM_I];break;
+                    case 'F': element = vm->primClasses[PRIM_F];break;
+                    case 'J': element = vm->primClasses[PRIM_J];break;
+                    case 'D': element = vm->primClasses[PRIM_D];break;
+                }
+            } else
             element = resolve_class(vm, name+1, len-1, link, NULL);
         }
         if(vm->exception) {
@@ -323,24 +326,7 @@ Object *resolve_class(VM *vm, JCHAR *name, JINT len, int link, Object *target) {
     GLOG("load: %s\n", jchar_to_ascii(name, len));
     void *class_raw = NULL;
     int nofree = 0;
-    /*if(!strcmp("digiplay/Sprite2D", jchar_to_ascii(name, len))) {
-        class_raw = &sprite_data0[0];
-        nofree=1;
-    }
-    else if(!strcmp("digiplay/Stage2D", jchar_to_ascii(name, len))) {
-        class_raw = &sprite_data1[0];
-        nofree=1;
-    }
-    else if(!strcmp("digiplay/Image", jchar_to_ascii(name, len))) {
-        class_raw = &sprite_data2[0];
-        nofree=1;
-    }
-    else if(!strcmp("digiplay/Platform", jchar_to_ascii(name, len))) {
-        class_raw = &sprite_data3[0];
-        nofree=1;
-    }
-
-    else */class_raw = read_class_file(name, len);
+    class_raw = read_class_file(name, len);
     if(!class_raw) {
         throw_classnotfound(vm, name, len);
         return NULL;
@@ -397,14 +383,16 @@ Object *find_method(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, in
 
 Object *resolve_method(VM *vm, JCHAR *clsName, int clslen, JCHAR *name, int nlen, JCHAR *signature, int slen) {
     Object *cls = resolve_class(vm, clsName, clslen, 1, NULL);
-    if(vm->exception) return NULL;
+    if(!cls || vm->exception) return NULL;
     Object *mth = find_method(vm, cls, name, nlen, signature, slen);
     if(mth) return mth;
     
+    throw_nosuchmethod(vm, clsName, clslen, name, nlen, signature, slen);
+    /*
     printf("NoSuchMethod: %s", jchar_to_ascii(clsName, clslen));
     printf(":%s", jchar_to_ascii(name, nlen));
     printf(":%s\n", jchar_to_ascii(signature, slen));
-    
+    */
     return NULL;
 }
 

@@ -288,7 +288,7 @@ char *parse_method(VM *vm, char *data, Object *m, CPItem *cp) {
     MTH(m,name) = cp[name].value.O;
     MTH(m,signature) = cp[signature].value.O;
     Method *mth = m->instance;
-
+    
     int ac = READ_U2(data); data += 2;
     for(int i=0; i<ac; i++) {
         int tmp = READ_U2(data); data += 2; //name

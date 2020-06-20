@@ -25,7 +25,7 @@ public class Stage2D extends Sprite2D {
     Point2D designSize;
     float scaleFactor;
     public final static GLQuadBatch QuadBatch = new GLQuadBatch(16384);
-    public final static GLShader2D DefaultShader = new GLShader2D("gl_FragColor = /*texture2D(texture, vUv.xy).xyzw * */vColor.xyzw;");
+    public final static GLShader2D DefaultShader = new GLShader2D("gl_FragColor = texture2D(texture, vUv.xy).xyzw * vColor.xyzw;");
     
     public void setup(Point2D size) {
         designSize = size;
@@ -99,6 +99,8 @@ public class Stage2D extends Sprite2D {
                 _invokeLaterCount = 0;
             }*/
 
+        updateBehaviours(Platform.gameTime, true);
+        
         //var currentTime = Platform.GetTimer();
         //updateBehaviours(currentTime, true);
         if (InvalidationCounter != 0) {

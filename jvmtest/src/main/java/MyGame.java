@@ -1,9 +1,11 @@
 
+import digiplay.Action1;
 import digiplay.GLQuadBatch;
 import digiplay.Game;
 import digiplay.Image;
 import digiplay.Platform;
 import digiplay.Point2D;
+import digiplay.Sprite2D;
 import digiplay.Stage2D;
 
 
@@ -34,8 +36,9 @@ public class MyGame implements Game {
     
     @Override
     public void begin() {
+        System.out.println(byte.class);
         Stage2D.I.setup(new Point2D(Platform.screenWidth,Platform.screenHeight));
-        for(int i=0; i<5000; i++) {
+        for(int i=0; i<5; i++) {
             Image img = new Image();
             Stage2D.I.addChild(img);
             img.setX(480);
@@ -44,6 +47,15 @@ public class MyGame implements Game {
             img.setAlpha((float)(Math.random()*.5)+.5f);
             img.setRotation((float)Math.random()*360);
             img.color = (((int)(Math.random()*255)) << 16) | (((int)(Math.random()*255)) << 8) | (((int)(Math.random()*255)));
+            /*img.onShow = new Action1<Sprite2D>() {
+                @Override
+                public void invoke(Sprite2D value) {
+                    System.out.println(value.getClass()+" shown");
+                }
+                
+            };*/
+            System.out.println(img);
+            img.addBehaviour(new B());
         }
         
 

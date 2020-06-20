@@ -39,7 +39,7 @@ void throw_exception(VM *vm, Object *exception) {
             }
             thr->stackTrace = arr;
         }
-        __android_log_print(ANDROID_LOG_ERROR, "GamaVM", "%s", tmp);
+        //__android_log_print(ANDROID_LOG_ERROR, "GamaVM", "%s", tmp);
     }
 }
 
@@ -138,6 +138,32 @@ void throw_unsatisfiedlink(VM *vm, Object *method) {
         ptr += sprintf(tmp,"%s",string_to_ascii(clsName));
         ptr += sprintf(ptr,":%s",string_to_ascii(MTH(method,name)));
         ptr += sprintf(ptr,":%s",string_to_ascii(MTH(method,signature)));
+
+        VAR args[2] = {{ .O = exp }, { .O = alloc_string_ascii(vm, tmp, 0) }};
+        CALLVM_V(vm, mth, &args[0]);
+    }
+    
+    throw_exception(vm, exp);
+}
+
+void throw_nosuchmethod(VM *vm, JCHAR *clsName, int clsLen, JCHAR *name, int nameLen, JCHAR *sign, int signLen) {
+    static Object *npe = NULL;
+    static Object *mth = NULL;
+    if(!npe || CLS(npe,vm) != vm) {
+        npe = resolve_class(vm, (JCHAR*)L"java/lang/NoSuchMethodException", 31, 1, NULL);
+        if(!npe) return;
+        
+        mth = find_method(vm, npe, (JCHAR*)L"<init>",6, (JCHAR*)L"(Ljava/lang/String;)V", 21);
+    }
+    Object *exp = alloc_object(vm, npe, 0);
+    if(mth) {
+        char tmp[256];
+        char *ptr = &tmp[0];
+        //Object *dc = ((Method*)method->instance)->declaringClass;
+        //Object *clsName = CLS(dc, name);
+        ptr += sprintf(tmp,"%s",jchar_to_ascii(clsName, clsLen));
+        ptr += sprintf(ptr,":%s",jchar_to_ascii(name, nameLen));
+        ptr += sprintf(ptr,":%s",jchar_to_ascii(sign, signLen));
 
         VAR args[2] = {{ .O = exp }, { .O = alloc_string_ascii(vm, tmp, 0) }};
         CALLVM_V(vm, mth, &args[0]);

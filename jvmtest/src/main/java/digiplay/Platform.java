@@ -31,7 +31,7 @@ public class Platform {
     static long lastTime = System.currentTimeMillis();
     static boolean initialized;
     static public int screenWidth, screenHeight;
-    public static int gameTime;   
+    public static float gameTime;   
     static long gameStartTime;
     
     public static void run(Game game) {
@@ -60,7 +60,6 @@ public class Platform {
         int delta = (int)(now - lastTime);
         lastTime = now;
         try {
-            
             game.update();
             game.render();
         }catch(Throwable e){

@@ -3,6 +3,7 @@ digiplay/GLTexture.class
 digiplay/MainActivity.class
 gamavm/apple/storekit/SKPaymentQueue.class
 digiplay/render/IndexBuffer.class
+digiplay/ParticleSprite.class
 digiplay/Net$HttpListener.class
 digiplay/Game.class
 digiplay/Matrix2D.class

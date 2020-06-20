@@ -699,7 +699,7 @@ public:
 
 class JdwpEventSetMod {
 public:
-    int type, count,exprId, caught, uncaught, size, depth;
+    int type, count,exprId, caught, uncaught, size, depth, sentClassLoaded;
     JLONG threadId;
     Object *clazz=nullptr, *exceptionOrNull = nullptr, *field = nullptr, *instance = nullptr;
     JdwpString *classPattern = nullptr, *sourceNamePattern = nullptr;

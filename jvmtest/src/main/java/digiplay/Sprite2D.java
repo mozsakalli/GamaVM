@@ -20,8 +20,9 @@ package digiplay;
  * @author mustafa
  */
 public class Sprite2D {
+
     int flags = VISIBLE | LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
-    float x, y, scaleX=1, scaleY=1, width,height,rotation, skewX, skewY, alpha = 1, worldAlpha = 1;
+    float x, y, scaleX = 1, scaleY = 1, width, height, rotation, skewX, skewY, alpha = 1, worldAlpha = 1;
     float animX, animY, animScaleX, animScaleY, animRotation, animSkewX, animSkewY, animAlpha;
     float midX, midY;
     float pivotX = .5f, pivotY = .5f;
@@ -35,10 +36,11 @@ public class Sprite2D {
     Mat2D worldMatrix = new Mat2D();
     String name;
     Behaviour behaviours;
-    
+    int visibleState = -1;
+    public Action1<Sprite2D> onInit, onShow;
+
     static int GLOBAL_FRAME_VERSION;
 
-    
     // Various flags used by Sprite and subclasses
     public final static int VISIBLE = 1 << 0;
     public final static int INTERACTIVE = 1 << 1;
@@ -109,23 +111,30 @@ public class Sprite2D {
         }
     }
 
-    public float getWidth() { return width; }
+    public float getWidth() {
+        return width;
+    }
+
     public void setWidth(float w) {
-        if(w != width) {
+        if (w != width) {
             width = w;
             midX = w * pivotX;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
-    public float getHeight() { return height; }
+
+    public float getHeight() {
+        return height;
+    }
+
     public void setHeight(float w) {
-        if(w != height) {
+        if (w != height) {
             height = w;
             midY = w * pivotY;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
-    
+
     public float getSkewX() {
         return skewX + animSkewX;
     }
@@ -240,6 +249,7 @@ public class Sprite2D {
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
+
     public float getPivotY() {
         return pivotY;
     }
@@ -251,7 +261,7 @@ public class Sprite2D {
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
-    
+
     void updateWorldAlpha() {
         if (parent == null) {
             return;
@@ -271,18 +281,26 @@ public class Sprite2D {
     public void setFlags(int flags) {
         this.flags |= flags;
     }
+
     public void cleatFlags(int mask) {
         this.flags &= ~mask;
     }
 
-    public boolean isVisible() { return (flags & VISIBLE) != 0; }
+    public boolean isVisible() {
+        return (flags & VISIBLE) != 0;
+    }
+
     public void setVisible(boolean value) {
         boolean current = (flags & VISIBLE) != 0;
-        if(value != current) {
-            if(value) flags |= VISIBLE; else flags &= ~VISIBLE;
+        if (value != current) {
+            if (value) {
+                flags |= VISIBLE;
+            } else {
+                flags &= ~VISIBLE;
+            }
         }
     }
-    
+
     public native Mat2D getLocalMatrix();/* {
         if ((flags & LOCAL_MATRIX_DIRTY) != 0) {
             localMatrix.compose(x + animX, y + animY, scaleX + animScaleX, scaleY + animScaleY, midX, midY, (flags & ROT_SKEW_DIRTY) != 0, rotation + animRotation, skewX + animSkewX, skewY + animSkewY);
@@ -436,12 +454,14 @@ public class Sprite2D {
         }
 
         init();
-        //OnInit?.Invoke(this);
+        if (onInit != null) {
+            onInit.invoke(this);
+        }
     }
-    
+
     public void draw() {
     }
-    
+
     public native void drawChildren();/* {
         Sprite2D ptr = firstChild;
         while(ptr != null) {
@@ -452,84 +472,73 @@ public class Sprite2D {
             ptr = ptr.next;
         }
     }*/
-    
-        public void addBehaviour(Behaviour b)
-        {
-            if (b == null) return;
-            Behaviour ptr = behaviours;
-            while (ptr != null)
-            {
-                if (ptr == b)
-                {
-                    ptr.setParent(this);
-                    return;
+
+    public void addBehaviour(Behaviour b) {
+        if (b == null) {
+            return;
+        }
+        Behaviour ptr = behaviours;
+        while (ptr != null) {
+            if (ptr == b) {
+                ptr.setParent(this);
+                return;
+            }
+            ptr = ptr.next;
+        }
+        b.next = behaviours;
+        behaviours = b;
+        b.setParent(this);
+    }
+
+    public void removeBehaviour(Behaviour b) {
+        if (b != null) {
+            b.markedForRemoval = true;
+            b.isInterrupted = true;
+        }
+    }
+
+    public void updateBehaviours(float time, boolean isParentVisible) {
+        int newState = isParentVisible && ((flags & VISIBLE) != 0) ? 1 : 0;
+        if (newState != visibleState) {
+            visibleState = newState;
+            switch (newState) {
+                case 1:
+                    if (onShow != null) {
+                        onShow.invoke(this);
+                    }
+                    break;
+            }
+        }
+        Behaviour ptr = behaviours;
+        if (ptr != null) {
+            Behaviour prev = null;
+            while (ptr != null) {
+                if (ptr.markedForRemoval) {
+                    if (prev != null) {
+                        prev.next = ptr.next;
+                    }
+                    if (ptr == behaviours) {
+                        behaviours = behaviours.next;
+                    }
+                    ptr.setParent(null);
+                } else {
+                    if (!ptr.markedForRemoval && ptr.parent != null && !ptr.update(time - ptr.startTime)) {
+                        ptr.markedForRemoval = true;
+                    }
+                    prev = ptr;
                 }
                 ptr = ptr.next;
             }
-            b.next = behaviours;
-            behaviours = b;
-            b.setParent(this);
         }
 
-        public void removeBehaviour(Behaviour b)
-        {
-            if (b != null)
-            {
-                b.markedForRemoval = true;
-                b.isInterrupted = true;
+        Sprite2D child = firstChild;
+        if (child != null) {
+            boolean v = visibleState == 1;
+            while (child != null) {
+                child.updateBehaviours(time, v);
+                child = child.next;
             }
         }
-
-   
-
-        public void updateBehaviours(float time, boolean isParentVisible)
-        {
-            /*
-            int newState = isParentVisible && ((flags & VISIBLE)!=0) ? 1 : 0;
-            if(newState != visibleState)
-            {
-                visibleState = newState;
-                switch(newState)
-                {
-                    case 1:
-                        //OnShow?.Invoke(this);
-                        break;
-                }
-            }
-            Behaviour ptr = behaviours;
-            if (ptr != null)
-            {
-                Behaviour prev = null;
-                while (ptr != null)
-                {
-                    if (ptr.markedForRemoval)
-                    {
-                        if (prev != null) prev.next = ptr.next;
-                        if (ptr == FirstBehaviour) FirstBehaviour = FirstBehaviour.next;
-                        ptr.parent = null;
-                    }
-                    else
-                    {
-                        if (!ptr.markedForRemoval && ptr.parent != null && !ptr.update(time - ptr.startTime))
-                        {
-                            ptr.markedForRemoval = true;
-                        }
-                        prev = ptr;
-                    }
-                    ptr = ptr.next;
-                }
-            }
-
-            Sprite2D child = FirstChild;
-            if (child != null)
-            {
-                var v = isParentVisible && Visible;
-                while (child != null)
-                {
-                    child.UpdateBehaviours(time, v);
-                    child = child.Next;
-                }
-            }*/
-        }    
+    }
 
 }

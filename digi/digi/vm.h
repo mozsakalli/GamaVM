@@ -365,6 +365,7 @@ extern void throw_null(VM *vm);
 extern void throw_arraybounds(VM *vm, int index, int length);
 extern void throw_cast(VM *vm, Object *son, Object *of);
 extern void throw_unsatisfiedlink(VM *vm, Object *method);
+extern void throw_nosuchmethod(VM *vm, JCHAR *clsName, int clsLen, JCHAR *name, int nameLen, JCHAR *sign, int signLen);
 
 /// NATIVE
 typedef struct NativeMethodInfo {
@@ -483,5 +484,12 @@ if(!var) { \
 	STRCHARS(aot_strings[sign]), STRLEN(aot_strings[sign])); \
 	if(!var) goto __EXCEPTION; \
 }
+
+#ifdef __ANDROID__
+#include <android/log.h>
+#define GLOG(...) __android_log_print(ANDROID_LOG_ERROR, "GamaVM", __VA_ARGS__)
+#else
+#define GLOG(...) printf( __VA_ARGS__)
+#endif
 
 #endif /* gamavm_h */

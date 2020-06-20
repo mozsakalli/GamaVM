@@ -214,7 +214,7 @@ extern "C" int jdwp_send_classload_event(VM *vm, Object *cls) {
         if(set->eventKind == JDWP_EVENTKIND_CLASS_PREPARE && set->modifiers > 0) {
             for(int i=0; i<set->modifiers; i++) {
                 JdwpEventSetMod *mod = set->mods[i];
-                if(mod->type == 5) {
+                if(mod->type == 5 && !mod->sentClassLoaded) {
                     int matches = 0;
                     Object *pattern = mod->classPattern->str;
                     matches = STRLEN(pattern) == STRLEN(clsName) && compare_chars(STRCHARS(pattern), STRCHARS(clsName), STRLEN(clsName));
@@ -232,8 +232,9 @@ extern "C" int jdwp_send_classload_event(VM *vm, Object *cls) {
                         p->writeInt(JDWP_CLASS_STATUS_INITIALIZED | JDWP_CLASS_STATUS_PREPARED | JDWP_CLASS_STATUS_VERIFIED);
                         p->completeEvent();
                         jdwp_client.queuePacket(p);
-                        //if (set->suspendPolicy != JDWP_SUSPENDPOLICY_NONE) suspend_requested = 1;
+                        if (set->suspendPolicy != JDWP_SUSPENDPOLICY_NONE) suspend_requested = 1;
                         jdwp_client.flush();
+                        mod->sentClassLoaded = 1;
                         //while(jdwp_process_client()) jdwp_client.flush();
                         JDWPLOG("!!! JdwpClassPrepare: %s suspend=%d\n", string_to_ascii(CLS(cls,name)), suspend_requested);
                     }
@@ -242,10 +243,11 @@ extern "C" int jdwp_send_classload_event(VM *vm, Object *cls) {
         }
         set = set->next;
     }
-    
+
     if(suspend_requested) {
         jdwp_suspended = 1;
-        /*while (jdwp_suspended) {
+        /*
+        while (jdwp_suspended) {
             while(jdwp_process_client())
                 jdwp_client.flush();
         }*/
@@ -310,11 +312,11 @@ void jdwp_eventset_set(JdwpEventSet *set) {
             } break;
                 
             case JDWP_EVENTKIND_CLASS_PREPARE: {
-                /*Object *ptr = jdwpVM->classes;
+                Object *ptr = jdwpVM->classes;
                 while(ptr) {
                     jdwp_send_classload_event(jdwpVM, ptr);
                     ptr = CLS(ptr, next);
-                }*/
+                }
                 JDWPLOG("!!!!!!!!! JDWP_EVENTKIND_CLASS_PREPARE\n");
             } break;
                 
@@ -482,6 +484,7 @@ void jdwp_process_packet(JdwpPacket *req) {
     
     int cmd = (req->commandSet << 8) + req->command;
     JDWPLOG(">>> Packet: 0x%x\n", cmd);
+    int pkt_queued = 0;
     switch(cmd) {
         case JDWP_CMD_VirtualMachine_Version: //0x0101
             resp->writeCString((char*)"jdwp 1.2");
@@ -627,8 +630,8 @@ void jdwp_process_packet(JdwpPacket *req) {
             for(int i=0; i<count; i++) {
                 Object *field = req->readObject();
                 Field *ff = (Field*)field->instance;
-                void *base = ((Class*)ff->declaringClass->instance)->global;
-                resp->writeValue(ff->signature, (void*)((char*)base + ff->offset));
+                //void *base = ((Class*)ff->declaringClass->instance)->global;
+                resp->writeValue(ff->signature, ff->offset);// (void*)((char*)base + ff->offset));
             }
             resp->complete(req->id, JDWP_ERROR_NONE);
 
@@ -746,8 +749,11 @@ void jdwp_process_packet(JdwpPacket *req) {
                 Object *field = req->readObject();
                 Field *ff = (Field*)field->instance;
                 int isstatic = (ff->flags & ACC_STATIC) != 0;
-                void *base = isstatic ? ((Class*)cls->instance)->global : o->instance;
-                resp->writeValue(ff->signature, (void*)((char*)base + ff->offset));
+                if(isstatic)
+                    resp->writeValue(ff->signature, ff->offset);
+                else {
+                    resp->writeValue(ff->signature, (void *) ((char *)o->instance + (int)(long)ff->offset));
+                }
             }
             resp->complete(req->id, JDWP_ERROR_NONE);
         } break;
@@ -797,7 +803,7 @@ void jdwp_process_packet(JdwpPacket *req) {
         } break;
             
         case JDWP_CMD_ThreadReference_Frames: { //0x0b06
-            if(jdwp_suspended) {
+            if(jdwp_suspended || true) {
                 JLONG thread = req->readLong();
                 int startFrame = req->readInt()+1;
                 int length = req->readInt();
@@ -856,9 +862,11 @@ void jdwp_process_packet(JdwpPacket *req) {
             
         case JDWP_CMD_EventRequest_Set: { //0x0f01
             JdwpEventSet *set = new JdwpEventSet(jdwpVM, req);
-            jdwp_eventset_set(set);
             resp->writeInt(set->requestId);
             resp->complete(req->id, JDWP_ERROR_NONE);
+            jdwp_client.queuePacket(resp);
+            pkt_queued = 1;
+            jdwp_eventset_set(set);
         } break;
             
         case JDWP_CMD_EventRequest_Clear: { //0x0f02
@@ -951,7 +959,9 @@ void jdwp_process_packet(JdwpPacket *req) {
             return;
     }
     
-    jdwp_client.queuePacket(resp);
+    if(!pkt_queued)
+        jdwp_client.queuePacket(resp);
+    
     /*if(cmd == JDWP_CMD_VirtualMachine_Version) {
         resp = new JdwpPacket;
         resp->onVMStartEvent();
