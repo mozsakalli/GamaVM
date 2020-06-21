@@ -293,7 +293,9 @@ public class GameView extends GLSurfaceView implements GLSurfaceView.Renderer {
     }
 
 
-
+    public void reload() {
+        Completables.clear();
+    }
 
     @Override
     public void onDrawFrame(javax.microedition.khronos.opengles.GL10 gl) {

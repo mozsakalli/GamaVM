@@ -374,7 +374,7 @@ extern void *resolve_native_method(VM *vm, Object *method);
 
 /// VM
 extern VM *vm_init();
-extern void vm_destroy();
+extern void vm_destroy(VM *vm);
 extern void vm_main(VM *vm, char *className, char *methodName, char *signature);
 extern void vm_interpret_exec(VM *vm, Object *omethod, VAR *args);
 extern void vm_native_exec(VM *vm, Object *omethod, VAR *args);

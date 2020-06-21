@@ -29,6 +29,9 @@ void gamavm_VM_wrapBytes(VM *vm, Object *method, VAR *args) {
     }
     vm->frames[vm->FP].ret.O = arr;
 }
+void gamavm_VM_freeMem(VM *vm, Object *method, VAR *args) {
+    if(args[0].J) free((void*)args[0].J);
+}
 
 void java_lang_Object_clone(VM *vm, Object *method, VAR *args) {
     Object *result = NULL;
@@ -277,6 +280,7 @@ NativeMethodInfo vm_native_methods[] = {
     {"gamavm/VM:getClass:(Ljava/lang/Object;)Ljava/lang/Class;", &gamavm_VM_getClass},
     {"gamavm/VM:getAddress:(Ljava/lang/Object;)J", &gamavm_VM_getAddress},
     {"gamavm/VM:wrapBytes:(JI)[B", &gamavm_VM_wrapBytes},
+    {"gamavm/VM:freeMem:(J)V", &gamavm_VM_freeMem},
 
     {"java/lang/Object:clone:()Ljava/lang/Object;", &java_lang_Object_clone},
     

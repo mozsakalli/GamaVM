@@ -95,20 +95,21 @@ public class MyGame implements Game {
             fpsTimer = now;
         }
         
-        if(now - jarTimer >= 3000) {
+        if(now - jarTimer >= 5000) {
             jarTimer = now;
             Net.Http http = new Net.Http("http://192.168.1.39:7777/jar"+jarTime) {
                 @Override
                 public void onComplete() {
                     if(this.bytes != null) {
                         try {
+                            /*
                             DataInputStream in = new DataInputStream(new ByteArrayInputStream(bytes));
                             jarTime = in.readLong();
                             if(in.available() > 0) {
                                 System.out.println("--- new jar "+jarTime+" / "+in.available());
                                 Platform.reload(bytes, 8, bytes.length - 8);
                                 return;
-                            }
+                            }*/
                         } catch(Throwable e){
                             e.printStackTrace();
                         }

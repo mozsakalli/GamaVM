@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     static AssetManager AM;
     static MainActivity I;
     GameView gameView;
-    public static final ExecutorService ThreadPool = Executors.newFixedThreadPool(4);
+    public static ExecutorService ThreadPool = Executors.newFixedThreadPool(4);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,8 +55,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     void start() {
-        gameView = new GameView(this);
-        setContentView(gameView);
+        if(gameView == null) {
+            gameView = new GameView(this);
+            setContentView(gameView);
+        } else {
+            ThreadPool.shutdownNow();
+            ThreadPool = Executors.newFixedThreadPool(4);
+            gameView.reload();
+        }
     }
     public static byte[] readFile(String path) {
         try {
@@ -93,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
     }*/
 
     public static native void gamaVMMain();
+    public static native void gamaVMDestroy();
     public static native void platformResize(int width, int height);
     public static native void platformStep();
     public static native void completeCompletable(long handle, byte[] data);

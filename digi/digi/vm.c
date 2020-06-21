@@ -100,6 +100,10 @@ void vm_destroy(VM *vm) {
     while(vm->classes) {
         Object *clso = vm->classes;
         VMClass *cls = (VMClass*)clso->instance;
+        Object *next = cls->next;
+        GLOG("Destroy: %s", string_to_ascii(cls->name));
+        if(!strcmp("digiplay/Net$Http", string_to_ascii(cls->name)))
+            printf("...");
         F(cls->allParents);
         F(cls->cp);
         F(cls->global);
@@ -124,15 +128,18 @@ void vm_destroy(VM *vm) {
                 F(m->compiled);
                 F(m->lineNumberTable);
                 F(m->localVarTable);
+                F(m->externalData);
                 F(mo->instance);
                 F(mo);
             }
             F(cls->methods);
+#ifndef __ANDROID__
             F(cls->externalData);
+#endif
         }
         F(clso->instance);
         F(clso);
-        vm->classes = CLS(vm->classes, next);
+        vm->classes = next;
     }
     
     while(vm->strings) {

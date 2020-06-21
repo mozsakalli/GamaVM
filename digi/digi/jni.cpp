@@ -68,15 +68,33 @@ void gama_to_jni(VM *vm, JNIEnv *env, char type, Object *cls, VAR *a, jvalue *j)
         case 'F': j->f = a->F; break;
         case 'J': j->j = a->J; break;
         case 'D': j->d = a->D; break;
+#define COPYARRAY(S,B) \
+if(a->O) { \
+    j##S##Array jb = env->New##B##Array(a->O->length); \
+    env->Set##B##ArrayRegion(jb,0,a->O->length, (j##S*)a->O->instance); \
+    j->l = jb; \
+} else j->l = 0;
+        case JNIARRAY_B: COPYARRAY(byte, Byte); break;
+        case JNIARRAY_Z: COPYARRAY(boolean, Boolean); break;
+        case JNIARRAY_C: COPYARRAY(char, Char); break;
+        case JNIARRAY_S: COPYARRAY(short, Short); break;
+        case JNIARRAY_I: COPYARRAY(int, Int); break;
+        case JNIARRAY_F: COPYARRAY(float, Float); break;
+        case JNIARRAY_J: COPYARRAY(long, Long); break;
+        case JNIARRAY_D: COPYARRAY(double, Double); break;
         case 'L': {
             if(!a->O) j->l = 0;
             else
             if(cls == vm->jlString) {
                 j->l = env->NewString(STRCHARS(a->O), STRLEN(a->O));
             } else {
-
+                GLOG("!!!Unknown JNI Type!!!! %c",type);
             }
         } break;
+
+        default:
+            GLOG("!!!Unknown JNI Type!!!! %c", type);
+            break;
     }
 }
 

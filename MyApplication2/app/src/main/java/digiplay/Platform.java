@@ -28,6 +28,7 @@ public class Platform {
     }
 
     public static void reload(byte[] bytes, int offset, int length) {
-        System.out.println(bytes);
+        MainActivity.gamaVMDestroy();
+        MainActivity.gamaVMMain();
     }
 }
