@@ -133,7 +133,6 @@ void Java_digiplay_GLShader2D_finalize(VM* vm, Method *method, VAR *args) {
         GLShader *b = (GLShader*)*FIELD_PTR_J(args[0].O, 0);
         glDeleteProgram(b->handle);
         free(b);
-        free(b);
     }
 }
 

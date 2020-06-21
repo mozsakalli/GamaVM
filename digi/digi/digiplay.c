@@ -377,7 +377,9 @@ void Java_digiplay_Sprite2D_drawChildren(VM *vm, Object *method, VAR *args) {
     static int drawMethodIndex = -1;
     if(drawMethodIndex == -1) {
         Object *mth =
-        resolve_method(vm, (JCHAR*)L"digiplay/Sprite2D",17,
+        resolve_method(vm,
+                       MTH_LOADER(method),
+                       (JCHAR*)L"digiplay/Sprite2D",17,
                        (JCHAR*)L"draw",4,
                        (JCHAR*)L"()V",3);
         if(!mth) return;

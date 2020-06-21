@@ -17,19 +17,31 @@ VM* vm_init() {
     VMClass *cls = gamaVM->jlClass->instance = vm_alloc(sizeof(VMClass));
     cls->instanceSize = sizeof(VMClass);
     
+    gamaVM->jlClassLoader = alloc_class(gamaVM);
+    CLS(gamaVM->jlClassLoader, instanceSize) = sizeof(ClassLoader);
+    gamaVM->sysClassLoader = alloc_object(gamaVM, gamaVM->jlClassLoader, 0);
+    cls->clsLoader = gamaVM->sysClassLoader;
+    CLS(gamaVM->jlClassLoader, clsLoader) = gamaVM->sysClassLoader;
+
     gamaVM->jlObject = alloc_class(gamaVM);
+    CLS(gamaVM->jlObject, clsLoader) = gamaVM->sysClassLoader;
     
     gamaVM->jlMethod = alloc_class(gamaVM);
     CLS(gamaVM->jlMethod, instanceSize) = sizeof(Method);
-    
+    CLS(gamaVM->jlMethod, clsLoader) = gamaVM->sysClassLoader;
+
     gamaVM->jlField = alloc_class(gamaVM);
     CLS(gamaVM->jlField, instanceSize) = sizeof(Field);
-    
+    CLS(gamaVM->jlField, clsLoader) = gamaVM->sysClassLoader;
+
     gamaVM->jlString = alloc_class(gamaVM);
     CLS(gamaVM->jlString, instanceSize) = sizeof(String);
-    
+    CLS(gamaVM->jlString, clsLoader) = gamaVM->sysClassLoader;
+
     gamaVM->jlSTE = alloc_class(gamaVM);
     CLS(gamaVM->jlSTE, instanceSize) = sizeof(StackTraceElement);
+    CLS(gamaVM->jlSTE, clsLoader) = gamaVM->sysClassLoader;
+
     
     //Setup primitive classes
     char *primitiveNames[9] = {"C","B","Z","S","I","F","J","D","V"};
@@ -38,6 +50,7 @@ VM* vm_init() {
     };
     for(int i=0; i<9; i++) {
         gamaVM->primClasses[i] = alloc_class(gamaVM);
+        CLS(gamaVM->primClasses[i], clsLoader) = gamaVM->sysClassLoader;
         CLS(gamaVM->primClasses[i], name) = alloc_string_ascii(gamaVM, primitiveNames[i], 1);
         CLS(gamaVM->primClasses[i], primitiveSize) = primitiveSizes[i];
         CLS(gamaVM->primClasses[i], linked) = 1;
@@ -45,12 +58,14 @@ VM* vm_init() {
         //gamaVM->classes = gamaVM->primClasses[i];
     }
     
-    resolve_class(gamaVM, L"java/lang/Object", 16, 0, gamaVM->jlObject);
-    resolve_class(gamaVM, L"java/lang/Class", 15, 0, gamaVM->jlClass);
-    resolve_class(gamaVM, L"java/lang/reflect/Field", 23, 0, gamaVM->jlField);
-    resolve_class(gamaVM, L"java/lang/reflect/Method", 24, 0, gamaVM->jlMethod);
-    resolve_class(gamaVM, L"java/lang/StackTraceElement", 27, 0, gamaVM->jlSTE);
-    resolve_class(gamaVM, L"java/lang/String", 16, 0, gamaVM->jlString);
+    resolve_class(gamaVM, gamaVM->sysClassLoader, L"java/lang/Object", 16, 0, gamaVM->jlObject);
+    resolve_class(gamaVM, gamaVM->sysClassLoader, L"java/lang/Class", 15, 0, gamaVM->jlClass);
+    resolve_class(gamaVM, gamaVM->sysClassLoader, L"java/lang/reflect/Field", 23, 0, gamaVM->jlField);
+    resolve_class(gamaVM, gamaVM->sysClassLoader, L"java/lang/reflect/Method", 24, 0, gamaVM->jlMethod);
+    resolve_class(gamaVM, gamaVM->sysClassLoader, L"java/lang/StackTraceElement", 27, 0, gamaVM->jlSTE);
+    resolve_class(gamaVM, gamaVM->sysClassLoader, L"java/lang/String", 16, 0, gamaVM->jlString);
+
+    resolve_class(gamaVM, gamaVM->sysClassLoader, L"java/lang/ClassLoader", 21, 1, gamaVM->jlClassLoader);
 
     return gamaVM;
 }
@@ -65,7 +80,7 @@ void vm_main(VM *vm, char *className, char *methodName, char *signature) {
     int signLen;
     JCHAR *sign = char_to_jchar(signature, &signLen);
     
-    vm->mainMethod = resolve_method(vm, clName, clsLen, name, nameLen, sign, signLen);
+    vm->mainMethod = resolve_method(vm, vm->sysClassLoader, clName, clsLen, name, nameLen, sign, signLen);
     if(!vm->mainMethod) {
         printf("Can't find main method: %s:%s:%s\n", className, methodName, signature);
         free(clName);
@@ -79,7 +94,7 @@ void vm_main(VM *vm, char *className, char *methodName, char *signature) {
     free(name);
     free(sign);
 }
-
+/*
 void vm_destroy(VM *vm) {
 #define F(m) if(m) free(m); m = NULL
     //first finalize objects
@@ -163,3 +178,4 @@ void vm_destroy(VM *vm) {
     }
     F(vm);
 }
+*/

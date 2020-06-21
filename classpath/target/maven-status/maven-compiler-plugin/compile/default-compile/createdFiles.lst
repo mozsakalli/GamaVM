@@ -155,6 +155,7 @@ java/util/IdentityHashMap$IdentityHashMapIterator.class
 java/util/AbstractMap$1.class
 java/util/SortedMap.class
 java/util/AbstractSet.class
+java/lang/ClassLoader.class
 java/util/Enumeration.class
 java/util/Collections$SynchronizedSortedSet.class
 java/lang/StringBuffer.class

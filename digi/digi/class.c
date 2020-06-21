@@ -40,6 +40,7 @@ Object *get_arrayclass_of(VM *vm, Object *cls) {
         arrCls = alloc_class(vm);
         CLS(arrCls, elementClass) = cls;
         CLS(cls, arrayClass) = arrCls;
+        CLS(arrCls, clsLoader) = CLS(cls, clsLoader); //set class loader
         JCHAR tmp[256];
         int len = 0;
         tmp[len++] = '[';
@@ -66,23 +67,28 @@ Object *get_arrayclass_of(VM *vm, Object *cls) {
         CLS(arrCls, superClass) = vm->jlObject;
         
         //add class to class list
-        CLS(arrCls, next) = vm->classes;
-        vm->classes = arrCls;
+        ClassLoader *cl = CLS(arrCls, clsLoader)->instance;
+        CLS(arrCls, next) = cl->classes;
+        cl->classes = arrCls;
     }
     
     return arrCls;
 }
 
-Object *find_class(VM *vm, JCHAR *name, JINT len) {
+Object *find_class(VM *vm, Object *cloader, JCHAR *name, JINT len) {
     //printf("------------------------ find: %s\n", jchar_to_ascii(name, len));
-    Object *ptr = vm->classes;
-    while(ptr) {
-        Object *clsName = CLS(ptr, name);
-        //printf("%s\n", string_to_ascii(clsName));
-        if(len == STRLEN(clsName) &&
-           compare_chars(name, STRCHARS(clsName), len))
-            return ptr;
-        ptr = CLS(ptr, next);
+    while(cloader) {
+        ClassLoader *cl = cloader->instance;
+        Object *ptr = cl->classes;
+        while(ptr) {
+            Object *clsName = CLS(ptr, name);
+            //printf("%s\n", string_to_ascii(clsName));
+            if(len == STRLEN(clsName) &&
+               compare_chars(name, STRCHARS(clsName), len))
+                return ptr;
+            ptr = CLS(ptr, next);
+        }
+        cloader = cl->parent;
     }
     return NULL;
 }
@@ -292,19 +298,21 @@ void link_class(VM *vm, Object *clsObject) {
     
 }
 
-Object *resolve_class(VM *vm, JCHAR *name, JINT len, int link, Object *target) {
+Object *resolve_class(VM *vm, Object *cloader, JCHAR *name, JINT len, int link, Object *target) {
     //printf("resolve: %s\n", jchar_to_ascii(name, len));
-    Object *cls = find_class(vm, name, len);
+    Object *cls = find_class(vm, cloader, name, len);
     if(cls) {
         if(link) link_class(vm, cls);
         return cls;
     }
     
+    //GLOG("resolve: %s\n", jchar_to_ascii(name, len));
+
     //array class
     if(name[0] == '[') {
         Object *element = NULL;
         if(name[1] == 'L') {
-            element = resolve_class(vm, name+2, len-3, link, NULL);
+            element = resolve_class(vm, cloader, name+2, len-3, link, NULL);
         } else {
             if(name[1] != '[') {
                 //primitive array
@@ -319,7 +327,7 @@ Object *resolve_class(VM *vm, JCHAR *name, JINT len, int link, Object *target) {
                     case 'D': element = vm->primClasses[PRIM_D];break;
                 }
             } else
-            element = resolve_class(vm, name+1, len-1, link, NULL);
+            element = resolve_class(vm, cloader, name+1, len-1, link, NULL);
         }
         if(vm->exception) {
             throw_classnotfound(vm, name+1, len-1);
@@ -328,7 +336,6 @@ Object *resolve_class(VM *vm, JCHAR *name, JINT len, int link, Object *target) {
         return get_arrayclass_of(vm, element);
     }
     
-    //GLOG("load: %s\n", jchar_to_ascii(name, len));
     void *class_raw = NULL;
     int nofree = 0;
     class_raw = read_class_file(name, len);
@@ -337,15 +344,17 @@ Object *resolve_class(VM *vm, JCHAR *name, JINT len, int link, Object *target) {
         return NULL;
     }
     cls = !target ? alloc_class(vm) : target;
-    int success = parse_class(vm, class_raw, cls);
+    int success = parse_class(vm, cloader, class_raw, cls);
     if(!nofree) free(class_raw);
     if(!success) {
         throw_classnotfound(vm, name, len);
         return NULL;
     }
     
-    CLS(cls, next) = vm->classes;
-    vm->classes = cls;
+    CLS(cls, clsLoader) = cloader;
+    ClassLoader *cl = cloader->instance;
+    CLS(cls, next) = cl->classes;
+    cl->classes = cls;
     
     if(link) {
         link_class(vm, cls);
@@ -357,7 +366,7 @@ Object *resolve_class(VM *vm, JCHAR *name, JINT len, int link, Object *target) {
 Object *resolve_class_by_index(VM *vm, Object *cls, int index) {
     CPItem *cp = CLS(cls, cp);
     Object *name = cp[cp[index].index1].value.O;
-    return resolve_class(vm, STRCHARS(name), STRLEN(name), 1, NULL);
+    return resolve_class(vm, CLS(cls, clsLoader), STRCHARS(name), STRLEN(name), 1, NULL);
 }
 
 
@@ -386,8 +395,8 @@ Object *find_method(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, in
     return NULL;
 }
 
-Object *resolve_method(VM *vm, JCHAR *clsName, int clslen, JCHAR *name, int nlen, JCHAR *signature, int slen) {
-    Object *cls = resolve_class(vm, clsName, clslen, 1, NULL);
+Object *resolve_method(VM *vm, Object *cloader, JCHAR *clsName, int clslen, JCHAR *name, int nlen, JCHAR *signature, int slen) {
+    Object *cls = resolve_class(vm, cloader, clsName, clslen, 1, NULL);
     if(!cls || vm->exception) return NULL;
     Object *mth = find_method(vm, cls, name, nlen, signature, slen);
     if(mth) return mth;
@@ -406,7 +415,9 @@ Object *resolve_method_by_index(VM *vm,Object *cls, int index) {
     Object *clsName = cp[cp[cp[index].index1].index1].value.O;
     Object *name = cp[cp[cp[index].index2].index1].value.O;
     Object *signature = cp[cp[cp[index].index2].index2].value.O;
-    return resolve_method(vm, STRCHARS(clsName), STRLEN(clsName),
+    return resolve_method(vm,
+                          CLS(cls, clsLoader),
+                          STRCHARS(clsName), STRLEN(clsName),
                           STRCHARS(name), STRLEN(name),
                           STRCHARS(signature),STRLEN(signature));
 }
@@ -436,8 +447,8 @@ Object *find_field(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, int
     return NULL;
 }
 
-Object *resolve_field(VM *vm, JCHAR *clsName, int clslen, JCHAR *name, int namelen, JCHAR *sign, int slen) {
-    Object *cls = resolve_class(vm, clsName, clslen, 1, NULL);
+Object *resolve_field(VM *vm, Object *cloader, JCHAR *clsName, int clslen, JCHAR *name, int namelen, JCHAR *sign, int slen) {
+    Object *cls = resolve_class(vm, cloader, clsName, clslen, 1, NULL);
     if(vm->exception) return NULL;
     Object *field = find_field(vm, cls, name, namelen, sign, slen);
     if(!field)
@@ -454,7 +465,9 @@ Object *resolve_field_by_index(VM *vm,Object *cls, int index) {
     /*printf("-- resolve field: %s", string_to_ascii(CLS(cls,name)));
     printf(":%s", string_to_ascii(name));
     printf(":%s\n",string_to_ascii(signature));*/
-    return resolve_field(vm, STRCHARS(clsName), STRLEN(clsName),
+    return resolve_field(vm,
+                         CLS(cls, clsLoader),
+                         STRCHARS(clsName), STRLEN(clsName),
                          STRCHARS(name), STRLEN(name),
                          STRCHARS(signature), STRLEN(signature));
 }

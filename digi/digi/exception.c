@@ -46,8 +46,8 @@ void throw_exception(VM *vm, Object *exception) {
 void throw_null(VM *vm) {
     static Object *npe = NULL;
     static Object *mth = NULL;
-    if(!npe || CLS(npe,vm) != vm) {
-        npe = resolve_class(vm, (JCHAR*)L"java/lang/NullPointerException", 30, 1, NULL);
+    if(!npe) {
+        npe = resolve_class(vm, vm->sysClassLoader, (JCHAR*)L"java/lang/NullPointerException", 30, 1, NULL);
         if(!npe) return;
         
         mth = find_method(vm, npe, (JCHAR*)L"<init>", 6, (JCHAR*)L"()V", 3);
@@ -63,8 +63,8 @@ void throw_null(VM *vm) {
 void throw_classnotfound(VM *vm, JCHAR *name, int len) {
     static Object *npe = NULL;
     static Object *mth = NULL;
-    if(!npe || CLS(npe,vm) != vm) {
-        npe = resolve_class(vm, (JCHAR*)L"java/lang/ClassNotFoundException", 32, 1, NULL);
+    if(!npe) {
+        npe = resolve_class(vm, vm->sysClassLoader, (JCHAR*)L"java/lang/ClassNotFoundException", 32, 1, NULL);
         if(!npe) return;
         
         mth = find_method(vm, npe, (JCHAR*)L"<init>", 6, (JCHAR*)L"(Ljava/lang/String;)V", 21);
@@ -82,8 +82,8 @@ void throw_classnotfound(VM *vm, JCHAR *name, int len) {
 void throw_arraybounds(VM *vm, int index, int length) {
     static Object *npe = NULL;
     static Object *mth = NULL;
-    if(!npe || CLS(npe,vm) != vm) {
-        npe = resolve_class(vm, (JCHAR*)L"java/lang/ArrayIndexOutOfBoundsException", 40, 1, NULL);
+    if(!npe) {
+        npe = resolve_class(vm, vm->sysClassLoader, (JCHAR*)L"java/lang/ArrayIndexOutOfBoundsException", 40, 1, NULL);
         if(!npe) return;
         
         mth = find_method(vm, npe, (JCHAR*)L"<init>", 6, (JCHAR*)L"(Ljava/lang/String;)V", 21);
@@ -101,8 +101,8 @@ void throw_arraybounds(VM *vm, int index, int length) {
 void throw_cast(VM *vm, Object *son, Object *of) {
     static Object *npe = NULL;
     static Object *mth = NULL;
-    if(!npe || CLS(npe,vm) != vm) {
-        npe = resolve_class(vm, (JCHAR*)L"java/lang/ClassCastException", 28, 1, NULL);
+    if(!npe) {
+        npe = resolve_class(vm, vm->sysClassLoader, (JCHAR*)L"java/lang/ClassCastException", 28, 1, NULL);
         if(!npe) return;
         
         mth = find_method(vm, npe, (JCHAR*)L"<init>",6, (JCHAR*)L"(Ljava/lang/String;)V", 21);
@@ -123,8 +123,8 @@ void throw_cast(VM *vm, Object *son, Object *of) {
 void throw_unsatisfiedlink(VM *vm, Object *method) {
     static Object *npe = NULL;
     static Object *mth = NULL;
-    if(!npe || CLS(npe,vm) != vm) {
-        npe = resolve_class(vm, (JCHAR*)L"java/lang/UnsatisfiedLinkError", 30, 1, NULL);
+    if(!npe) {
+        npe = resolve_class(vm, vm->sysClassLoader, (JCHAR*)L"java/lang/UnsatisfiedLinkError", 30, 1, NULL);
         if(!npe) return;
         
         mth = find_method(vm, npe, (JCHAR*)L"<init>",6, (JCHAR*)L"(Ljava/lang/String;)V", 21);
@@ -151,8 +151,8 @@ void throw_unsatisfiedlink(VM *vm, Object *method) {
 void throw_nosuchmethod(VM *vm, JCHAR *clsName, int clsLen, JCHAR *name, int nameLen, JCHAR *sign, int signLen) {
     static Object *npe = NULL;
     static Object *mth = NULL;
-    if(!npe || CLS(npe,vm) != vm) {
-        npe = resolve_class(vm, (JCHAR*)L"java/lang/NoSuchMethodException", 31, 1, NULL);
+    if(!npe) {
+        npe = resolve_class(vm, vm->sysClassLoader, (JCHAR*)L"java/lang/NoSuchMethodException", 31, 1, NULL);
         if(!npe) return;
         
         mth = find_method(vm, npe, (JCHAR*)L"<init>",6, (JCHAR*)L"(Ljava/lang/String;)V", 21);

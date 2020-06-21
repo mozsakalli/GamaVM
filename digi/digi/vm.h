@@ -108,7 +108,8 @@ typedef struct __attribute__ ((packed)) Object {
     struct {
         char free       : 1;
         char atomic     : 1;
-        char version    : 6;
+        char isClass    : 1;
+        char version    : 5;
     } gc;
 } Object;
 
@@ -166,6 +167,7 @@ typedef struct CatchInfo {
 } CatchInfo;
 
 #define MTH(o,f) ((Method*)o->instance)->f
+#define MTH_LOADER(method) CLS(MTH(method, declaringClass),clsLoader)
 typedef struct __attribute__ ((packed)) Method {
     Object *name;
     Object *signature;
@@ -200,6 +202,12 @@ typedef struct CPItem {
     JINT type;
 } CPItem;
 
+typedef struct __attribute__ ((packed)) ClassLoader {
+    Object *parent;
+    Object *classes;
+    Object *strings;
+} ClassLoader;
+
 #define CLS(o,f) ((VMClass*)o->instance)->f
 #define CLS_PRIM(o) CLS(o,primitiveSize)
 typedef struct __attribute__ ((packed)) Class {
@@ -230,7 +238,7 @@ typedef struct __attribute__ ((packed)) Class {
     
     JINT allParentCount;
     Object **allParents;
-    struct VM *vm;
+    Object *clsLoader;
     int externalFlags;
     Object *externalName;
     void *externalData;
@@ -277,8 +285,9 @@ typedef struct Frame {
 #define PRIM_V  8
 typedef struct VM {
     HeapBlock *heap;
-    Object *classes, *strings;
-    Object *jlObject, *jlClass, *jlMethod, *jlField, *jlString, *jlSTE;
+    //Object *classes, *strings;
+    Object *sysClassLoader;
+    Object *jlObject, *jlClass, *jlMethod, *jlField, *jlString, *jlSTE, *jlClassLoader;
     Object *primClasses[9];
     Object *exception;
     Frame frames[MAX_FRAMES];
@@ -327,16 +336,16 @@ extern void gc_unprotect(VM *vm,Object *o);
 
 /// CLASS
 extern Object *get_arrayclass_of(VM *vm, Object *cls);
-extern Object *resolve_class(VM *vm, JCHAR *name, JINT len, int link, Object *target);
+extern Object *resolve_class(VM *vm, Object *cloader, JCHAR *name, JINT len, int link, Object *target);
 extern Object *resolve_class_by_index(VM *vm, Object *cls, int index);
-extern Object *find_class(VM *vm, JCHAR *name, JINT len);
+extern Object *find_class(VM *vm, Object *cloader, JCHAR *name, JINT len);
 extern Object *find_class_method(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, int slen);
 extern Object *find_method(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, int slen);
-extern Object *resolve_method(VM *vm, JCHAR *clsName, int clslen, JCHAR *name, int nlen, JCHAR *signature, int slen);
+extern Object *resolve_method(VM *vm, Object *cloader, JCHAR *clsName, int clslen, JCHAR *name, int nlen, JCHAR *signature, int slen);
 extern Object *resolve_method_by_index(VM *vm,Object *cls, int index);
 extern Object *find_class_field(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, int slen);
 extern Object *find_field(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, int slen);
-extern Object *resolve_field(VM *vm, JCHAR *clsName, int clslen, JCHAR *name, int namelen, JCHAR *sign, int slen);
+extern Object *resolve_field(VM *vm, Object *cloader, JCHAR *clsName, int clslen, JCHAR *name, int namelen, JCHAR *sign, int slen);
 extern Object *resolve_field_by_index(VM *vm,Object *cls, int index);
 extern JINT is_class_child_of(VM *vm, Object *json, Object *jof);
 inline static JINT check_cast(VM *vm, Object *object, Object *cls) {
@@ -345,7 +354,7 @@ inline static JINT check_cast(VM *vm, Object *object, Object *cls) {
 }
 
 /// PARSE
-extern int parse_class(VM *vm, char *data, Object *clsObject);
+extern int parse_class(VM *vm, Object *cloader, char *data, Object *clsObject);
 extern int get_line_number(Method *method, int pc);
 /// UTF
 extern int get_utf8_length(char *data, int length);

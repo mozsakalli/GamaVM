@@ -12,27 +12,33 @@
 #define READ_U2(data) ((unsigned char)data[0] << 8) | (unsigned char)data[1];
 #define READ_U1(data) (unsigned char)data[0];
 
-Object *parse_cp_utf8(VM *vm, char *data, int len) {
+Object *parse_cp_utf8(VM *vm, Object *cloader, char *data, int len) {
     int charlen = get_utf8_length(data, len);
     JCHAR search[charlen];
     decode_utf8(data, len, search);
     
-    Object *ptr = vm->strings;
-    while(ptr) {
-        if(STRLEN(ptr) == charlen && compare_chars(search, STRCHARS(ptr), charlen)) {
-            return ptr;
+    Object *cptr = cloader;
+    while(cptr) {
+        ClassLoader *cl = cptr->instance;
+        Object *ptr = cl->strings;
+        while(ptr) {
+            if(STRLEN(ptr) == charlen && compare_chars(search, STRCHARS(ptr), charlen)) {
+                return ptr;
+            }
+            ptr = STR(ptr, next);
         }
-        ptr = STR(ptr, next);
+        cptr = cl->parent;
     }
     
     Object *str = alloc_string_java(vm, search, charlen, 1);
-    STR(str, next) = vm->strings;
-    vm->strings = str;
+    ClassLoader *cl = cloader->instance;
+    STR(str, next) = cl->strings;
+    cl->strings = str;
     
     return str;
 }
 
-char *parse_constant_pool(VM *vm, char *data, CPItem** cpTarget) {
+char *parse_constant_pool(VM *vm, Object *cloader, char *data, CPItem** cpTarget) {
     int count = READ_U2(data); data += 2;
     CPItem *cp = (CPItem*)malloc(sizeof(CPItem)*count);
     *cpTarget = cp;
@@ -47,7 +53,7 @@ char *parse_constant_pool(VM *vm, char *data, CPItem** cpTarget) {
         case 1: //CONSTANT_Utf8
             {
                 int len = READ_U2(data); data += 2;
-                cp[i].value.O = parse_cp_utf8(vm, data, len);
+                cp[i].value.O = parse_cp_utf8(vm, cloader, data, len);
                 //printf("CP = %s\n", string2c(cp[i].value.O));
                 cp[i].type = 'O';
                 data += len;
@@ -313,7 +319,7 @@ char *parse_method(VM *vm, char *data, Object *m, CPItem *cp) {
     return data;
 }
 
-int parse_class(VM *vm, char *data, Object *clsObject) {
+int parse_class(VM *vm, Object *cloader, char *data, Object *clsObject) {
     int magic = READ_U4(data); data += 4;
     if(magic != 0xCAFEBABE)
         return 0;
@@ -322,7 +328,7 @@ int parse_class(VM *vm, char *data, Object *clsObject) {
 
     VMClass *cls = (VMClass*)clsObject->instance;
     CPItem *cp = NULL;
-    data = parse_constant_pool(vm, data, &cp);
+    data = parse_constant_pool(vm, cloader, data, &cp);
     cls->cp = cp;
     cls->flags = READ_U2(data); data += 2;
     JINT nameIndex = READ_U2(data); data += 2;
@@ -330,7 +336,7 @@ int parse_class(VM *vm, char *data, Object *clsObject) {
     cls->name = cp[cp[nameIndex].index1].value.O;
     Object *superName = cp[cp[superIndex].index1].value.O;
     if(superName)
-        cls->superClass = resolve_class(vm, STRCHARS(superName), STRLEN(superName), 0, NULL);
+        cls->superClass = resolve_class(vm, cloader, STRCHARS(superName), STRLEN(superName), 0, NULL);
     
     //parse interfaces
     int count = READ_U2(data); data += 2;
@@ -339,7 +345,7 @@ int parse_class(VM *vm, char *data, Object *clsObject) {
         for(int i=0; i<count; i++) {
             int iindex = READ_U2(data); data += 2;
             Object *iname = cls->cp[cls->cp[iindex].index1].value.O;
-            Object *intf = resolve_class(vm, STRCHARS(iname), STRLEN(iname), 0, NULL);
+            Object *intf = resolve_class(vm, cloader, STRCHARS(iname), STRLEN(iname), 0, NULL);
             if(!intf || vm->exception) return 0;
             ((Object**)cls->interfaces->instance)[i] = intf;
         }

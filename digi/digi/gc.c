@@ -28,7 +28,7 @@ int heap_is_object(VM *vm, void *o) {
 void gc_queue_object(VM *vm, Object *o) {
     if(!o || o->gc.version == vm->gcVersion) return;
     o->gc.version = vm->gcVersion;
-    if(!o->instance || o->gc.atomic) return;
+    if(!o->instance || (o->gc.atomic && !o->gc.isClass)) return;
     if(vm->markQueue.S == vm->markQueue.C) {
         int size = vm->markQueue.C;
         if(size == 0) size = 4096; else size *= 2;
@@ -51,7 +51,11 @@ void gc_queue_object(VM *vm, Object *o) {
 }
 
 void gc_mark_class(VM *vm, VMClass *cls) {
-    if(!cls || !cls->fields || cls->primitiveSize || cls->elementClass || !cls->global) return;
+    if(!cls) return;
+    //printf("mark class: %s\n", string_to_ascii(cls->name));
+    gc_queue_object(vm, cls->clsLoader);
+    gc_queue_object(vm, cls->next);
+    if(!cls->fields || cls->primitiveSize || cls->elementClass || !cls->global) return;
     int len = cls->fields->length;
     for(int i=0; i<len; i++) {
         Object *fo = ARRAY_DATA_O(cls->fields)[i];
@@ -104,18 +108,24 @@ void gc_mark_queue(VM *vm) {
         vm->markQueue.R = (vm->markQueue.R + 1) % vm->markQueue.C;
         vm->markQueue.S--;
         
-        VMClass *cls = o->cls->instance;
-        if(cls->instanceOffsets) {
-            for(int i=0; i<cls->instanceOffsetCount; i++) {
-                int off = cls->instanceOffsets[i];
-                Object *field_value = *FIELD_PTR_O(o, off);
-                if(field_value) gc_queue_object(vm, field_value);
-            }
-        } else if(cls->elementClass && !((VMClass*)cls->elementClass->instance)->primitiveSize) {
-            int len = 0;
-            for(int i=0; i<len; i++) {
-                Object *array_item = ARRAY_DATA_O(o)[i];
-                if(array_item) gc_queue_object(vm, array_item);
+        //printf("cls: %s\n",string_to_ascii(CLS(o->cls,name)));
+        if(o->gc.isClass) {
+            gc_mark_class(vm, o->instance);
+        } else {
+            VMClass *cls = o->cls->instance;
+            if(cls->instanceOffsets) {
+                for(int i=0; i<cls->instanceOffsetCount; i++) {
+                    int off = cls->instanceOffsets[i];
+                    Object *field_value = *FIELD_PTR_O(o, off);
+                    if(field_value) gc_queue_object(vm, field_value);
+                }
+            } else if(cls->elementClass && !((VMClass*)cls->elementClass->instance)->primitiveSize) {
+                int len = o->length;
+                for(int i=0; i<len; i++) {
+                    Object *array_item = ARRAY_DATA_O(o)[i];
+                    if(array_item) gc_queue_object(vm, array_item);
+                }
+                count += len / 128;
             }
         }
     }
@@ -172,11 +182,12 @@ void gc_step(VM *vm) {
     switch(vm->gcStep) {
         case GCSTEP_INIT: //initialize
             vm->gcVersion = (vm->gcVersion+1) & 15;
-            vm->gcStep = GCSTEP_MARKCLASSES;
-            vm->gcPtr = vm->classes;
+            vm->gcStep = GCSTEP_MARKSTACK; //GCSTEP_MARKSTACK; //GCSTEP_MARKCLASSES;
+            //vm->gcPtr = ((ClassLoader*)vm->sysClassLoader->instance)->classes;
             vm->markQueue.R = vm->markQueue.W = vm->markQueue.S = 0;
-            gc_queue_object(vm, vm->exception);
-            gc_queue_object(vm, vm->mainMethod);
+            gc_queue_object(vm, vm->sysClassLoader);
+            //gc_queue_object(vm, vm->exception);
+            //gc_queue_object(vm, vm->mainMethod);
             for(int i=0; i<vm->gcRootCount; i++)
                 gc_queue_object(vm, vm->gcRoots[i]);
             break;

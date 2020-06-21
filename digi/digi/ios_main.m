@@ -358,12 +358,12 @@ int main(int argc, char * argv[]) {
 }
 
 +(void) run {
-    digiplayPlatformStepMethod = resolve_method(gamaVM, L"digiplay/Platform",17, L"step",4, L"()V", 3);
+    digiplayPlatformStepMethod = resolve_method(gamaVM, gamaVM->sysClassLoader, L"digiplay/Platform",17, L"step",4, L"()V", 3);
     
     CGRect bounds = [[UIScreen mainScreen] bounds];
     CGFloat scale = [[UIScreen mainScreen] scale];
     
-    Object *resize_method = resolve_method(gamaVM, L"digiplay/Platform",17, L"resize",6, L"(II)V", 5);
+    Object *resize_method = resolve_method(gamaVM, gamaVM->sysClassLoader, L"digiplay/Platform",17, L"resize",6, L"(II)V", 5);
     VAR vargs[7] = {
         //{ .O = digiplayPlatform },
         { .I = (JINT)(bounds.size.width * scale) },

@@ -34,7 +34,7 @@ int jni_parse_signature(VM *vm, JCHAR *sign, int ptr, char *type, Object **cls) 
     if(*type == 'L') {
         int start = ptr;
         while(sign[ptr] != ';') ptr++;
-        *cls = resolve_class(vm, sign + start, ptr - start, 1, nil);
+        //todo: *cls = resolve_class(vm, sign + start, ptr - start, 1, nil);
         ptr++;
         if(vm->exception) return 0;
     } else if(*type == '[') {

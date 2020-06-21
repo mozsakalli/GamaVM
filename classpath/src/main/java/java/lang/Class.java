@@ -62,7 +62,7 @@ public final class Class<T> {
 
     int allParentCount;
     Class[] allParents;
-    Object vm;
+    ClassLoader classLoader;
     int externalFlags;
     String externalName;
     Object externalData;

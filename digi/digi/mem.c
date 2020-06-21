@@ -55,6 +55,7 @@ Object *alloc_object(VM *vm, Object *cls, int atomic) {
     o->gc.version = vm->gcVersion;
     o->gc.atomic = atomic;
     o->gc.free = 0;
+    o->gc.isClass = 0;
     
     int size = CLS(cls, instanceSize);
     if(size > 0) {
@@ -75,12 +76,8 @@ Object *alloc_array(VM *vm, Object *cls, int length, int atomic) {
 
 Object *alloc_class(VM *vm) {
     Object *cls = alloc_object(vm, vm->jlClass, 1);
-    CLS(cls, vm) = vm;
+    cls->gc.isClass = 1;
     return cls;
-}
-
-void free_class(Object *cls) {
-    
 }
 
 Object *alloc_string_ascii(VM *vm, char *chars, int atomic) {
