@@ -123,9 +123,11 @@ void gc_mark_queue(VM *vm) {
                 int len = o->length;
                 for(int i=0; i<len; i++) {
                     Object *array_item = ARRAY_DATA_O(o)[i];
-                    if(array_item) gc_queue_object(vm, array_item);
+                    if(array_item) {
+                        gc_queue_object(vm, array_item);
+                        count++;
+                    }
                 }
-                count += len / 128;
             }
         }
     }

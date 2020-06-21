@@ -13,29 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package java.lang;
 
 /**
  *
  * @author mustafa
  */
-public abstract class ClassLoader {
-
-    ClassLoader parent;
-    Class classes;
-    String strings;
-
-    protected abstract byte[] readResource(String path);
+public class JarClassLoader extends ClassLoader {
+    String[] classpath;
     
-    public Class loadClass(String name) throws ClassNotFoundException {
-        return loadClass(name, false);
+    public JarClassLoader(String[] classpath) {
+        if(classpath == null || classpath.length == 0) throw new RuntimeException("Classpath must be supplied");
+        this.classpath = classpath;
     }
-
-    protected native Class loadClass(String name, boolean resolve) throws ClassNotFoundException;
-
-    protected native Class defineClass(String name, byte[] b, int offset, int length);
-
-    public final ClassLoader getParent() {
-        return parent;
+  
+    @Override
+    protected byte[] readResource(String path) {
+        for(String cp : classpath) {
+            
+        }
     }
+    
 }
