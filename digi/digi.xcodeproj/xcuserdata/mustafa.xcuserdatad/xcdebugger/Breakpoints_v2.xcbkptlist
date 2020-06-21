@@ -62,8 +62,8 @@
             filePath = "digi/parse.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "346"
-            endingLineNumber = "346"
+            startingLineNumber = "352"
+            endingLineNumber = "352"
             landmarkName = "parse_annotations(vm, data, cp, externalFlags, exName)"
             landmarkType = "9">
          </BreakpointContent>
@@ -414,8 +414,8 @@
             filePath = "digi/vm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
             landmarkName = "vm_main(vm, className, methodName, signature)"
             landmarkType = "9">
          </BreakpointContent>
@@ -686,8 +686,8 @@
             filePath = "digi/class.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "248"
-            endingLineNumber = "248"
+            startingLineNumber = "254"
+            endingLineNumber = "254"
             landmarkName = "link_class(vm, clsObject)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1294,8 +1294,8 @@
             filePath = "digi/class.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "154"
-            endingLineNumber = "154"
+            startingLineNumber = "160"
+            endingLineNumber = "160"
             landmarkName = "link_class(vm, clsObject)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1422,8 +1422,8 @@
             filePath = "digi/vm.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
             landmarkName = "vm_init()"
             landmarkType = "9">
          </BreakpointContent>
@@ -1628,8 +1628,8 @@
             filePath = "digi/class.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "305"
-            endingLineNumber = "305"
+            startingLineNumber = "311"
+            endingLineNumber = "311"
             landmarkName = "resolve_class(vm, name, len, link, target)"
             landmarkType = "9">
          </BreakpointContent>

@@ -71,6 +71,4 @@ public class Platform {
     @External
     public static native byte[] readAsset(String path);
     
-    @External
-    public static native void reload(byte[] jar, int offset, int length);
 }

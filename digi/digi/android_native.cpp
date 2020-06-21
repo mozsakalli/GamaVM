@@ -119,17 +119,6 @@ Java_digiplay_MainActivity_gamaVMMain(
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_digiplay_MainActivity_gamaVMDestroy(
-        JNIEnv *env,
-        jclass /* this */) {
-    if(gamaVM) {
-        vm_destroy(gamaVM);
-        gamaVM = NULL;
-    }
-}
-
-
-extern "C" JNIEXPORT void JNICALL
 Java_digiplay_MainActivity_platformResize(
         JNIEnv *env,
         jclass /* this */, jint width, jint height) {

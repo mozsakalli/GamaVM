@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
     }*/
 
     public static native void gamaVMMain();
-    public static native void gamaVMDestroy();
     public static native void platformResize(int width, int height);
     public static native void platformStep();
     public static native void completeCompletable(long handle, byte[] data);
