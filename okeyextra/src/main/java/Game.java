@@ -28,10 +28,13 @@ public class Game implements digiplay.Game {
 
     @Override
     public void begin() {
-        Stage2D.I.setup(new Point2D(Platform.screenWidth, Platform.screenHeight));
+        Stage2D.setup(new Point2D(Platform.screenWidth, Platform.screenHeight));
         Image img = new Image();
         img.setX(400);
         img.setY(400);
+        img.setScaleY(3);
+        img.scaleX(3);
+        img.addBehaviour(new B());
         Stage2D.I.addChild(img);
     }
 

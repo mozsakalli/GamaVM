@@ -348,9 +348,16 @@ Object *resolve_class(VM *vm, Object *cloader, JCHAR *name, JINT len, int link, 
             if(vm->exception) return NULL;
             readResourceMethod = MTH(method, vTableIndex);
         }
-        //todo: load class from custom classloader
+        
+        VAR rargs[2] = { {.O = cloader}, { .O = alloc_string_java(vm, name, len, 0)}};
+        CALLVM_V(vm, CLS(cloader->cls, vtable)[readResourceMethod], &rargs[0]);
+        if(vm->exception) return NULL;
+        Object *res = vm->frames[vm->FP].ret.O;
+        if(res) class_raw = res->instance;
     }
     if(!class_raw) {
+        if(((ClassLoader*)cloader->instance)->parent)
+            return resolve_class(vm, ((ClassLoader*)cloader->instance)->parent, name, len, link, target);
         throw_classnotfound(vm, name, len);
         return NULL;
     }

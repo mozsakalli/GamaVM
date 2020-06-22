@@ -21,16 +21,17 @@ package digiplay;
  */
 public class Stage2D extends Sprite2D {
 
-    public final static Stage2D I = new Stage2D();
+    public static Stage2D I;
     Point2D designSize;
     float scaleFactor;
     public final static GLQuadBatch QuadBatch = new GLQuadBatch(16384);
     public final static GLShader2D DefaultShader = new GLShader2D("gl_FragColor = texture2D(texture, vUv.xy).xyzw * vColor.xyzw;");
     
-    public void setup(Point2D size) {
-        designSize = size;
-        setFlags(Sprite2D.INTERACTIVE | Sprite2D.INTERACTIVE_CHILD | Sprite2D.IN_STAGE);
-        resize();
+    public static void setup(Point2D size) {
+        I = new Stage2D();
+        I.designSize = size;
+        I.setFlags(Sprite2D.INTERACTIVE | Sprite2D.INTERACTIVE_CHILD | Sprite2D.IN_STAGE);
+        I.resize();
     }
 
     public void resize() {
