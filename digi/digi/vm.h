@@ -337,6 +337,7 @@ extern void gc_unprotect(VM *vm,Object *o);
 /// CLASS
 extern Object *get_arrayclass_of(VM *vm, Object *cls);
 extern Object *resolve_class(VM *vm, Object *cloader, JCHAR *name, JINT len, int link, Object *target);
+extern void link_class(VM *vm, Object *clsObject);
 extern Object *resolve_class_by_index(VM *vm, Object *cls, int index);
 extern Object *find_class(VM *vm, Object *cloader, JCHAR *name, JINT len);
 extern Object *find_class_method(VM *vm, Object *cls, JCHAR *name, JINT nlen, JCHAR *sign, int slen);

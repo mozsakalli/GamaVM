@@ -1,6 +1,7 @@
 java/io/InputStreamReader.class
 java/util/AbstractList$SubAbstractListRandomAccess.class
 java/lang/Math.class
+gamavm/Unsafe.class
 java/util/TimeZone.class
 java/util/TreeMap$UnboundedEntryIterator.class
 java/lang/SuppressWarnings.class
@@ -360,6 +361,7 @@ java/util/Collections$EmptySet.class
 java/util/EventListener.class
 java/util/SimpleTimeZone.class
 java/text/DateFormatPatterns.class
+gamavm/SysClassLoader.class
 java/util/HashMap$AbstractMapIterator.class
 java/util/zip/InflaterInputStream.class
 java/util/MapEntry.class

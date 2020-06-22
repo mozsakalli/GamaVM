@@ -20,7 +20,7 @@ void *read_file(const char* path, int *size) {
 
 void *read_class_file(JCHAR *name, int len) {
     int jarSize;
-    void *jar = read_file("jvm_test.jar", &jarSize);
+    void *jar = read_file("boot.jar", &jarSize);
     if(!jar) return NULL;
 
     char tmp[512];
@@ -64,4 +64,24 @@ void java_lang_System_SystemOutStream_printImpl(VM *vm, Object *method, VAR *arg
     NSString *ns = [[NSString alloc] initWithCharacters:STRCHARS(string) length:STRLEN(string)];
     NSLog(@"%@", ns);
     [ns release];
+}
+
+extern VM *gamaVM;
+void vm_completeCompletable(JLONG gamaHandle, void *buffer, int length) {
+    if(!gamaHandle) return;
+    Object *target = (Object*)gamaHandle;
+    gc_unprotect(gamaVM, target);
+
+    static int methodIndex = -1;
+    if(methodIndex == -1) {
+        Object *m = resolve_method(gamaVM, gamaVM->sysClassLoader,
+        (JCHAR*)L"digiplay/Completable",20, (JCHAR*)L"complete",8, (JCHAR*)L"(JI)V",5);
+        if(!m) return;
+        methodIndex = MTH(m, iTableIndex);
+    }
+
+
+    Object *method = CLS(target->cls, itable)[methodIndex];
+    VAR args[3] = {{.O = target}, {.J = (JLONG)buffer}, {.I = length}};
+    CALLVM_V(gamaVM, method, &args[0]);
 }

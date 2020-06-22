@@ -35,7 +35,7 @@
             </goals>  
             <configuration> 
               <!-- outputFile>/Users/mustafa/Work/GamaVM/MyApplication2/app/src/main/assets/jvm_test.jar</outputFile -->  
-              <outputFile>/Users/mustafa/Work/GamaVM/digi/digi/assets/jvm_test.jar</outputFile> 
+              <outputFile>/Users/mustafa/Work/GamaVM/digi/digi/assets/boot.jar</outputFile> 
             </configuration> 
           </execution> 
         </executions>  

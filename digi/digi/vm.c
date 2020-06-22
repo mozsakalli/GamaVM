@@ -93,6 +93,14 @@ void vm_main(VM *vm, char *className, char *methodName, char *signature) {
     free(clName);
     free(name);
     free(sign);
+    
+    Object *ptr = ((ClassLoader*)vm->sysClassLoader->instance)->classes;
+    while (ptr) {
+        if(!CLS(ptr, name)) {
+            printf("....");
+        }
+        ptr = CLS(ptr,next);
+    }
 }
 /*
 void vm_destroy(VM *vm) {

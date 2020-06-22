@@ -36,6 +36,7 @@
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/io/Serializable.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/util/Random.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/Double.java
+/Users/mustafa/Work/GamaVM/classpath/src/main/java/gamavm/Unsafe.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/Object.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/io/ByteArrayOutputStream.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/NoSuchMethodException.java
@@ -112,6 +113,7 @@
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/ref/Reference.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/gamavm/JNIObject.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/annotation/Documented.java
+/Users/mustafa/Work/GamaVM/classpath/src/main/java/gamavm/SysClassLoader.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/Comparable.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/ref/WeakReference.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/text/DateFormat.java

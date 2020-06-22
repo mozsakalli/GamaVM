@@ -5,8 +5,6 @@ import digiplay.Net;
 import digiplay.Platform;
 import digiplay.Point2D;
 import digiplay.Stage2D;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 
 
 /*

@@ -9,20 +9,20 @@
 #import <Foundation/Foundation.h>
 #include "vm.h"
 
-@interface Http : NSObject {
+@interface digiplay_Net$Http : NSObject {
     NSURLConnection *connection;
     @public NSMutableData *receivedData;
-    @public Object* callback;
+    @public JLONG gamaHandle;
     @public bool isImageURL;
 }
-- (id)initWithURLAndPostParams:(NSString*)url postParams:(NSString*)postParams thiz:(Object*)cb;
+- (id)initWithURLAndPostParams:(NSString*)url postParams:(NSString*)postParams thiz:(JLONG)handle;
 - (void)clear;
 - (void)doCallback:(void*)data length:(int)length;
 @end
 
-@implementation Http
+@implementation digiplay_Net$Http
 
-- (id) initWithURLAndPostParams:(NSString*)url postParams:(NSString*)postParams thiz:(Object *)cb  {
+- (id) initWithURLAndPostParams:(NSString*)url postParams:(NSString*)postParams thiz:(JLONG)handle  {
     self = [super init];
     if (self) {
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -37,7 +37,7 @@
             [postLength release];
         }
         [request setTimeoutInterval:15];
-        callback = cb;
+        gamaHandle = handle;
         [self download:request];
         [request release];
         request = nil;
@@ -90,7 +90,7 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)conn {
-    if(receivedData && callback) {
+    if(receivedData && gamaHandle) {
         int length = (int)[receivedData length];
         void* data = (void*)[receivedData bytes];
         [self doCallback:data length:length];
@@ -103,9 +103,11 @@
 }
 
 extern VM *gamaVM;
+extern void vm_completeCompletable(JLONG gamaHandle, void *buffer, int length);
 - (void)doCallback:(void*)data length:(int)length {
-    if(callback) {
-        gc_unprotect(gamaVM, callback);
+    /*
+    if(gamaHandle) {
+        gc_unprotect(gamaVM, (Object*)gamaHandle);
         if(data) {
             Object *method = find_method(gamaVM, callback->cls, L"onHttpSuccess", 13, L"([B)V", 5);
             if(method) {
@@ -121,15 +123,28 @@ extern VM *gamaVM;
                 invoke_interface_v(gamaVM, method, &args[0]);
             }
         }
-    }
+    }*/
+    void *buffer = NULL;
+    if(data && length > 0) {
+        buffer = malloc(length);
+        memcpy(buffer, data, length);
+    } else length = 0;
+    
+    vm_completeCompletable(gamaHandle, buffer, length);
     [self clear];
     [self release];
 }
 
++(void)start:(JLONG)handle url:(NSString*)url post:(NSString*)post {
+    gc_protect(gamaVM, (Object*)handle);
+    digiplay_Net$Http *http = [[digiplay_Net$Http alloc] initWithURLAndPostParams:url postParams:post thiz:handle];
+    [http retain];
+}
 @end
 
 
 void Java_digiplay_Net_http(VM *vm, Object *method, VAR *args) {
+    /*
     if(!args[0].O) {
         throw_null(vm);
         return;
@@ -143,5 +158,5 @@ void Java_digiplay_Net_http(VM *vm, Object *method, VAR *args) {
     
     gc_protect(gamaVM, args[2].O);
     Http *http = [[Http alloc] initWithURLAndPostParams:url postParams:post thiz:args[2].O];
-    [http retain];
+    [http retain];*/
 }

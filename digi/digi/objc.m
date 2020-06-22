@@ -108,6 +108,11 @@ void vm_invoke_objc(VM *vm, Object *method, VAR *args) {
     for (int i = 2; i < numarg; i++) {
         const char *t = [sig getArgumentTypeAtIndex:i];
         switch(t[0]) {
+            case 'q': {
+                long long x = a->J;
+                [inv setArgument:&x atIndex:i];
+            } break;
+                
             case '@': {
                 if(!a->O) {
                     id n = nil;
@@ -120,6 +125,7 @@ void vm_invoke_objc(VM *vm, Object *method, VAR *args) {
             default:
                 printf("!!!!!!!!!!!!!!!!!!! Unknown objc type: %c\n", t[0]);
         }
+        a++;
     }
     
     [inv setTarget:target];
@@ -186,22 +192,29 @@ void vm_resolve_objc(VM *vm, Object *method, VAR *args) {
     Class objcClass = getObjcClass(cls);
     char selname[256];
     char *sptr = selname;
-    sptr += sprintf(selname, "%s", string_to_ascii(m->name));
-    if(m->argCount > 0) sptr += sprintf(sptr, ":");
-    SEL sel = NSSelectorFromString([[NSString alloc] initWithUTF8String:selname]);
-    if(!sel) {
-        return;
+    if(m->externalName) {
+        sprintf(selname, "%s", string_to_ascii(m->externalName));
+    } else {
+        sptr += sprintf(selname, "%s", string_to_ascii(m->name));
+        if(m->argCount > 0) sptr += sprintf(sptr, ":");
     }
-    
-    if(IS_STATIC(m->flags)) {
-        if([objcClass respondsToSelector:sel]) {
-            JNIMethodInfo *mi = vm_build_external_method(vm, method, sel);
-            mi->objcClass = objcClass;
-            m->externalData = mi;
-            m->entry = &vm_invoke_objc;
-            vm_invoke_objc(vm, method, args);
+    printf("selector: %s\n", selname);
+    SEL sel = NSSelectorFromString([[NSString alloc] initWithUTF8String:selname]);
+    if(sel) {
+        if(IS_STATIC(m->flags)) {
+            if([objcClass respondsToSelector:sel]) {
+                JNIMethodInfo *mi = vm_build_external_method(vm, method, sel);
+                mi->objcClass = objcClass;
+                m->externalData = mi;
+                m->entry = &vm_invoke_objc;
+                vm_invoke_objc(vm, method, args);
+                return;
+            }
         }
     }
+    //fallback to native exec
+    m->entry = &vm_native_exec;
+    vm_native_exec(vm, method, args);
 }
 
 void vm_link_external_class(VM *vm, Object *clsObject) {

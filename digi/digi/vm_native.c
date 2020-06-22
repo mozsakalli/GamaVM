@@ -13,6 +13,7 @@
 #include <mach/mach_time.h>
 #endif
 #include <math.h>
+#include "miniz.h"
 
 void gamavm_VM_getClass(VM *vm, Object *method, VAR *args) {
     vm->frames[vm->FP].ret.O = args[0].O ? (Object*)args[0].O->cls : NULL;
@@ -31,6 +32,47 @@ void gamavm_VM_wrapBytes(VM *vm, Object *method, VAR *args) {
 }
 void gamavm_VM_freeMem(VM *vm, Object *method, VAR *args) {
     if(args[0].J) free((void*)args[0].J);
+}
+void gamavm_VM_extractZip(VM *vm, Object *method, VAR *args) {
+    Object *path = args[0].O;
+    Object *array = args[1].O;
+    JINT offset = args[2].I;
+    if(!path || !array) {
+        throw_null(vm);
+        return;
+    }
+    if(offset < 0 || offset >= array->length) {
+        throw_arraybounds(vm, offset, array->length);
+        return;
+    }
+    
+    vm->frames[vm->FP].ret.O = NULL;
+    
+    mz_zip_archive zip = {0};
+    if(mz_zip_reader_init_mem(&zip, array->instance+offset, array->length-offset, 0) == MZ_FALSE) {
+        return;
+    }
+
+    char tmp[512];
+    sprintf(tmp, "%s", string_to_ascii(path));
+    int file_index = mz_zip_reader_locate_file(&zip, tmp, NULL, 0);//
+    mz_zip_archive_file_stat file_stat = {0};
+    if (!mz_zip_reader_file_stat(&zip, file_index, &file_stat)) {
+        return;
+    }
+    size_t uncompressed_size = (size_t) file_stat.m_uncomp_size;
+    void *p = mz_zip_reader_extract_file_to_heap(&zip, file_stat.m_filename, &uncompressed_size, 0);
+    if (!p) {
+        return;
+    } else {
+        Object *result = alloc_array_B(vm, (int)uncompressed_size, 0);
+        memcpy(result->instance, p, uncompressed_size);
+        mz_free(p);
+        vm->frames[vm->FP].ret.O = result;
+    }
+}
+void gamavm_VM_getSystemClassLoader(VM *vm, Object *method, VAR *args) {
+    vm->frames[vm->FP].ret.O = vm->sysClassLoader;
 }
 
 void java_lang_Object_clone(VM *vm, Object *method, VAR *args) {
@@ -273,6 +315,40 @@ void java_lang_Float_intBitsToFloat(VM *vm, Object *method, VAR *args) {
     vm->frames[vm->FP].ret.F = *f;
 }
 
+void java_lang_ClassLoader_defineClass(VM *vm, Object *method, VAR *args) {
+    Object *loader = args[0].O;
+    Object *name = args[1].O;
+    Object *array = args[2].O;
+    JINT offset = args[3].I;
+    JINT len = args[4].I;
+    
+    vm->frames[vm->FP].ret.O = NULL;
+    
+    if(!loader || !name || !array) {
+        throw_null(vm);
+        return;
+    }
+    
+    if(offset < 0 || offset >= array->length) {
+        throw_arraybounds(vm, offset, array->length);
+        return;
+    }
+    
+    Object *cls = alloc_class(vm);
+    if(!parse_class(vm, loader, array->instance+offset, cls)) {
+        throw_classnotfound(vm, STRCHARS(name), STRLEN(name));
+        return;
+    }
+    
+    CLS(cls, clsLoader) = loader;
+    ClassLoader *cl = loader->instance;
+    CLS(cls, next) = cl->classes;
+    cl->classes = cls;
+    
+    link_class(vm, cls);
+    
+    vm->frames[vm->FP].ret.O = cls;
+}
 
 extern void java_lang_System_SystemOutStream_printImpl(VM *vm, Object *method, VAR *args);
 
@@ -281,6 +357,8 @@ NativeMethodInfo vm_native_methods[] = {
     {"gamavm/VM:getAddress:(Ljava/lang/Object;)J", &gamavm_VM_getAddress},
     {"gamavm/VM:wrapBytes:(JI)[B", &gamavm_VM_wrapBytes},
     {"gamavm/VM:freeMem:(J)V", &gamavm_VM_freeMem},
+    {"gamavm/VM:extractZip:(Ljava/lang/String;[BI)[B", &gamavm_VM_extractZip},
+    {"gamavm/VM:getSystemClassLoader:()Ljava/lang/ClassLoader;", &gamavm_VM_getSystemClassLoader},
 
     {"java/lang/Object:clone:()Ljava/lang/Object;", &java_lang_Object_clone},
     
@@ -295,6 +373,8 @@ NativeMethodInfo vm_native_methods[] = {
     {"java/lang/Double:toStringImpl:(DZ)Ljava/lang/String;", &java_lang_Double_toStringImpl},
 
     {"java/lang/Math:random:()D", &java_lang_Math_random_D},
+
+    {"java/lang/ClassLoader:defineClass:(Ljava/lang/String;[BII)Ljava/lang/Class;", &java_lang_ClassLoader_defineClass},
 
     NULL
 };

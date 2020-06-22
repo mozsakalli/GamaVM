@@ -232,7 +232,7 @@ public class Hotreload {
                     } else
                     if(url.startsWith("/jar")) {
                         String hash = url.length() > 4 ? url.substring(4) : "";
-                        File f = new File("/Users/mustafa/Work/GamaVM/MyApplication2/app/src/main/assets/jvm_test.jar");
+                        File f = new File("/Users/mustafa/Work/GamaVM/okeyextra/target/okeyextra.jar");
                         ByteArrayOutputStream ba = new ByteArrayOutputStream();
                         DataOutputStream d = new DataOutputStream(ba);
                         d.writeLong(f.lastModified());

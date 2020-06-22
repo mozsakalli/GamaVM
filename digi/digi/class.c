@@ -338,7 +338,18 @@ Object *resolve_class(VM *vm, Object *cloader, JCHAR *name, JINT len, int link, 
     
     void *class_raw = NULL;
     int nofree = 0;
-    class_raw = read_class_file(name, len);
+    if(cloader == vm->sysClassLoader)
+        class_raw = read_class_file(name, len);
+    else {
+        static int readResourceMethod = -1;
+        if(readResourceMethod == -1) {
+            Object *method =
+            resolve_method(vm, vm->sysClassLoader, L"java/lang/ClassLoader", 21, L"readResource", 12, L"(Ljava/lang/String;)[B", 22);
+            if(vm->exception) return NULL;
+            readResourceMethod = MTH(method, vTableIndex);
+        }
+        //todo: load class from custom classloader
+    }
     if(!class_raw) {
         throw_classnotfound(vm, name, len);
         return NULL;

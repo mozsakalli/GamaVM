@@ -318,8 +318,8 @@
             filePath = "digi/vm_native.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "47"
-            endingLineNumber = "47"
+            startingLineNumber = "89"
+            endingLineNumber = "89"
             landmarkName = "java_lang_Object_clone(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1230,8 +1230,8 @@
             filePath = "digi/ios_net.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145"
+            startingLineNumber = "160"
+            endingLineNumber = "160"
             landmarkName = "Java_digiplay_Net_http(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1628,8 +1628,8 @@
             filePath = "digi/objc.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "220"
-            endingLineNumber = "220"
+            startingLineNumber = "233"
+            endingLineNumber = "233"
             landmarkName = "vm_link_external_class(vm, clsObject)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1644,8 +1644,8 @@
             filePath = "digi/objc.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "205"
-            endingLineNumber = "205"
+            startingLineNumber = "218"
+            endingLineNumber = "218"
             landmarkName = "vm_resolve_objc(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1660,8 +1660,8 @@
             filePath = "digi/objc.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "201"
-            endingLineNumber = "201"
+            startingLineNumber = "209"
+            endingLineNumber = "209"
             landmarkName = "vm_resolve_objc(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1676,8 +1676,8 @@
             filePath = "digi/objc.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "184"
-            endingLineNumber = "184"
+            startingLineNumber = "190"
+            endingLineNumber = "190"
             landmarkName = "vm_resolve_objc(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1724,8 +1724,8 @@
             filePath = "digi/objc.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "119"
-            endingLineNumber = "119"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
             landmarkName = "vm_invoke_objc(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1740,8 +1740,8 @@
             filePath = "digi/objc.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "132"
-            endingLineNumber = "132"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
             landmarkName = "vm_invoke_objc(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1756,8 +1756,8 @@
             filePath = "digi/objc.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
             landmarkName = "vm_invoke_objc(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1999,6 +1999,118 @@
             startingLineNumber = "14"
             endingLineNumber = "14"
             landmarkName = "read_file(path, size)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6653EA29-8194-4F8E-87AC-6D5AD6C06A80"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/ios_main.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
+            landmarkName = "-updateTimerFired"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "46C4072E-ED38-40C7-AE56-9FB478904C5F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/ios_net.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
+            landmarkName = "-doCallback:length:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "39BE70DA-C21A-4E88-A3B2-592515E2C1F1"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/vm_native.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "37"
+            endingLineNumber = "37"
+            landmarkName = "gamavm_VM_extractZip(vm, method, args)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A3A54373-221E-424A-A1DF-61A8CC6E7344"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/class.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "98"
+            endingLineNumber = "98"
+            landmarkName = "link_class(vm, clsObject)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FC932483-B7FB-496E-9992-A6C46F90FA14"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/vm_native.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "319"
+            endingLineNumber = "319"
+            landmarkName = "java_lang_ClassLoader_defineClass(vm, method, args)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "24F02804-6C10-4622-A8D4-D6563B055DA1"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/vm_native.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "338"
+            endingLineNumber = "338"
+            landmarkName = "java_lang_ClassLoader_defineClass(vm, method, args)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4EA7B038-12D4-4B93-8805-29FAA91D11CA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/vm.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
+            landmarkName = "vm_main(vm, className, methodName, signature)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

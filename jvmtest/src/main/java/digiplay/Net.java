@@ -38,11 +38,14 @@ public class Net {
         public String postData;
 
         public Http(String url) {
+            if(url == null || url.isEmpty()) throw new RuntimeException("URL can't be null");
+            if(url.startsWith("//")) url = "http:" + url;
             this.url = url;
         }
         
         public Http param(String name, Object value) {
-            if(value != null) {
+            if(name != null && value != null) {
+                //todo: url encode
                 if(postData == null)
                     postData = name;
                 else postData += "&" + name;
@@ -55,6 +58,6 @@ public class Net {
             start(VM.getAddress(this), url, postData);
         }
         
-        @External private static native void start(long handle, String url, String postData);
+        @External(objc="start:url:post:") private static native void start(long handle, String url, String postData);
     }
 }

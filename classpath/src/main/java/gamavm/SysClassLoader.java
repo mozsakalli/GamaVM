@@ -28,6 +28,6 @@ public class SysClassLoader extends ClassLoader {
     
     @Override
     protected byte[] readResource(String path) {
-        return VM.extractZip(jar, path);
+        return VM.extractZip(path, jar, 0);
     }
 }

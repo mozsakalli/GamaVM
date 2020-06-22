@@ -45,7 +45,7 @@ public class VM {
     public static native void gcUnProtect(Object o);
     
     public static native byte[] readFile(String path);
-    public static native byte[] extractZip(byte[] zip, String name);
+    public static native byte[] extractZip(String name, byte[] zip, int offset);
     
     public static native Method getCaller();
 }

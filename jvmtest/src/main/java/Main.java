@@ -22,15 +22,7 @@ import digiplay.Platform;
  */
 public class Main {
     
-    Object obj;
-    
     public static void main() {
-        Platform.run(new MyGame());
+        Platform.run(new Player());
     }
-    
-    public static void main(String...args) {
-    }
-
-
-
 }

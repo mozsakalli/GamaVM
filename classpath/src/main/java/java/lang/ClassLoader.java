@@ -15,6 +15,8 @@
  */
 package java.lang;
 
+import gamavm.VM;
+
 /**
  *
  * @author mustafa
@@ -26,7 +28,7 @@ public abstract class ClassLoader {
     String strings;
 
     public ClassLoader() {
-        this(null);
+        this(VM.getSystemClassLoader());
     }
     
     public ClassLoader(ClassLoader parent) {
@@ -45,6 +47,7 @@ public abstract class ClassLoader {
         while(cl != null) {
             Class ptr = cl.classes;
             while(ptr != null) {
+                System.out.println(name0+" -> "+ptr.getName());
                 if(ptr.getName().equals(name0)) return ptr;
                 ptr = ptr.next;
             }
