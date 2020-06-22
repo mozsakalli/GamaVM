@@ -14,6 +14,7 @@ VM* vm_init() {
     
     gamaVM->jlClass = vm_alloc(sizeof(Object));
     gamaVM->jlClass->gc.atomic = 1;
+    gamaVM->jlClass->cls = gamaVM->jlClass;
     VMClass *cls = gamaVM->jlClass->instance = vm_alloc(sizeof(VMClass));
     cls->instanceSize = sizeof(VMClass);
     

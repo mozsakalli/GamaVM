@@ -33,12 +33,11 @@ public class Player implements Game {
     
     @Override
     public void begin() {
-        System.out.println(byte[].class.getName());
+        System.out.println(Class.class.getName());
     }
 
     @Override
     public void update() {
-        if(true) return;
         long now = System.currentTimeMillis();
         if(now - lastCheckTime >= 5000) {
             lastCheckTime = now;

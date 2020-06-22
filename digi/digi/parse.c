@@ -334,6 +334,7 @@ int parse_class(VM *vm, Object *cloader, char *data, Object *clsObject) {
     JINT nameIndex = READ_U2(data); data += 2;
     JINT superIndex = READ_U2(data); data += 2;
     cls->name = cp[cp[nameIndex].index1].value.O;
+    //printf("--parse: %s : %p\n", string_to_ascii(cls->name), clsObject);
     Object *superName = cp[cp[superIndex].index1].value.O;
     if(superName)
         cls->superClass = resolve_class(vm, cloader, STRCHARS(superName), STRLEN(superName), 0, NULL);

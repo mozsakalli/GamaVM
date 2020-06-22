@@ -47,7 +47,6 @@ public abstract class ClassLoader {
         while(cl != null) {
             Class ptr = cl.classes;
             while(ptr != null) {
-                System.out.println(name0+" -> "+ptr.getName());
                 if(ptr.getName().equals(name0)) return ptr;
                 ptr = ptr.next;
             }

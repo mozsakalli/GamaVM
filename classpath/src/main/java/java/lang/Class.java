@@ -285,6 +285,10 @@ public final class Class<T> {
     }
     
     private Method findMethod(String name, Class[] parameters) {
+        if(methods == null) return null;
+        for(Method m : methods) {
+            
+        }
         /*
         if(methods == null) return null;
         for(Method m : methods) {
