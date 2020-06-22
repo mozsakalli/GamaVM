@@ -27,5 +27,6 @@ public class GLTexture {
     public native void upload(byte[] bytes);
     public native void dispose();
 
+    @Override protected native void finalize();
     
 }

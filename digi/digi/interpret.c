@@ -293,6 +293,20 @@ CatchInfo *find_catch_block(VM *vm, Object *omethod, Object *exception, int pc) 
     return NULL;
 }
 
+void vm_compiler_free_code(Method *m) {
+    if(m->compiled) {
+        OP *ops = m->compiled;
+        for(int i=0; i<m->compiledSize; i++) {
+            OPSwitch *s = ops[i].sw;
+            if(s) {
+                if(s->keys) free(s->keys);
+                if(s->offsets) free(s->offsets);
+            }
+            free(s);
+        }
+        free(m->compiled);
+    }
+}
 int vm_compiler_method_type(CPItem *cp, int index) {
     Object *str = cp[cp[cp[index].index2].index2].value.O;
     JCHAR *ch = STRCHARS(str);
@@ -1319,6 +1333,7 @@ void vm_compile_method(VM *vm, Method *method, void **handlers) {
     }
 
     method->compiled = ctx.ops;
+    method->compiledSize = ctx.opCount;
 }
 
 void dpc(VAR *stack, int sp, VAR *local, Method *m, OP *op) {

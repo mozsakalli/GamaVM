@@ -22,6 +22,7 @@ public class Method {
     int vTableIndex;
     Object entry;
     Object compiled;
+    int compiledSize;
     int breakpoint;
     int externalFlags;
     String externalName;

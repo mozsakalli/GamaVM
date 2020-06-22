@@ -102,11 +102,19 @@ void link_class(VM *vm, Object *clsObject) {
 
     cls->linked = 1;
     cls->instanceSize = 0;
+    if(clsObject == vm->jlClassLoader) {
+        cls->isClassLoader = 1;
+    } 
+    
     int globalSize = 0;
     
     int ico[128];
     if(cls->superClass) {
         link_class(vm, cls->superClass);
+        if(clsObject != vm->jlClassLoader) {
+            cls->isClassLoader = CLS(cls->superClass, isClassLoader);
+        }
+
         cls->instanceSize = CLS(cls->superClass,instanceSize);
         cls->instanceOffsetCount = CLS(cls->superClass,instanceOffsetCount);
         if(cls->instanceOffsetCount > 0) {

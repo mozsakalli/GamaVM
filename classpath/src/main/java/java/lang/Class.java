@@ -68,7 +68,8 @@ public final class Class<T> {
     int externalFlags;
     String externalName;
     Object externalData;
-
+    int isClassLoader;
+    
     public static java.lang.Class forName(java.lang.String className) {
         return forName(className, true, VM.getCaller().declaringClass.classLoader);
     }
@@ -286,7 +287,6 @@ public final class Class<T> {
             if (!m.getName().equals(name)) {
                 continue;
             }
-            System.out.println(getName()+":"+m.getName()+" -> "+name);
             Class[] mparams = m.getParameterTypes();
             if (mparams.length == parameters.length) {
                 boolean equals = true;

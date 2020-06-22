@@ -189,6 +189,7 @@ typedef struct __attribute__ ((packed)) Method {
     JINT vTableIndex;
     void *entry;
     void *compiled;
+    JINT compiledSize;
     JINT breakpoint;
     int externalFlags;
     Object *externalName;
@@ -242,6 +243,7 @@ typedef struct __attribute__ ((packed)) Class {
     int externalFlags;
     Object *externalName;
     void *externalData;
+    int isClassLoader;
 } VMClass;
 
 #define STR(o,f) ((String*)o->instance)->f
@@ -309,6 +311,7 @@ typedef struct VM {
     } markQueue;
     Object **gcRoots;
     int gcRootCount, gcRootCapacity;
+    Object *sweepClasses, *sweepStrings;
 } VM;
 
 #ifdef __cplusplus

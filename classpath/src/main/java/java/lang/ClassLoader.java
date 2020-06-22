@@ -26,7 +26,7 @@ public abstract class ClassLoader {
     ClassLoader parent;
     Class classes;
     String strings;
-
+    
     public ClassLoader() {
         this(VM.getSystemClassLoader());
     }

@@ -40,13 +40,13 @@ public class Player implements Game {
         long now = System.currentTimeMillis();
         if(now - lastCheckTime >= 5000) {
             lastCheckTime = now;
-            Net.Http http = new Net.Http("http://192.168.1.51:7777/jar"+jarHash) {
+            Net.Http http = new Net.Http("http://192.168.1.52:7777/jar"+jarHash) {
                 @Override
                 public void onComplete() {
                     if(this.bytes != null) {
                         try {
                             DataInputStream in = new DataInputStream(new ByteArrayInputStream(bytes));
-                            jarHash = in.readLong();
+                            //jarHash = in.readLong();
                             if(in.available() > 0) {
                                 System.out.println("--- new jar "+jarHash+" / "+in.available());
                                 classLoader = new PlayerClassLoader(bytes, 8, bytes.length - 8);
