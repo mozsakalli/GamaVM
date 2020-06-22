@@ -25,13 +25,38 @@ public abstract class ClassLoader {
     Class classes;
     String strings;
 
+    public ClassLoader() {
+        this(null);
+    }
+    
+    public ClassLoader(ClassLoader parent) {
+        this.parent = parent;
+    }
+    
     protected abstract byte[] readResource(String path);
     
     public Class loadClass(String name) throws ClassNotFoundException {
         return loadClass(name, false);
     }
 
-    protected native Class loadClass(String name, boolean resolve) throws ClassNotFoundException;
+    protected Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        String name0 = name.replace('.', '/');
+        ClassLoader cl = this;
+        while(cl != null) {
+            Class ptr = cl.classes;
+            while(ptr != null) {
+                if(ptr.getName().equals(name0)) return ptr;
+                ptr = ptr.next;
+            }
+            cl = cl.parent;
+        }
+        
+        //can't find class
+        byte[] bytes = readResource(name0+".class");
+        if(bytes != null) return defineClass(name, bytes, 0, bytes.length);
+        if(parent != null) return parent.loadClass(name, resolve);
+        throw new ClassNotFoundException(name);
+    }
 
     protected native Class defineClass(String name, byte[] b, int offset, int length);
 

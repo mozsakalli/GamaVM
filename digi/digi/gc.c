@@ -184,12 +184,12 @@ void gc_step(VM *vm) {
     switch(vm->gcStep) {
         case GCSTEP_INIT: //initialize
             vm->gcVersion = (vm->gcVersion+1) & 15;
-            vm->gcStep = GCSTEP_MARKSTACK; //GCSTEP_MARKSTACK; //GCSTEP_MARKCLASSES;
+            vm->gcStep = GCSTEP_MARKSTACK; 
             //vm->gcPtr = ((ClassLoader*)vm->sysClassLoader->instance)->classes;
             vm->markQueue.R = vm->markQueue.W = vm->markQueue.S = 0;
             gc_queue_object(vm, vm->sysClassLoader);
-            //gc_queue_object(vm, vm->exception);
-            //gc_queue_object(vm, vm->mainMethod);
+            gc_queue_object(vm, vm->exception);
+            gc_queue_object(vm, vm->mainMethod);
             for(int i=0; i<vm->gcRootCount; i++)
                 gc_queue_object(vm, vm->gcRoots[i]);
             break;

@@ -16,6 +16,8 @@
 
 package gamavm;
 
+import java.lang.reflect.Method;
+
 /**
  *
  * @author mustafa
@@ -24,6 +26,7 @@ public class VM {
     
     public static native Class getClass(Object o);
     public static native Object getObject(long address);
+    public static native ClassLoader getSystemClassLoader();
     
     public static native long getAddress(Object o);
     public static native Object allocObject(Class cls);
@@ -41,4 +44,8 @@ public class VM {
     public static native void gcProtect(Object o);
     public static native void gcUnProtect(Object o);
     
+    public static native byte[] readFile(String path);
+    public static native byte[] extractZip(byte[] zip, String name);
+    
+    public static native Method getCaller();
 }

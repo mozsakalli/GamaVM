@@ -16,6 +16,7 @@
 
 package java.lang;
 
+import gamavm.VM;
 import java.io.IOException;
 import java.lang.annotation.*;
 import java.lang.reflect.Constructor;
@@ -67,7 +68,13 @@ public final class Class<T> {
     String externalName;
     Object externalData;
     
-    public native static java.lang.Class forName(java.lang.String className);
+    public static java.lang.Class forName(java.lang.String className) {
+        return forName(className, true, VM.getCaller().declaringClass.classLoader);
+    }
+
+    public static java.lang.Class forName(java.lang.String className, boolean initialize, ClassLoader loader) {
+        return loader.loadClass(className, true);
+    }
     
     public Class<T> getSuperclass() {
         return superClass;

@@ -3,7 +3,7 @@ package java.lang.reflect;
 public class Method {
     String name;
     String signature;
-    Class declaringClass;
+    public Class declaringClass;
     int flags;
     Object argMap;
     int argCount;

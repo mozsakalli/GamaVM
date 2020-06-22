@@ -14,25 +14,15 @@
  * limitations under the License.
  */
 
-package java.lang;
+package gamavm;
 
 /**
  *
  * @author mustafa
  */
-public class JarClassLoader extends ClassLoader {
-    String[] classpath;
+public @interface Unsafe {
     
-    public JarClassLoader(String[] classpath) {
-        if(classpath == null || classpath.length == 0) throw new RuntimeException("Classpath must be supplied");
-        this.classpath = classpath;
-    }
-  
-    @Override
-    protected byte[] readResource(String path) {
-        for(String cp : classpath) {
-            
-        }
-    }
+    public boolean arrayCheck() default false;
+    public boolean nullCheck() default false;
     
 }
