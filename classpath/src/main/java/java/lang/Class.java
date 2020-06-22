@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package java.lang;
 
 import gamavm.VM;
@@ -21,6 +20,7 @@ import java.io.IOException;
 import java.lang.annotation.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
@@ -36,6 +36,7 @@ import java.util.List;
  * an object: Since: JDK1.0, CLDC 1.0
  */
 public final class Class<T> {
+
     String name;
     Class superClass;
     Class[] interfaces;
@@ -57,7 +58,7 @@ public final class Class<T> {
     int maxMethodIndex;
     int vTableSize;
     Object vtable;
-    
+
     int iTableSize;
     Object itable;
 
@@ -67,7 +68,7 @@ public final class Class<T> {
     int externalFlags;
     String externalName;
     Object externalData;
-    
+
     public static java.lang.Class forName(java.lang.String className) {
         return forName(className, true, VM.getCaller().declaringClass.classLoader);
     }
@@ -75,33 +76,28 @@ public final class Class<T> {
     public static java.lang.Class forName(java.lang.String className, boolean initialize, ClassLoader loader) {
         return loader.loadClass(className, true);
     }
-    
+
     public Class<T> getSuperclass() {
         return superClass;
     }
-    
+
     public Class getComponentType() {
         return elementClass;
     }
-    
+
     public boolean isPrimitive() {
         return primitiveSize != 0;
     }
-    
+
     public int getModifiers() {
         return flags;
     }
-    
-    public Constructor getConstructor(Class[] args) {
-        Method result = getMethod("<init>", args);
-        //if(result != null) {
-        //    result.klass = Constructor.class; //hack for ClassCastException
-        //}
-        //return (Constructor)result;
-        throw new UnsupportedOperationException();
+
+    public Constructor getConstructor(Class... args) throws NoSuchMethodException {
+        return new Constructor(getMethod("<init>", args));
     }
 
-    public Constructor getDeclaredConstructor(Class[] args) {
+    public Constructor getDeclaredConstructor(Class[] args) throws NoSuchMethodException {
         Method result = getDeclaredMethod("<init>", args);
         //if(result != null) {
         //    result.klass = Constructor.class; //hack for ClassCastException
@@ -109,7 +105,7 @@ public final class Class<T> {
         //return (Constructor)result;
         throw new UnsupportedOperationException();
     }
-    
+
     public java.lang.String getName() {
         return name;
     }
@@ -120,7 +116,7 @@ public final class Class<T> {
         //return new FileInputStream(file);
         return null;
     }
-    
+
     public URL getResource(String name) {
         return null;
     }
@@ -153,16 +149,14 @@ public final class Class<T> {
         return false;
     }
 
-    public java.lang.Object newInstance() {
-        /*
-        Constructor constructor = getConstructor(new Class[0]);
-        if(constructor != null)
-            return constructor.newInstance(new Object[0]);
-        throw new IllegalArgumentException(name+" doesn't have default constructor");
-        */
-        throw new UnsupportedOperationException();
+    public java.lang.Object newInstance() throws IllegalAccessException, InstantiationException {
+        try {
+            return getConstructor().newInstance();
+        } catch (InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
-    
+
     public java.lang.String toString() {
         return getName() + " class";
     }
@@ -278,79 +272,89 @@ public final class Class<T> {
 
     public boolean desiredAssertionStatus() {
         return false;
-    }        
-    
+    }
+
     public Class[] getInterfaces() {
         return interfaces != null ? interfaces.clone() : new Class[0];
     }
-    
+
     private Method findMethod(String name, Class[] parameters) {
-        if(methods == null) return null;
-        for(Method m : methods) {
-            
+        if (parameters == null) {
+            parameters = new Class[0];
         }
-        /*
-        if(methods == null) return null;
-        for(Method m : methods) {
-            if(((parameters == null && m.parameters.length == 0) || 
-               (parameters.length == m.parameters.length)) && name.equals(m.name)) {
-                boolean equals = true;
-                if(parameters != null) {
-                    for(int i=0; i<parameters.length; i++)
-                        if(parameters[i] != m.parameters[i]) {
-                            //todo: boxing & assignablefrom
-                            equals = false;
-                            break;
-                        }
-                }
-                if(equals) return m;
+        for (Method m : methods) {
+            if (!m.getName().equals(name)) {
+                continue;
             }
-        }*/
+            System.out.println(getName()+":"+m.getName()+" -> "+name);
+            Class[] mparams = m.getParameterTypes();
+            if (mparams.length == parameters.length) {
+                boolean equals = true;
+                for (int i = 0; i < parameters.length; i++) {
+                    if (parameters[i] != mparams[i]) {
+                        equals = false;
+                        break;
+                    }
+                }
+                if (equals) {
+                    return m;
+                }
+            }
+        }
         return null;
     }
-    
-    public Method getDeclaredMethod(String name, Class[] parameters) {
+
+    public Method getDeclaredMethod(String name, Class... parameters) throws NoSuchMethodException {
         Method result = findMethod(name, parameters);
-        if(result == null) throw new NoSuchMethodError();
+        if (result == null) {
+            throw new NoSuchMethodException(this.name + ":" + name);
+        }
         return result;
     }
-    
+
     public Method[] getDeclaredMethods() {
         return methods != null ? methods.clone() : new Method[0];
     }
 
-    public Method getMethod(String name, Class...parameters) {
+    public Method getMethod(String name, Class... parameters) throws NoSuchMethodException {
         Class root = this;
-        while(root != null) {
+        while (root != null) {
             Method result = root.findMethod(name, parameters);
-            if(result != null) return result;
+            if (result != null) {
+                return result;
+            }
             root = root.superClass;
         }
-        throw new NoSuchMethodError();
+        throw new NoSuchMethodException(getName()+":"+name);
     }
-    
+
     public Method[] getMethods() {
         List<Method> list = new ArrayList();
         Class root = this;
-        while(root != null) {
-            if(root.methods != null)
-                for(int i=0; i<root.methods.length; i++)
+        while (root != null) {
+            if (root.methods != null) {
+                for (int i = 0; i < root.methods.length; i++) {
                     list.add(root.methods[i]);
+                }
+            }
             root = root.superClass;
         }
         return list.toArray(new Method[list.size()]);
     }
-    
+
     public Field getDeclaredField(String name) {
         Field result = null;
-        if(fields != null) {
-            for(Field f : fields)
-                if(f.getName().equals(name)) {
+        if (fields != null) {
+            for (Field f : fields) {
+                if (f.getName().equals(name)) {
                     result = f;
                     break;
                 }
+            }
         }
-        if(result == null) throw new NoSuchFieldError(name);
+        if (result == null) {
+            throw new NoSuchFieldError(name);
+        }
         return result;
     }
 
@@ -361,47 +365,63 @@ public final class Class<T> {
     public Field getField(String name) {
         Class root = this;
         Field result = null;
-        while(root != null && result == null) {
-            if(root.fields != null) {
-                for(Field field : root.fields)
-                    if(field.getName().equals(name)) {
+        while (root != null && result == null) {
+            if (root.fields != null) {
+                for (Field field : root.fields) {
+                    if (field.getName().equals(name)) {
                         result = field;
                         break;
                     }
+                }
             }
-            if(result == null)
+            if (result == null) {
                 root = root.superClass;
+            }
         }
-        if(result == null) throw new NoSuchFieldError(name);
+        if (result == null) {
+            throw new NoSuchFieldError(name);
+        }
         return result;
     }
-    
+
     public Field[] getFields() {
         List<Field> list = new ArrayList();
         Class root = this;
-        while(root != null) {
-            if(root.fields != null)
-                for(int i=0; i<root.fields.length; i++)
+        while (root != null) {
+            if (root.fields != null) {
+                for (int i = 0; i < root.fields.length; i++) {
                     list.add(root.fields[i]);
+                }
+            }
             root = root.superClass;
         }
         return list.toArray(new Field[list.size()]);
     }
-    
+
     public static String getPrimitiveNativeName(Class componentType) {
         String name;
-        if(componentType == byte.class) name = "B";
-        else if(componentType == boolean.class) name = "Z";
-        else if(componentType == char.class) name = "C";
-        else if(componentType == short.class) name = "S";
-        else if(componentType == int.class) name = "I";
-        else if(componentType == float.class) name = "F";
-        else if(componentType == long.class) name = "J";
-        else if(componentType == double.class) name = "D";
-        else throw new RuntimeException(componentType.getName()+" is not primitive class");
+        if (componentType == byte.class) {
+            name = "B";
+        } else if (componentType == boolean.class) {
+            name = "Z";
+        } else if (componentType == char.class) {
+            name = "C";
+        } else if (componentType == short.class) {
+            name = "S";
+        } else if (componentType == int.class) {
+            name = "I";
+        } else if (componentType == float.class) {
+            name = "F";
+        } else if (componentType == long.class) {
+            name = "J";
+        } else if (componentType == double.class) {
+            name = "D";
+        } else {
+            throw new RuntimeException(componentType.getName() + " is not primitive class");
+        }
         return name;
     }
-    
+
     public static Class getArrayClassFor(Class componentType) {
         String name = "[" + (componentType.isPrimitive() ? getPrimitiveNativeName(componentType) : componentType.getName());
         return forName(name);

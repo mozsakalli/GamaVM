@@ -312,7 +312,7 @@ void jdwp_eventset_set(JdwpEventSet *set) {
             } break;
                 
             case JDWP_EVENTKIND_CLASS_PREPARE: {
-                Object *ptr = jdwpVM->classes;
+                Object *ptr = ((ClassLoader*)jdwpVM->sysClassLoader)->classes;
                 while(ptr) {
                     jdwp_send_classload_event(jdwpVM, ptr);
                     ptr = CLS(ptr, next);
@@ -498,7 +498,7 @@ void jdwp_process_packet(JdwpPacket *req) {
         case JDWP_CMD_VirtualMachine_ClassesBySignature: { //0x0102
             JdwpString *signature = req->readString(jdwpVM);
             Object *sign = signature->toClassName();
-            Object *cls = find_class(jdwpVM, STRCHARS(sign), STRLEN(sign)); //jdwp_find_class(signature->toClassName(), 1);
+            Object *cls = find_class(jdwpVM, jdwpVM->sysClassLoader, STRCHARS(sign), STRLEN(sign)); //jdwp_find_class(signature->toClassName(), 1);
             if(cls) {
                 resp->writeInt(1);
                 resp->writeByte(jdwp_get_class_type(cls));

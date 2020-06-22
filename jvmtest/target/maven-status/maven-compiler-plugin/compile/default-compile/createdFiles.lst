@@ -1,7 +1,9 @@
 digiplay/GLQuadBatch.class
+MyGame$1.class
 digiplay/GLTexture.class
 digiplay/MainActivity.class
 gamavm/apple/storekit/SKPaymentQueue.class
+Player$1.class
 digiplay/ParticleSprite.class
 digiplay/Game.class
 gamavm/apple/uikit/UIResponder.class
@@ -14,6 +16,7 @@ gamavm/apple/NSDictionary.class
 digiplay/Platform.class
 gamavm/apple/NSMutableObject.class
 digiplay/Action1.class
+B.class
 digiplay/Image.class
 gamavm/jni/JniMethod.class
 digiplay/Mat2D.class
@@ -23,6 +26,7 @@ gamavm/jni/JniBridge.class
 digiplay/Completable.class
 digiplay/QuadMesh.class
 MyGame.class
+PlayerClassLoader.class
 Main.class
 digiplay/net/Socket.class
 digiplay/Texture2D.class
@@ -34,6 +38,7 @@ digiplay/Point2D.class
 digiplay/Behaviour.class
 gamavm/apple/uikit/UIApplicationDelegate.class
 gamavm/apple/Selector.class
+Player.class
 digiplay/ByteArrayCompletable.class
 digiplay/Sprite2D.class
 digiplay/Mat3D.class

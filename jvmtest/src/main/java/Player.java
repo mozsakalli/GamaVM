@@ -33,7 +33,6 @@ public class Player implements Game {
     
     @Override
     public void begin() {
-        System.out.println(Class.class.getName());
     }
 
     @Override
@@ -41,7 +40,7 @@ public class Player implements Game {
         long now = System.currentTimeMillis();
         if(now - lastCheckTime >= 5000) {
             lastCheckTime = now;
-            Net.Http http = new Net.Http("http://192.168.1.46:7777/jar"+jarHash) {
+            Net.Http http = new Net.Http("http://192.168.0.136:7777/jar"+jarHash) {
                 @Override
                 public void onComplete() {
                     if(this.bytes != null) {
@@ -53,6 +52,7 @@ public class Player implements Game {
                                 classLoader = new PlayerClassLoader(bytes, 8, bytes.length - 8);
                                 Class gameClass = classLoader.loadClass("Game");
                                 currentGame = (Game)gameClass.newInstance();
+                                currentGame.begin();
                             }
                         } catch(Throwable e){
                             e.printStackTrace();

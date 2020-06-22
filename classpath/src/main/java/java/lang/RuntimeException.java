@@ -28,4 +28,8 @@ public class RuntimeException extends Exception{
     public RuntimeException(String s, Throwable c) {
         super(s,c);
     }
+    
+    public RuntimeException(Throwable c) {
+        super(c);
+    }
 }

@@ -180,7 +180,14 @@ enum {
     OP_MONITOREXIT,
     OP_TABLE,
     OP_LOOKUP,
+    OP_INSTANCEOF,
+    OP_INSTANCEOFRESOLVED,
 };
+
+typedef struct OPSwitch {
+    int def, count, low, high;
+    int *keys, *offsets;
+} OPSwitch;
 
 typedef struct OP {
     int pc;
@@ -191,6 +198,7 @@ typedef struct OP {
     VAR var;
     JINT line;
     void *handler;
+    OPSwitch *sw;
 } OP;
 
 typedef struct BB {
@@ -726,6 +734,12 @@ void vm_compiler_build_ops(COMPILERCTX *ctx) {
                 op->type = 'O';
                 bc = vm_compiler_readu2(bc, &op->index);
                 break;
+                
+            case op_instanceof:
+                op->code = OP_INSTANCEOF;
+                op->type = 'I';
+                bc = vm_compiler_readu2(bc, &op->index);
+                break;
 
             case op_newarray:
                 op->code = OP_NEWARRAY;
@@ -791,22 +805,42 @@ void vm_compiler_build_ops(COMPILERCTX *ctx) {
                 
             case op_lookupswitch:
             {
-                int padding = 4 - ((pc + 1) % 4);
-                if(padding > 0) bc += padding;
-                bc = vm_compiler_reads4(bc, &op->index);
-                int count;
-                bc = vm_compiler_reads4(bc, &count);
+                int padding = ((pc + 1) % 4);
+                if(padding > 0) bc += 4 - padding;
+                OPSwitch *sw = vm_alloc(sizeof(OPSwitch));
+                bc = vm_compiler_reads4(bc, &sw->def);
+                bc = vm_compiler_reads4(bc, &sw->count);
+                sw->keys = malloc(sizeof(int) * sw->count);
+                sw->offsets = malloc(sizeof(int) * sw->count);
                 op->code = OP_LOOKUP;
-                OP *keys = (OP*)malloc(sizeof(OP) * (count + 1));
-                for(int i=0; i<count; i++) {
-                    bc = vm_compiler_reads4(bc, &keys[i].index); //key
-                    bc = vm_compiler_reads4(bc, &keys[i].pc); //offset
+                //OP *keys = (OP*)malloc(sizeof(OP) * (count + 1));
+                for(int i=0; i<sw->count; i++) {
+                    bc = vm_compiler_reads4(bc, &sw->keys[i]); //key
+                    bc = vm_compiler_reads4(bc, &sw->offsets[i]); //offset
                 }
-                keys[count].pc = 0xFFFFFFFF;
-                op->var.O = (Object*)keys;
+                op->sw = sw;
+                //keys[count].pc = 0xFFFFFFFF;
+                //op->var.O = (Object*)keys;
             }
             break;
-                
+            
+            case op_tableswitch:
+            {
+                int padding = ((pc + 1) % 4);
+                if(padding > 0) bc += 4 - padding;
+                OPSwitch *sw = vm_alloc(sizeof(OPSwitch));
+                bc = vm_compiler_reads4(bc, &sw->def);
+                bc = vm_compiler_reads4(bc, &sw->low);
+                bc = vm_compiler_reads4(bc, &sw->high);
+                sw->count = sw->high - sw->low + 1;
+                sw->offsets = malloc(sizeof(int) * sw->count);
+                op->code = OP_TABLE;
+                for(int i=0; i<sw->count; i++) {
+                    bc = vm_compiler_reads4(bc, &sw->offsets[i]); //offset
+                }
+                op->sw = sw;
+            }
+            break;
             default:
                 printf("UNKNOWN op:0x%x / %d\n", opcode, opcode);
                 return;
@@ -1011,6 +1045,10 @@ void vm_process_bb(Method *method, BB *bb, void **handlers) {
                 op->handler = handlers[OP_CHECKCAST];
                 break;
                 
+            case OP_INSTANCEOF:
+                op->handler = handlers[OP_INSTANCEOF];
+                break;
+                
             case OP_LOADARRAY_I:
             case OP_LOADARRAY_J:
             case OP_LOADARRAY_F:
@@ -1051,6 +1089,11 @@ void vm_process_bb(Method *method, BB *bb, void **handlers) {
                 op->handler = handlers[OP_LOOKUP];
                 break;
                 
+            case OP_TABLE:
+                bb->sp--;
+                op->handler = handlers[OP_TABLE];
+                break;
+
             default:
                 printf("UNKNOWN CODE: %d bc:0x%x", op->code, op->bc);
                 printf("   %s",string_to_ascii(CLS(method->declaringClass,name)));
@@ -1113,21 +1156,19 @@ void vm_compile_method(VM *vm, Method *method, void **handlers) {
             }
             if(!found) printf("!!!!!! JUMPTARGET NOT FOUND pc=%d!!!!!!\n", pc);
             */
-        } else if(op->code == OP_LOOKUP) {
-            int pc = op->pc + op->index;
+        } else if(op->code == OP_LOOKUP || op->code == OP_TABLE) {
+            OPSwitch *sw = op->sw;
+            int pc = op->pc + sw->def;
             int k;
             if(vm_compile_find_op(&ctx, pc, &k)) {
-                op->index = k - i;
+                sw->def = k - i;
             } else printf("!!!!!! JUMPTARGET NOT FOUND pc=%d!!!!!!\n", pc);
-            int j=0;
-            OP *keys = (OP*)op->var.O;
-            while(1) {
-                if(keys[j].pc == 0xFFFFFFFF) break;
-                pc = keys[j].pc + op->pc;
+            for(int j=0; j<sw->count; j++) {
+                pc = op->pc + sw->offsets[j];
                 if(vm_compile_find_op(&ctx, pc, &k)) {
-                    keys[j].pc = k - i;
+                    sw->offsets[j] = k - i;
                 } else printf("!!!!!! JUMPTARGET NOT FOUND pc=%d!!!!!!\n", pc);
-                j++;
+
             }
         }
     }
@@ -1155,16 +1196,14 @@ void vm_compile_method(VM *vm, Method *method, void **handlers) {
                 }
                 break;
                 
+            case OP_TABLE:
             case OP_LOOKUP: {
-                bb_targets[i + op->index] = 1;
-                int j=0;
-                OP *keys = (OP*)op->var.O;
-                while(1) {
-                    if(keys[j].pc == 0xFFFFFFFF) break;
-                    bb_targets[keys[j].pc + i] = 1;
-                    j++;
+                OPSwitch *sw = op->sw;
+                bb_targets[i + sw->def] = 1;
+                for(int j=0; j<sw->count; j++) {
+                    bb_targets[sw->offsets[j] + i] = 1;
                 }
-            }
+                }
                 break;
                 
         }
@@ -1462,6 +1501,8 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
         &&OP_MONITOREXIT,
         &&OP_TABLE,
         &&OP_LOOKUP,
+        &&OP_INSTANCEOF,
+        &&OP_INSTANCEOFRESOLVED
     };
     
     Method *method = omethod->instance;
@@ -2293,7 +2334,7 @@ OP_CHECKCAST:
 OP_CHECKCASTRESOLVED:
     if(!check_cast(vm, stack[sp-1].O, op->var.O)) {
         vm->frames[fp].line = op->line;
-        throw_cast(vm, NULL, NULL);
+        throw_cast(vm, stack[sp-1].O->cls, op->var.O);
         goto __EXCEPTION;
     }
     NEXT(1);
@@ -2466,22 +2507,30 @@ OP_MONITORENTER:
 OP_MONITOREXIT:
     sp--;
     NEXT(1)
-OP_TABLE:
-    printf("!!!!!!!!!!!!!!!! OP_TABLE NOT IMPLEMENTED\n");
-    return;
+OP_TABLE: {
+    int key = stack[--sp].I;
+    OPSwitch *sw = op->sw;
+    if(key < sw->low || key > sw->high) NEXT(sw->def);
+    NEXT(sw->offsets[key - sw->low]);
+}
 OP_LOOKUP:
     {
         int key = stack[--sp].I;
-        OP *keys = (OP*)op->var.O;
-        int j = 0;
-        while(1) {
-            int kpc = keys[j].pc;
-            if(kpc == 0xFFFFFFFF) break;
-            if(keys[j].index == key) {NEXT(kpc);}
-            j++;
+        OPSwitch *sw = op->sw;
+        for(int j=0; j<sw->count; j++) {
+            if(sw->keys[j] == key) { NEXT(sw->offsets[j]); }
         }
-        NEXT(op->index);
+        NEXT(sw->def);
     }
+OP_INSTANCEOF:
+    op->var.O = (Object*)resolve_class_by_index(vm, method->declaringClass, op->index);
+    if(vm->exception) goto __EXCEPTION;
+    op->handler = handlers[OP_INSTANCEOFRESOLVED];
+    REDISPATCH();
+OP_INSTANCEOFRESOLVED:
+    stack[sp-1].I = check_cast(vm, stack[sp-1].O, op->var.O);
+    NEXT(1);
+
 __EXCEPTION:
     {
         Object *exception = vm->exception;

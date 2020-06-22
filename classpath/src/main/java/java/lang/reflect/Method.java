@@ -1,9 +1,7 @@
 package java.lang.reflect;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Method {
+
     String name;
     String signature;
     public Class declaringClass;
@@ -28,39 +26,84 @@ public class Method {
     int externalFlags;
     String externalName;
     Object externalData;
-    
+
     public Class getDeclaringClass() {
         return declaringClass;
     }
-    
+
     public Class[] getParameterTypes() {
-        List<Class> types = new ArrayList();
+        int count = argCount;
+        if ((flags & 0x0008) == 0) {
+            count--; //static
+        }
+        Class[] result = new Class[count];
         int ptr = 1;
         int len = signature.length();
-        while(ptr < len) {
+        int index = 0;
+        while (ptr < len) {
             char ch = signature.charAt(ptr++);
-            switch(ch) {
-                case 'B': types.add(byte.class); break;
-                case 'Z': types.add(boolean.class); break;
-                case 'C': types.add(char.class); break;
-                case 'S': types.add(short.class); break;
-                case 'I': types.add(int.class); break;
-                case 'F': types.add(float.class); break;
-                case 'J': types.add(long.class); break;
-                case 'D': types.add(double.class); break;
+            if (ch == ')') {
+                break;
+            }
+            switch (ch) {
+                case 'B':
+                    result[index++] = byte.class;
+                    break;
+                case 'Z':
+                    result[index++] = boolean.class;
+                    break;
+                case 'C':
+                    result[index++] = char.class;
+                    break;
+                case 'S':
+                    result[index++] = short.class;
+                    break;
+                case 'I':
+                    result[index++] = int.class;
+                    break;
+                case 'F':
+                    result[index++] = float.class;
+                    break;
+                case 'J':
+                    result[index++] = long.class;
+                    break;
+                case 'D':
+                    result[index++] = double.class;
+                    break;
                 case '[': {
                     int start = ptr - 1;
-                    while(signature.charAt(ptr) == '[') ptr++;
-                    if(signature.charAt(ptr) == 'L') {
-                        ptr++;
-                        while(signature.charAt(ptr) != ';') ptr++;
+                    while (signature.charAt(ptr) == '[') {
                         ptr++;
                     }
-                    //ch = signature.charAt(ptr);
-                    
-                } break;
+                    if (signature.charAt(ptr) == 'L') {
+                        ptr++;
+                        while (signature.charAt(ptr) != ';') {
+                            ptr++;
+                        }
+                        ptr++;
+                    }
+
+                    result[index++] = Class.forName(signature.substring(start, ptr));
+                }
+                break;
+                case 'L': {
+                    int start = ptr++;
+                    while (signature.charAt(ptr) != ';') {
+                        ptr++;
+                    }
+                    ptr++;
+                    result[index++] = Class.forName(signature.substring(start, ptr));
+                }
+                break;
             }
         }
+        return result;
     }
-    
+
+    public String getName() {
+        return name;
+    }
+
+    public native Object invoke(Object instance, Object... arguments) throws InvocationTargetException, IllegalAccessException;
+
 }

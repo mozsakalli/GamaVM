@@ -1,3 +1,9 @@
+
+import digiplay.Image;
+import digiplay.Platform;
+import digiplay.Point2D;
+import digiplay.Stage2D;
+
 /*
  * Copyright (C) 2019 Digitoy Games.
  *
@@ -22,15 +28,30 @@ public class Game implements digiplay.Game {
 
     @Override
     public void begin() {
-        System.out.println("!!!! Let the game begins !!!!");
+        Stage2D.I.setup(new Point2D(Platform.screenWidth, Platform.screenHeight));
+        Image img = new Image();
+        img.setX(400);
+        img.setY(400);
+        Stage2D.I.addChild(img);
     }
 
+    long fpsTime;
+    int fps;
+    
     @Override
     public void update() {
+        long now = System.currentTimeMillis();
+        if(now - fpsTime <= 1000) fps++; else {
+            System.out.println("FPS: "+fps);
+            fpsTime = now;
+            fps = 0;
+        }
+        Stage2D.I.update();
     }
 
     @Override
     public void render() {
+        Stage2D.I.render();
     }
 
 }

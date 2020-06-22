@@ -72,7 +72,7 @@ VM* vm_init() {
 }
 
 void vm_main(VM *vm, char *className, char *methodName, char *signature) {
-    jdwp_start(vm, "192.168.1.39", 10000);
+    jdwp_start(vm, "192.168.0.136", 10000);
 
     int clsLen;
     JCHAR *clName = char_to_jchar(className, &clsLen);

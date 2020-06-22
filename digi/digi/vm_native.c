@@ -21,6 +21,14 @@ void gamavm_VM_getClass(VM *vm, Object *method, VAR *args) {
 void gamavm_VM_getAddress(VM *vm, Object *method, VAR *args) {
     vm->frames[vm->FP].ret.J = (JLONG)args[0].O;
 }
+void gamavm_VM_allocObject(VM *vm, Object *method, VAR *args) {
+    if(!args[0].O) {
+        throw_null(vm);
+        return;
+    }
+    
+    vm->frames[vm->FP].ret.O = alloc_object(vm, args[0].O, 0);
+}
 void gamavm_VM_wrapBytes(VM *vm, Object *method, VAR *args) {
     Object *arr = NULL;
     if(args[0].J && args[1].I >= 0) {
@@ -195,116 +203,12 @@ void java_lang_Math_random_D(VM *vm, Object *method, VAR *args) {
 }
 
 void java_lang_Double_toStringImpl(VM *vm, Object *method, VAR *args) {
-    /*
-    JDOUBLE d = args[0].D;
-    JINT b = args[1].I;
-    char s[32];
-    if ( !b ){
-        sprintf(s, "%lf", d);
-    } else {
-        sprintf(s, "%1.20E", d);
-    }
-    
-    // We need to match the format of Java spec.  That includes:
-    // No "+" for positive exponent.
-    // No leading zeroes in positive exponents.
-    // No trailing zeroes in decimal portion.
-    int j=0;
-    int i=32;
-    char s2[32];
-    JINT inside=0;
-    while (i-->0){
-        if (inside){
-            if (s[i]=='.'){
-                s2[j++]='0';
-            }
-            if (s[i]!='0'){
-                inside=0;
-                s2[j++]=s[i];
-            }
-            
-        } else {
-            if (s[i]=='E'){
-                inside=1;
-            }
-            if (s[i]=='+'){
-                // If a positive exponent, we don't need leading zeroes in
-                // the exponent
-                while (s2[--j]=='0'){
-                    
-                }
-                j++;
-                continue;
-            }
-            s2[j++]=s[i];
-        }
-    }
-    i=0;
-    while (j-->0){
-        s[i++]=s2[j];
-        if (s[i]=='\0'){
-            break;
-        }
-    }
-     */
     char buf[21];
     int length = snprintf(buf,20,"%g",args[0].D);
     vm->frames[vm->FP].ret.O = alloc_string_ascii(vm, buf, 0);
 }
 
 void java_lang_Float_toStringImpl(VM *vm, Object *method, VAR *args) {
-    /*
-    char s[33];
-    JFLOAT d = args[0].F;
-    JINT b = args[1].I;
-    int len ;
-    if ( !b ){
-        len = snprintf(s, 32, "%f", d);
-    } else {
-        len = snprintf(s, 32, "%1.20E", d);
-    }
-    // We need to match the format of Java spec.  That includes:
-    // No "+" for positive exponent.
-    // No leading zeroes in positive exponents.
-    // No trailing zeroes in decimal portion.
-    int j=0;
-    int i=len;
-    char s2[33];
-    JINT inside=0;
-    while (i-->0){
-        if (inside){
-            if (s[i]=='.'){
-                s2[j++]='0';
-            }
-            if (s[i]!='0'){
-                inside=0;
-                s2[j++]=s[i];
-            }
-            
-        } else {
-            if (s[i]=='E'){
-                inside=1;
-            }
-            if (s[i]=='+'){
-                // If a positive exponent, we don't need leading zeroes in
-                // the exponent
-                while (s2[--j]=='0'){
-                    
-                }
-                j++;
-                continue;
-            }
-            s2[j++]=s[i];
-        }
-    }
-    i=0;
-    while (j-->0){
-        s[i++]=s2[j];
-        if (s[i]=='\0'){
-            break;
-        }
-    }
-    */
     char buf[21];
     int length = snprintf(buf,20,"%g",args[0].F);
     vm->frames[vm->FP].ret.O = alloc_string_ascii(vm, buf, 0);
@@ -350,11 +254,15 @@ void java_lang_ClassLoader_defineClass(VM *vm, Object *method, VAR *args) {
     vm->frames[vm->FP].ret.O = cls;
 }
 
+void java_lang_reflect_Method_invoke(VM *vm, Object *method, VAR *args) {
+}
+
 extern void java_lang_System_SystemOutStream_printImpl(VM *vm, Object *method, VAR *args);
 
 NativeMethodInfo vm_native_methods[] = {
     {"gamavm/VM:getClass:(Ljava/lang/Object;)Ljava/lang/Class;", &gamavm_VM_getClass},
     {"gamavm/VM:getAddress:(Ljava/lang/Object;)J", &gamavm_VM_getAddress},
+    {"gamavm/VM:allocObject:(Ljava/lang/Class;)Ljava/lang/Object;", &gamavm_VM_allocObject},
     {"gamavm/VM:wrapBytes:(JI)[B", &gamavm_VM_wrapBytes},
     {"gamavm/VM:freeMem:(J)V", &gamavm_VM_freeMem},
     {"gamavm/VM:extractZip:(Ljava/lang/String;[BI)[B", &gamavm_VM_extractZip},
@@ -376,5 +284,6 @@ NativeMethodInfo vm_native_methods[] = {
 
     {"java/lang/ClassLoader:defineClass:(Ljava/lang/String;[BII)Ljava/lang/Class;", &java_lang_ClassLoader_defineClass},
 
+    {"java/lang/reflect/Method:invoke:(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;", &java_lang_reflect_Method_invoke},
     NULL
 };

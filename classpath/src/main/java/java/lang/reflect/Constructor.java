@@ -16,14 +16,24 @@
 
 package java.lang.reflect;
 
+import gamavm.VM;
+
 /**
  *
  * @author mustafa
  */
-public class Constructor extends Method {
+public class Constructor {
     
-    public Object newInstance(Object ... initargs) {
-        throw new UnsupportedOperationException();
+    Method method;
+    public Constructor(Method method) {
+        this.method = method;
+    }
+    
+    public Object newInstance(Object ... initargs) throws InvocationTargetException, InstantiationException, IllegalAccessException {
+        System.out.println("dc: "+method.declaringClass);
+        Object result = VM.allocObject(method.declaringClass);
+        method.invoke(result, initargs);
+        return result;
     }
     
     
