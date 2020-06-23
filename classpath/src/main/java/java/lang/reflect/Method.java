@@ -27,7 +27,8 @@ public class Method {
     int externalFlags;
     String externalName;
     Object externalData;
-
+    int returnSign;
+    
     public Class getDeclaringClass() {
         return declaringClass;
     }

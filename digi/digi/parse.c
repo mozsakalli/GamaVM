@@ -173,18 +173,20 @@ void setup_method_args(Method *method) {
     ch++; //(
     int count = 0;
     int jcount = 0;
-    JINT tmp[256]; //enough for paramters? :)
+    MethodArg tmp[256]; //enough for paramters? :)
     memset(tmp, 0, sizeof(tmp));
     
     if(!IS_STATIC(method->flags)) {
         count++;
-        tmp[0] = 0;
+        tmp[0].localIndex = 0;
+        tmp[0].sign = 'L';
         jcount++;
     }
     while(1) {
         if(*ch == ')') break;
         count++;
-        tmp[count-1] = jcount++;
+        tmp[count-1].localIndex = jcount++;
+        tmp[count-1].sign = *ch;
         while(*ch == '[') ch++;
         if(*ch == 'L') {
             while(*ch != ';') ch++;
@@ -192,9 +194,10 @@ void setup_method_args(Method *method) {
         if(*ch == 'D' || *ch == 'J') jcount++;
         ch++;
     }
-    
-    method->argMap = (JINT*)malloc(sizeof(JINT) * count);
-    memcpy(method->argMap, tmp, sizeof(JINT) * count);
+    ch++;
+    method->returnSign = *ch;
+    method->argMap = (MethodArg*)malloc(sizeof(MethodArg) * count);
+    memcpy(method->argMap, tmp, sizeof(MethodArg) * count);
     method->argCount = count;
 }
 

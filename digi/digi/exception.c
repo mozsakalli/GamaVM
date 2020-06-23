@@ -75,7 +75,7 @@ void throw_classnotfound(VM *vm, JCHAR *name, int len) {
         CALLVM_V(vm, mth, &args[0]);
     }
     
-    //printf("Class Not Found! : %s\n", string2c(name));
+    printf("Class Not Found! : %s\n", jchar_to_ascii(name, len));
     throw_exception(vm, exp);
 }
 

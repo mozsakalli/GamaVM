@@ -143,20 +143,3 @@ extern void vm_completeCompletable(JLONG gamaHandle, void *buffer, int length);
 @end
 
 
-void Java_digiplay_Net_http(VM *vm, Object *method, VAR *args) {
-    /*
-    if(!args[0].O) {
-        throw_null(vm);
-        return;
-    }
-    
-    NSString *url = [[NSString alloc] initWithCharacters:STRCHARS(args[0].O) length:STRLEN(args[0].O)];
-    NSString *post = nil;
-    if(args[1].O) {
-        post = [[NSString alloc] initWithCharacters:STRCHARS(args[1].O) length:STRLEN(args[1].O)];
-    }
-    
-    gc_protect(gamaVM, args[2].O);
-    Http *http = [[Http alloc] initWithURLAndPostParams:url postParams:post thiz:args[2].O];
-    [http retain];*/
-}

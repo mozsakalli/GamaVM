@@ -166,6 +166,11 @@ typedef struct CatchInfo {
     void *label;
 } CatchInfo;
 
+typedef struct MethodArg {
+    int localIndex;
+    int sign;
+} MethodArg;
+
 #define MTH(o,f) ((Method*)o->instance)->f
 #define MTH_LOADER(method) CLS(MTH(method, declaringClass),clsLoader)
 typedef struct __attribute__ ((packed)) Method {
@@ -173,7 +178,7 @@ typedef struct __attribute__ ((packed)) Method {
     Object *signature;
     Object *declaringClass;
     JINT flags;
-    JINT *argMap;
+    MethodArg *argMap;
     JINT argCount;
     JINT maxStack;
     JINT maxLocals;
@@ -194,6 +199,7 @@ typedef struct __attribute__ ((packed)) Method {
     int externalFlags;
     Object *externalName;
     void *externalData;
+    int returnSign;
 } Method;
 
 typedef struct CPItem {

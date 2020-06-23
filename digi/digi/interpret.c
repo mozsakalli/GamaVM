@@ -1129,7 +1129,7 @@ void pm(VM *vm, char *m, Object *omethod) {
     ptr += sprintf(ptr, ":%s", string_to_ascii(method->name));
     ptr += sprintf(ptr, ":%s = %d args:%d", string_to_ascii(method->signature), method->maxStack + method->maxLocals, method->argCount);
     for(int i=0; i<method->argCount; i++)
-        ptr += sprintf(ptr, " %d=%d", i, method->argMap[i]);
+        ptr += sprintf(ptr, " %d=%d", i, method->argMap[i].localIndex);
     ptr += sprintf(ptr, " SP=%d FP=%d", vm->SP, vm->FP);
     GLOG("%s\n", tmp);
 }
@@ -1542,10 +1542,10 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
 
     int argCount = method->argCount;
     if(argCount > 0) {
-        JINT *map = method->argMap;
+        MethodArg *map = method->argMap;
         for(int i=0; i<argCount; i++) {
             //GLOG("arg%d = I:%d O:%p J:%ld\n", map[i], args->I, args->O, args->J);
-            local[map[i]] = *args;
+            local[map[i].localIndex] = *args;
             args++;
         }
     }

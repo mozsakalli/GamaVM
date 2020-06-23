@@ -255,6 +255,73 @@ void java_lang_ClassLoader_defineClass(VM *vm, Object *method, VAR *args) {
 }
 
 void java_lang_reflect_Method_invoke(VM *vm, Object *method, VAR *args) {
+    Object *mo = args[0].O;
+    Method *m = mo->instance;
+    int argCount = m->argCount;
+    
+    Object *base = args[1].O;
+    VAR rargs[argCount];
+    int ptr = 0;
+    if(!IS_STATIC(m->flags)) {
+        if(!base) {
+            throw_null(vm);
+            return;
+        }
+        rargs[ptr++].O = base;
+    }
+    
+    Object *arr = args[2].O;
+    
+    if(arr) {
+        Object **vals = arr->instance;
+        for(int i=0; i<arr->length; i++) {
+            switch(m->argMap[i].sign) {
+                case 'B': rargs[ptr].I = vals[i] ? *FIELD_PTR_B(vals[i], 0) : 0;break;
+                case 'Z': rargs[ptr].I = vals[i] ? *FIELD_PTR_Z(vals[i], 0) : 0;break;
+                case 'C': rargs[ptr].I = vals[i] ? *FIELD_PTR_C(vals[i], 0) : 0;break;
+                case 'S': rargs[ptr].I = vals[i] ? *FIELD_PTR_S(vals[i], 0) : 0;break;
+                case 'I': rargs[ptr].I = vals[i] ? *FIELD_PTR_I(vals[i], 0) : 0;break;
+                case 'F': rargs[ptr].F = vals[i] ? *FIELD_PTR_F(vals[i], 0) : 0;break;
+                case 'J': rargs[ptr].J = vals[i] ? *FIELD_PTR_J(vals[i], 0) : 0;break;
+                case 'D': rargs[ptr].D = vals[i] ? *FIELD_PTR_D(vals[i], 0) : 0;break;
+                default: rargs[ptr].O = vals[i];
+            }
+            ptr++;
+        }
+    }
+    
+    CALLVM_V(vm, mo, &rargs[0]);
+    if(!vm->exception) {
+        static Object **box_classes = NULL;
+        if(!box_classes) {
+            box_classes = malloc(sizeof(Object*) * 8);
+            box_classes[0] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Byte", 14, 1, NULL);
+            box_classes[1] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Boolean", 17, 1, NULL);
+            box_classes[2] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Character", 19, 1, NULL);
+            box_classes[3] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Short", 15, 1, NULL);
+            box_classes[4] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Integer", 17, 1, NULL);
+            box_classes[5] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Float", 15, 1, NULL);
+            box_classes[6] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Long", 14, 1, NULL);
+            box_classes[7] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Double", 16, 1, NULL);
+            if(vm->exception) {
+                free(box_classes);
+                return;
+            }
+        }
+        Object *ret = vm->frames[vm->FP].ret.O;
+        switch(m->returnSign) {
+            case 'B': ret = alloc_object(vm, box_classes[0], 0); *FIELD_PTR_B(ret, 0) = vm->frames[vm->FP].ret.I;break;
+            case 'Z': ret = alloc_object(vm, box_classes[1], 0); *FIELD_PTR_Z(ret, 0) = vm->frames[vm->FP].ret.I;break;
+            case 'C': ret = alloc_object(vm, box_classes[2], 0); *FIELD_PTR_C(ret, 0) = vm->frames[vm->FP].ret.I;break;
+            case 'S': ret = alloc_object(vm, box_classes[3], 0); *FIELD_PTR_S(ret, 0) = vm->frames[vm->FP].ret.I;break;
+            case 'I': ret = alloc_object(vm, box_classes[4], 0); *FIELD_PTR_I(ret, 0) = vm->frames[vm->FP].ret.I;break;
+            case 'F': ret = alloc_object(vm, box_classes[5], 0); *FIELD_PTR_F(ret, 0) = vm->frames[vm->FP].ret.F;break;
+            case 'J': ret = alloc_object(vm, box_classes[6], 0); *FIELD_PTR_J(ret, 0) = vm->frames[vm->FP].ret.J;break;
+            case 'D': ret = alloc_object(vm, box_classes[7], 0); *FIELD_PTR_D(ret, 0) = vm->frames[vm->FP].ret.D;break;
+        }
+        
+        vm->frames[vm->FP].ret.O = ret;
+    }
 }
 
 extern void java_lang_System_SystemOutStream_printImpl(VM *vm, Object *method, VAR *args);
