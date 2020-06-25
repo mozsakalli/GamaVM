@@ -24,8 +24,8 @@ public class GetField extends Field {
             //code +=  "*(("+ Util.getPlatformType(type)+"*)(CLS("+ref+"->declaringClass,global) + "+ref+"->offset))";
         } else {
             StackValue base = stack.pop();
-            if(!base.value.equals("L0")) //dont null check this
-                code += String.format("if(!%s) { frame->pc = %d; throw_null(vm); goto __EXCEPTION; }\n", base.value, this.pc);
+            //if(!base.value.equals("L0")) //dont null check this
+            code += String.format("if(!%s) { frame->pc = %d; throw_null(vm); goto __EXCEPTION; }\n", base.value, this.pc);
             code += tmp.value+" = ";
             code += "*FIELD_PTR_"+type+"("+base.value+","+ref+"->offset)";
             //code += "((char*)"+base.value+" + "+ref+"->offset.I) = "+base.value;

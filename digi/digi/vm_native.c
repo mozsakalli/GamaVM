@@ -254,6 +254,60 @@ void java_lang_ClassLoader_defineClass(VM *vm, Object *method, VAR *args) {
     vm->frames[vm->FP].ret.O = cls;
 }
 
+Object **get_box_classes(VM *vm) {
+    static Object **box_classes = NULL;
+    if(!box_classes) {
+        box_classes = malloc(sizeof(Object*) * 8);
+        box_classes[0] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Byte", 14, 1, NULL);
+        if(!vm->exception) box_classes[1] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Boolean", 17, 1, NULL);
+        if(!vm->exception) box_classes[2] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Character", 19, 1, NULL);
+        if(!vm->exception) box_classes[3] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Short", 15, 1, NULL);
+        if(!vm->exception) box_classes[4] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Integer", 17, 1, NULL);
+        if(!vm->exception) box_classes[5] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Float", 15, 1, NULL);
+        if(!vm->exception) box_classes[6] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Long", 14, 1, NULL);
+        if(!vm->exception) box_classes[7] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Double", 16, 1, NULL);
+        if(vm->exception) {
+            free(box_classes);
+            return NULL;
+        }
+    }
+    return box_classes;
+}
+Object *vm_box_value(VM *vm, int sign, VAR *var) {
+    Object **box_classes = get_box_classes(vm);
+    if(!box_classes) return var->O;
+    Object *ret = var->O;
+    switch(sign) {
+        case 'B': ret = alloc_object(vm, box_classes[0], 0); *FIELD_PTR_B(ret, 0) = var->I;break;
+        case 'Z': ret = alloc_object(vm, box_classes[1], 0); *FIELD_PTR_Z(ret, 0) = var->I;break;
+        case 'C': ret = alloc_object(vm, box_classes[2], 0); *FIELD_PTR_C(ret, 0) = var->I;break;
+        case 'S': ret = alloc_object(vm, box_classes[3], 0); *FIELD_PTR_S(ret, 0) = var->I;break;
+        case 'I': ret = alloc_object(vm, box_classes[4], 0); *FIELD_PTR_I(ret, 0) = var->I;break;
+        case 'F': ret = alloc_object(vm, box_classes[5], 0); *FIELD_PTR_F(ret, 0) = var->F;break;
+        case 'J': ret = alloc_object(vm, box_classes[6], 0); *FIELD_PTR_J(ret, 0) = var->J;break;
+        case 'D': ret = alloc_object(vm, box_classes[7], 0); *FIELD_PTR_D(ret, 0) = var->D;break;
+    }
+    return ret;
+}
+
+void vm_unbox_object(VM *vm, int sign, Object *o, VAR *var) {
+    if(!o) {
+        var->J = 0;
+        return;
+    }
+    switch(sign) {
+        case 'B': var->I = *FIELD_PTR_B(o, 0);break;
+        case 'Z': var->I = *FIELD_PTR_Z(o, 0);break;
+        case 'C': var->I = *FIELD_PTR_C(o, 0);break;
+        case 'S': var->I = *FIELD_PTR_S(o, 0);break;
+        case 'I': var->I = *FIELD_PTR_I(o, 0);break;
+        case 'F': var->F = *FIELD_PTR_F(o, 0);break;
+        case 'J': var->J = *FIELD_PTR_J(o, 0);break;
+        case 'D': var->D = *FIELD_PTR_D(o, 0);break;
+        default: var->O = o;
+    }
+}
+
 void java_lang_reflect_Method_invoke(VM *vm, Object *method, VAR *args) {
     Object *mo = args[0].O;
     Method *m = mo->instance;
@@ -275,6 +329,8 @@ void java_lang_reflect_Method_invoke(VM *vm, Object *method, VAR *args) {
     if(arr) {
         Object **vals = arr->instance;
         for(int i=0; i<arr->length; i++) {
+            vm_unbox_object(vm, m->argMap[i].sign, vals[i], &rargs[ptr++]);
+            /*
             switch(m->argMap[i].sign) {
                 case 'B': rargs[ptr].I = vals[i] ? *FIELD_PTR_B(vals[i], 0) : 0;break;
                 case 'Z': rargs[ptr].I = vals[i] ? *FIELD_PTR_Z(vals[i], 0) : 0;break;
@@ -285,24 +341,25 @@ void java_lang_reflect_Method_invoke(VM *vm, Object *method, VAR *args) {
                 case 'J': rargs[ptr].J = vals[i] ? *FIELD_PTR_J(vals[i], 0) : 0;break;
                 case 'D': rargs[ptr].D = vals[i] ? *FIELD_PTR_D(vals[i], 0) : 0;break;
                 default: rargs[ptr].O = vals[i];
-            }
-            ptr++;
+            }*/
         }
     }
     
     CALLVM_V(vm, mo, &rargs[0]);
     if(!vm->exception) {
+        vm->frames[vm->FP].ret.O = vm_box_value(vm, m->returnSign, &vm->frames[vm->FP].ret);
+        /*
         static Object **box_classes = NULL;
         if(!box_classes) {
             box_classes = malloc(sizeof(Object*) * 8);
             box_classes[0] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Byte", 14, 1, NULL);
-            box_classes[1] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Boolean", 17, 1, NULL);
-            box_classes[2] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Character", 19, 1, NULL);
-            box_classes[3] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Short", 15, 1, NULL);
-            box_classes[4] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Integer", 17, 1, NULL);
-            box_classes[5] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Float", 15, 1, NULL);
-            box_classes[6] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Long", 14, 1, NULL);
-            box_classes[7] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Double", 16, 1, NULL);
+            if(!vm->exception) box_classes[1] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Boolean", 17, 1, NULL);
+            if(!vm->exception) box_classes[2] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Character", 19, 1, NULL);
+            if(!vm->exception) box_classes[3] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Short", 15, 1, NULL);
+            if(!vm->exception) box_classes[4] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Integer", 17, 1, NULL);
+            if(!vm->exception) box_classes[5] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Float", 15, 1, NULL);
+            if(!vm->exception) box_classes[6] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Long", 14, 1, NULL);
+            if(!vm->exception) box_classes[7] = resolve_class(vm, vm->sysClassLoader, L"java/lang/Double", 16, 1, NULL);
             if(vm->exception) {
                 free(box_classes);
                 return;
@@ -320,7 +377,7 @@ void java_lang_reflect_Method_invoke(VM *vm, Object *method, VAR *args) {
             case 'D': ret = alloc_object(vm, box_classes[7], 0); *FIELD_PTR_D(ret, 0) = vm->frames[vm->FP].ret.D;break;
         }
         
-        vm->frames[vm->FP].ret.O = ret;
+        vm->frames[vm->FP].ret.O = ret;*/
     }
 }
 

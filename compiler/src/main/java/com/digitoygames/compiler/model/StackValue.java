@@ -27,7 +27,7 @@ public class StackValue {
     public int spillIndex = -1;
     public boolean live;
     public int localIndex = -1;
-
+    
     public boolean is2Word() {
         return type.equals("D") || type.equals("J");
     }

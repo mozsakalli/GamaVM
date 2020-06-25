@@ -1120,7 +1120,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "70"
             endingLineNumber = "70"
-            landmarkName = "mat2d_compose(m, x, y, scaleX, scaleY, pivotX, pivotY, rotSkew, rotation, skewX, skewY)"
+            landmarkName = "fast_sin(x)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2044,8 +2044,8 @@
             filePath = "digi/vm_native.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "357"
-            endingLineNumber = "357">
+            startingLineNumber = "414"
+            endingLineNumber = "414">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2058,8 +2058,8 @@
             filePath = "digi/vm_native.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "357"
-            endingLineNumber = "357">
+            startingLineNumber = "414"
+            endingLineNumber = "414">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2248,8 +2248,8 @@
             filePath = "digi/vm_native.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "258"
-            endingLineNumber = "258"
+            startingLineNumber = "312"
+            endingLineNumber = "312"
             landmarkName = "java_lang_reflect_Method_invoke(vm, method, args)"
             landmarkType = "9">
          </BreakpointContent>

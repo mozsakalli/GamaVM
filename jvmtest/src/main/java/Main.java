@@ -22,7 +22,12 @@ import digiplay.Platform;
  */
 public class Main {
     
+    static class T {
+        public float a;
+    }
     public static void main() {
+        T t = new T();
+        t.a = t.a + t.a*12 - t.a;
         Platform.run(new Player());
     }
 }

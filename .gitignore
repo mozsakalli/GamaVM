@@ -2,3 +2,6 @@
 /jvmtest/target/
 /srv/target/
 /okeyextra/target/
+/JavaFX/nbproject/private/
+/JavaFX/build/
+/JavaFX/dist/
