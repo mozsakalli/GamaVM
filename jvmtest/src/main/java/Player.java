@@ -40,7 +40,7 @@ public class Player implements Game {
         long now = System.currentTimeMillis();
         if(now - lastCheckTime >= 5000) {
             lastCheckTime = now;
-            Net.Http http = new Net.Http("http://192.168.1.63:7777/jar"+jarHash) {
+            Net.Http http = new Net.Http("http://192.168.0.136:7777/jar"+jarHash) {
                 @Override
                 public void onComplete() {
                     if(this.bytes != null) {

@@ -28,12 +28,12 @@ typedef struct JNIMethodInfo {
     Object *returnClass;
 } JNIMethodInfo;
 
-int jni_parse_signature(VM *vm, JCHAR *sign, int ptr, char *type, Object **cls) {
+int jni_parse_signature(VM *vm, JCHAR *sign, int ptr, char *type, Object **cls, Object *cloader) {
     *type = sign[ptr++];
     if(*type == 'L') {
         int start = ptr;
         while(sign[ptr] != ';') ptr++;
-        *cls = resolve_class(vm, sign + start, ptr - start, 1, nullptr);
+        *cls = resolve_class(vm, cloader, sign + start, ptr - start, 1, nullptr);
         ptr++;
         if(vm->exception) return 0;
     } else if(*type == '[') {
@@ -243,13 +243,13 @@ void jni_invoke_resolve(VM *vm, Object *method, VAR *args) {
     JCHAR *sign = STRCHARS(m->signature);
     int ptr = 1;
     while(sign[ptr] != ')') {
-        ptr = jni_parse_signature(vm, sign, ptr, &mi->argTypes[mi->argCount], &mi->argClasses[mi->argCount]);
+        ptr = jni_parse_signature(vm, sign, ptr, &mi->argTypes[mi->argCount], &mi->argClasses[mi->argCount], CLS(m->declaringClass,clsLoader));
         if(vm->exception)
             return;
         mi->argCount++;
     }
     ptr++;
-    jni_parse_signature(vm, sign, ptr, &mi->returnType, &mi->returnClass);
+    jni_parse_signature(vm, sign, ptr, &mi->returnType, &mi->returnClass, CLS(m->declaringClass,clsLoader));
 
     m->externalData = mi;
     if(m->externalFlags & 2) {

@@ -32,6 +32,7 @@ public class PlayerClassLoader extends ClassLoader {
     }
     
     protected byte[] readResource(String path) {
+        System.out.println("--- readResource: "+path);
         return VM.extractZip(path, jarFile, jarOffset);
     }
 

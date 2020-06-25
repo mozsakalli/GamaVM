@@ -383,6 +383,7 @@ extern void throw_arraybounds(VM *vm, int index, int length);
 extern void throw_cast(VM *vm, Object *son, Object *of);
 extern void throw_unsatisfiedlink(VM *vm, Object *method);
 extern void throw_nosuchmethod(VM *vm, JCHAR *clsName, int clsLen, JCHAR *name, int nameLen, JCHAR *sign, int signLen);
+extern void throw_abstractmethod(VM *vm, JCHAR *clsName, int clsLen, JCHAR *name, int nameLen, JCHAR *sign, int signLen);
 
 /// NATIVE
 typedef struct NativeMethodInfo {

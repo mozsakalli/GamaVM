@@ -173,3 +173,29 @@ void throw_nosuchmethod(VM *vm, JCHAR *clsName, int clsLen, JCHAR *name, int nam
     
     throw_exception(vm, exp);
 }
+
+void throw_abstractmethod(VM *vm, JCHAR *clsName, int clsLen, JCHAR *name, int nameLen, JCHAR *sign, int signLen) {
+    static Object *npe = NULL;
+    static Object *mth = NULL;
+    if(!npe) {
+        npe = resolve_class(vm, vm->sysClassLoader, (JCHAR*)L"java/lang/AbstractMethodError", 29, 1, NULL);
+        if(!npe) return;
+
+        mth = find_method(vm, npe, (JCHAR*)L"<init>",6, (JCHAR*)L"(Ljava/lang/String;)V", 21);
+    }
+    Object *exp = alloc_object(vm, npe, 0);
+    if(mth) {
+        char tmp[256];
+        char *ptr = &tmp[0];
+        //Object *dc = ((Method*)method->instance)->declaringClass;
+        //Object *clsName = CLS(dc, name);
+        ptr += sprintf(tmp,"%s",jchar_to_ascii(clsName, clsLen));
+        ptr += sprintf(ptr,":%s",jchar_to_ascii(name, nameLen));
+        ptr += sprintf(ptr,":%s",jchar_to_ascii(sign, signLen));
+
+        VAR args[2] = {{ .O = exp }, { .O = alloc_string_ascii(vm, tmp, 0) }};
+        CALLVM_V(vm, mth, &args[0]);
+    }
+
+    throw_exception(vm, exp);
+}

@@ -3,9 +3,9 @@
 Object **aot_strings;
 
 //Main
-static Field *f2390489_4=NULL;
-static JLONG m2390489_1=0,m2390489_3=0,m2390489_7=0,m2390489_8=0;
-static Object *c2390489_2=NULL,*c2390489_6=NULL,*c2390489_9=NULL,*c2390489_10=NULL,*c2390489_29=NULL;
+static Field *f2390489_10=NULL;
+static JLONG m2390489_1=0,m2390489_9=0,m2390489_17=0,m2390489_18=0;
+static Object *c2390489_2=NULL,*c2390489_7=NULL,*c2390489_15=NULL,*c2390489_19=NULL,*c2390489_24=NULL;
 void Main__init____V(VM *vm, Object *omethod, VAR *args) {
 	Frame *frame = &vm->frames[++vm->FP];
 	frame->method = omethod;
@@ -37,44 +37,41 @@ void Main_main___V(VM *vm, Object *omethod, VAR *args) {
 	JFLOAT T1,T2,T3;
 	Object *L0,*T0;
 BB0:
-	AOTCLASS(c2390489_2,3);
-	T0=alloc_object(vm,c2390489_2,0);
+	AOTCLASS(c2390489_7,3);
+	T0=alloc_object(vm,c2390489_7,0);
 	{
 	ARGBUF[0].O=T0;  frame->pc=4;
-	  AOTMETHOD(m2390489_3,3,1,2); //Main$T:<init>:()V;
-	  ((VM_CALL)(MTH(((Object*)m2390489_3),entry)))(vm,m2390489_3,ARGBUF);
+	  AOTMETHOD(m2390489_9,3,1,2); //Main$T:<init>:()V;
+	  ((VM_CALL)(MTH(((Object*)m2390489_9),entry)))(vm,m2390489_9,ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
 	L0=T0;
-	AOTFIELD(f2390489_4,3,4,5); //Main$T:a:F;
+	AOTFIELD(f2390489_10,3,4,5); //Main$T:a:F;
 	if(!L0) { frame->pc = 10; throw_null(vm); goto __EXCEPTION; }
-	T1 = *FIELD_PTR_F(L0,f2390489_4->offset);
+	T1 = *FIELD_PTR_F(L0,f2390489_10->offset);
 	//Main$T:a:F;
-	if(!L0) { frame->pc = 14; throw_null(vm); goto __EXCEPTION; }
-	T2 = *FIELD_PTR_F(L0,f2390489_4->offset);
+	T2 = *FIELD_PTR_F(L0,f2390489_10->offset);
 	T3 = T2 * 12.0;
 	T2 = T1 + T3;
 	//Main$T:a:F;
-	if(!L0) { frame->pc = 22; throw_null(vm); goto __EXCEPTION; }
-	T1 = *FIELD_PTR_F(L0,f2390489_4->offset);
+	T1 = *FIELD_PTR_F(L0,f2390489_10->offset);
 	T3 = T2 - T1;
 	//Main$T:a:F;
-	if(!L0) { frame->pc = 26; throw_null(vm); goto __EXCEPTION; }
-	*FIELD_PTR_F(L0,f2390489_4->offset) = T3;
-	AOTCLASS(c2390489_6,6);
-	T0=alloc_object(vm,c2390489_6,0);
+	*FIELD_PTR_F(L0,f2390489_10->offset) = T3;
+	AOTCLASS(c2390489_15,6);
+	T0=alloc_object(vm,c2390489_15,0);
 	{
 	ARGBUF[0].O=T0;  frame->pc=33;
-	  AOTMETHOD(m2390489_7,6,1,2); //Player:<init>:()V;
-	  ((VM_CALL)(MTH(((Object*)m2390489_7),entry)))(vm,m2390489_7,ARGBUF);
+	  AOTMETHOD(m2390489_17,6,1,2); //Player:<init>:()V;
+	  ((VM_CALL)(MTH(((Object*)m2390489_17),entry)))(vm,m2390489_17,ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	
 	{
 	ARGBUF[0].O=T0;  frame->pc=36;
-	  AOTMETHOD(m2390489_8,7,8,9); //digiplay/Platform:run:(Ldigiplay/Game;)V;
-	  ((VM_CALL)(MTH(((Object*)m2390489_8),entry)))(vm,m2390489_8,ARGBUF);
+	  AOTMETHOD(m2390489_18,7,8,9); //digiplay/Platform:run:(Ldigiplay/Game;)V;
+	  ((VM_CALL)(MTH(((Object*)m2390489_18),entry)))(vm,m2390489_18,ARGBUF);
 	  if(vm->exception) goto __EXCEPTION;
 	}
 	

@@ -21,7 +21,7 @@ import gamavm.VM;
  *
  * @author mustafa
  */
-public abstract class ClassLoader {
+public class ClassLoader {
 
     ClassLoader parent;
     Class classes;
@@ -35,7 +35,11 @@ public abstract class ClassLoader {
         this.parent = parent;
     }
     
-    protected abstract byte[] readResource(String path);
+    protected byte[] readResource(String path) {
+        byte[] jar = VM.readFile("boot.jar");
+        if(jar == null) return null;
+        return VM.extractZip(path, jar, 0);
+    }
     
     public Class loadClass(String name) throws ClassNotFoundException {
         return loadClass(name, false);

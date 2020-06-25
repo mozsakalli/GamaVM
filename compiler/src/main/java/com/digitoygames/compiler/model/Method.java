@@ -19,6 +19,7 @@ package com.digitoygames.compiler.model;
 import com.digitoygames.compiler.Util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -28,6 +29,7 @@ import java.util.List;
 public class Method extends Field {
     
     Code code;
+    public HashSet<String> nullCheckedVars = new HashSet();
     
     public Code getCode() throws Exception {
         if(code != null) return code;

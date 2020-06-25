@@ -55,7 +55,7 @@ extern "C" void *__platform_read_file(const char* path, int *size) {
 extern "C" void *read_class_file(JCHAR *name, int len) {
     int jarSize;
     void *jar = NULL;
-    if(!jar) jar = __platform_read_file("jvm_test.jar", &jarSize);
+    if(!jar) jar = __platform_read_file("boot.jar", &jarSize);
     if(!jar) return NULL;
 
     char tmp[512];
@@ -115,14 +115,14 @@ Java_digiplay_MainActivity_gamaVMMain(
 
     gamaVM = vm_init();
     vm_main(gamaVM, (char*)"Main", (char*)"main", (char*)"()V");
-    digiplayPlatformStepMethod = resolve_method(gamaVM, (JCHAR*)L"digiplay/Platform",17, (JCHAR*)L"step",4, (JCHAR*)L"()V", 3);
+    digiplayPlatformStepMethod = resolve_method(gamaVM, gamaVM->sysClassLoader, (JCHAR*)L"digiplay/Platform",17, (JCHAR*)L"step",4, (JCHAR*)L"()V", 3);
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_digiplay_MainActivity_platformResize(
         JNIEnv *env,
         jclass /* this */, jint width, jint height) {
-    Object *resize_method = resolve_method(gamaVM, (JCHAR*)L"digiplay/Platform",17, (JCHAR*)L"resize",6, (JCHAR*)L"(II)V", 5);
+    Object *resize_method = resolve_method(gamaVM, gamaVM->sysClassLoader, (JCHAR*)L"digiplay/Platform",17, (JCHAR*)L"resize",6, (JCHAR*)L"(II)V", 5);
     VAR vargs[2] = {
             { .I = width },
             { .I = height },
@@ -150,7 +150,7 @@ Java_digiplay_MainActivity_completeCompletable(
 
     static int methodIndex = -1;
     if(methodIndex == -1) {
-        Object *m = resolve_method(gamaVM, (JCHAR*)L"digiplay/Completable",20, (JCHAR*)L"complete",8, (JCHAR*)L"(JI)V",5);
+        Object *m = resolve_method(gamaVM, gamaVM->sysClassLoader, (JCHAR*)L"digiplay/Completable",20, (JCHAR*)L"complete",8, (JCHAR*)L"(JI)V",5);
         if(!m) return;
         methodIndex = MTH(m, iTableIndex);
     }

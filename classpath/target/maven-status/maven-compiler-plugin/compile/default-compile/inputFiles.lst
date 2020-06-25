@@ -42,6 +42,7 @@
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/NoSuchMethodException.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/nio/channels/Channel.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/net/URIHelper.java
+/Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/AbstractMethodError.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/reflect/Method.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/text/SimpleDateFormat.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/net/URI.java
@@ -92,6 +93,7 @@
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/AutoCloseable.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/util/Stack.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/util/Observer.java
+/Users/mustafa/Work/GamaVM/classpath/src/main/java/gamavm/External.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/util/Iterator.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/util/Observable.java
 /Users/mustafa/Work/GamaVM/classpath/src/main/java/java/lang/Boolean.java

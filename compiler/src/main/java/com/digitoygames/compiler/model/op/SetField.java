@@ -17,8 +17,10 @@ public class SetField extends Field {
             code +=  "*(("+ Util.getPlatformType(type)+"*)("+ref+"->offset)) = "+tmp.value;
         } else {
             StackValue base = stack.pop();
-            //if(!base.value.equals("L0")) //dont null check this
-            code += String.format("if(!%s) { frame->pc = %d; throw_null(vm); goto __EXCEPTION; }\n", base.value, this.pc);
+            if(!method.nullCheckedVars.contains(base.value)) {
+                code += String.format("if(!%s) { frame->pc = %d; throw_null(vm); goto __EXCEPTION; }\n", base.value, this.pc);
+                method.nullCheckedVars.add(base.value);
+            }
             code += "*FIELD_PTR_"+type+"("+base.value+","+ref+"->offset) = "+tmp.value;
             //code += "((char*)"+base.value+" + "+ref+"->offset.I) = "+base.value;
         }

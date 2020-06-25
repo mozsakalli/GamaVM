@@ -41,6 +41,7 @@ add_library( # Sets the name of the library.
         /Users/mustafa/Work/GamaVM/digi/digi/android_net.cpp
         /Users/mustafa/Work/GamaVM/digi/digi/jdwp.cpp
         /Users/mustafa/Work/GamaVM/digi/digi/jni.cpp
+        /Users/mustafa/Work/GamaVM/digi/digi/d.c
         )
 
 # Searches for a specified prebuilt library and stores the path as a

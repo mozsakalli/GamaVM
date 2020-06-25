@@ -30,8 +30,7 @@ public class StoreLocal extends Local {
     public void execute(Method method, Stack stack) {
         StackValue local = method.getLocal(index, type);
         code = local.value+"="+stack.pop().value;
-        //code = "local["+index+"]."+type+"="+stack.pop().value;
-                //"L"+type+index+"="+stack.pop().value;
+        method.nullCheckedVars.remove(local.value);
     }
 
     

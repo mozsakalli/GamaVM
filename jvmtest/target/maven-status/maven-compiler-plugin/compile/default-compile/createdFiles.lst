@@ -9,7 +9,6 @@ digiplay/Game.class
 gamavm/apple/uikit/UIResponder.class
 gamavm/apple/uikit/UIView.class
 digiplay/Stage2D.class
-gamavm/External.class
 digiplay/Net.class
 gamavm/apple/Bridge.class
 gamavm/apple/NSDictionary.class
@@ -38,6 +37,7 @@ digiplay/Point2D.class
 digiplay/Behaviour.class
 gamavm/apple/uikit/UIApplicationDelegate.class
 gamavm/apple/Selector.class
+Main$T.class
 Player.class
 digiplay/ByteArrayCompletable.class
 digiplay/Sprite2D.class

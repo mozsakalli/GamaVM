@@ -197,6 +197,7 @@ java/util/LinkedList$Link.class
 java/util/Collections$SingletonSet.class
 java/io/BufferedOutputStream.class
 java/lang/annotation/AnnotationFormatError.class
+gamavm/External.class
 java/util/zip/DeflaterOutputStream.class
 java/lang/IllegalThreadStateException.class
 java/lang/StackOverflowError.class
@@ -246,6 +247,7 @@ java/lang/annotation/Inherited.class
 java/lang/Byte.class
 java/util/RandomAccess.class
 java/util/Hashtable$6.class
+java/lang/AbstractMethodError.class
 java/util/regex/RegexPattern.class
 java/io/RandomAccessFile.class
 java/lang/Enum.class

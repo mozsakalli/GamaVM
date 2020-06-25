@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
  *
  * @author mustafa
  */
+@External
 public class VM {
     
     public static native Class getClass(Object o);
@@ -44,7 +45,7 @@ public class VM {
     public static native void gcProtect(Object o);
     public static native void gcUnProtect(Object o);
     
-    public static native byte[] readFile(String path);
+    @External public static native byte[] readFile(String path);
     public static native byte[] extractZip(String name, byte[] zip, int offset);
     
     public static native Method getCaller();

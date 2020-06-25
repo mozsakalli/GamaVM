@@ -1521,6 +1521,13 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
     };
     
     Method *method = omethod->instance;
+    if(IS_ABSTRACT(method->flags)) {
+        throw_abstractmethod(vm, STRCHARS(CLS(method->declaringClass,name)), STRLEN(CLS(method->declaringClass,name)),
+                             STRCHARS(method->name), STRLEN(method->name),
+                             STRCHARS(method->signature), STRLEN(method->signature)
+                );
+        return;
+    }
     //VAR stack[method->maxStack];
     //VAR local[method->maxLocals];
     VAR* local = &vm->stack[vm->SP];

@@ -29,13 +29,13 @@ public class Game implements digiplay.Game {
     @Override
     public void begin() {
         Stage2D.setup(new Point2D(Platform.screenWidth, Platform.screenHeight));
-        for(int i=0; i<10; i++) {
+        for(int i=0; i<2000; i++) {
         Image img = new Image();
         img.setX(400);
         img.setY(400);
         img.setScaleY(1);
         img.scaleX(1);
-        img.addBehaviour(new B());
+        img.addBehaviour(new BB());
         Stage2D.I.addChild(img);
         }
     }
@@ -47,7 +47,7 @@ public class Game implements digiplay.Game {
     public void update() {
         long now = System.currentTimeMillis();
         if(now - fpsTime <= 1000) fps++; else {
-            System.out.println("FPS: "+fps);
+            System.out.println("FPS-X: "+fps);
             fpsTime = now;
             fps = 0;
         }

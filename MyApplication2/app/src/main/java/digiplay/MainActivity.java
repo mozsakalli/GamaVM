@@ -15,8 +15,8 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
-    static AssetManager AM;
-    static MainActivity I;
+    public static AssetManager AM;
+    public static MainActivity I;
     GameView gameView;
     public static ExecutorService ThreadPool = Executors.newFixedThreadPool(4);
 

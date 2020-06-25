@@ -240,6 +240,8 @@ public class MethodCompiler2 {
             bb.stack.push(ex);
         }
 
+        method.nullCheckedVars.clear();
+        
         Op lastOp = bb.ops.isEmpty() ? null : bb.ops.get(bb.ops.size() - 1);
         for(Op o : bb.ops) {
             o.execute(method, bb.stack);

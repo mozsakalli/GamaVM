@@ -307,7 +307,6 @@ void link_class(VM *vm, Object *clsObject) {
 }
 
 Object *resolve_class(VM *vm, Object *cloader, JCHAR *name, JINT len, int link, Object *target) {
-    //printf("resolve: %s\n", jchar_to_ascii(name, len));
     Object *cls = find_class(vm, cloader, name, len);
     if(cls) {
         if(link) link_class(vm, cls);
@@ -345,10 +344,21 @@ Object *resolve_class(VM *vm, Object *cloader, JCHAR *name, JINT len, int link, 
     }
     
     void *class_raw = NULL;
-    int nofree = 0;
     if(cloader == vm->sysClassLoader)
         class_raw = read_class_file(name, len);
     else {
+        static int loadMethod = -1;
+        if(loadMethod == -1) {
+            Object *method =
+                    resolve_method(vm, vm->sysClassLoader, L"java/lang/ClassLoader", 21, L"loadClass", 9, L"(Ljava/lang/String;Z)Ljava/lang/Class;", 38);
+            if(vm->exception) return NULL;
+            loadMethod = MTH(method, vTableIndex);
+        }
+        VAR rargs[3] = { {.O = cloader}, { .O = alloc_string_java(vm, name, len, 0)}, { .I = link}};
+        CALLVM_V(vm, CLS(cloader->cls, vtable)[loadMethod], &rargs[0]);
+        if(vm->exception) return NULL;
+        return vm->frames[vm->FP].ret.O;
+        /*
         static int readResourceMethod = -1;
         if(readResourceMethod == -1) {
             Object *method =
@@ -361,7 +371,7 @@ Object *resolve_class(VM *vm, Object *cloader, JCHAR *name, JINT len, int link, 
         CALLVM_V(vm, CLS(cloader->cls, vtable)[readResourceMethod], &rargs[0]);
         if(vm->exception) return NULL;
         Object *res = vm->frames[vm->FP].ret.O;
-        if(res) class_raw = res->instance;
+        if(res) class_raw = res->instance;*/
     }
     if(!class_raw) {
         if(((ClassLoader*)cloader->instance)->parent)
@@ -371,7 +381,7 @@ Object *resolve_class(VM *vm, Object *cloader, JCHAR *name, JINT len, int link, 
     }
     cls = !target ? alloc_class(vm) : target;
     int success = parse_class(vm, cloader, class_raw, cls);
-    if(!nofree) free(class_raw);
+    free(class_raw);
     if(!success) {
         throw_classnotfound(vm, name, len);
         return NULL;

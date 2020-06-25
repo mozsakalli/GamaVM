@@ -22,10 +22,10 @@ import digiplay.Platform;
  *
  * @author mustafa
  */
-public class B extends Behaviour {
-    float dx = (float)Math.random()*10 - 5;
-    float dy = (float)Math.random()*10 - 5;
-    float dr = (float)Math.random()*100 - 50 + 30;
+public class BB extends Behaviour {
+    float dx = 2- (float)Math.random()*4;
+    float dy = 2- (float)Math.random()*4 - 2;
+    float dr = 15- (float)Math.random()*10;
     
     @Override
     public boolean update(float time) {
