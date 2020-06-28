@@ -20,43 +20,30 @@ package digiplay;
  *
  * @author mustafa
  */
-public class Image extends Sprite2D {
+public class Image extends Sprite {
     
-    QuadMesh quad;
-    static GLTexture texture;
-    String src;
-
-    public Image() {
-        markContentInvalid();
-        if(texture == null) {
-            texture = new GLTexture();
-            texture.upload(Platform.readAsset("bunny.png"));
+    Texture2D texture2D;
+    
+    String src = "";
+    public void setSrc(String src) {
+        if(src != null && !src.equals(this.src)) {
+            this.src = src;
+            texture2D = Texture2D.get(src);
+            markContentInvalid();
         }
     }
-    public String getSrc() { return src; }
-    public void setSrc(String src) {
-    }
-
-    @Override
-    public void invalidateContent() {
-        if (quad == null) quad = new QuadMesh(1);
-        setWidth(texture.width);
-        setHeight(texture.height);
-        quad.set(0, 0, 0, texture.width, texture.height, 0, 0, 1, 0, 1, 1, 0, 1);
-        /*
-        if(texture != null) {
-            if (quad == null) quad = new QuadMesh(1);
-            setWidth(texture.width);
-            setHeight(texture.height);
-            quad.set(0, 0, 0, texture.width, texture.height, 0, 0, 1, 0, 1, 1, 0, 1);
-        }*/
-    }
-
-    @Override
-    public void draw() {
-        //if(quad != null)
-        //    Stage2D.QuadBatch.drawQuadMesh(quad, getWorldMatrix(GLOBAL_FRAME_VERSION), Stage2D.DefaultShader, texture, 0, color, this.worldAlpha, blendMode);
-    }
     
-    
+    @Override public void invalidateContent() {
+        if(texture2D != null) {
+            texture = texture2D.texture;
+            if(mesh == null) mesh = new Mesh(Mesh.QUAD, 1);
+            mesh.setQuad(0, texture2D.drawX, texture2D.drawY, texture2D.drawWidth, texture2D.drawHeight, 
+                    texture2D.u1, texture2D.v1, 
+                    texture2D.u2, texture2D.v2, 
+                    texture2D.u3, texture2D.v3, 
+                    texture2D.u4, texture2D.v4);
+            setWidth(texture2D.width);
+            setHeight(texture2D.height);
+        }
+    }
 }

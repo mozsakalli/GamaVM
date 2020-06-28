@@ -1,6 +1,6 @@
 
 import digiplay.Game;
-import digiplay.Image;
+import digiplay.Image2D;
 import digiplay.Net;
 import digiplay.Platform;
 import digiplay.Point2D;
@@ -37,7 +37,7 @@ public class MyGame implements Game {
         System.out.println(byte.class);
         Stage2D.I.setup(new Point2D(Platform.screenWidth,Platform.screenHeight));
         for(int i=0; i<5; i++) {
-            Image img = new Image();
+            Image2D img = new Image2D();
             Stage2D.I.addChild(img);
             img.setX(480);
             img.setY(320);
@@ -61,9 +61,9 @@ public class MyGame implements Game {
         new Asset() {
             @Override public void onComplete() {
                 System.out.println("Bytes loaded: "+bytes.length);
-                new Stb.Image() {
+                new Stb.Image2D() {
                     @Override public void onComplete() {
-                        System.out.println("Image loaded: "+width+"x"+height+" len:"+this.pixels.length);
+                        System.out.println("Image2D loaded: "+width+"x"+height+" len:"+this.pixels.length);
                     }
                 }.decode(bytes);
             }

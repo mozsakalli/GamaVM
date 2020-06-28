@@ -30,7 +30,7 @@ public class Sprite {
     float px=.5f,py=.5f;
     float width,height, midy, midx;
     float clipX, clipY, clipW, clipH;
-    int numChildren, depth, parentVersion, color=0xFFFFFFFF, depthEnabled, stencilMode, blendMode=1;
+    int numChildren, depth, parentVersion, color=0xFFFFFFFF, depthEnabled, stencilMode, blendMode=1, textureMode;
     Sprite parent, next, prev, firstChild, lastChild;
     Mat4 local=new Mat4(),world=new Mat4(), inverse = new Mat4();
     Mesh mesh;
@@ -425,6 +425,9 @@ public class Sprite {
     public void setMesh(Mesh m) {
         mesh = m;
     }
+    
+    public Sprite getFirstChild() { return firstChild; }
+    public Sprite getNext() { return next; }
     /*
     public void addBehaviour(Behaviour b) {
         if (b == null) {

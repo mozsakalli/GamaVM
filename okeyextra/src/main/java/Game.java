@@ -1,5 +1,5 @@
 
-import digiplay.Image;
+import digiplay.Image2D;
 import digiplay.Platform;
 import digiplay.Point2D;
 import digiplay.Stage2D;
@@ -30,7 +30,7 @@ public class Game implements digiplay.Game {
     public void begin() {
         Stage2D.setup(new Point2D(Platform.screenWidth, Platform.screenHeight));
         for(int i=0; i<5000; i++) {
-        Image img = new Image();
+        Image2D img = new Image2D();
         img.setX(400);
         img.setY(400);
         img.setScaleY(1);

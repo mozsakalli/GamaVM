@@ -68,7 +68,61 @@ public class Stage extends Sprite {
         setPivotY(0);
         setWidth(designWidth);
         setHeight(designHeight);
-    }    
+    }   
+    
+    void invalidateSprite(Sprite sprite) {
+        sprite.invalidateContentIfRequired();
+        Sprite ptr = sprite.firstChild;
+        while (ptr != null) {
+            invalidateSprite(ptr);
+            ptr = ptr.next;
+        }
+    }
+
+    public void update() {
+        //ClearBackground = true;
+        boolean invalidated = false;
+        if (InvalidationCounter != 0) {
+            InvalidationCounter = 0;
+            invalidateSprite(this);
+            if (InvalidationCounter != 0) {
+                invalidateSprite(this);
+            }
+            invalidated = true;
+        }
+        
+        /*
+            if (_invokeLaterCount > 0)
+            {
+                for (int i = 0; i < _invokeLaterCount; i++)
+                {
+                    _invokeLaterList[i].Invoke();
+                    _invokeLaterList[i] = null;
+                }
+                _invokeLaterCount = 0;
+            }*/
+
+        //updateBehaviours(Platform.gameTime, true);
+        
+        //var currentTime = Platform.GetTimer();
+        //updateBehaviours(currentTime, true);
+        if (InvalidationCounter != 0) {
+            InvalidationCounter = 0;
+            invalidateSprite(this);
+            if (InvalidationCounter != 0) {
+                invalidateSprite(this);
+            }
+            invalidated = true;
+        }
+        /*
+            if(invalidated && Scene2D.currentScene != null && !Scene2D.currentScene._invalidationCalled)
+            {
+                Scene2D.currentScene._invalidationCalled = true;
+                Scene2D.currentScene.InitCompleted();
+            } 
+         */
+    }
+    
     public native void render(int width, int height);
     
 }

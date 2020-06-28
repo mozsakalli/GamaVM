@@ -42,7 +42,7 @@ typedef struct __attribute__ ((packed)) Sprite {
     JFLOAT px,py;
     JFLOAT width,height, midy, midx;
     JFLOAT clipX, clipY, clipW, clipH;
-    JINT numChildren, depth, parentVersion, color, depthEnabled, stencilMode, blendMode;
+    JINT numChildren, depth, parentVersion, color, depthEnabled, stencilMode, blendMode, textureMode;
     Object *parent, *next, *prev, *firstChild, *lastChild;
     Object *local,*world, *inverse;
     Object *mesh;

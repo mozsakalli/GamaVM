@@ -38,16 +38,16 @@ inline static double fast_sin(double x) {
 }
 #define fast_cos(r) fast_sin((r)+M_PI/2)
 
-typedef struct VEC2 {
+typedef struct __attribute__ ((packed)) VEC2 {
     float x,y;
 } VEC2;
-typedef struct VEC3 {
+typedef struct __attribute__ ((packed)) VEC3 {
     float x,y,z;
 } VEC3;
-typedef struct COLOR {
+typedef struct __attribute__ ((packed)) COLOR {
     unsigned char r,g,b,a;
 } COLOR;
-typedef struct VERTEX {
+typedef struct __attribute__ ((packed)) VERTEX {
     VEC3 pos;
     VEC2 uv;
     COLOR color;

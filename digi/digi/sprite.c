@@ -3,6 +3,9 @@
 //
 
 #include "sprite.h"
+#define STBI_NO_THREAD_LOCALS
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 #define MAX_BATCH_QUADS 8192
 #define MAX_BATCH_VERTS (MAX_BATCH_QUADS<<2)
@@ -14,7 +17,9 @@ int BatchVertexCount, BatchIndexCount;
 Mat4 ProjectionMatrix;
 int ProjectionDirty;
 int RenderWidth, RenderHeight, StencilMode, DepthEnabled, BlendMode, Clipping;
-Shader *_Shader;
+Object *_Shader;
+Object *_Texture;
+int _TextureMode;
 
 extern void render_set_cliprect(float x, float y, float w, float h);
 extern void render_set_blendmode(int mode);
@@ -23,6 +28,9 @@ extern void render_viewport(int x, int y, int width, int height);
 extern void render_useshader(Shader *shader);
 extern void render_set_projection(Mat4 *projection);
 extern void render_draw_indexed(VERTEX *vertex, short *index, int count, int drawAsLines);
+extern void render_upload_texture(Texture *tex, void *buffer);
+extern void render_set_texture(Texture *tex);
+extern void render_set_texture_mode(int mode);
 
 void render_flush_batch() {
     if(BatchIndexCount > 0) {
@@ -110,17 +118,17 @@ void render_quad_mesh(Mesh *mesh, Mat4 *mat, int color, float alpha) {
         v++;
 
         v->pos = q->p2;
-        v->uv = q->t1;
+        v->uv = q->t2;
         v->color = col;
         v++;
 
         v->pos = q->p3;
-        v->uv = q->t1;
+        v->uv = q->t3;
         v->color = col;
         v++;
 
         v->pos = q->p4;
-        v->uv = q->t1;
+        v->uv = q->t4;
         v->color = col;
         v++;
         q++;
@@ -180,8 +188,22 @@ void render_sprite(Object *spriteObject) {
 
         if(_Shader != sprite->shader) {
             render_flush_batch();
-            render_useshader(_Shader = sprite->shader);
+            _Shader = sprite->shader;
+            render_useshader(_Shader ? _Shader->instance : NULL);
             ProjectionDirty = 1;
+            _Texture = NULL;
+        }
+
+        if(_Texture != sprite->texture) {
+            render_flush_batch();
+            _Texture = sprite->texture;
+            render_set_texture(_Texture ? _Texture->instance : NULL);
+            _TextureMode = -1;
+        }
+
+        if(_TextureMode != sprite->textureMode) {
+            render_flush_batch();
+            render_set_texture_mode(_TextureMode = sprite->textureMode);
         }
 
         Mesh *mesh = sprite->mesh->instance;
@@ -218,8 +240,10 @@ void Gama_digiplay_Stage_render(VM *vm, Object *method, VAR *args) {
     render_set_blendmode(0);
     render_set_cliprect(0,0,0,0);
     render_clear_color((int)stage->color);
-
-    render_useshader(_Shader = NULL);
+    _Texture = NULL;
+    _Shader = NULL;
+    _TextureMode = -1;
+    render_useshader(NULL);
 
     render_sprite(args[0].O);
 
@@ -264,9 +288,41 @@ void Gama_digiplay_Mesh_setQuad(VM *vm, Object *method, VAR *args) {
     q[index].t4 = (VEC2){args[12].F, args[13].F};
 }
 
+void Gama_digiplay_Texture_upload(VM *vm, Object *method, VAR *args) {
+    if(!args[0].O || !args[1].O) {
+        throw_null(vm);
+        return;
+    }
+
+    Texture *tex = (Texture*)args[0].O->instance;
+    Object *array = args[1].O;
+
+    int comp = 0;
+    stbi_uc* pix = stbi_load_from_memory((stbi_uc *)array->instance, array->length, &tex->width, &tex->height, &comp, 4);
+    if(pix) {
+        //
+        struct RGBA { unsigned char r; unsigned char g; unsigned char b; unsigned char a; };
+        struct RGBA * ptr = (struct RGBA * ) pix;
+        int len = tex->width * tex->height;
+        for (int i = 0; i < len; i++) {
+            float a = ptr[i].a / 255.0f;
+            ptr[i].r *= a;
+            ptr[i].g *= a;
+            ptr[i].b *= a;
+        }
+
+        tex->hwWidth = tex->width; //glWidth = npot ? width : pow2_size(width);");
+        tex->hwHeight = tex->height; // npot ? height : pow2_size(height);");
+        render_upload_texture(tex, pix);
+        free(pix);
+    }
+}
+
 NativeMethodInfo digiplay_sprite_methods[] = {
         {"digiplay/Mesh:resize:(I)V", &Gama_digiplay_Mesh_resize},
         {"digiplay/Mesh:setQuad:(IFFFFFFFFFFFF)V", &Gama_digiplay_Mesh_setQuad},
+
+        {"digiplay/Texture:upload:([B)V", &Gama_digiplay_Texture_upload},
 
         {"digiplay/Stage:render:(II)V", &Gama_digiplay_Stage_render},
         NULL

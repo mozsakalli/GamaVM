@@ -119,7 +119,7 @@ void render_useshader(Shader *shader) {
     if(!shader) {
         if(!deviceDefaultShader) {
             deviceDefaultShader = vm_alloc(sizeof(Shader));
-            render_create_shader_program(deviceDefaultShader, "gl_FragColor = vColor.xyzw; ");
+            render_create_shader_program(deviceDefaultShader, "gl_FragColor = texture2D(texture, vUv.xy).xyzw * vColor.xyzw; ");
         }
         shader = deviceDefaultShader;
     }
@@ -150,4 +150,39 @@ void render_draw_indexed(VERTEX *vertex, short *index, int count, int drawAsLine
     }
 
     glDrawElements(drawAsLines ? GL_LINE_STRIP : GL_TRIANGLES, count, GL_UNSIGNED_SHORT, index);
+    int err = glGetError();
+}
+
+void render_upload_texture(Texture *tex, void *buffer) {
+    GLuint texture = (GLuint)tex->gpu;
+    glActiveTexture(GL_TEXTURE0);
+    if(!texture) {
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glPixelStorei( GL_UNPACK_ALIGNMENT,1 );
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32,32,/*tex->hwWidth, tex->hwHeight, */0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, 0);
+    } else glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glPixelStorei( GL_UNPACK_ALIGNMENT,1 );
+    glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, tex->width, tex->height, GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)buffer );
+    tex->gpu = texture;
+}
+
+void render_set_texture(Texture *tex) {
+    if(deviceCurrentShader) {
+        glActiveTexture(GL_TEXTURE0);
+        glUniform1i(deviceCurrentShader->texture, 0);
+        glBindTexture(GL_TEXTURE_2D, tex ? (GLuint)tex->gpu : 0);
+    }
+}
+
+void render_set_texture_mode(int mode) {
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }

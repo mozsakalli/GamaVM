@@ -16,11 +16,11 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #endif
-
+/*
 #define STBI_NO_THREAD_LOCALS
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-
+*/
 
 typedef struct GLShader {
     GLint handle;
@@ -505,7 +505,7 @@ void Java_digiplay_GLTexture_upload(VM *vm, Object *method, VAR *args) {
         throw_null(vm);
         return;
     }
-
+/*
     GLTextrue *tex = (GLTextrue*)args[0].O->instance;
     Object *array = args[1].O;
 
@@ -535,7 +535,7 @@ void Java_digiplay_GLTexture_upload(VM *vm, Object *method, VAR *args) {
         tex->handle = texture;
         vm->frames[vm->FP].ret.I = 1;
     } else
-        vm->frames[vm->FP].ret.I = 1;
+        vm->frames[vm->FP].ret.I = 1;*/
 }
 
 typedef struct GLTriangleBatch {

@@ -1,6 +1,6 @@
 
 import digiplay.Game;
-import digiplay.Mesh;
+import digiplay.Image;
 import digiplay.Platform;
 import digiplay.Sprite;
 import digiplay.Stage;
@@ -35,27 +35,37 @@ public class Player implements Game {
     @Override
     public void begin() {
         Stage.setup(960, 640);
-        for(int i=0; i<1; i++) {
-            Sprite s = new Sprite();
-            s.setX((float)Math.random()*Stage.I.designWidth/2);
-            s.setY((float)Math.random()*Stage.I.designHeight/2);
+        for(int i=0; i<5; i++) {
+            Image img = new Image();
+            //Sprite s = new Sprite();
+            img.setX((float)Math.random()*Stage.I.designWidth/2);
+            img.setY((float)Math.random()*Stage.I.designHeight/2);
+            img.setSrc("bunny");
+            Stage.I.addChild(img);
+            /*
             s.setWidth(50);
             s.setHeight(50);
-            s.setAlpha((float)Math.random()*.5f+.5f);
+            //s.setAlpha((float)Math.random()*.5f+.5f);
             
             Mesh m = new Mesh(Mesh.QUAD, 1);
             m.setQuad(0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0);
             s.setMesh(m);
             Stage.I.addChild(s);
-            this.s = s;
+            this.s = s;*/
         }
     }
 
     float dx = 1, dy = 1;
     @Override
     public void update() {
-        s.setRotationY(s.getRotationY()+1);
-        s.setRotationX(s.getRotationX()+3);
+        Sprite ptr = Stage.I.getFirstChild();
+        while(ptr != null) {
+            ptr.setRotationX(ptr.getRotationX() + 2);
+            ptr = ptr.getNext();
+        }
+        Stage.I.update();
+        //s.setRotationY(s.getRotationY()+1);
+        //s.setRotationX(s.getRotationX()+3);
         /*
         float x = s.getX();
         x += dx;
