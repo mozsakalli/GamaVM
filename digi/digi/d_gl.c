@@ -28,7 +28,7 @@ int gl_create_shader(const char *code, int isVertexShader) {
     }
     return shader;
 }
-
+/*
 void gl_create_shader(GLShader *shader, const char *vcode, const char *fcode) {
     int vertex = gl_create_shader(vcode, 1);
     int frag = gl_create_shader(fcode, 0);
@@ -64,7 +64,7 @@ void gl_create_shader(GLShader *shader, const char *vcode, const char *fcode) {
         }
     }
 }
-
+*/
 #define MAX_SHADER  8
 GLuint BatchQuadIBO;
 extern int CurrentMaterial;

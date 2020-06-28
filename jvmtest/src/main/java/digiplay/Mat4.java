@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package digiplay;
 
 /**
@@ -21,6 +20,7 @@ package digiplay;
  * @author mustafa
  */
 public class Mat4 {
+
     public float M00;
     public float M10;
     public float M20;
@@ -38,16 +38,33 @@ public class Mat4 {
     public float M23;
     public float M33;
     int version, is3d;
-    float cx,cy,sx,sy;
-    
+    float cx, cy, sx, sy;
+
     public Mat4() {
         identity();
     }
-    
-    public native void identity();
-    public native void setup2DProjection();
-    
+
+    public void identity() {
+        M00 = 1;
+        M01 = 0;
+        M02 = 0;
+        M03 = 0;
+        M10 = 0;
+        M11 = 1;
+        M12 = 0;
+        M13 = 0;
+        M20 = 0;
+        M21 = 0;
+        M22 = 1;
+        M23 = 0;
+        M30 = 0;
+        M31 = 0;
+        M32 = 0;
+        M33 = 1;
+    }
+
+    public native void setup2DProjection(float width, float height);
+
     //public native void updateRot2D(float r, float sx, float sy);
     //public native void compose2d(float x, float y, float sx, float sy, float r, float px, float py);
-    
 }

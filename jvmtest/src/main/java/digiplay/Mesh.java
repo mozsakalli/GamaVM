@@ -20,7 +20,7 @@ package digiplay;
  *
  * @author mustafa
  */
-public class NodeMesh {
+public class Mesh {
     int type;
     int capacity;
     int size;
@@ -29,10 +29,12 @@ public class NodeMesh {
     long cache;
     long gpu;
     
-    public NodeMesh(int type, int capacity) {
-        init(type, capacity);
+    public final static int QUAD    = 0;
+    
+    public Mesh(int type, int capacity) {
+        this.type = type;
+        resize(capacity);
     }
-    private final native void init(int type, int capacity);
     public final native void resize(int capacity);
     public final native void setQuad(int index, float x, float y, float width, float height, float u1,float v1, float u2, float v2,
             float u3, float v3, float u4, float v4);

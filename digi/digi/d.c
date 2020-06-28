@@ -64,7 +64,7 @@ void mesh_render_quads(Mesh *mesh, Mat4 *mat, int color, float alpha) {
     if(alpha > 1) alpha = 1;
     COLOR col;
     if(color == 0xFFFFFF && alpha == 1) {
-        col = {255,255,255,255};
+        //col = {255,255,255,255};
     } else {
         col.r = ((color >> 16) & 0xff) * alpha;
         col.g = ((color >> 8) & 0xff) * alpha;

@@ -542,6 +542,8 @@ typedef struct GLTriangleBatch {
 
 } GLTriangleBatch;
 
+extern void Gama_Player_playerstep(VM *vm, Object *method, VAR *args);
+
 NativeMethodInfo digiplay_gl_methods[] = {
     {"digiplay/GLShader2D:compile:(Ljava/lang/String;)J", &Java_digiplay_GLShader2D_compile},
     {"digiplay/GLShader2D:finalize:()V", &Java_digiplay_GLShader2D_finalize},
@@ -557,6 +559,7 @@ NativeMethodInfo digiplay_gl_methods[] = {
     {"digiplay/QuadMesh:finalize:()V", &Java_digiplay_QuadMesh_finalize},
 
     {"digiplay/GLTexture:upload:([B)V", &Java_digiplay_GLTexture_upload},
+    {"Player:playerstep:(II)V", &Gama_Player_playerstep},
 
     NULL
 };

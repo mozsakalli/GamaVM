@@ -13,34 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package digiplay;
 
 /**
  *
  * @author mustafa
  */
-public class Sprite2D {
-
-    int flags = VISIBLE | LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
-    float x, y, scaleX = 1, scaleY = 1, width, height, rotation, rotationX, rotationY, skewX, skewY, alpha = 1, worldAlpha = 1;
-    float animX, animY, animScaleX, animScaleY, animRotation, animRotationX, animRotationY, animSkewX, animSkewY, animAlpha;
-    float midX, midY;
-    float pivotX = .5f, pivotY = .5f;
-    int matrixUpdateCount, parentMatrixUpdateCount;
-    int depth, numChildren;
-    public int color = 0xFFFFFF;
-    public int blendMode = 1;
-    int frameVersion;
-    Sprite2D parent, firstChild, lastChild, next, prev;
-    Mat4 localMatrix = new Mat4();
-    Mat4 worldMatrix = new Mat4();
-    String name;
-    Behaviour behaviours;
-    int visibleState = -1;
-    public Action1<Sprite2D> onInit, onShow;
-
-    static int GLOBAL_FRAME_VERSION;
-
+public class Sprite {
+    int flags = VISIBLE | LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY | ROT_SKEW_DIRTY;
+    float x,y,z, _x,_y,_z;
+    float sx=1,sy=1,sz=1, _sx,_sy,_sz;
+    float rx,ry,rz, _rx,_ry,_rz;
+    float skx, sky; //skew
+    float alpha=1,_alpha,worldAlpha=1;
+    float px=.5f,py=.5f;
+    float width,height, midy, midx;
+    float clipX, clipY, clipW, clipH;
+    int numChildren, depth, parentVersion, color=0xFFFFFFFF, depthEnabled, stencilMode, blendMode=1;
+    Sprite parent, next, prev, firstChild, lastChild;
+    Mat4 local=new Mat4(),world=new Mat4(), inverse = new Mat4();
+    Mesh mesh;
+    Texture texture;
+    Shader shader;
+    
     // Various flags used by Sprite and subclasses
     public final static int VISIBLE = 1 << 0;
     public final static int INTERACTIVE = 1 << 1;
@@ -55,9 +51,9 @@ public class Sprite2D {
     public final static int HIDES_SCENE = 1 << 10;
     public final static int STAY_ON_TOP = 1 << 11;
     public final static int STRETCH_ZERO = 1 << 12;
-
+    
     public float getX() {
-        return x + animX;
+        return x + _x;
     }
 
     public void setX(float x) {
@@ -68,7 +64,7 @@ public class Sprite2D {
     }
 
     public float getY() {
-        return y + animY;
+        return y + _y;
     }
 
     public void setY(float y) {
@@ -78,39 +74,61 @@ public class Sprite2D {
         }
     }
 
-    public float scaleX() {
-        return scaleX + animScaleX;
+    public float getScaleX() {
+        return sx + _sx;
     }
 
-    public void scaleX(float scaleX) {
-        if (scaleX != this.scaleX) {
-            this.scaleX = scaleX;
+    public void setScaleX(float scaleX) {
+        if (scaleX != sx) {
+            sx = scaleX;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
 
     public float getScaleY() {
-        return scaleY + animScaleY;
+        return sy + _sy;
     }
 
     public void setScaleY(float scaleY) {
-        if (scaleY != this.scaleY) {
-            this.scaleY = scaleY;
+        if (scaleY != sy) {
+            sy = scaleY;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
 
     public float getRotation() {
-        return rotation + animRotation;
+        return rz + _rz;
     }
 
     public void setRotation(float rotation) {
-        if (rotation != this.rotation) {
-            this.rotation = rotation;
+        if (rotation != rz) {
+            rz = rotation;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY | ROT_SKEW_DIRTY;
         }
     }
 
+    public float getRotationY() {
+        return ry + _ry;
+    }
+
+    public void setRotationY(float rotation) {
+        if (rotation != ry) {
+            ry = rotation;
+            flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY | ROT_SKEW_DIRTY;
+        }
+    }
+
+    public float getRotationX() {
+        return rx + _rx;
+    }
+
+    public void setRotationX(float rotation) {
+        if (rotation != rx) {
+            rx = rotation;
+            flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY | ROT_SKEW_DIRTY;
+        }
+    }
+    
     public float getWidth() {
         return width;
     }
@@ -118,7 +136,7 @@ public class Sprite2D {
     public void setWidth(float w) {
         if (w != width) {
             width = w;
-            midX = w * pivotX;
+            midx = w * px;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
@@ -130,90 +148,90 @@ public class Sprite2D {
     public void setHeight(float w) {
         if (w != height) {
             height = w;
-            midY = w * pivotY;
+            midy = w * py;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
 
     public float getSkewX() {
-        return skewX + animSkewX;
+        return skx;
     }
 
     public void setSkewX(float skewX) {
-        if (skewX != this.skewX) {
-            this.skewX = skewX;
+        if (skewX != skx) {
+            skx = skewX;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY | ROT_SKEW_DIRTY;
         }
     }
 
     public float getSkewY() {
-        return skewY + animSkewY;
+        return sky;
     }
 
     public void setSkewY(float skewY) {
-        if (skewY != this.skewY) {
-            this.skewY = skewY;
+        if (skewY != sky) {
+            sky = skewY;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY | ROT_SKEW_DIRTY;
         }
     }
 
     public float getAnimX() {
-        return animX;
+        return _x;
     }
 
     public void setAnimX(float animX) {
-        if (animX != this.animX) {
-            this.animX = animX;
+        if (animX != _x) {
+            _x = animX;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
 
     public float getAnimY() {
-        return animY;
+        return _y;
     }
 
     public void setAnimY(float animY) {
-        if (animY != this.animY) {
-            this.animY = animY;
+        if (animY != _y) {
+            _y = animY;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
 
     public float getAnimScaleX() {
-        return animScaleX;
+        return _sx;
     }
 
     public void setAnimScaleX(float animScaleX) {
-        if (animScaleX != this.animScaleX) {
-            this.animScaleX = animScaleX;
+        if (animScaleX != _sx) {
+            _sx = animScaleX;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
 
     public float getAnimScaleY() {
-        return animScaleY;
+        return _sy;
     }
 
     public void setAnimScaleY(float animScaleY) {
-        if (animScaleY != this.animScaleY) {
-            this.animScaleY = animScaleY;
+        if (animScaleY != _sy) {
+            _sy = animScaleY;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
 
     public float getAnimRotation() {
-        return animRotation;
+        return _rz;
     }
 
     public void setAnimRotation(float animRotation) {
-        if (animRotation != this.animRotation) {
-            this.animRotation = animRotation;
+        if (animRotation != _rz) {
+            _rz = animRotation;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY | ROT_SKEW_DIRTY;
         }
     }
 
     public float getAlpha() {
-        return alpha + animAlpha;
+        return alpha + _alpha;
     }
 
     public void setAlpha(float value) {
@@ -226,12 +244,12 @@ public class Sprite2D {
     }
 
     public float getAnimAlpha() {
-        return animAlpha;
+        return _alpha;
     }
 
     public void setAnimAlpha(float value) {
-        if (value != animAlpha) {
-            animAlpha = value;
+        if (value != _alpha) {
+            _alpha = value;
             if ((flags & IN_STAGE) != 0) {
                 updateWorldAlpha();
             }
@@ -239,105 +257,44 @@ public class Sprite2D {
     }
 
     public float getPivotX() {
-        return pivotX;
+        return px;
     }
 
     public void setPivotX(float value) {
-        if (value != this.pivotX) {
-            this.pivotX = value;
-            midX = value * width;
+        if (value != px) {
+            px = value;
+            midx = value * width;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
 
     public float getPivotY() {
-        return pivotY;
+        return py;
     }
 
     public void setPivotY(float value) {
-        if (value != this.pivotY) {
-            this.pivotY = value;
-            midY = value * height;
+        if (value != py) {
+            py = value;
+            midy = value * height;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
+    }    
+    public void dispose() {
     }
 
     void updateWorldAlpha() {
         if (parent == null) {
             return;
         }
-        worldAlpha = parent.worldAlpha * (alpha + animAlpha);
-        Sprite2D child = firstChild;
+        worldAlpha = parent.worldAlpha * (alpha + _alpha);
+        Sprite child = firstChild;
         while (child != null) {
             child.updateWorldAlpha();
             child = child.next;
         }
     }
-
-    public int getFlags() {
-        return flags;
-    }
-
-    public void setFlags(int flags) {
-        this.flags |= flags;
-    }
-
-    public void cleatFlags(int mask) {
-        this.flags &= ~mask;
-    }
-
-    public boolean isVisible() {
-        return (flags & VISIBLE) != 0;
-    }
-
-    public void setVisible(boolean value) {
-        boolean current = (flags & VISIBLE) != 0;
-        if (value != current) {
-            if (value) {
-                flags |= VISIBLE;
-            } else {
-                flags &= ~VISIBLE;
-            }
-        }
-    }
-
-    //public native Mat2D getLocalMatrix();
-    /*{
-        if ((flags & LOCAL_MATRIX_DIRTY) != 0) {
-            localMatrix.compose(x + animX, y + animY, scaleX + animScaleX, scaleY + animScaleY, midX, midY, (flags & ROT_SKEW_DIRTY) != 0, rotation + animRotation, skewX + animSkewX, skewY + animSkewY);
-            flags &= ~(ROT_SKEW_DIRTY | LOCAL_MATRIX_DIRTY);
-            //localMatrix.modifyCounter++;
-            matrixUpdateCount++;
-        }
-        return localMatrix;
-    }*/
-
-    //public native Mat2D getWorldMatrix(int globalFrameVersion);
-    /* {
-        if (frameVersion != GLOBAL_FRAME_VERSION) {
-            frameVersion = GLOBAL_FRAME_VERSION;
-            int updateCount = matrixUpdateCount;
-            Mat2D localMat = getLocalMatrix();
-            Sprite2D traParent = parent; //TransformParent != null ? TransformParent : Parent;
-            if (traParent == null) {
-                return localMatrix;
-            }
-            Mat2D parentMat = traParent.getWorldMatrix();
-            if (traParent.matrixUpdateCount != parentMatrixUpdateCount || updateCount != matrixUpdateCount) {
-                Mat2D.multiply(parentMat, localMat, worldMatrix);
-                parentMatrixUpdateCount = traParent.matrixUpdateCount;
-                //worldMatrix.modifyCounter = localMatrix.modifyCounter;
-                //worldMatrix.cacheVersion++;
-                matrixUpdateCount++;
-            }
-        }
-        return worldMatrix;
-    }*/
-
-    public void dispose() {
-    }
-
-    void unlinkChild(Sprite2D child) {
+    
+    void unlinkChild(Sprite child) {
         if (child.prev == null) {
             firstChild = firstChild.next;
         }
@@ -353,7 +310,7 @@ public class Sprite2D {
         child.next = child.prev = null;
     }
 
-    void linkChild(Sprite2D child) {
+    void linkChild(Sprite child) {
         if (firstChild == null) {
             firstChild = lastChild = child;
             child.prev = child.next = null;
@@ -369,11 +326,11 @@ public class Sprite2D {
                 lastChild = child;
                 lastChild.next = null;
             } else {
-                Sprite2D target = firstChild;
+                Sprite target = firstChild;
                 while (target != null && target.depth <= child.depth) {
                     target = target.next;
                 }
-                Sprite2D pre = target.prev;
+                Sprite pre = target.prev;
                 if (pre != null) {
                     pre.next = child;
                 }
@@ -385,7 +342,7 @@ public class Sprite2D {
         }
     }
 
-    public void removeChild(Sprite2D child) {
+    public void removeChild(Sprite child) {
         if (child != null && child.parent == this) {
             unlinkChild(child);;
             numChildren--;
@@ -394,7 +351,7 @@ public class Sprite2D {
         }
     }
 
-    public void addChild(Sprite2D child) {
+    public void addChild(Sprite child) {
         if (child == null || child.parent == this) {
             return;
         }
@@ -445,36 +402,30 @@ public class Sprite2D {
         flags |= IN_STAGE;
         markContentInvalid();
 
-        Sprite2D ptr = firstChild;
+        Sprite ptr = firstChild;
         while (ptr != null) {
             ptr.setInStage();
             ptr = ptr.next;
         }
 
-        if (parent == Stage2D.I) {
+        if (parent == Stage.I) {
             invalidateContent();
         }
 
         init();
-        if (onInit != null) {
-            onInit.invoke(this);
-        }
+        //if (onInit != null) {
+        //    onInit.invoke(this);
+        //}
     }
 
-    public void draw() {
+    public Mesh getMesh() {
+        return mesh;
     }
-
-    public native void drawChildren();/* {
-        Sprite2D ptr = firstChild;
-        while(ptr != null) {
-            if((ptr.flags & VISIBLE) != 0 && ptr.worldAlpha > 0) {
-                ptr.draw();
-                ptr.drawChildren();
-            }
-            ptr = ptr.next;
-        }
-    }*/
-
+    
+    public void setMesh(Mesh m) {
+        mesh = m;
+    }
+    /*
     public void addBehaviour(Behaviour b) {
         if (b == null) {
             return;
@@ -533,7 +484,7 @@ public class Sprite2D {
             }
         }
 
-        Sprite2D child = firstChild;
+        Sprite child = firstChild;
         if (child != null) {
             boolean v = visibleState == 1;
             while (child != null) {
@@ -541,6 +492,5 @@ public class Sprite2D {
                 child = child.next;
             }
         }
-    }
-
+    }*/
 }

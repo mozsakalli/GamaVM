@@ -168,11 +168,11 @@ typedef struct __attribute__ ((packed)) Texture {
 typedef struct __attribute__ ((packed)) Node {
     JINT flags;
     JFLOAT x,y,z, _x,_y,_z;
-    JFLOAT sx=1,sy=1,sz=1, _sx,_sy,_sz;
+    JFLOAT sx,sy,sz, _sx,_sy,_sz;
     JFLOAT rx,ry,rz, _rx,_ry,_rz;
     JFLOAT skx, sky; //skew
-    JFLOAT alpha=1,_alpha,worldAlpha=1;
-    JFLOAT px=.5f,py=.5f;
+    JFLOAT alpha,_alpha,worldAlpha;
+    JFLOAT px,py;
     JFLOAT width,height, midy, midx;
     JINT numChildren, depth, parentVersion, color;
     Object *parent, *next, *prev, *firstChild, *lastChild;

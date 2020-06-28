@@ -39,7 +39,7 @@ public class Node {
     int numChildren, depth, parentVersion, color;
     Node parent, next, prev, firstChild, lastChild;
     Mat4 local=new Mat4(),world=new Mat4(), inverse = new Mat4();
-    NodeMesh mesh;
+    Mesh mesh;
     int material;
     Texture texture;
    

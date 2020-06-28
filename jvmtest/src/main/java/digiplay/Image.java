@@ -54,8 +54,8 @@ public class Image extends Sprite2D {
 
     @Override
     public void draw() {
-        if(quad != null)
-            Stage2D.QuadBatch.drawQuadMesh(quad, getWorldMatrix(GLOBAL_FRAME_VERSION), Stage2D.DefaultShader, texture, 0, color, this.worldAlpha, blendMode);
+        //if(quad != null)
+        //    Stage2D.QuadBatch.drawQuadMesh(quad, getWorldMatrix(GLOBAL_FRAME_VERSION), Stage2D.DefaultShader, texture, 0, color, this.worldAlpha, blendMode);
     }
     
     

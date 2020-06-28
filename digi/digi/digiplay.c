@@ -405,6 +405,7 @@ void Java_digiplay_Sprite2D_drawChildren(VM *vm, Object *method, VAR *args) {
 //extern void Java_digiplay_Platform_run(VM *vm, Object *method, VAR *args);
 //extern void Java_digiplay_Net_http(VM *vm, Object *method, VAR *args);
 
+
 NativeMethodInfo digiplay_native_methods[] = {
     //{"digiplay/Platform:run:()V", &Java_digiplay_Platform_run},
     
@@ -418,6 +419,7 @@ NativeMethodInfo digiplay_native_methods[] = {
     {"digiplay/Sprite2D:getLocalMatrix:()Ldigiplay/Mat2D;", &Java_digiplay_Sprite2D_getLocalMatrix},
     {"digiplay/Sprite2D:getWorldMatrix:(I)Ldigiplay/Mat2D;", &Java_digiplay_Sprite2D_getWorldMatrix},
     {"digiplay/Sprite2D:drawChildren:()V", &Java_digiplay_Sprite2D_drawChildren},
+
 
     NULL
 };

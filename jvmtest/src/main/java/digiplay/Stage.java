@@ -20,9 +20,55 @@ package digiplay;
  *
  * @author mustafa
  */
-public class Stage extends Node {
+public class Stage extends Sprite {
+    
+    public final static Stage I = new Stage();
+    public float designWidth, designHeight, scaleFactor;
     
     public Stage() {
         flags |= IN_STAGE;
+        color = 0xFF000000;
     }
+    
+    public static void setup(float width, float height) {
+        I.designWidth = width;
+        I.designHeight = height;
+        I.resize();
+    }
+    
+    public void resize() {
+        float ww = designWidth;
+        float hh = designHeight;
+
+        float ratio = hh / ww;
+
+        float sw = Platform.screenWidth;
+        float sh = Platform.screenHeight;
+        
+        float w = sw;
+        float h = (int) (w * ratio);
+        if (h - 2 > sh) {
+            h = sh;
+            w = (int) (h / ratio);
+            scaleFactor = h / hh;
+        } else {
+            scaleFactor = w / ww;
+        }
+        w = scaleFactor * designWidth;
+        h = scaleFactor * designHeight;
+
+        setScaleX(w / ww);
+        setScaleY(h / hh);
+        System.out.println("Stage2D::scaleFactor is " + scaleFactor + " resolution: " + sw + "x" + sh);
+
+        setX((sw - w) / 2);
+        setY((sh - h) / 2);
+
+        setPivotX(0);
+        setPivotY(0);
+        setWidth(designWidth);
+        setHeight(designHeight);
+    }    
+    public native void render(int width, int height);
+    
 }

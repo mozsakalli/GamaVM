@@ -24,6 +24,7 @@ extern NativeMethodInfo vm_native_methods[];
 extern NativeMethodInfo digiplay_native_methods[];
 extern NativeMethodInfo digiplay_gl_methods[];
 extern NativeMethodInfo aot_native_methods[];
+extern NativeMethodInfo digiplay_sprite_methods[];
 
 /// EXTRAEXTERNS
 
@@ -40,6 +41,7 @@ void *resolve_native_method0(VM *vm, char *signature) {
     result = search_native(&vm_native_methods[0], signature); if(result) return result;
     result = search_native(&digiplay_native_methods[0], signature); if(result) return result;
     result = search_native(&digiplay_gl_methods[0], signature); if(result) return result;
+    result = search_native(&digiplay_sprite_methods[0], signature); if(result) return result;
     //result = search_native(&aot_native_methods[0], signature); if(result) return result;
     /*
     result = search_native(&aot_native_methods0[0], signature); if(result) return result;

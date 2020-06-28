@@ -13,7 +13,6 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/PlayerClassLoader.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/NSObject.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIViewController.java
-/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/NodeMesh.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/MainActivity.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/Tmp.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Point2D.java
@@ -22,6 +21,7 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/jni/JniBridge.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Image.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Game.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Mesh.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Material.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/B.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIWindow.java
@@ -39,10 +39,12 @@
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIApplicationDelegate.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/jni/URL.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/Selector.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Shader.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Mat2D.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Mat4.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/jni/JniClass.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/net/Socket.java
+/Users/mustafa/Work/GamaVM/jvmtest/src/main/java/digiplay/Sprite.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/MyGame.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/NSMutableObject.java
 /Users/mustafa/Work/GamaVM/jvmtest/src/main/java/gamavm/apple/uikit/UIResponder.java
