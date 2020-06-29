@@ -344,9 +344,9 @@ Object *resolve_class(VM *vm, Object *cloader, JCHAR *name, JINT len, int link, 
     }
     
     void *class_raw = NULL;
-    if(cloader == vm->sysClassLoader)
-        class_raw = read_class_file(name, len);
-    else {
+    //if(cloader == vm->sysClassLoader)
+    //    class_raw = read_class_file(name, len);
+    /*else */{
         static int loadMethod = -1;
         if(loadMethod == -1) {
             Object *method =

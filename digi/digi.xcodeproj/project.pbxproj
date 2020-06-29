@@ -22,6 +22,8 @@
 		454446462491707000CCDAC1 /* ios_net.m in Sources */ = {isa = PBXBuildFile; fileRef = 454446452491707000CCDAC1 /* ios_net.m */; };
 		4544464824917D4F00CCDAC1 /* invoke.c in Sources */ = {isa = PBXBuildFile; fileRef = 4544464724917D4E00CCDAC1 /* invoke.c */; };
 		4547016D249E06B300F788C1 /* objc.m in Sources */ = {isa = PBXBuildFile; fileRef = 4547016C249E06B300F788C1 /* objc.m */; };
+		454CACBC24AA8B0300096DE3 /* sprite.c in Sources */ = {isa = PBXBuildFile; fileRef = 454CACBA24AA8B0200096DE3 /* sprite.c */; };
+		454CACBD24AA8B0300096DE3 /* sprite_gl.c in Sources */ = {isa = PBXBuildFile; fileRef = 454CACBB24AA8B0300096DE3 /* sprite_gl.c */; };
 		456D45AE248EF1CC00E7C7BD /* ios_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 456D45AD248EF1CC00E7C7BD /* ios_main.m */; };
 		456D45B0248EF53A00E7C7BD /* digiplay.c in Sources */ = {isa = PBXBuildFile; fileRef = 456D45AF248EF53A00E7C7BD /* digiplay.c */; };
 		4595C88E248D6FD2008E4CAA /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 4595C88D248D6FD2008E4CAA /* assets */; };
@@ -50,6 +52,8 @@
 		454446452491707000CCDAC1 /* ios_net.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ios_net.m; sourceTree = "<group>"; };
 		4544464724917D4E00CCDAC1 /* invoke.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = invoke.c; sourceTree = "<group>"; };
 		4547016C249E06B300F788C1 /* objc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = objc.m; sourceTree = "<group>"; };
+		454CACBA24AA8B0200096DE3 /* sprite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sprite.c; sourceTree = "<group>"; };
+		454CACBB24AA8B0300096DE3 /* sprite_gl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sprite_gl.c; sourceTree = "<group>"; };
 		456D45AD248EF1CC00E7C7BD /* ios_main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ios_main.m; sourceTree = "<group>"; };
 		456D45AF248EF53A00E7C7BD /* digiplay.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = digiplay.c; sourceTree = "<group>"; };
 		4595C88D248D6FD2008E4CAA /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = digi/assets; sourceTree = "<group>"; };
@@ -106,6 +110,8 @@
 		45E7399A248C4F26004E55EB /* digi */ = {
 			isa = PBXGroup;
 			children = (
+				454CACBB24AA8B0300096DE3 /* sprite_gl.c */,
+				454CACBA24AA8B0200096DE3 /* sprite.c */,
 				45E739A7248C4F2A004E55EB /* Assets.xcassets */,
 				4507300B248CE66B001379B2 /* class.c */,
 				4540FAAF248F666E00FBB78F /* digiplay_gl.c */,
@@ -215,11 +221,13 @@
 				4507300C248CE66B001379B2 /* class.c in Sources */,
 				4540FAB0248F666E00FBB78F /* digiplay_gl.c in Sources */,
 				4547016D249E06B300F788C1 /* objc.m in Sources */,
+				454CACBD24AA8B0300096DE3 /* sprite_gl.c in Sources */,
 				4595C891248D7314008E4CAA /* miniz.c in Sources */,
 				456D45AE248EF1CC00E7C7BD /* ios_main.m in Sources */,
 				45073014248D4D0B001379B2 /* exception.c in Sources */,
 				45073010248CF1DD001379B2 /* utf.c in Sources */,
 				45407D68248E0EA6008462C5 /* vm_native.c in Sources */,
+				454CACBC24AA8B0300096DE3 /* sprite.c in Sources */,
 				4507300A248CDC09001379B2 /* mem.c in Sources */,
 				4595C893248D79F4008E4CAA /* interpret.c in Sources */,
 				45073012248D4BD7001379B2 /* ios_native.m in Sources */,

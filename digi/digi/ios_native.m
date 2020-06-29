@@ -18,7 +18,36 @@ void *read_file(const char* path, int *size) {
     return (char*)[data bytes];
 }
 
+typedef struct JARInfo {
+    char path[256];
+    mz_zip_archive zip;
+    struct JARInfo *next;
+} JARInfo;
+static JARInfo *JARS = NULL;
+
+
+void *read_jar_resource(JCHAR *jarName, int jarNameLen, JCHAR *name, int nameLen, int *outLen) {
+    NSString* path = [[NSBundle mainBundle] resourcePath];
+    path = [[path stringByAppendingString:@"/assets/"] stringByAppendingString: [[NSString alloc] initWithCharacters:jarName length:jarNameLen]];
+    char cpath[256];
+    snprintf(cpath, 255, "%s", [path UTF8String]);
+    [path release];
+    JARInfo *jar = JARS;
+    while(jar) {
+        if(!strcmp(jar->path, cpath)) break;
+        jar = jar->next;
+    }
+    
+    if(!jar) {
+        FILE *file = fopen(cpath, "r");
+        if(!file) return NULL;
+    }
+    
+    return NULL;
+}
+
 void *read_class_file(JCHAR *name, int len) {
+    
     int jarSize;
     void *jar = read_file("boot.jar", &jarSize);
     if(!jar) return NULL;
@@ -26,6 +55,7 @@ void *read_class_file(JCHAR *name, int len) {
     char tmp[512];
     char *str = tmp;
     mz_zip_archive zip = {0};
+    
     if(mz_zip_reader_init_mem(&zip, jar, jarSize, 0) == MZ_FALSE) {
         free(jar);
         return NULL;
