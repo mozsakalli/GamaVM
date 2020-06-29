@@ -30,7 +30,7 @@ public class Sprite {
     float px=.5f,py=.5f;
     float width,height, midy, midx;
     float clipX, clipY, clipW, clipH;
-    int numChildren, depth, parentVersion, color=0xFFFFFFFF, depthEnabled, stencilMode, blendMode=1, textureMode;
+    int numChildren, depth, parentVersion, color=0xFFFFFFFF, depthEnabled, stencilMode, blendMode=1, textureMode, cullMode;
     Sprite parent, next, prev, firstChild, lastChild;
     Mat4 local=new Mat4(),world=new Mat4(), inverse = new Mat4();
     Mesh mesh;

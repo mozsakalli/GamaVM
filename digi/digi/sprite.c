@@ -20,6 +20,7 @@ int RenderWidth, RenderHeight, StencilMode, DepthEnabled, BlendMode, Clipping;
 Object *_Shader;
 Object *_Texture;
 int _TextureMode;
+int _CullMode;
 
 extern void render_set_cliprect(float x, float y, float w, float h);
 extern void render_set_blendmode(int mode);
@@ -31,6 +32,7 @@ extern void render_draw_indexed(VERTEX *vertex, short *index, int count, int dra
 extern void render_upload_texture(Texture *tex, void *buffer);
 extern void render_set_texture(Texture *tex);
 extern void render_set_texture_mode(int mode);
+extern void render_cull_mode(int mode);
 
 void render_flush_batch() {
     if(BatchIndexCount > 0) {
@@ -206,6 +208,11 @@ void render_sprite(Object *spriteObject) {
             render_set_texture_mode(_TextureMode = sprite->textureMode);
         }
 
+        if(_CullMode != sprite->cullMode) {
+            render_flush_batch();
+            render_cull_mode(_CullMode = sprite->cullMode);
+        }
+
         Mesh *mesh = sprite->mesh->instance;
         switch(mesh->type) {
             case MESH_QUAD:
@@ -240,13 +247,14 @@ void Gama_digiplay_Stage_render(VM *vm, Object *method, VAR *args) {
     render_set_blendmode(0);
     render_set_cliprect(0,0,0,0);
     render_clear_color((int)stage->color);
+    render_cull_mode(0);
     _Texture = NULL;
     _Shader = NULL;
     _TextureMode = -1;
+    _CullMode = 0;
+
     render_useshader(NULL);
-
     render_sprite(args[0].O);
-
     render_flush_batch();
 }
 

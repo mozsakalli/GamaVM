@@ -186,3 +186,7 @@ void render_set_texture_mode(int mode) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
+
+void render_cull_mode(int mode) {
+
+}
