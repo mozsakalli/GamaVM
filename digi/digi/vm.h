@@ -432,7 +432,7 @@ inline static Object *alloc_array_O(VM *vm, Object *cls, int length, int atomic)
 
 extern void *read_class_file(JCHAR *name, int len);
 
-#ifdef JDWP_ENABLED
+#ifdef PLAYERMODE
     extern void jdwp_tick(VM *vm, Object *method, int pc, int line, int lineChanged);
     extern void jdwp_start(VM *vm, char *host, int port);
     extern int jdwp_send_classload_event(VM *vm, Object *cls);

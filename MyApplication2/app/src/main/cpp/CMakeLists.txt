@@ -6,8 +6,8 @@
 cmake_minimum_required(VERSION 3.4.1)
 #, --no-warn-shared-textrel
 set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wall -v -Wl,--no-fatal-warnings")
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fshort-wchar")
-set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fshort-wchar")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fshort-wchar -DPLAYERMODE")
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fshort-wchar -DPLAYERMODE")
 set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast")
 set (CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Ofast")
 
