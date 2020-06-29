@@ -35,7 +35,7 @@ public class Sprite2D {
     Mat4 localMatrix = new Mat4();
     Mat4 worldMatrix = new Mat4();
     String name;
-    Behaviour behaviours;
+    BehaviourX behaviours;
     int visibleState = -1;
     public Action1<Sprite2D> onInit, onShow;
 
@@ -475,11 +475,11 @@ public class Sprite2D {
         }
     }*/
 
-    public void addBehaviour(Behaviour b) {
+    public void addBehaviour(BehaviourX b) {
         if (b == null) {
             return;
         }
-        Behaviour ptr = behaviours;
+        BehaviourX ptr = behaviours;
         while (ptr != null) {
             if (ptr == b) {
                 ptr.setParent(this);
@@ -492,7 +492,7 @@ public class Sprite2D {
         b.setParent(this);
     }
 
-    public void removeBehaviour(Behaviour b) {
+    public void removeBehaviour(BehaviourX b) {
         if (b != null) {
             b.markedForRemoval = true;
             b.isInterrupted = true;
@@ -511,9 +511,9 @@ public class Sprite2D {
                     break;
             }
         }
-        Behaviour ptr = behaviours;
+        BehaviourX ptr = behaviours;
         if (ptr != null) {
-            Behaviour prev = null;
+            BehaviourX prev = null;
             while (ptr != null) {
                 if (ptr.markedForRemoval) {
                     if (prev != null) {

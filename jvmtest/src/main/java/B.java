@@ -1,6 +1,7 @@
 
 import digiplay.Behaviour;
 import digiplay.Platform;
+import digiplay.Stage;
 
 /*
  * Copyright (C) 2019 Digitoy Games.
@@ -32,13 +33,13 @@ public class B extends Behaviour {
         float x = parent.getX();
         x += dx;
         if(x <= 0) { x = 0; dx = -dx; }
-        else if(x >= Platform.screenWidth) { x = Platform.screenWidth; dx = -dx;}
+        else if(x >= Stage.I.designWidth) { x = Stage.I.designWidth; dx = -dx;}
         parent.setX(x);
         
         float y = parent.getY();
         y += dy;
         if(y <= 0) { y = 0; dy = -dy; }
-        else if(y >= Platform.screenHeight) { y = Platform.screenHeight; dy = -dy;}
+        else if(y >= Stage.I.designHeight) { y = Stage.I.designHeight; dy = -dy;}
         parent.setY(y);
         
         parent.setRotation(parent.getRotation()+dr);        

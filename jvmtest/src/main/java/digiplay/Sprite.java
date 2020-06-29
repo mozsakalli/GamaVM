@@ -36,6 +36,8 @@ public class Sprite {
     Mesh mesh;
     Texture texture;
     Shader shader;
+    Behaviour behaviours;
+    int visibleState = -1;
     
     // Various flags used by Sprite and subclasses
     public final static int VISIBLE = 1 << 0;
@@ -279,6 +281,10 @@ public class Sprite {
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }    
+    
+    public int getBlendMode() { return blendMode; }
+    public void setBlendMode(int mode) { blendMode = mode; }
+    
     public void dispose() {
     }
 
@@ -428,7 +434,7 @@ public class Sprite {
     
     public Sprite getFirstChild() { return firstChild; }
     public Sprite getNext() { return next; }
-    /*
+    
     public void addBehaviour(Behaviour b) {
         if (b == null) {
             return;
@@ -454,6 +460,7 @@ public class Sprite {
     }
 
     public void updateBehaviours(float time, boolean isParentVisible) {
+        /* todo:
         int newState = isParentVisible && ((flags & VISIBLE) != 0) ? 1 : 0;
         if (newState != visibleState) {
             visibleState = newState;
@@ -465,6 +472,7 @@ public class Sprite {
                     break;
             }
         }
+        */
         Behaviour ptr = behaviours;
         if (ptr != null) {
             Behaviour prev = null;
@@ -495,5 +503,5 @@ public class Sprite {
                 child = child.next;
             }
         }
-    }*/
+    }
 }

@@ -1,5 +1,5 @@
 
-import digiplay.Behaviour;
+import digiplay.BehaviourX;
 import digiplay.Platform;
 
 /*
@@ -22,7 +22,7 @@ import digiplay.Platform;
  *
  * @author mustafa
  */
-public class BB extends Behaviour {
+public class BB extends BehaviourX {
     float dx = 2- (float)Math.random()*4;
     float dy = 2- (float)Math.random()*4 - 2;
     float dr = 15- (float)Math.random()*10;

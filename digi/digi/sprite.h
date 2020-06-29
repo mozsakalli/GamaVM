@@ -47,6 +47,8 @@ typedef struct __attribute__ ((packed)) Sprite {
     Object *local,*world, *inverse;
     Object *mesh;
     Object *texture, *shader;
+    Object *behaviours;
+    JINT visibleState;
 } Sprite;
 
 inline static int update_sprite_localmatrix(Sprite *sprite) {

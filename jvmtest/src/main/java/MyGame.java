@@ -53,7 +53,7 @@ public class MyGame implements Game {
                 
             };*/
             System.out.println(img);
-            img.addBehaviour(new B());
+            //img.addBehaviour(new B());
         }
         
 

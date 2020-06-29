@@ -106,9 +106,7 @@ void render_set_blendmode(int mode) {
         glDisable(GL_BLEND);
     else {
         glEnable(GL_BLEND);
-        switch (mode) {
-            case 1: glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA); break;
-        }
+        glBlendFunc(GL_ONE, mode == 1 ? GL_ONE_MINUS_SRC_ALPHA : GL_DST_ALPHA);
     }
 }
 

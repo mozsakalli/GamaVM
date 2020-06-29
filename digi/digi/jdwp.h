@@ -6,7 +6,7 @@
 //  Copyright © 2020 mustafa. All rights reserved.
 //
 
-#ifdef JDWP_ENABLED
+#ifdef PLAYERMODE
 
 #ifndef jdwp_h
 #define jdwp_h

@@ -1,5 +1,4 @@
 digiplay/GLQuadBatch.class
-MyGame$1.class
 digiplay/Material.class
 digiplay/GLTexture.class
 digiplay/MainActivity.class
@@ -28,7 +27,6 @@ gamavm/apple/uikit/UIWindow.class
 gamavm/jni/JniBridge.class
 digiplay/Completable.class
 digiplay/QuadMesh.class
-MyGame.class
 PlayerClassLoader.class
 Main.class
 digiplay/net/Socket.class

@@ -5,7 +5,7 @@
 //  Created by mustafa on 31.05.2020.
 //  Copyright © 2020 mustafa. All rights reserved.
 //
-#ifdef JDWP_ENABLED
+#ifdef PLAYERMODE
 
 //#define JDWP_SERVER_MODE
 

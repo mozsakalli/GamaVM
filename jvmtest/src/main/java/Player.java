@@ -35,13 +35,16 @@ public class Player implements Game {
     @Override
     public void begin() {
         Stage.setup(960, 640);
-        for(int i=0; i<5; i++) {
+        for(int i=0; i<2000; i++) {
             Image img = new Image();
             //Sprite s = new Sprite();
             img.setX((float)Math.random()*Stage.I.designWidth/2);
             img.setY((float)Math.random()*Stage.I.designHeight/2);
             img.setSrc("bunny");
+            img.setBlendMode(2);
             Stage.I.addChild(img);
+            
+            img.addBehaviour(new B());
             /*
             s.setWidth(50);
             s.setHeight(50);
@@ -58,11 +61,12 @@ public class Player implements Game {
     float dx = 1, dy = 1;
     @Override
     public void update() {
+        /*
         Sprite ptr = Stage.I.getFirstChild();
         while(ptr != null) {
             ptr.setRotationX(ptr.getRotationX() + 2);
             ptr = ptr.getNext();
-        }
+        }*/
         Stage.I.update();
         //s.setRotationY(s.getRotationY()+1);
         //s.setRotationX(s.getRotationX()+3);

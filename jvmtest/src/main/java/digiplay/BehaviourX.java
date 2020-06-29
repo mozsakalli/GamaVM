@@ -1,11 +1,11 @@
 package digiplay;
 
-public class Behaviour {
+public class BehaviourX {
 
-    public Sprite parent;
-    public Behaviour next;
+    public Sprite2D parent;
+    public BehaviourX next;
 
-    public void setParent(Sprite value) {
+    public void setParent(Sprite2D value) {
         if (parent != null) {
             dispose();
         }
