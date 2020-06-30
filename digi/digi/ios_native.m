@@ -25,66 +25,66 @@ typedef struct JARInfo {
 } JARInfo;
 static JARInfo *JARS = NULL;
 
-
-void *read_jar_resource(JCHAR *jarName, int jarNameLen, JCHAR *name, int nameLen, int *outLen) {
+JARInfo *get_jar_info(JCHAR *jarName, int jarNameLen) {
     NSString* path = [[NSBundle mainBundle] resourcePath];
     path = [[path stringByAppendingString:@"/assets/"] stringByAppendingString: [[NSString alloc] initWithCharacters:jarName length:jarNameLen]];
     char cpath[256];
     snprintf(cpath, 255, "%s", [path UTF8String]);
-    [path release];
+    
     JARInfo *jar = JARS;
     while(jar) {
-        if(!strcmp(jar->path, cpath)) break;
+        if(!strcmp(jar->path, cpath)) return jar;
         jar = jar->next;
     }
     
     if(!jar) {
         FILE *file = fopen(cpath, "r");
         if(!file) return NULL;
+        fclose(file);
+        jar = vm_alloc(sizeof(JARInfo));
+        mz_zip_reader_init_file(&jar->zip, cpath, 0);
+        jar->next = JARS;
+        JARS = jar;
     }
-    
-    return NULL;
+    return jar;
 }
 
-void *read_class_file(JCHAR *name, int len) {
-    
-    int jarSize;
-    void *jar = read_file("boot.jar", &jarSize);
+void *read_jar_resource(JCHAR *jarName, int jarNameLen, JCHAR *name, int nameLen, int isClass, int *outLen) {
+    JARInfo *jar = get_jar_info(jarName, jarNameLen);
     if(!jar) return NULL;
 
     char tmp[512];
     char *str = tmp;
-    mz_zip_archive zip = {0};
-    
-    if(mz_zip_reader_init_mem(&zip, jar, jarSize, 0) == MZ_FALSE) {
-        free(jar);
-        return NULL;
+    memcpy(str, jchar_to_ascii(name, nameLen), nameLen);
+    str += nameLen;
+    if(isClass) {
+        memcpy(str, ".class", 6);
+        nameLen += 6;
     }
-    memcpy(str, jchar_to_ascii(name, len), len);
-    str += len;
-    memcpy(str, ".class", 6);
-    len += 6;
-    tmp[len] = 0;
-    //sprintf(str, ".class");
-    int file_index = mz_zip_reader_locate_file(&zip, tmp, NULL, 0);//
+    tmp[nameLen] = 0;
+
+    int file_index = mz_zip_reader_locate_file(&jar->zip, tmp, NULL, 0);//
     mz_zip_archive_file_stat file_stat = {0};
-    if (!mz_zip_reader_file_stat(&zip, file_index, &file_stat)) {
-        free(jar);
+    if (!mz_zip_reader_file_stat(&jar->zip, file_index, &file_stat)) {
         return NULL;
     }
     size_t uncompressed_size = (size_t) file_stat.m_uncomp_size;
-    void *p = mz_zip_reader_extract_file_to_heap(&zip, file_stat.m_filename, &uncompressed_size, 0);
-    free(jar);
+    void *p = mz_zip_reader_extract_file_to_heap(&jar->zip, file_stat.m_filename, &uncompressed_size, 0);
     if (!p) {
         return NULL;
     } else {
+        *outLen = (int)uncompressed_size;
         void *ret = malloc(uncompressed_size);
         memcpy(ret, p, uncompressed_size);
         mz_free(p);
         return ret;
     }
-
     return NULL;
+}
+
+void *read_class_file(JCHAR *name, int len) {
+    int dataLen;
+    return read_jar_resource(L"boot.jar", 8, name, len, 1, &dataLen);
 }
 
 void java_lang_System_SystemOutStream_printImpl(VM *vm, Object *method, VAR *args) {
