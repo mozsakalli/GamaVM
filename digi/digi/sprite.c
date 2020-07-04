@@ -149,6 +149,75 @@ void render_quad_mesh(Mesh *mesh, Mat4 *mat, int color, float alpha) {
 
 }
 
+void render_polygon_mesh(Mesh *mesh, Mat4 *mat, int color, float alpha) {
+    PolygonMesh *poly = (PolygonMesh*)mesh->vertices;
+    if(!poly) return;
+
+    VEC3 *pos = poly->pos ? poly->pos->instance : NULL;
+    VEC2 *uv = poly->uv ? poly->uv->instance : NULL;
+    COLOR *colors = poly->color ? poly->color->instance : NULL;
+    short *index = poly->index ? poly->index->instance : NULL;
+    
+    if(!pos && !index) return;
+    
+    //batchable
+    if(poly->pos->length <= 768) {
+        int len = poly->pos->length / 3;
+        if(len > poly->cachePosCapacity) poly->cachePos = realloc(poly->cachePos, (poly->cachePosCapacity = len) * sizeof(VEC3));
+        if(mesh->version != mat->version) {
+            if(mat->is3d) {
+                float *ptr = &mat->vals[0];
+                for(int i=0; i<len; i++) {
+                    float x = pos[i].x;
+                    float y = pos[i].y;
+                    float z = pos[i].z;
+                    poly->cachePos[i] = (VEC3) {
+                        x * ptr[0] + y * ptr[4] + z * ptr[8] + ptr[12],
+                        x * ptr[1] + y * ptr[5] + z * ptr[9] + ptr[13],
+                        x * ptr[2] + y * ptr[6] + z * ptr[10] + ptr[14]};
+                }
+            } else {
+                float m00 = mat->vals[M2D00];
+                float m01 = mat->vals[M2D01];
+                float m02 = mat->vals[M2D02];
+                float m10 = mat->vals[M2D10];
+                float m11 = mat->vals[M2D11];
+                float m12 = mat->vals[M2D12];
+                for(int i=0; i<len; i++) {
+                    poly->cachePos[i] = (VEC3){pos[i].x * m00 + pos[i].y * m01 + m02, pos[i].x * m10 + pos[i].y * m11 + m12, 0};
+                }
+            }
+            mesh->version = mat->version;
+        }
+        if(BatchVertexCount + poly->pos->length > MAX_BATCH_VERTS)
+            render_flush_batch();
+        if(alpha > 1) alpha = 1;
+        COLOR col;
+        if(color == 0xFFFFFF && alpha == 1) {
+            col = (COLOR){255,255,255,255};
+        } else {
+            col.r = ((color >> 16) & 0xff) * alpha;
+            col.g = ((color >> 8) & 0xff) * alpha;
+            col.b = ((color >> 0) & 0xff) * alpha;
+            col.a = alpha * 255;
+        }
+        VERTEX *v = &BatchVerts[BatchVertexCount];
+        for(int i=0; i<len; i++) {
+            v->pos = poly->cachePos[i];
+            v->color = col;
+            v->uv = uv[i];
+            v++;
+        }
+        short *n = &BatchIndex[BatchIndexCount];
+        for(int i=0; i<poly->count; i++)
+            n[i] = BatchIndexCount + index[i];
+        BatchIndexCount += poly->count;
+        BatchVertexCount += len;
+    } else {
+        
+    }
+}
+
 void render_sprite(Object *spriteObject) {
     Sprite *sprite = spriteObject->instance;
     //update matrix
@@ -218,6 +287,10 @@ void render_sprite(Object *spriteObject) {
             case MESH_QUAD:
                 render_quad_mesh(mesh, sprite->world->instance, sprite->color, sprite->worldAlpha);
                 break;
+                
+            case MESH_POLYGON:
+                render_polygon_mesh(mesh, sprite->world->instance, sprite->color, sprite->worldAlpha);
+                break;
         }
     }
 
@@ -268,8 +341,12 @@ void Gama_digiplay_Mesh_resize(VM *vm, Object *method, VAR *args) {
     int capacity = args[1].I;
     switch(mesh->type) {
         case MESH_QUAD:
-            mesh->vertices = realloc(mesh->vertices, sizeof(QuadMeshItem) * capacity);
+            mesh->vertices = realloc((void*)mesh->vertices, sizeof(QuadMeshItem) * capacity);
             mesh->capacity = mesh->size = capacity;
+            break;
+            
+        case MESH_POLYGON:
+            if(mesh->vertices) free((void*)mesh->vertices); mesh->vertices = 0;
             break;
     }
 }
@@ -281,6 +358,8 @@ void Gama_digiplay_Mesh_setQuad(VM *vm, Object *method, VAR *args) {
     }
 
     Mesh *mesh = args[0].O->instance;
+    if(mesh->type != MESH_QUAD) return;
+    
     int index = args[1].I;
     if(index < 0 || index >= mesh->size) {
         throw_arraybounds(vm, index, mesh->size);
@@ -294,6 +373,47 @@ void Gama_digiplay_Mesh_setQuad(VM *vm, Object *method, VAR *args) {
     q[index].t2 = (VEC2){args[8].F, args[9].F};
     q[index].t3 = (VEC2){args[10].F, args[11].F};
     q[index].t4 = (VEC2){args[12].F, args[13].F};
+    mesh->version = 0;
+}
+
+void Gama_digiplay_Mesh_setPolygon(VM *vm, Object *method, VAR *args) {
+    if(!args[0].O) {
+        throw_null(vm);
+        return;
+    }
+
+    Mesh *mesh = args[0].O->instance;
+    if(mesh->type != MESH_POLYGON) return;
+    Object *pos = args[1].O;
+    Object *uv = args[2].O;
+    Object *color = args[3].O;
+    Object *index = args[4].O;
+    int count = args[5].I;
+    
+    if(!mesh->vertices) mesh->vertices = vm_alloc(sizeof(PolygonMesh));
+    PolygonMesh *poly = (PolygonMesh*)mesh->vertices;
+    if(poly->pos != pos) {
+        if(poly->pos) gc_unprotect(vm, poly->pos);
+        poly->pos = pos;
+        if(poly->pos) gc_protect(vm, poly->pos);
+    }
+    if(poly->uv != uv) {
+        if(poly->uv) gc_unprotect(vm, poly->uv);
+        poly->uv = uv;
+        if(poly->uv) gc_protect(vm, poly->uv);
+    }
+    if(poly->color != color) {
+        if(poly->color) gc_unprotect(vm, poly->color);
+        poly->color = color;
+        if(poly->color) gc_protect(vm, poly->color);
+    }
+    if(poly->index != index) {
+        if(poly->index) gc_unprotect(vm, poly->index);
+        poly->index = index;
+        if(poly->index) gc_protect(vm, poly->index);
+    }
+    poly->count = count;
+    mesh->version = 0;
 }
 
 void Gama_digiplay_Texture_upload(VM *vm, Object *method, VAR *args) {
@@ -327,11 +447,12 @@ void Gama_digiplay_Texture_upload(VM *vm, Object *method, VAR *args) {
 }
 
 NativeMethodInfo digiplay_sprite_methods[] = {
-        {"digiplay/Mesh:resize:(I)V", &Gama_digiplay_Mesh_resize},
-        {"digiplay/Mesh:setQuad:(IFFFFFFFFFFFF)V", &Gama_digiplay_Mesh_setQuad},
+    {"digiplay/Mesh:resize:(I)V", &Gama_digiplay_Mesh_resize},
+    {"digiplay/Mesh:setQuad:(IFFFFFFFFFFFF)V", &Gama_digiplay_Mesh_setQuad},
+    {"digiplay/Mesh:setPolygon:([F[F[I[SI)V", &Gama_digiplay_Mesh_setPolygon},
 
-        {"digiplay/Texture:upload:([B)V", &Gama_digiplay_Texture_upload},
+    {"digiplay/Texture:upload:([B)V", &Gama_digiplay_Texture_upload},
 
-        {"digiplay/Stage:render:(II)V", &Gama_digiplay_Stage_render},
-        NULL
+    {"digiplay/Stage:render:(II)V", &Gama_digiplay_Stage_render},
+    NULL
 };

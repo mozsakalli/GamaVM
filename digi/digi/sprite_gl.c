@@ -11,8 +11,19 @@
 #include <GLES2/gl2ext.h>
 #endif
 
+Texture *glBoundTexture = NULL;
+int glBoundTextureMode = 0;
+int glBoundBlendMode = 0;
+int glBoundCulling = 0;
+int glBoundDepthMode = 0;
+int glBoundStencilMode = 0;
+Shader *glBoundShader = NULL;
+
+Shader *deviceShaders[8] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+
 Shader *deviceCurrentShader = NULL;
 Shader *deviceDefaultShader = NULL;
+
 int needsVertexBinding = 1;
 void *lastVertexBuffer = NULL;
 
@@ -131,6 +142,20 @@ void render_set_projection(Mat4 *projection) {
         glUniformMatrix4fv(deviceCurrentShader->projection, 1, GL_FALSE, &projection->vals[0]);
     }
 }
+void render_prepare_draw(Texture *texture, int textureMode, int blendMode, int culling, int depth, int stencil) {
+    if(texture != glBoundTexture) {
+        glBoundTextureMode = -1;
+    }
+    
+    if(textureMode != glBoundTextureMode) {
+        
+    }
+    
+    if(blendMode != glBoundBlendMode) {
+        
+    }
+}
+
 void render_draw_indexed(VERTEX *vertex, short *index, int count, int drawAsLines) {
     if(!deviceCurrentShader) return;
     if(needsVertexBinding || lastVertexBuffer != vertex) {

@@ -36,9 +36,12 @@ public class ClassLoader {
     }
     
     protected byte[] readResource(String path) {
+        /*
         byte[] jar = VM.readFile("boot.jar");
         if(jar == null) return null;
         return VM.extractZip(path, jar, 0);
+        */
+        return VM.readResourceFromJar("boot.jar", path);
     }
     
     public Class loadClass(String name) throws ClassNotFoundException {

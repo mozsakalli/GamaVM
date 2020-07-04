@@ -110,8 +110,6 @@
 		45E7399A248C4F26004E55EB /* digi */ = {
 			isa = PBXGroup;
 			children = (
-				454CACBB24AA8B0300096DE3 /* sprite_gl.c */,
-				454CACBA24AA8B0200096DE3 /* sprite.c */,
 				45E739A7248C4F2A004E55EB /* Assets.xcassets */,
 				4507300B248CE66B001379B2 /* class.c */,
 				4540FAAF248F666E00FBB78F /* digiplay_gl.c */,
@@ -135,6 +133,8 @@
 				4547016C249E06B300F788C1 /* objc.m */,
 				4595C894248D7B1C008E4CAA /* opcodes.h */,
 				4507300D248CF04B001379B2 /* parse.c */,
+				454CACBB24AA8B0300096DE3 /* sprite_gl.c */,
+				454CACBA24AA8B0200096DE3 /* sprite.c */,
 				4507300F248CF1DD001379B2 /* utf.c */,
 				45407D67248E0EA5008462C5 /* vm_native.c */,
 				45E739B5248C4FB8004E55EB /* vm.c */,

@@ -47,6 +47,7 @@ public class VM {
     
     @External public static native byte[] readFile(String path);
     public static native byte[] extractZip(String name, byte[] zip, int offset);
+    public static native byte[] readResourceFromJar(String jarName, String name);
     
     public static native Method getCaller();
 }

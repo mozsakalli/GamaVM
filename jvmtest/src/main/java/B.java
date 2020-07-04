@@ -30,6 +30,7 @@ public class B extends Behaviour {
     
     @Override
     public boolean update(float time) {
+        /*
         float x = parent.getX();
         x += dx;
         if(x <= 0) { x = 0; dx = -dx; }
@@ -42,7 +43,9 @@ public class B extends Behaviour {
         else if(y >= Stage.I.designHeight) { y = Stage.I.designHeight; dy = -dy;}
         parent.setY(y);
         
-        parent.setRotation(parent.getRotation()+dr);        
+        parent.setRotation(parent.getRotation()+dr);     
+        */
+        parent.setRotationY(parent.getRotationY() + 1);
         return true;
     }
 }

@@ -30,12 +30,17 @@ public class Mesh {
     long gpu;
     
     public final static int QUAD    = 0;
+    public final static int POLYGON = 1;
     
     public Mesh(int type, int capacity) {
         this.type = type;
         resize(capacity);
     }
+    
+    @Override protected native void finalize();
+    
     public final native void resize(int capacity);
     public final native void setQuad(int index, float x, float y, float width, float height, float u1,float v1, float u2, float v2,
             float u3, float v3, float u4, float v4);
+    public final native void setPolygon(float[] verts, float[] uvs, int[] colors, short[] triangles, int count);
 }

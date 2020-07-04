@@ -436,8 +436,15 @@ typedef struct QuadMeshItem {
     VEC3 p1, p2, p3, p4;
 } QuadMeshItem;
 
+typedef struct PolygonMesh {
+    Object *pos, *uv, *color, *index;
+    int count;
+    VEC3 *cachePos;
+    int cachePosCapacity;
+} PolygonMesh;
 
-#define MESH_QUAD   0
+#define MESH_QUAD       0
+#define MESH_POLYGON    1
 typedef struct __attribute__ ((packed)) Mesh {
     JINT type;
     JINT capacity;

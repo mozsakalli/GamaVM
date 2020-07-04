@@ -33,7 +33,7 @@ public class Sprite {
     int numChildren, depth, parentVersion, color=0xFFFFFFFF, depthEnabled, stencilMode, blendMode=1, textureMode, cullMode;
     Sprite parent, next, prev, firstChild, lastChild;
     Mat4 local=new Mat4(),world=new Mat4(), inverse = new Mat4();
-    Mesh mesh;
+    protected Mesh mesh;
     Texture texture;
     Shader shader;
     Behaviour behaviours;

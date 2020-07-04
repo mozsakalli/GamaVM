@@ -31,11 +31,12 @@ public class Player implements Game {
     Game currentGame;
     PlayerClassLoader classLoader;
     Sprite s;
+    My my;
     
     @Override
     public void begin() {
         Stage.setup(960, 640);
-        for(int i=0; i<2000; i++) {
+        for(int i=0; i<2; i++) {
             Image img = new Image();
             //Sprite s = new Sprite();
             img.setX((float)Math.random()*Stage.I.designWidth/2);
@@ -56,11 +57,18 @@ public class Player implements Game {
             Stage.I.addChild(s);
             this.s = s;*/
         }
+        
+        My m = new My();
+        m.setX(300);
+        m.setY(300);
+        Stage.I.addChild(m);
+        my = m;
     }
 
     float dx = 1, dy = 1;
     @Override
     public void update() {
+        my.setRotationY(my.getRotationY()+1);
         /*
         Sprite ptr = Stage.I.getFirstChild();
         while(ptr != null) {

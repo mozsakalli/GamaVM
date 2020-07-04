@@ -94,8 +94,8 @@
             filePath = "digi/interpret.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1788"
-            endingLineNumber = "1788"
+            startingLineNumber = "1787"
+            endingLineNumber = "1787"
             landmarkName = "vm_interpret_exec(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -110,8 +110,8 @@
             filePath = "digi/interpret.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1785"
-            endingLineNumber = "1785"
+            startingLineNumber = "1784"
+            endingLineNumber = "1784"
             landmarkName = "vm_interpret_exec(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -334,8 +334,8 @@
             filePath = "digi/interpret.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2508"
-            endingLineNumber = "2508"
+            startingLineNumber = "2507"
+            endingLineNumber = "2507"
             landmarkName = "vm_interpret_exec(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -350,8 +350,8 @@
             filePath = "digi/interpret.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2507"
-            endingLineNumber = "2507"
+            startingLineNumber = "2506"
+            endingLineNumber = "2506"
             landmarkName = "vm_interpret_exec(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1358,8 +1358,8 @@
             filePath = "digi/interpret.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2277"
-            endingLineNumber = "2277"
+            startingLineNumber = "2276"
+            endingLineNumber = "2276"
             landmarkName = "vm_interpret_exec(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1406,8 +1406,8 @@
             filePath = "digi/interpret.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1580"
-            endingLineNumber = "1580"
+            startingLineNumber = "1579"
+            endingLineNumber = "1579"
             landmarkName = "vm_interpret_exec(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -2104,8 +2104,8 @@
             filePath = "digi/interpret.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2541"
-            endingLineNumber = "2541"
+            startingLineNumber = "2540"
+            endingLineNumber = "2540"
             landmarkName = "vm_interpret_exec(vm, omethod, args)"
             landmarkType = "9">
          </BreakpointContent>
@@ -2283,6 +2283,54 @@
             startingLineNumber = "53"
             endingLineNumber = "53"
             landmarkName = "read_jar_resource(jarName, jarNameLen, name, nameLen, isClass, outLen)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "93295B57-4374-40F1-8D70-BF4DD30E55F3"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/sprite.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "380"
+            endingLineNumber = "380"
+            landmarkName = "Gama_digiplay_Mesh_setPolygon(vm, method, args)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0A6A384B-5CB1-4905-8F7A-162CFEF9731D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/sprite.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "153"
+            endingLineNumber = "153"
+            landmarkName = "render_polygon_mesh(mesh, mat, color, alpha)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7D046180-520D-4B74-AF89-485F1A2525C5"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/sprite.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
+            landmarkName = "render_polygon_mesh(mesh, mat, color, alpha)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

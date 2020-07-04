@@ -1562,11 +1562,10 @@ void vm_interpret_exec(VM *vm, Object *omethod, VAR *args) {
     vm->frames[fp].method = omethod;
     vm->frames[fp].SP = local;
     //Frame *frame = &vm->frames[++vm->fp];
-    int last_jdwp_line = -1;
     
     OP* op = &((OP*)method->compiled)[0];
-#ifdef JDWP_ENABLED
-
+#ifdef PLAYERMODE
+    int last_jdwp_line = -1;
 #define NEXT(d) { \
     vm->frames[fp].line = op->line; \
     vm->frames[fp].pc = op->pc; \
