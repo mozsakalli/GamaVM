@@ -102,7 +102,7 @@ public class Stage extends Sprite {
                 _invokeLaterCount = 0;
             }*/
 
-        updateBehaviours(Platform.gameTime, true);
+        updateBehaviours(Platform.gameTime);
         
         //var currentTime = Platform.GetTimer();
         //updateBehaviours(currentTime, true);

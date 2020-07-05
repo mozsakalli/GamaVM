@@ -36,8 +36,17 @@ public class Player implements Game {
     @Override
     public void begin() {
         Stage.setup(960, 640);
+        s = new Sprite();
+        s.setPosition(480, 320);
+        Stage.I.addChild(s);
+        
+        Image img = new Image();
+        img.setSrc("bunny");
+        s.addChild(img);
+        img.addBehaviour(new B());
+        
         for(int i=0; i<2; i++) {
-            Image img = new Image();
+            img = new Image();
             //Sprite s = new Sprite();
             img.setX((float)Math.random()*Stage.I.designWidth/2);
             img.setY((float)Math.random()*Stage.I.designHeight/2);
@@ -45,7 +54,7 @@ public class Player implements Game {
             img.setBlendMode(2);
             Stage.I.addChild(img);
             
-            img.addBehaviour(new B());
+            //img.addBehaviour(new B());
             /*
             s.setWidth(50);
             s.setHeight(50);

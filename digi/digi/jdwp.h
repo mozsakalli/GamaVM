@@ -915,7 +915,7 @@ public:
     }
     
     void flush() {
-        while(qHead) {
+        while(fd && qHead) {
             if(qHead->sentPtr >= qHead->ptr) {
                 JdwpPacket *p = qHead;
                 qHead = qHead->next;

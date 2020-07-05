@@ -19,18 +19,20 @@ typedef struct __attribute__ ((packed)) Texture {
 } Texture;
 
 #define VISIBLE (1 << 0)
-#define INTERACTIVE (1 << 1)
-#define LOCAL_MATRIX_DIRTY (1 << 2)
-#define VIEW_MATRIX_DIRTY (1 << 3)
-#define INTERACTIVE_CHILD (1 << 4)
-#define ROT_SKEW_DIRTY (1 << 5)
-#define IN_STAGE (1 << 6)
-#define CONTENT_INVALID (1 << 7)
-#define DISPOSED (1 << 8)
-#define STOP_PROPAGATION (1 << 9)
-#define HIDES_SCENE (1 << 10)
-#define STAY_ON_TOP (1 << 11)
-#define STRETCH_ZERO (1 << 12)
+#define PVISIBLE (1 << 1)
+#define VISIBLE_FLAGS (VISIBLE|PVISIBLE)
+#define INTERACTIVE (1 << 2)
+#define LOCAL_MATRIX_DIRTY (1 << 3)
+#define VIEW_MATRIX_DIRTY (1 << 4)
+#define INTERACTIVE_CHILD (1 << 5)
+#define ROT_SKEW_DIRTY (1 << 6)
+#define IN_STAGE (1 << 7)
+#define CONTENT_INVALID (1 << 8)
+#define DISPOSED (1 << 9)
+#define STOP_PROPAGATION (1 << 10)
+#define HIDES_SCENE (1 << 11)
+#define STAY_ON_TOP (1 << 12)
+#define STRETCH_ZERO (1 << 13)
 
 typedef struct __attribute__ ((packed)) Sprite {
     JINT flags;

@@ -7,7 +7,7 @@
 //
 #ifdef PLAYERMODE
 
-//#define JDWP_SERVER_MODE
+#define JDWP_SERVER_MODE
 
 #include "jdwp.h"
 #include "pthread.h"
@@ -22,7 +22,7 @@ JdwpClient jdwp_client;
 int jdwp_server_fd;
 int jdwp_step_fp = -1;
 int jdwp_invoking = 0;
-int jdwp_suspend_on_start = 1;
+int jdwp_suspend_on_start = 0;
 
 #ifdef __ANDROID__
 #include <android/log.h>
@@ -275,7 +275,7 @@ void jdwp_eventset_set(JdwpEventSet *set) {
                                 jdwp_step_fp = jdwpVM->FP - 1;
                                 break;
                         }
-                        //printf("!!!!!!!!! step: %d:%d\n", jdwp_step_line_index, jdwp_step_fp);
+                        printf("!!!!!!!!! step: %d:%d\n", jdwp_step_fp, jdwpVM->FP);
                         break;
                         /*
                         int index = (int)mod->location.index;
@@ -312,7 +312,8 @@ void jdwp_eventset_set(JdwpEventSet *set) {
             } break;
                 
             case JDWP_EVENTKIND_CLASS_PREPARE: {
-                Object *ptr = ((ClassLoader*)jdwpVM->sysClassLoader)->classes;
+                ClassLoader *cloader = (ClassLoader*)jdwpVM->sysClassLoader->instance;
+                Object *ptr = cloader->classes;
                 while(ptr) {
                     jdwp_send_classload_event(jdwpVM, ptr);
                     ptr = CLS(ptr, next);
@@ -519,6 +520,13 @@ void jdwp_process_packet(JdwpPacket *req) {
             resp->complete(req->id, JDWP_ERROR_NONE);
             break;
             
+        case JDWP_CMD_VirtualMachine_Dispose: {
+            jdwp_client.reset();
+            gc_resume();
+            jdwp_suspended = 0;
+            jdwp_step_fp = -1;
+        } break;
+                
         case JDWP_CMD_VirtualMachine_IDSizes: //0x0107
             resp->writeInt(8);
             resp->writeInt(8);
@@ -1047,7 +1055,7 @@ void jdwp_tick(VM *vm, Object *method, int pc, int line, int lineChanged) {
     if(jdwp_invoking) return;
     
     if(jdwp_step_fp != -1) {
-        if(lineChanged && vm->FP <= jdwp_step_fp) {
+        if(lineChanged && vm->FP == jdwp_step_fp) {
             if(jdwp_send_step_event(method, pc)) {
                 jdwp_suspended = 1;
                 jdwp_step_fp = -1;
@@ -1062,6 +1070,7 @@ void jdwp_tick(VM *vm, Object *method, int pc, int line, int lineChanged) {
                 if(mf->lineNumberTable[i].pc == pc && mf->lineNumberTable[i].breakpoint) {
                     if(jdwp_send_breakpoint_event(method, pc)) {
                         jdwp_suspended = 1;
+                        jdwp_step_fp = -1;
                         JDWPLOG("!!!!! BREAKPOINT !!!! %d:%d\n",i,mf->lineNumberTable[i].line);
                     }
                     break;

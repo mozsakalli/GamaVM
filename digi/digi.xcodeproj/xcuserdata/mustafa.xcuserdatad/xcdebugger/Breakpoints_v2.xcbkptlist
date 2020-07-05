@@ -366,8 +366,8 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "718"
-            endingLineNumber = "718"
+            startingLineNumber = "726"
+            endingLineNumber = "726"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -430,8 +430,8 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1039"
-            endingLineNumber = "1039"
+            startingLineNumber = "1047"
+            endingLineNumber = "1047"
             landmarkName = "jdwp_tick(vm, method, pc, line, lineChanged)"
             landmarkType = "9">
          </BreakpointContent>
@@ -446,8 +446,8 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1020"
-            endingLineNumber = "1020"
+            startingLineNumber = "1028"
+            endingLineNumber = "1028"
             landmarkName = "jdwp_start(vm, host, port)"
             landmarkType = "9">
          </BreakpointContent>
@@ -462,8 +462,8 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "981"
-            endingLineNumber = "981"
+            startingLineNumber = "989"
+            endingLineNumber = "989"
             landmarkName = "jdwp_process_client()"
             landmarkType = "9">
          </BreakpointContent>
@@ -478,8 +478,8 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "998"
-            endingLineNumber = "998"
+            startingLineNumber = "1006"
+            endingLineNumber = "1006"
             landmarkName = "jdwp_start(vm, host, port)"
             landmarkType = "9">
          </BreakpointContent>
@@ -526,8 +526,8 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1051"
-            endingLineNumber = "1051"
+            startingLineNumber = "1059"
+            endingLineNumber = "1059"
             landmarkName = "jdwp_tick(vm, method, pc, line, lineChanged)"
             landmarkType = "9">
          </BreakpointContent>
@@ -542,8 +542,8 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1053"
-            endingLineNumber = "1053"
+            startingLineNumber = "1061"
+            endingLineNumber = "1061"
             landmarkName = "jdwp_tick(vm, method, pc, line, lineChanged)"
             landmarkType = "9">
          </BreakpointContent>
@@ -558,8 +558,8 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1012"
-            endingLineNumber = "1012"
+            startingLineNumber = "1020"
+            endingLineNumber = "1020"
             landmarkName = "jdwp_start(vm, host, port)"
             landmarkType = "9">
          </BreakpointContent>
@@ -702,8 +702,8 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "475"
-            endingLineNumber = "475"
+            startingLineNumber = "476"
+            endingLineNumber = "476"
             landmarkName = "jdwp_invoke_method(req, resp, isStatic)"
             landmarkType = "9">
          </BreakpointContent>
@@ -718,8 +718,8 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1065"
-            endingLineNumber = "1065"
+            startingLineNumber = "1074"
+            endingLineNumber = "1074"
             landmarkName = "jdwp_tick(vm, method, pc, line, lineChanged)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1246,8 +1246,8 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "620"
-            endingLineNumber = "620"
+            startingLineNumber = "628"
+            endingLineNumber = "628"
             landmarkName = "jdwp_process_packet(req)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1422,8 +1422,8 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1060"
-            endingLineNumber = "1060"
+            startingLineNumber = "1068"
+            endingLineNumber = "1068"
             landmarkName = "jdwp_tick(vm, method, pc, line, lineChanged)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1438,8 +1438,8 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1073"
-            endingLineNumber = "1073"
+            startingLineNumber = "1082"
+            endingLineNumber = "1082"
             landmarkName = "jdwp_tick(vm, method, pc, line, lineChanged)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1564,8 +1564,8 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1062"
-            endingLineNumber = "1062"
+            startingLineNumber = "1070"
+            endingLineNumber = "1070"
             landmarkName = "jdwp_tick(vm, method, pc, line, lineChanged)"
             landmarkType = "9">
          </BreakpointContent>
@@ -2120,8 +2120,8 @@
             filePath = "digi/jdwp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1010"
-            endingLineNumber = "1010"
+            startingLineNumber = "1018"
+            endingLineNumber = "1018"
             landmarkName = "jdwp_start(vm, host, port)"
             landmarkType = "9">
          </BreakpointContent>
@@ -2331,6 +2331,38 @@
             startingLineNumber = "204"
             endingLineNumber = "204"
             landmarkName = "render_polygon_mesh(mesh, mat, color, alpha)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "44ED112D-65E0-4F4E-9F57-651186EA96B1"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/jdwp.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1084"
+            endingLineNumber = "1084"
+            landmarkName = "jdwp_tick(vm, method, pc, line, lineChanged)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "81C22B28-6179-43E7-81A7-29EBB42D269E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "digi/jdwp.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1083"
+            endingLineNumber = "1083"
+            landmarkName = "jdwp_tick(vm, method, pc, line, lineChanged)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

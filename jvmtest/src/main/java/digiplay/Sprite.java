@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package digiplay;
 
 /**
@@ -21,39 +20,41 @@ package digiplay;
  * @author mustafa
  */
 public class Sprite {
+
     int flags = VISIBLE | LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY | ROT_SKEW_DIRTY;
-    float x,y,z, _x,_y,_z;
-    float sx=1,sy=1,sz=1, _sx,_sy,_sz;
-    float rx,ry,rz, _rx,_ry,_rz;
+    float x, y, z, _x, _y, _z;
+    float sx = 1, sy = 1, sz = 1, _sx, _sy, _sz;
+    float rx, ry, rz, _rx, _ry, _rz;
     float skx, sky; //skew
-    float alpha=1,_alpha,worldAlpha=1;
-    float px=.5f,py=.5f;
-    float width,height, midy, midx;
+    float alpha = 1, _alpha, worldAlpha = 1;
+    float px = .5f, py = .5f;
+    float width, height, midy, midx;
     float clipX, clipY, clipW, clipH;
-    int numChildren, depth, parentVersion, color=0xFFFFFFFF, depthEnabled, stencilMode, blendMode=1, textureMode, cullMode;
+    int numChildren, depth, parentVersion, color = 0xFFFFFFFF, depthEnabled, stencilMode, blendMode = 1, textureMode, cullMode;
     Sprite parent, next, prev, firstChild, lastChild;
-    Mat4 local=new Mat4(),world=new Mat4(), inverse = new Mat4();
+    Mat4 local = new Mat4(), world = new Mat4(), inverse = new Mat4();
     protected Mesh mesh;
     Texture texture;
     Shader shader;
     Behaviour behaviours;
     int visibleState = -1;
-    
+
     // Various flags used by Sprite and subclasses
     public final static int VISIBLE = 1 << 0;
-    public final static int INTERACTIVE = 1 << 1;
-    public final static int LOCAL_MATRIX_DIRTY = 1 << 2;
-    public final static int VIEW_MATRIX_DIRTY = 1 << 3;
-    public final static int INTERACTIVE_CHILD = 1 << 4;
-    public final static int ROT_SKEW_DIRTY = 1 << 5;
-    public final static int IN_STAGE = 1 << 6;
-    public final static int CONTENT_INVALID = 1 << 7;
-    public final static int DISPOSED = 1 << 8;
-    public final static int STOP_PROPAGATION = 1 << 9;
-    public final static int HIDES_SCENE = 1 << 10;
-    public final static int STAY_ON_TOP = 1 << 11;
-    public final static int STRETCH_ZERO = 1 << 12;
-    
+    public final static int PVISIBLE = 1 << 1;
+    public final static int INTERACTIVE = 1 << 2;
+    public final static int LOCAL_MATRIX_DIRTY = 1 << 3;
+    public final static int VIEW_MATRIX_DIRTY = 1 << 4;
+    public final static int INTERACTIVE_CHILD = 1 << 5;
+    public final static int ROT_SKEW_DIRTY = 1 << 6;
+    public final static int IN_STAGE = 1 << 7;
+    public final static int CONTENT_INVALID = 1 << 8;
+    public final static int DISPOSED = 1 << 9;
+    public final static int STOP_PROPAGATION = 1 << 10;
+    public final static int HIDES_SCENE = 1 << 11;
+    public final static int STAY_ON_TOP = 1 << 12;
+    public final static int STRETCH_ZERO = 1 << 13;
+
     public float getX() {
         return x + _x;
     }
@@ -74,6 +75,11 @@ public class Sprite {
             this.y = y;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
+    }
+
+    public void setPosition(float x, float y) {
+        setX(x);
+        setY(y);
     }
 
     public float getScaleX() {
@@ -130,7 +136,7 @@ public class Sprite {
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY | ROT_SKEW_DIRTY;
         }
     }
-    
+
     public float getWidth() {
         return width;
     }
@@ -280,12 +286,53 @@ public class Sprite {
             midy = value * height;
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
-    }    
-    
-    public int getBlendMode() { return blendMode; }
-    public void setBlendMode(int mode) { blendMode = mode; }
-    
+    }
+
+    public boolean isVisible() {
+        return (flags & (VISIBLE | PVISIBLE)) == (VISIBLE | PVISIBLE);
+    }
+
+    public void setVisible(boolean v) {
+        if (v) {
+            if ((flags & VISIBLE) == 0) {
+                setVisibility(VISIBLE, false);
+            }
+        } else {
+            if ((flags & VISIBLE) != 0) {
+                setVisibility(VISIBLE, true);
+            }
+        }
+    }
+
+    public int getBlendMode() {
+        return blendMode;
+    }
+
+    public void setBlendMode(int mode) {
+        blendMode = mode;
+    }
+
     public void dispose() {
+        if ((flags & DISPOSED) != 0) {
+            return;
+        }
+
+        if (parent != null) {
+            parent.removeChild(this);
+        }
+
+        //clear behaviours
+        Behaviour b = behaviours;
+        while (b != null) {
+            b.setParent(null);
+            b = b.next;
+        }
+
+        while (firstChild != null) {
+            removeChild(firstChild);
+        }
+
+        flags |= DISPOSED;
     }
 
     void updateWorldAlpha() {
@@ -299,7 +346,7 @@ public class Sprite {
             child = child.next;
         }
     }
-    
+
     void unlinkChild(Sprite child) {
         if (child.prev == null) {
             firstChild = firstChild.next;
@@ -357,7 +404,30 @@ public class Sprite {
         }
     }
 
+    private void setVisibility(int flags, boolean clear) {
+        if (clear) {
+            this.flags &= ~flags;
+        } else {
+            this.flags |= flags;
+        }
+        int state = (flags & (VISIBLE | PVISIBLE)) == (VISIBLE | PVISIBLE) ? 1 : 0;
+        if(state != visibleState) {
+           //if(state == 1 && OnShow != null) 
+           visibleState = state; 
+        }
+        boolean clearChild = state == 0;
+        Sprite ptr = firstChild;
+        while (ptr != null) {
+            ptr.setVisibility(PVISIBLE, clearChild);
+            ptr = ptr.next;
+        }
+    }
+
     public void addChild(Sprite child) {
+        if (child == this) {
+            throw new RuntimeException("Can't add self as child");
+        }
+
         if (child == null || child.parent == this) {
             return;
         }
@@ -373,10 +443,10 @@ public class Sprite {
         if ((flags & IN_STAGE) != 0) {
             child.updateWorldAlpha();
             child.setInStage();
+            child.setVisibility(PVISIBLE, (flags & VISIBLE) == 0);
         }
 
         child.flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
-        //child.OnAdded?.Invoke();
     }
 
     static int InvalidationCounter;
@@ -427,14 +497,19 @@ public class Sprite {
     public Mesh getMesh() {
         return mesh;
     }
-    
+
     public void setMesh(Mesh m) {
         mesh = m;
     }
-    
-    public Sprite getFirstChild() { return firstChild; }
-    public Sprite getNext() { return next; }
-    
+
+    public Sprite getFirstChild() {
+        return firstChild;
+    }
+
+    public Sprite getNext() {
+        return next;
+    }
+
     public void addBehaviour(Behaviour b) {
         if (b == null) {
             return;
@@ -459,7 +534,7 @@ public class Sprite {
         }
     }
 
-    public void updateBehaviours(float time, boolean isParentVisible) {
+    public void updateBehaviours(float time) {
         /* todo:
         int newState = isParentVisible && ((flags & VISIBLE) != 0) ? 1 : 0;
         if (newState != visibleState) {
@@ -472,7 +547,7 @@ public class Sprite {
                     break;
             }
         }
-        */
+         */
         Behaviour ptr = behaviours;
         if (ptr != null) {
             Behaviour prev = null;
@@ -497,9 +572,8 @@ public class Sprite {
 
         Sprite child = firstChild;
         if (child != null) {
-            boolean v = visibleState == 1;
             while (child != null) {
-                child.updateBehaviours(time, v);
+                child.updateBehaviours(time);
                 child = child.next;
             }
         }

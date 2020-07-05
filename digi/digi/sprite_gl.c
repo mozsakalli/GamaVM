@@ -10,7 +10,7 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #endif
-
+/*
 Texture *glBoundTexture = NULL;
 int glBoundTextureMode = 0;
 int glBoundBlendMode = 0;
@@ -183,7 +183,7 @@ void render_upload_texture(Texture *tex, void *buffer) {
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
         glPixelStorei( GL_UNPACK_ALIGNMENT,1 );
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32,32,/*tex->hwWidth, tex->hwHeight, */0, GL_RGBA,
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32,32,0, GL_RGBA,
                      GL_UNSIGNED_BYTE, 0);
     } else glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -213,3 +213,4 @@ void render_set_texture_mode(int mode) {
 void render_cull_mode(int mode) {
 
 }
+*/
