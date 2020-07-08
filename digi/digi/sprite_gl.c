@@ -10,7 +10,7 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #endif
-/*
+
 Texture *glBoundTexture = NULL;
 int glBoundTextureMode = 0;
 int glBoundBlendMode = 0;
@@ -213,4 +213,4 @@ void render_set_texture_mode(int mode) {
 void render_cull_mode(int mode) {
 
 }
-*/
+

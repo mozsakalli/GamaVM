@@ -37,8 +37,10 @@ public class Sprite {
     Texture texture;
     Shader shader;
     Behaviour behaviours;
-    int visibleState = -1;
+    int visibleState = -1, batchOrder;
 
+    public Action1<Sprite> onShow, onInit;
+    
     // Various flags used by Sprite and subclasses
     public final static int VISIBLE = 1 << 0;
     public final static int PVISIBLE = 1 << 1;
@@ -54,7 +56,8 @@ public class Sprite {
     public final static int HIDES_SCENE = 1 << 11;
     public final static int STAY_ON_TOP = 1 << 12;
     public final static int STRETCH_ZERO = 1 << 13;
-
+    public final static int BATCH_CHILDREN = 1 << 14;
+    
     public float getX() {
         return x + _x;
     }
@@ -287,6 +290,17 @@ public class Sprite {
             flags |= LOCAL_MATRIX_DIRTY | VIEW_MATRIX_DIRTY;
         }
     }
+    
+    public int getDepth() { return depth; }
+    public void setDepth(int depth) {
+        if(depth != this.depth) {
+           if(parent != null) {
+               parent.unlinkChild(this);
+               this.depth = depth;
+               parent.linkChild(this);
+           } else this.depth = depth;
+        }
+    }
 
     public boolean isVisible() {
         return (flags & (VISIBLE | PVISIBLE)) == (VISIBLE | PVISIBLE);
@@ -412,7 +426,7 @@ public class Sprite {
         }
         int state = (flags & (VISIBLE | PVISIBLE)) == (VISIBLE | PVISIBLE) ? 1 : 0;
         if(state != visibleState) {
-           //if(state == 1 && OnShow != null) 
+           if(state == 1 && onShow != null) onShow.invoke(this);
            visibleState = state; 
         }
         boolean clearChild = state == 0;
@@ -489,6 +503,7 @@ public class Sprite {
         }
 
         init();
+        if(onInit != null) onInit.invoke(this);
         //if (onInit != null) {
         //    onInit.invoke(this);
         //}

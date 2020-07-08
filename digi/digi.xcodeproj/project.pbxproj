@@ -26,7 +26,6 @@
 		454CACBD24AA8B0300096DE3 /* sprite_gl.c in Sources */ = {isa = PBXBuildFile; fileRef = 454CACBB24AA8B0300096DE3 /* sprite_gl.c */; };
 		456D45AE248EF1CC00E7C7BD /* ios_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 456D45AD248EF1CC00E7C7BD /* ios_main.m */; };
 		456D45B0248EF53A00E7C7BD /* digiplay.c in Sources */ = {isa = PBXBuildFile; fileRef = 456D45AF248EF53A00E7C7BD /* digiplay.c */; };
-		458005AD24B1A6EE00EB2FB3 /* render.c in Sources */ = {isa = PBXBuildFile; fileRef = 458005AC24B1A6ED00EB2FB3 /* render.c */; };
 		4595C88E248D6FD2008E4CAA /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 4595C88D248D6FD2008E4CAA /* assets */; };
 		4595C891248D7314008E4CAA /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = 4595C890248D7314008E4CAA /* miniz.c */; };
 		4595C893248D79F4008E4CAA /* interpret.c in Sources */ = {isa = PBXBuildFile; fileRef = 4595C892248D79F4008E4CAA /* interpret.c */; };
@@ -42,7 +41,6 @@
 		4507300F248CF1DD001379B2 /* utf.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = utf.c; sourceTree = "<group>"; };
 		45073011248D4BD7001379B2 /* ios_native.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ios_native.m; sourceTree = "<group>"; };
 		45073013248D4D0B001379B2 /* exception.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = exception.c; sourceTree = "<group>"; };
-		451012DD24B134F000D5AA20 /* sokol_gfx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sokol_gfx.h; sourceTree = "<group>"; };
 		4540187B248E565C004AF6EF /* gc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gc.c; sourceTree = "<group>"; };
 		4540187D248E6D2C004AF6EF /* jdwp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jdwp.h; sourceTree = "<group>"; };
 		4540187E248E6D2C004AF6EF /* jdwp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = jdwp.cpp; sourceTree = "<group>"; };
@@ -58,7 +56,6 @@
 		454CACBB24AA8B0300096DE3 /* sprite_gl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sprite_gl.c; sourceTree = "<group>"; };
 		456D45AD248EF1CC00E7C7BD /* ios_main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ios_main.m; sourceTree = "<group>"; };
 		456D45AF248EF53A00E7C7BD /* digiplay.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = digiplay.c; sourceTree = "<group>"; };
-		458005AC24B1A6ED00EB2FB3 /* render.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = render.c; sourceTree = "<group>"; };
 		4595C88D248D6FD2008E4CAA /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = digi/assets; sourceTree = "<group>"; };
 		4595C88F248D7314008E4CAA /* miniz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
 		4595C890248D7314008E4CAA /* miniz.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
@@ -142,8 +139,6 @@
 				45407D67248E0EA5008462C5 /* vm_native.c */,
 				45E739B5248C4FB8004E55EB /* vm.c */,
 				45E739B4248C4FB8004E55EB /* vm.h */,
-				451012DD24B134F000D5AA20 /* sokol_gfx.h */,
-				458005AC24B1A6ED00EB2FB3 /* render.c */,
 			);
 			path = digi;
 			sourceTree = "<group>";
@@ -225,7 +220,6 @@
 				45E739AE248C4F2A004E55EB /* main.m in Sources */,
 				4507300C248CE66B001379B2 /* class.c in Sources */,
 				4540FAB0248F666E00FBB78F /* digiplay_gl.c in Sources */,
-				458005AD24B1A6EE00EB2FB3 /* render.c in Sources */,
 				4547016D249E06B300F788C1 /* objc.m in Sources */,
 				454CACBD24AA8B0300096DE3 /* sprite_gl.c in Sources */,
 				4595C891248D7314008E4CAA /* miniz.c in Sources */,

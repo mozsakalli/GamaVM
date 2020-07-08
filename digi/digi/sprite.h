@@ -50,7 +50,8 @@ typedef struct __attribute__ ((packed)) Sprite {
     Object *mesh;
     Object *texture, *shader;
     Object *behaviours;
-    JINT visibleState;
+    JINT visibleState, batchOrder;
+    Object *onShow, *onInit;
 } Sprite;
 
 inline static int update_sprite_localmatrix(Sprite *sprite) {
