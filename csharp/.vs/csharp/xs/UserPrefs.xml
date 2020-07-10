@@ -1,0 +1,34 @@
+﻿<Properties StartupConfiguration="{A6B42CA3-DE66-4C0B-AAE0-57B98B6857A1}|Default">
+  <MonoDevelop.Ide.ItemProperties.csharp PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Program.cs">
+    <Files>
+      <File FileName="Program.cs" Line="181" Column="44" />
+      <File FileName="ILImporter.cs" />
+      <File FileName="BasicBlock.cs" />
+      <File FileName="EvaluationStack.cs" />
+      <File FileName="TypeUtils.cs" />
+      <File FileName="ILUtils.cs" />
+      <File FileName="Test.cs" />
+      <File FileName="Types.cs" />
+      <File FileName="Converter.cs" />
+      <File FileName="Writer.cs" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="csharp" expanded="True">
+            <Node name="csharp" expanded="True">
+              <Node name="Program.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|anycpu" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
