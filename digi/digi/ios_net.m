@@ -13,7 +13,6 @@
     NSURLConnection *connection;
     @public NSMutableData *receivedData;
     @public JLONG gamaHandle;
-    @public bool isImageURL;
 }
 - (id)initWithURLAndPostParams:(NSString*)url postParams:(NSString*)postParams thiz:(JLONG)handle;
 - (void)clear;
