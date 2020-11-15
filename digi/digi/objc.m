@@ -29,12 +29,12 @@ typedef struct JNIMethodInfo {
     Object *returnClass;
 } JNIMethodInfo;
 
-int jni_parse_signature(VM *vm, JCHAR *sign, int ptr, char *type, Object **cls) {
+int jni_parse_signature(VM *vm, JCHAR *sign, int ptr, char *type, Object **cls, Object *clsLoader) {
     *type = sign[ptr++];
     if(*type == 'L') {
         int start = ptr;
         while(sign[ptr] != ';') ptr++;
-        //todo: *cls = resolve_class(vm, sign + start, ptr - start, 1, nil);
+        *cls = resolve_class(vm, clsLoader, &sign[start], ptr - start, 1, NULL);
         ptr++;
         if(vm->exception) return 0;
     } else if(*type == '[') {
@@ -61,7 +61,7 @@ int jni_parse_signature(VM *vm, JCHAR *sign, int ptr, char *type, Object **cls) 
 
 Class getObjcClass(VMClass *cls) {
     char namechars[256];
-    int len = snprintf(namechars,255,"%s", string_to_ascii(cls->name));
+    int len = snprintf(namechars,255,"%s", string_to_ascii(cls->externalName ? cls->externalName : cls->name));
     for(int i=0; i<len; i++) if(namechars[i] == '/' || namechars[i] == '.') namechars[i] = '_';
     return NSClassFromString([[NSString alloc] initWithUTF8String:namechars]);
 }
@@ -152,8 +152,26 @@ void vm_invoke_objc(VM *vm, Object *method, VAR *args) {
             } else ret->O = nil;
         } break;
             
+        case 'L': {
+            void *x = *((void **)buffer);
+            if(!x) {
+                ret->O = NULL;
+                free(buffer);
+            } else {
+                if(mi->returnClass == vm->jlString) {
+                    
+                } else {
+                    static Object *nsobjClass = NULL;
+                    if(!nsobjClass) {
+                        nsobjClass = resolve_class(vm, CLS(vm->sysClassLoader,clsLoader), L"gamavm/apple/NSObject", 21, 1, NULL);
+                        if(!nsobjClass) return;
+                    }
+                }
+            }
+        } break;
+            
         default:
-            printf("!!!!!!!!!!!!! Unimplemented Objc Type\n");
+            printf("!!!!!!!!!!!!! Unimplemented Objc Type: %c\n", mi->returnType);
     }
     
     
@@ -174,7 +192,7 @@ JNIMethodInfo *vm_build_external_method(VM *vm, Object *method, SEL sel) {
     JCHAR *sign = STRCHARS(m->signature);
     int ptr = 1;
     while(sign[ptr] != ')') {
-        ptr = jni_parse_signature(vm, sign, ptr, &mi->argTypes[mi->argCount], &mi->argClasses[mi->argCount]);
+        ptr = jni_parse_signature(vm, sign, ptr, &mi->argTypes[mi->argCount], &mi->argClasses[mi->argCount], CLS(m->declaringClass, clsLoader));
         if(vm->exception) {
             free(mi);
             return NULL;
@@ -182,7 +200,7 @@ JNIMethodInfo *vm_build_external_method(VM *vm, Object *method, SEL sel) {
         mi->argCount++;
     }
     ptr++;
-    jni_parse_signature(vm, sign, ptr, &mi->returnType, &mi->returnClass);
+    jni_parse_signature(vm, sign, ptr, &mi->returnType, &mi->returnClass, CLS(m->declaringClass, clsLoader));
 
     return mi;
 }

@@ -37,4 +37,26 @@ public class Bag<T> {
         return size;
     }
     
+    public void setSize(int size) {
+        this.size = size;
+    }
+    
+    public T get(int index) {
+        return items[index];
+    }
+    
+    public T getAndClear(int index) {
+        T value = items[index];
+        items[index] = null;
+        return value;
+    }
+    
+    public void add(T item) {
+        if(size == items.length) {
+            T[] tmp = (T[])new Object[items.length * 2];
+            System.arraycopy(items, 0, tmp, 0, items.length);
+            items = tmp;
+        }
+        items[size++] = item;
+    }
 }

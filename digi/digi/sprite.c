@@ -297,7 +297,7 @@ void render_sprite(Object *spriteObject) {
     Object *ptr = sprite->firstChild;
     while(ptr) {
         Sprite *child = ptr->instance;
-        if((child->flags & VISIBLE_FLAGS) == VISIBLE_FLAGS && child->worldAlpha > 0) {
+        if(child->worldAlpha > 0 && (child->flags & VISIBLE_FLAGS) == VISIBLE_FLAGS) {
             render_sprite(ptr);
         }
         ptr = child->next;

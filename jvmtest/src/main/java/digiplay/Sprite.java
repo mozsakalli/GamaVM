@@ -58,6 +58,8 @@ public class Sprite {
     public final static int STRETCH_ZERO = 1 << 13;
     public final static int BATCH_CHILDREN = 1 << 14;
     
+    static Bag<Sprite> InvalidQueue = new Bag();
+    
     public float getX() {
         return x + _x;
     }
@@ -468,6 +470,7 @@ public class Sprite {
     public void markContentInvalid() {
         if ((flags & CONTENT_INVALID) == 0) {
             flags |= CONTENT_INVALID;
+            InvalidQueue.add(this);
             InvalidationCounter++;
         }
     }
@@ -504,9 +507,6 @@ public class Sprite {
 
         init();
         if(onInit != null) onInit.invoke(this);
-        //if (onInit != null) {
-        //    onInit.invoke(this);
-        //}
     }
 
     public Mesh getMesh() {

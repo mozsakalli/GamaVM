@@ -161,7 +161,7 @@ void render_draw_indexed(VERTEX *vertex, short *index, int count, int drawAsLine
     if(needsVertexBinding || lastVertexBuffer != vertex) {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        float *ptr = vertex;
+        float *ptr = (float*)vertex;
         glEnableVertexAttribArray(deviceCurrentShader->pos);
         glVertexAttribPointer(deviceCurrentShader->pos, 3, GL_FLOAT, GL_FALSE, sizeof(VERTEX), ptr);
         glEnableVertexAttribArray(deviceCurrentShader->uv);
@@ -173,7 +173,6 @@ void render_draw_indexed(VERTEX *vertex, short *index, int count, int drawAsLine
     }
 
     glDrawElements(drawAsLines ? GL_LINE_STRIP : GL_TRIANGLES, count, GL_UNSIGNED_SHORT, index);
-    int err = glGetError();
 }
 
 void render_upload_texture(Texture *tex, void *buffer) {

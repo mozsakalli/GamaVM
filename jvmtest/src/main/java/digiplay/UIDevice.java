@@ -1,7 +1,3 @@
-
-import digiplay.Platform;
-import digiplay.UIDevice;
-
 /*
  * Copyright (C) 2019 Digitoy Games.
  *
@@ -17,14 +13,21 @@ import digiplay.UIDevice;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package digiplay;
+
+import gamavm.External;
+
 /**
  *
  * @author mustafa
  */
-public class Main {
+@External(objc = "UIDevice")
+public class UIDevice {
     
-    public static void main() {
-        System.out.println(UIDevice.getCurrentDevice().getName());
-        Platform.run(new Player());
-    }
+    @External(objc = "currentDevice")
+    public native static UIDevice getCurrentDevice();
+    
+    @External(objc = "name")
+    public native String getName();
 }
